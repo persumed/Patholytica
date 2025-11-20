@@ -37,7 +37,7 @@ body.light-theme {
 body, html {
   margin:0;
   padding:0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: "Inter", Arial, sans-serif;
   background: var(--bg-color);
   color: var(--text-color);
   transition: background 0.35s ease, color 0.35s ease;
@@ -46,44 +46,57 @@ a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 /* ------------------------------------------------------------------
- * 3. HEADER & NAVIGATION
+ * 3. HEADER & FOOTER (FROM LOGIN PAGE)
  * ------------------------------------------------------------------ */
 .header-wrapper {
   position: sticky;
   top: 0;
   background: var(--bg-color);
-  padding: 12px 20px;
+  padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid var(--card-border);
+  z-index: 40;
+}
+.header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  z-index: 50;
+  justify-content: space-between;
+  padding: 16px 18px;
 }
-.logo-img { height:32px; transition: filter 0.25s ease; }
+.logo-img { height: 32px; width: auto; transition: filter 0.25s ease; cursor: pointer; }
 body.light-theme .logo-img { filter: invert(1); }
-
-.main-nav a {
-  margin-left: 20px;
-  font-weight: 500;
-  padding: 5px 0;
-  transition: color 0.25s ease;
-  color: var(--text-color);
-}
-.main-nav a:hover { color: var(--accent); }
 
 .theme-toggle {
   padding: 6px 14px;
+  font-size: 12.5px;
+  background: transparent;
   border-radius: 6px;
   border: 1px solid var(--card-border);
-  background: transparent;
   color: var(--text-color);
   cursor: pointer;
   transition: 0.25s ease;
 }
-.theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 11px;
+  border-top: 1px solid var(--card-border);
+  color: #888;
+}
+footer a {
+  color: #888;
+  margin: 0 3px;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+footer a:hover { color: var(--accent); }
 
 /* ------------------------------------------------------------------
- * 4. PROFILE LAYOUT & CARDS
+ * 4. PROFILE LAYOUT
  * ------------------------------------------------------------------ */
 .profile-container {
   max-width: 960px;
@@ -94,30 +107,22 @@ body.light-theme .logo-img { filter: invert(1); }
   padding: 0 20px;
 }
 
-/* Main Content Column */
-.main-profile-content {
-  flex: 2 1 500px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
 .profile-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 16px;
   padding: 30px;
-  text-align: center;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 8px 24px rgba(0,0,0,0.25);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  text-align: center;
 }
 .profile-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 12px 32px rgba(0,0,0,0.35);
 }
 
-/* Profile Image */
+/* User Info */
 .profile-img {
   width: 120px;
   height: 120px;
@@ -125,23 +130,10 @@ body.light-theme .logo-img { filter: invert(1); }
   object-fit: cover;
   border: 4px solid var(--accent);
   margin-bottom: 15px;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
+.profile-card h2 { margin: 8px 0 5px; font-size: 24px; }
+.profile-card p { margin: 4px 0; font-size: 14px; color: var(--secondary-text); }
 
-/* Profile Info */
-.profile-card h2 {
-  margin: 8px 0 5px;
-  font-size: 24px;
-}
-.profile-card p {
-  margin: 4px 0;
-  font-size: 14px;
-  color: var(--secondary-text);
-}
-
-/* ------------------------------------------------------------------
- * 5. BUTTONS & STATS
- * ------------------------------------------------------------------ */
 .btn {
   display: inline-block;
   padding: 10px 22px;
@@ -162,31 +154,27 @@ body.light-theme .logo-img { filter: invert(1); }
   justify-content: space-around;
   margin-top: 20px;
   gap: 10px;
-  width: 100%;
 }
 .stats div {
   text-align: center;
   flex: 1;
   padding: 8px 0;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255,255,255,0.05);
 }
-body.light-theme .stats div { background: rgba(0, 0, 0, 0.05); }
+body.light-theme .stats div { background: rgba(0,0,0,0.05); }
 .stats div h3 { margin:0; font-size:20px; }
 .stats div p { margin:2px 0 0; font-size:13px; color: var(--secondary-text); }
 
-/* ------------------------------------------------------------------
- * 6. POSTS & EXHIBITION
- * ------------------------------------------------------------------ */
-.decoy-posts-section {
-  width: 100%;
-  margin-top: 30px;
+/* Libraries Section */
+.libraries-container {
+  flex: 2 1 500px;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 30px;
 }
 
-.post-card, .exhibition-preview {
+.library-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 16px;
@@ -194,37 +182,16 @@ body.light-theme .stats div { background: rgba(0, 0, 0, 0.05); }
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   transition: all 0.25s ease;
-}
-.post-card:hover, .exhibition-preview:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-}
-
-.post-card {
-  flex: 1 1 45%;
-  min-width: 300px;
   text-align: left;
 }
-.post-card h3 { color: var(--accent); margin:0 0 8px; font-size:18px; }
-.post-card p { font-size:14px; margin-bottom:12px; color: var(--text-color); }
-.post-meta { font-size:12px; color: var(--secondary-text); display:flex; justify-content:space-between; }
-.post-meta a { color: var(--secondary-text); }
+.library-card:hover { transform: translateY(-3px); box-shadow:0 6px 16px rgba(0,0,0,0.2);}
+.library-card h3 { color: var(--accent); margin:0 0 8px; font-size:18px; }
+.library-card p { font-size:14px; color: var(--text-color); }
 
-.exhibition-preview {
-  flex: 1 1 100%;
-  text-align: center;
-  margin-top: 0;
-}
-.exhibition-preview h3 { font-size:22px; margin:0 0 8px; }
-.exhibition-preview a { color: var(--accent); font-weight:600; }
-
-/* ------------------------------------------------------------------
- * 7. ACTIVITY LIST & TAGS
- * ------------------------------------------------------------------ */
+/* Activity List & Tags */
 .activity-list {
   list-style: none;
   padding-left: 0;
-  text-align: left;
   margin-top: 15px;
 }
 .activity-list li {
@@ -255,28 +222,19 @@ body.light-theme .stats div { background: rgba(0, 0, 0, 0.05); }
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
-  transition: transform 0.15s ease, opacity 0.15s ease;
-  cursor: default;
 }
-.tag:hover { transform: translateY(-1px); opacity: 0.9; }
 
-/* ------------------------------------------------------------------
- * 8. RESPONSIVE
- * ------------------------------------------------------------------ */
-@media(max-width: 768px) { .main-nav { display:none; } }
-@media(max-width: 640px){
-  .profile-container { flex-direction: column; align-items: center; max-width: 100%; }
-  .profile-card, .main-profile-content { min-width: 90%; max-width: 90%; text-align: left; }
-  .profile-container > .profile-card:first-child { text-align: center; }
-  .main-profile-content { gap: 20px; }
-  .decoy-posts-section { flex-direction: column; gap: 20px; }
-  .post-card { flex: 1 1 100%; min-width: unset; }
-  .exhibition-preview { min-width: 90%; }
+/* Responsive */
+@media(max-width: 768px){ .main-nav{display:none;} }
+@media(max-width:640px){
+  .profile-container{flex-direction:column;align-items:center;max-width:100%;}
+  .profile-card,.libraries-container{min-width:90%;max-width:90%; text-align:left;}
+  .profile-card{text-align:center;}
 }
-@media (max-width: 480px){
-  .header-wrapper { padding: 10px; }
-  .logo-img { height: 28px; }
-  .theme-toggle { padding: 4px 10px; font-size: 13px; }
+@media(max-width:480px){
+  .header-wrapper{padding:10px;}
+  .logo-img{height:28px;}
+  .theme-toggle{padding:4px 10px;font-size:13px;}
 }
 </style>
 </head>
@@ -284,91 +242,67 @@ body.light-theme .stats div { background: rgba(0, 0, 0, 0.05); }
 
 <!-- HEADER -->
 <div class="header-wrapper">
-  <a href="#"><img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo"></a>
-  <nav class="main-nav">
-    <a href="#dashboard">Dashboard</a>
-    <a href="#libraries">Libraries</a>
-    <a href="#community">Community</a>
-  </nav>
-  <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+  <div class="header">
+    <a href="https://patholytica.com"><img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo"></a>
+    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+  </div>
 </div>
 
-<!-- PROFILE CONTAINER -->
+<!-- PROFILE CONTENT -->
 <div class="profile-container">
 
-  <!-- USER INFO CARD -->
+  <!-- User Info -->
   <div class="profile-card">
-    <img src="profile-pic.jpg" alt="Jane Doe's Profile Picture" class="profile-img">
-    <h2>Jane Doe</h2>
-    <p>@janedoe</p>
-    <p>Medical Student | Lifelong Learner</p>
-    <p style="font-style: italic; font-size: 12px; margin-top: 10px;">Status: Online</p>
+    <img src="profile-pic.jpg" alt="User Profile" class="profile-img">
+    <h2>John Smith</h2>
+    <p>@johnsmith</p>
+    <p>Educator | Library Creator</p>
     <button class="btn">Edit Profile</button>
 
     <div class="stats">
-      <div><h3>32</h3><p>Libraries</p></div>
-      <div><h3>1.2k</h3><p>Followers</p></div>
-      <div><h3>180</h3><p>Following</p></div>
+      <div><h3>12</h3><p>Libraries</p></div>
+      <div><h3>4.5k</h3><p>Followers</p></div>
+      <div><h3>230</h3><p>Following</p></div>
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
-  <div class="main-profile-content">
+  <!-- Libraries & Activity -->
+  <div class="libraries-container">
 
-    <!-- ABOUT & ACTIVITY -->
+    <!-- About -->
     <div class="profile-card">
       <h2>About Me</h2>
-      <p style="color:var(--text-color); margin-bottom: 20px; font-size: 15px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed semper nulla. Proin nec nunc et turpis tincidunt feugiat.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Passionate about building Libraries for learning and sharing knowledge globally.</p>
 
       <h2>Recent Activity</h2>
       <ul class="activity-list">
-        <li>Completed <strong>Anatomy 101</strong></li>
-        <li>Started <strong>Pathophysiology Basics</strong></li>
+        <li>Created Library: <strong>Neuroanatomy</strong></li>
+        <li>Added 15 slides to <strong>Pathophysiology</strong></li>
+        <li>Shared <strong>Cardiology Cases</strong> publicly</li>
         <li>Joined <strong>Medical Quiz Challenge</strong></li>
-        <li>Earned <strong>Top Learner</strong> Badge</li>
       </ul>
     </div>
 
-    <!-- SKILLS & INTERESTS -->
+    <!-- Skills / Interests / Tags -->
     <div class="profile-card">
-      <h2>Skills & Interests</h2>
+      <h2>Tags & Interests</h2>
       <div class="tags-container">
         <span class="tag">Cardiology</span>
         <span class="tag">Histology</span>
+        <span class="tag">Medical Education</span>
         <span class="tag">Clinical Trials</span>
-        <span class="tag">Emergency Medicine</span>
-        <span class="tag">Pharmacology</span>
-        <span class="tag">Medical Spanish</span>
+        <span class="tag">Neurology</span>
       </div>
     </div>
 
-  </div>
-
-  <!-- POSTS & EXHIBITION -->
-  <div class="decoy-posts-section">
-
-    <div class="exhibition-preview">
-      <h3>Featured Library Exhibition: Histology Heroes 🔬</h3>
-      <p style="font-size: 15px; margin-bottom: 10px;">A curated collection of high-resolution slides and essential guides on tissue structure.</p>
-      <a href="#">Explore the Exhibition →</a>
+    <!-- Libraries Overview -->
+    <div class="library-card">
+      <h3>Library: Histology Basics</h3>
+      <p>Contains curated slides, notes, and references for histology learners worldwide.</p>
     </div>
-
-    <div class="post-card">
-      <h3>The Role of Telomerase in Aging</h3>
-      <p>Fascinating read on how telomere length dictates cellular lifespan. Are we close to therapeutic breakthroughs?</p>
-      <div class="post-meta">
-        <span>#Research #Genetics</span>
-        <a href="#">Read More</a>
-      </div>
-    </div>
-
-    <div class="post-card">
-      <h3>Quick Tips: Differentiating Glioblastoma Grades</h3>
-      <p>My notes from this week's neuro-pathology workshop. Remember: look for necrosis and microvascular proliferation!</p>
-      <div class="post-meta">
-        <span>#Pathology #Neurology</span>
-        <a href="#">Read More</a>
-      </div>
+    <div class="library-card">
+      <h3>Library: Pharmacology Essentials</h3>
+      <p>Structured learning modules for rapid understanding of pharmacology concepts.</p>
     </div>
 
   </div>
@@ -376,7 +310,11 @@ body.light-theme .stats div { background: rgba(0, 0, 0, 0.05); }
 
 <!-- FOOTER -->
 <footer>
-  © 2025 Patholytica by MedicineBank. All rights reserved. <a href="#">Privacy Policy</a>
+  © 2025 Patholytica by MedicineBank. All rights reserved.
+  <br>
+  <a href="#">Privacy Policy</a> | 
+  <a href="#">Terms</a> | 
+  <a href="#">Contact</a>
 </footer>
 
 <script>
@@ -384,10 +322,7 @@ function toggleTheme(){
   document.body.classList.toggle('light-theme');
   localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
 }
-
-if(localStorage.getItem("theme") === "light"){
-  document.body.classList.add("light-theme");
-}
+if(localStorage.getItem("theme") === "light"){ document.body.classList.add("light-theme"); }
 </script>
 </body>
 </html>
