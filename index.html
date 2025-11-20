@@ -229,6 +229,9 @@ footer a:hover { color: var(--accent); }
     <p>Your tool to <strong>LOVE</strong> what you learn</p>
 
     <a class="login-btn" id="startLoginBtn">Login to Continue</a>
+    <button id="googleLoginBtn" class="login-btn" style="background:#4285F4; box-shadow: 0 6px 16px rgba(66,133,244,0.35); margin-bottom:6px;">
+      Continue with Google
+    </button>
     <span class="guest-text" id="guestBtn">Guest Mode</span>
 
     <!-- Login form -->
@@ -284,7 +287,7 @@ footer a:hover { color: var(--accent); }
 <script type="module">
 // Import Firebase modules
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
 // Firebase config
 const firebaseConfig = {
@@ -401,6 +404,23 @@ signupForm.addEventListener("submit", (e) => {
       window.location.href = "dashboard.html";
     })
     .catch(err => alert(err.message));
+});
+
+// GOOGLE SIGN-IN
+const provider = new GoogleAuthProvider();
+const googleBtn = document.getElementById("googleLoginBtn");
+
+googleBtn.addEventListener("click", () => {
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      const user = result.user;
+      console.log("Google User:", user);
+      window.location.href = "dashboard.html";
+    })
+    .catch((error) => {
+      console.error(error);
+      alert(error.message);
+    });
 });
 </script>
 
