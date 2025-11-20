@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a" id="theme-color-meta">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Patholytica — by MedicineBank</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -263,10 +265,22 @@ footer a:hover { color: var(--accent); }
 
 <script>
 function toggleTheme(){
-  document.body.classList.toggle('light-theme');
-  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
+  const isLight = document.body.classList.toggle('light-theme');
+  const themeColorMeta = document.getElementById('theme-color-meta');
+  
+  // Update meta theme color
+  themeColorMeta.setAttribute('content', isLight ? '#f8f9fa' : '#0a0a0a');
+  
+  localStorage.setItem("theme", isLight ? "light" : "dark");
 }
-if(localStorage.getItem("theme") === "light") document.body.classList.add("light-theme");
+
+// On page load, check saved theme and set meta color
+if(localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light-theme");
+  document.getElementById('theme-color-meta').setAttribute('content', '#f8f9fa');
+} else {
+  document.getElementById('theme-color-meta').setAttribute('content', '#0a0a0a');
+}
 
 /* Elements */
 const startBtn = document.getElementById("startLoginBtn");
