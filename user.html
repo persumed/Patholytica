@@ -4,19 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profile — Patholytica</title>
-
 <style>
-/* ------------------------------------------------------------------
- * 1. THEME VARIABLES
- * ------------------------------------------------------------------ */
+/* ----------------------------------------------------------
+ * THEME VARIABLES
+ * ---------------------------------------------------------- */
 :root {
   --bg-color: #0d0d0d;
   --text-color: #fff;
   --secondary-text: #ccc;
   --card-bg: rgba(24,24,24,0.7);
   --card-border: rgba(255,255,255,0.07);
-  --accent: #b0003a;          /* Burgundy */
-  --accent-hover: #88002a;    /* Darker Burgundy */
+  --accent: #b0003a;
+  --accent-hover: #88002a;
 }
 
 /* Light Theme */
@@ -30,11 +29,11 @@ body.light-theme {
   --accent-hover: #88002a;
 }
 
-/* ------------------------------------------------------------------
- * 2. GLOBAL STYLES
- * ------------------------------------------------------------------ */
+/* ----------------------------------------------------------
+ * GLOBAL
+ * ---------------------------------------------------------- */
 * { box-sizing: border-box; }
-body, html {
+body {
   margin:0;
   padding:0;
   font-family: "Inter", Arial, sans-serif;
@@ -45,196 +44,179 @@ body, html {
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ------------------------------------------------------------------
- * 3. HEADER & FOOTER (FROM LOGIN PAGE)
- * ------------------------------------------------------------------ */
+/* ----------------------------------------------------------
+ * HEADER
+ * ---------------------------------------------------------- */
 .header-wrapper {
   position: sticky;
-  top: 0;
+  top:0;
   background: var(--bg-color);
   padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid var(--card-border);
-  z-index: 40;
+  z-index: 50;
 }
 .header {
-  display: flex;
-  align-items: center;
+  display:flex;
   justify-content: space-between;
-  padding: 16px 18px;
+  align-items: center;
+  padding:16px 20px;
 }
-.logo-img { height: 32px; width: auto; transition: filter 0.25s ease; cursor: pointer; }
+.logo-img { height:32px; width:auto; transition: filter 0.25s ease; cursor:pointer; }
 body.light-theme .logo-img { filter: invert(1); }
 
 .theme-toggle {
-  padding: 6px 14px;
-  font-size: 12.5px;
-  background: transparent;
-  border-radius: 6px;
-  border: 1px solid var(--card-border);
+  padding:6px 14px;
+  border-radius:6px;
+  border:1px solid var(--card-border);
+  background:transparent;
   color: var(--text-color);
-  cursor: pointer;
-  transition: 0.25s ease;
+  cursor:pointer;
+  transition:0.25s ease;
 }
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
+.theme-toggle:hover { color:var(--accent); border-color:var(--accent); }
 
+/* ----------------------------------------------------------
+ * FOOTER
+ * ---------------------------------------------------------- */
 footer {
-  text-align: center;
-  padding: 16px;
-  font-size: 11px;
-  border-top: 1px solid var(--card-border);
-  color: #888;
+  text-align:center;
+  padding:16px;
+  font-size:11px;
+  border-top:1px solid var(--card-border);
+  color:#888;
 }
-footer a {
-  color: #888;
-  margin: 0 3px;
-  text-decoration: none;
-  transition: color 0.25s ease;
-}
-footer a:hover { color: var(--accent); }
+footer a { color:#888; margin:0 3px; transition:0.25s ease; }
+footer a:hover { color:var(--accent); }
 
-/* ------------------------------------------------------------------
- * 4. PROFILE LAYOUT
- * ------------------------------------------------------------------ */
-.profile-container {
+/* ----------------------------------------------------------
+ * PROFILE LAYOUT
+ * ---------------------------------------------------------- */
+.profile-page {
   max-width: 960px;
-  margin: 40px auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  padding: 0 20px;
+  margin:40px auto;
+  padding:0 20px;
 }
 
-.profile-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 30px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 8px 24px rgba(0,0,0,0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  text-align: center;
-}
-.profile-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 12px 32px rgba(0,0,0,0.35);
+.profile-header {
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+  align-items:center;
 }
 
-/* User Info */
-.profile-img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid var(--accent);
-  margin-bottom: 15px;
+.profile-avatar {
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid var(--accent);
 }
-.profile-card h2 { margin: 8px 0 5px; font-size: 24px; }
-.profile-card p { margin: 4px 0; font-size: 14px; color: var(--secondary-text); }
 
-.btn {
-  display: inline-block;
-  padding: 10px 22px;
-  margin-top: 12px;
-  font-weight: 600;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  color: #fff;
-  background: var(--accent);
+.profile-info {
+  flex:1;
 }
-.btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
 
-/* Stats */
+.profile-info h1 { margin:0; font-size:28px; }
+.profile-info p { margin:4px 0; color:var(--secondary-text); font-size:14px; }
+.edit-btn {
+  margin-top:10px;
+  padding:10px 22px;
+  border:none;
+  border-radius:10px;
+  background:var(--accent);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.25s ease;
+}
+.edit-btn:hover { background:var(--accent-hover); transform:translateY(-2px); }
+
+/* Stats section */
 .stats {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
-  gap: 10px;
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
 }
 .stats div {
-  text-align: center;
-  flex: 1;
-  padding: 8px 0;
-  border-radius: 6px;
+  text-align:center;
+  flex:1;
+  padding:10px 0;
+  border-radius:8px;
   background: rgba(255,255,255,0.05);
 }
 body.light-theme .stats div { background: rgba(0,0,0,0.05); }
 .stats div h3 { margin:0; font-size:20px; }
-.stats div p { margin:2px 0 0; font-size:13px; color: var(--secondary-text); }
+.stats div p { margin:2px 0 0; font-size:13px; color:var(--secondary-text); }
 
-/* Libraries Section */
-.libraries-container {
-  flex: 2 1 500px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+/* Libraries section */
+.section {
+  margin-top:40px;
+}
+
+.section h2 {
+  font-size:22px;
+  margin-bottom:15px;
+}
+
+.library-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
 }
 
 .library-card {
   background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 20px;
+  border:1px solid var(--card-border);
+  border-radius:16px;
+  padding:20px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: all 0.25s ease;
-  text-align: left;
+  transition:0.25s ease;
 }
-.library-card:hover { transform: translateY(-3px); box-shadow:0 6px 16px rgba(0,0,0,0.2);}
+.library-card:hover { transform:translateY(-3px); box-shadow:0 6px 16px rgba(0,0,0,0.2); }
 .library-card h3 { color: var(--accent); margin:0 0 8px; font-size:18px; }
 .library-card p { font-size:14px; color: var(--text-color); }
 
-/* Activity List & Tags */
+/* Recent activity list */
 .activity-list {
-  list-style: none;
-  padding-left: 0;
-  margin-top: 15px;
+  list-style:none;
+  padding-left:0;
 }
 .activity-list li {
-  margin-bottom: 8px;
-  padding-left: 20px;
-  position: relative;
-  font-size: 14px;
-  color: var(--secondary-text);
+  margin-bottom:8px;
+  padding-left:20px;
+  position:relative;
+  font-size:14px;
+  color:var(--secondary-text);
 }
 .activity-list li:before {
-  content: '•';
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-  font-weight: bold;
+  content:'•';
+  position:absolute;
+  left:0;
+  color:var(--accent);
+  font-weight:bold;
 }
 
+/* Tags */
 .tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 15px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
 }
 .tag {
-  background: var(--accent);
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
+  background:var(--accent);
+  color:#fff;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:500;
 }
 
 /* Responsive */
-@media(max-width: 768px){ .main-nav{display:none;} }
 @media(max-width:640px){
-  .profile-container{flex-direction:column;align-items:center;max-width:100%;}
-  .profile-card,.libraries-container{min-width:90%;max-width:90%; text-align:left;}
-  .profile-card{text-align:center;}
-}
-@media(max-width:480px){
-  .header-wrapper{padding:10px;}
-  .logo-img{height:28px;}
-  .theme-toggle{padding:4px 10px;font-size:13px;}
+  .profile-header{flex-direction:column;align-items:center;text-align:center;}
+  .profile-info{flex:unset;}
+  .stats{flex-direction:column;gap:10px;}
 }
 </style>
 </head>
@@ -248,64 +230,77 @@ body.light-theme .stats div { background: rgba(0,0,0,0.05); }
   </div>
 </div>
 
-<!-- PROFILE CONTENT -->
-<div class="profile-container">
+<!-- PROFILE PAGE -->
+<div class="profile-page">
 
-  <!-- User Info -->
-  <div class="profile-card">
-    <img src="profile-pic.jpg" alt="User Profile" class="profile-img">
-    <h2>John Smith</h2>
-    <p>@johnsmith</p>
-    <p>Educator | Library Creator</p>
-    <button class="btn">Edit Profile</button>
+  <!-- User Header -->
+  <div class="profile-header">
+    <img src="profile-pic.jpg" alt="User Avatar" class="profile-avatar">
+    <div class="profile-info">
+      <h1>Dr. Emily Carter</h1>
+      <p>@emilycarter</p>
+      <p>Medical Educator & Library Creator</p>
+      <button class="edit-btn">Edit Profile</button>
 
-    <div class="stats">
-      <div><h3>12</h3><p>Libraries</p></div>
-      <div><h3>4.5k</h3><p>Followers</p></div>
-      <div><h3>230</h3><p>Following</p></div>
-    </div>
-  </div>
-
-  <!-- Libraries & Activity -->
-  <div class="libraries-container">
-
-    <!-- About -->
-    <div class="profile-card">
-      <h2>About Me</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Passionate about building Libraries for learning and sharing knowledge globally.</p>
-
-      <h2>Recent Activity</h2>
-      <ul class="activity-list">
-        <li>Created Library: <strong>Neuroanatomy</strong></li>
-        <li>Added 15 slides to <strong>Pathophysiology</strong></li>
-        <li>Shared <strong>Cardiology Cases</strong> publicly</li>
-        <li>Joined <strong>Medical Quiz Challenge</strong></li>
-      </ul>
-    </div>
-
-    <!-- Skills / Interests / Tags -->
-    <div class="profile-card">
-      <h2>Tags & Interests</h2>
-      <div class="tags-container">
-        <span class="tag">Cardiology</span>
-        <span class="tag">Histology</span>
-        <span class="tag">Medical Education</span>
-        <span class="tag">Clinical Trials</span>
-        <span class="tag">Neurology</span>
+      <div class="stats">
+        <div>
+          <h3>15</h3>
+          <p>Libraries</p>
+        </div>
+        <div>
+          <h3>2.3k</h3>
+          <p>Followers</p>
+        </div>
+        <div>
+          <h3>180</h3>
+          <p>Following</p>
+        </div>
       </div>
     </div>
-
-    <!-- Libraries Overview -->
-    <div class="library-card">
-      <h3>Library: Histology Basics</h3>
-      <p>Contains curated slides, notes, and references for histology learners worldwide.</p>
-    </div>
-    <div class="library-card">
-      <h3>Library: Pharmacology Essentials</h3>
-      <p>Structured learning modules for rapid understanding of pharmacology concepts.</p>
-    </div>
-
   </div>
+
+  <!-- Libraries Section -->
+  <div class="section">
+    <h2>My Libraries</h2>
+    <div class="library-grid">
+      <div class="library-card">
+        <h3>Neuroanatomy</h3>
+        <p>High-resolution slides, notes, and diagrams for brain and spinal cord studies.</p>
+      </div>
+      <div class="library-card">
+        <h3>Cardiology Cases</h3>
+        <p>Curated case studies and clinical guidelines for cardiology learners.</p>
+      </div>
+      <div class="library-card">
+        <h3>Pharmacology Essentials</h3>
+        <p>Structured learning modules for rapid understanding of pharmacology concepts.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity Section -->
+  <div class="section">
+    <h2>Recent Activity</h2>
+    <ul class="activity-list">
+      <li>Created Library: <strong>Immunology</strong></li>
+      <li>Shared 20 slides in <strong>Pathophysiology</strong></li>
+      <li>Joined <strong>Medical Quiz Challenge</strong></li>
+      <li>Added notes to <strong>Histology Basics</strong></li>
+    </ul>
+  </div>
+
+  <!-- Tags / Interests Section -->
+  <div class="section">
+    <h2>Tags & Interests</h2>
+    <div class="tags-container">
+      <span class="tag">Cardiology</span>
+      <span class="tag">Neurology</span>
+      <span class="tag">Histology</span>
+      <span class="tag">Medical Education</span>
+      <span class="tag">Pharmacology</span>
+    </div>
+  </div>
+
 </div>
 
 <!-- FOOTER -->
@@ -322,7 +317,7 @@ function toggleTheme(){
   document.body.classList.toggle('light-theme');
   localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
 }
-if(localStorage.getItem("theme") === "light"){ document.body.classList.add("light-theme"); }
+if(localStorage.getItem("theme")==="light"){ document.body.classList.add("light-theme"); }
 </script>
 </body>
 </html>
