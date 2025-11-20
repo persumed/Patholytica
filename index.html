@@ -281,10 +281,11 @@ footer a:hover { color: var(--accent); }
 </footer>
 
 <!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+<script type="module">
+// Import Firebase modules
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
-<script>
 // Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
@@ -296,9 +297,8 @@ const firebaseConfig = {
 };
 
 // Init Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 // THEME
 function toggleTheme(){
@@ -312,6 +312,9 @@ function toggleTheme(){
 if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
 }
+
+// Make toggleTheme globally accessible
+window.toggleTheme = toggleTheme;
 
 // UI elements
 const startBtn = document.getElementById("startLoginBtn");
@@ -364,7 +367,6 @@ showLoginLink.addEventListener("click", (e) => {
   }, 250);
 });
 
-
 // LOGIN
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -373,13 +375,12 @@ form.addEventListener("submit", (e) => {
   const email = inputs[0].value;
   const password = inputs[1].value;
 
-  auth.signInWithEmailAndPassword(email, password)
+  signInWithEmailAndPassword(auth, email, password)
     .then(() => {
       window.location.href = "dashboard.html";
     })
     .catch(err => alert(err.message));
 });
-
 
 // SIGNUP
 signupForm.addEventListener("submit", (e) => {
@@ -395,7 +396,7 @@ signupForm.addEventListener("submit", (e) => {
     return;
   }
 
-  auth.createUserWithEmailAndPassword(email, password)
+  createUserWithEmailAndPassword(auth, email, password)
     .then(() => {
       window.location.href = "dashboard.html";
     })
