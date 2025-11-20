@@ -6,9 +6,13 @@
 <title>Profile — Patholytica</title>
 
 <style>
+/* ------------------------------------------------------------------
+ * 1. THEME VARIABLES
+ * ------------------------------------------------------------------ */
 :root {
   --bg-color: #0d0d0d;
   --text-color: #fff;
+  --secondary-text: #ccc;
   --card-bg: rgba(24,24,24,0.7);
   --card-border: rgba(255,255,255,0.07);
   --accent: #b0003a;          /* Burgundy */
@@ -19,19 +23,32 @@
 body.light-theme {
   --bg-color: #f5f5f5;
   --text-color: #111;
+  --secondary-text: #555;
   --card-bg: rgba(255,255,255,0.65);
   --card-border: rgba(0,0,0,0.1);
   --accent: #b0003a;
   --accent-hover: #88002a;
 }
 
-/* Global */
+/* ------------------------------------------------------------------
+ * 2. GLOBAL STYLES
+ * ------------------------------------------------------------------ */
 * { box-sizing: border-box; }
-body, html { margin:0; padding:0; font-family: "Inter", Arial, sans-serif; background: var(--bg-color); color: var(--text-color); transition: background 0.35s ease, color 0.35s ease; }
+body, html {
+  margin:0;
+  padding:0;
+  /* Updated font stack for broader compatibility */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.35s ease, color 0.35s ease;
+}
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* HEADER */
+/* ------------------------------------------------------------------
+ * 3. HEADER & NAVIGATION
+ * ------------------------------------------------------------------ */
 .header-wrapper {
   position: sticky;
   top: 0;
@@ -45,6 +62,20 @@ a:hover { text-decoration: underline; }
 }
 .logo-img { height:32px; transition: filter 0.25s ease; }
 body.light-theme .logo-img { filter: invert(1); }
+
+/* Added Navigation */
+.main-nav a {
+  margin-left: 20px;
+  font-weight: 500;
+  padding: 5px 0;
+  transition: color 0.25s ease;
+  color: var(--text-color);
+}
+.main-nav a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
 .theme-toggle {
   padding: 6px 14px;
   border-radius: 6px;
@@ -56,7 +87,10 @@ body.light-theme .logo-img { filter: invert(1); }
 }
 .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
 
-/* PROFILE LAYOUT */
+
+/* ------------------------------------------------------------------
+ * 4. PROFILE LAYOUT & CARDS
+ * ------------------------------------------------------------------ */
 .profile-container {
   max-width: 900px;
   margin: 40px auto;
@@ -64,6 +98,17 @@ body.light-theme .logo-img { filter: invert(1); }
   flex-wrap: wrap;
   gap: 30px;
   padding: 0 20px;
+}
+
+/* Main Content Area (Column 2) */
+.main-profile-content {
+    flex: 2 1 500px;
+    display: flex;
+    flex-direction: column;
+}
+/* Ensure the top card in the second column doesn't have extra top margin */
+.main-profile-content .profile-card:first-child {
+    margin-top: 0;
 }
 
 .profile-card {
@@ -74,13 +119,16 @@ body.light-theme .logo-img { filter: invert(1); }
   flex: 1 1 250px;
   min-width: 250px;
   text-align: center;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  /* Reduced blur for performance/subtlety */
+  backdrop-filter: blur(10px);
+  /* Adjusted shadow for better contrast on both themes */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 8px 24px rgba(0,0,0,0.25);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .profile-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.55);
+  /* A slightly more pronounced hover shadow */
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 12px 32px rgba(0,0,0,0.35);
 }
 
 /* PROFILE IMAGE */
@@ -101,10 +149,13 @@ body.light-theme .logo-img { filter: invert(1); }
 .profile-card p {
   margin: 4px 0;
   font-size: 14px;
-  color: #ccc;
+  color: var(--secondary-text);
 }
 
-/* ACTION BUTTONS */
+
+/* ------------------------------------------------------------------
+ * 5. ACTION BUTTONS & STATS
+ * ------------------------------------------------------------------ */
 .btn {
   display: inline-block;
   padding: 10px 22px;
@@ -113,7 +164,7 @@ body.light-theme .logo-img { filter: invert(1); }
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  transition: 0.25s ease;
+  transition: all 0.25s ease;
   color: #fff;
   background: var(--accent);
 }
@@ -133,41 +184,117 @@ body.light-theme .logo-img { filter: invert(1); }
   margin: 0;
   font-size: 20px;
 }
-.stats div p { margin: 2px 0 0; font-size: 13px; color: #ccc; }
+.stats div p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--secondary-text);
+}
 
-/* FOOTER */
+/* RECENT ACTIVITY LIST */
+.activity-list {
+  list-style-type: none; /* Remove default bullets */
+  padding-left: 0;
+  text-align: left;
+  margin-top: 15px;
+}
+.activity-list li {
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+  font-size: 14px;
+  color: var(--secondary-text);
+}
+/* Custom bullet point */
+.activity-list li:before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+
+/* ------------------------------------------------------------------
+ * 6. SKILLS/TAGS
+ * ------------------------------------------------------------------ */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+}
+.tag {
+  background: var(--accent);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  cursor: default;
+}
+.tag:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+/* ------------------------------------------------------------------
+ * 7. FOOTER
+ * ------------------------------------------------------------------ */
 footer {
   text-align: center;
   padding: 16px;
-  font-size: 11px;
+  font-size: 12px;
   border-top: 1px solid var(--card-border);
-  color: #888;
+  color: var(--secondary-text);
 }
-footer a { color: #888; }
+footer a { color: var(--secondary-text); }
 footer a:hover { color: var(--accent); }
 
-/* RESPONSIVE */
+
+/* ------------------------------------------------------------------
+ * 8. RESPONSIVE DESIGN
+ * ------------------------------------------------------------------ */
+
+/* Tablet/Desktop: Hide Nav on smaller screens */
+@media (max-width: 768px) {
+  .main-nav { display: none; }
+}
+
+/* Mobile: Stack layout, center everything */
 @media(max-width: 640px){
   .profile-container { flex-direction: column; align-items: center; }
+  .profile-card { min-width: 90%; text-align: left; padding: 25px; } /* Increased width on mobile */
+  /* Revert alignment for the main user card image/button */
+  .profile-container > .profile-card:first-child { text-align: center; }
+}
+
+/* Small Mobile: Stack stats vertically */
+@media(max-width: 400px){
+  .stats { flex-direction: column; gap: 10px; }
+  .profile-card { padding: 20px; }
 }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header-wrapper">
-  <a href="#"><img src="IMG_0696.png" class="logo-img" alt="Logo"></a>
+  <a href="#"><img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo"></a>
+  <nav class="main-nav">
+    <a href="#dashboard">Dashboard</a>
+    <a href="#courses">Courses</a>
+    <a href="#community">Community</a>
+  </nav>
   <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
 </div>
 
-<!-- PROFILE -->
 <div class="profile-container">
-  <!-- User Info Card -->
   <div class="profile-card">
-    <img src="profile-pic.jpg" alt="Profile" class="profile-img">
+    <img src="profile-pic.jpg" alt="Jane Doe's Profile Picture" class="profile-img">
     <h2>Jane Doe</h2>
     <p>@janedoe</p>
     <p>Medical Student | Lifelong Learner</p>
+    <p style="font-style: italic; font-size: 12px; margin-top: 10px;">Status: Online</p>
     <button class="btn">Edit Profile</button>
 
     <div class="stats">
@@ -186,23 +313,36 @@ footer a:hover { color: var(--accent); }
     </div>
   </div>
 
-  <!-- Additional Info / Activity Card -->
-  <div class="profile-card">
-    <h2>About Me</h2>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed semper nulla. Proin nec nunc et turpis tincidunt feugiat.</p>
+  <div class="main-profile-content">
+      <div class="profile-card">
+        <h2>About Me</h2>
+        <p style="color:var(--text-color); margin-bottom: 20px; font-size: 15px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed semper nulla. Proin nec nunc et turpis tincidunt feugiat.</p>
 
-    <h2>Recent Activity</h2>
-    <ul style="text-align:left; padding-left:15px; color:#ccc;">
-      <li>Completed "Anatomy 101"</li>
-      <li>Started "Pathophysiology Basics"</li>
-      <li>Joined "Medical Quiz Challenge"</li>
-    </ul>
+        <h2>Recent Activity</h2>
+        <ul class="activity-list">
+          <li>Completed **Anatomy 101**</li>
+          <li>Started **Pathophysiology Basics**</li>
+          <li>Joined **Medical Quiz Challenge**</li>
+          <li>Earned **Top Learner** Badge</li>
+        </ul>
+      </div>
+
+      <div class="profile-card" style="margin-top: 30px;">
+        <h2>Skills & Interests</h2>
+        <div class="tags-container">
+          <span class="tag">Cardiology</span>
+          <span class="tag">Histology</span>
+          <span class="tag">Clinical Trials</span>
+          <span class="tag">Emergency Medicine</span>
+          <span class="tag">Pharmacology</span>
+          <span class="tag">Medical Spanish</span>
+        </div>
+      </div>
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
-  © 2025 Patholytica by MedicineBank. All rights reserved.
+  © 2025 Patholytica by MedicineBank. All rights reserved. <a href="#">Privacy Policy</a>
 </footer>
 
 <script>
@@ -214,6 +354,7 @@ function toggleTheme(){
   );
 }
 
+// Apply saved theme on load
 if(localStorage.getItem("theme") === "light"){
   document.body.classList.add("light-theme");
 }
