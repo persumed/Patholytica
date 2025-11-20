@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile — Patholytica</title>
+
+<style>
+:root {
+  --bg-color: #0d0d0d;
+  --text-color: #fff;
+  --card-bg: rgba(24,24,24,0.7);
+  --card-border: rgba(255,255,255,0.07);
+  --accent: #b0003a;          /* Burgundy */
+  --accent-hover: #88002a;    /* Darker Burgundy */
+}
+
+/* Light Theme */
+body.light-theme {
+  --bg-color: #f5f5f5;
+  --text-color: #111;
+  --card-bg: rgba(255,255,255,0.65);
+  --card-border: rgba(0,0,0,0.1);
+  --accent: #b0003a;
+  --accent-hover: #88002a;
+}
+
+/* Global */
+* { box-sizing: border-box; }
+body, html { margin:0; padding:0; font-family: "Inter", Arial, sans-serif; background: var(--bg-color); color: var(--text-color); transition: background 0.35s ease, color 0.35s ease; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* HEADER */
+.header-wrapper {
+  position: sticky;
+  top: 0;
+  background: var(--bg-color);
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 50;
+}
+.logo-img { height:32px; transition: filter 0.25s ease; }
+body.light-theme .logo-img { filter: invert(1); }
+.theme-toggle {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+.theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+/* PROFILE LAYOUT */
+.profile-container {
+  max-width: 900px;
+  margin: 40px auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 0 20px;
+}
+
+.profile-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 30px;
+  flex: 1 1 250px;
+  min-width: 250px;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.profile-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.55);
+}
+
+/* PROFILE IMAGE */
+.profile-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent);
+  margin-bottom: 15px;
+}
+
+/* PROFILE INFO */
+.profile-card h2 {
+  margin: 8px 0 5px;
+  font-size: 24px;
+}
+.profile-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* ACTION BUTTONS */
+.btn {
+  display: inline-block;
+  padding: 10px 22px;
+  margin-top: 12px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.25s ease;
+  color: #fff;
+  background: var(--accent);
+}
+.btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+
+/* STATS / DETAILS SECTION */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  gap: 20px;
+}
+.stats div {
+  text-align: center;
+}
+.stats div h3 {
+  margin: 0;
+  font-size: 20px;
+}
+.stats div p { margin: 2px 0 0; font-size: 13px; color: #ccc; }
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 11px;
+  border-top: 1px solid var(--card-border);
+  color: #888;
+}
+footer a { color: #888; }
+footer a:hover { color: var(--accent); }
+
+/* RESPONSIVE */
+@media(max-width: 640px){
+  .profile-container { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header-wrapper">
+  <a href="#"><img src="IMG_0696.png" class="logo-img" alt="Logo"></a>
+  <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+</div>
+
+<!-- PROFILE -->
+<div class="profile-container">
+  <!-- User Info Card -->
+  <div class="profile-card">
+    <img src="profile-pic.jpg" alt="Profile" class="profile-img">
+    <h2>Jane Doe</h2>
+    <p>@janedoe</p>
+    <p>Medical Student | Lifelong Learner</p>
+    <button class="btn">Edit Profile</button>
+
+    <div class="stats">
+      <div>
+        <h3>32</h3>
+        <p>Courses</p>
+      </div>
+      <div>
+        <h3>1.2k</h3>
+        <p>Followers</p>
+      </div>
+      <div>
+        <h3>180</h3>
+        <p>Following</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional Info / Activity Card -->
+  <div class="profile-card">
+    <h2>About Me</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed semper nulla. Proin nec nunc et turpis tincidunt feugiat.</p>
+
+    <h2>Recent Activity</h2>
+    <ul style="text-align:left; padding-left:15px; color:#ccc;">
+      <li>Completed "Anatomy 101"</li>
+      <li>Started "Pathophysiology Basics"</li>
+      <li>Joined "Medical Quiz Challenge"</li>
+    </ul>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  © 2025 Patholytica by MedicineBank. All rights reserved.
+</footer>
+
+<script>
+function toggleTheme(){
+  document.body.classList.toggle('light-theme');
+  localStorage.setItem(
+    "theme",
+    document.body.classList.contains("light-theme") ? "light" : "dark"
+  );
+}
+
+if(localStorage.getItem("theme") === "light"){
+  document.body.classList.add("light-theme");
+}
+</script>
+</body>
+</html>
