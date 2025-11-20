@@ -2,221 +2,212 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile — Patholytica</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a" id="theme-color-meta">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Patholytica — by MedicineBank</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-/* ----------------------------------------------------------
- * THEME VARIABLES
- * ---------------------------------------------------------- */
 :root {
-  --bg-color: #0d0d0d;
-  --text-color: #fff;
-  --secondary-text: #ccc;
-  --card-bg: rgba(24,24,24,0.7);
-  --card-border: rgba(255,255,255,0.07);
-  --accent: #b0003a;
-  --accent-hover: #88002a;
+  --bg-color: #0a0a0a;
+  --bg-gradient: linear-gradient(135deg, #0a0a0a 0%, #1a0a14 100%);
+  --text-color: #ffffff;
+  --text-secondary: #a0a0a0;
+  --card-bg: rgba(20,20,20,0.85);
+  --card-border: rgba(255,255,255,0.08);
+  --accent: #e8184f;
+  --accent-hover: #c01540;
+  --accent-glow: rgba(232, 24, 79, 0.25);
+  --input-bg: rgba(255,255,255,0.05);
+  --input-border: rgba(255,255,255,0.1);
 }
 
-/* Light Theme */
 body.light-theme {
-  --bg-color: #f5f5f5;
-  --text-color: #111;
-  --secondary-text: #555;
-  --card-bg: rgba(255,255,255,0.65);
-  --card-border: rgba(0,0,0,0.1);
-  --accent: #b0003a;
-  --accent-hover: #88002a;
+  --bg-color: #f8f9fa;
+  --bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #fef0f3 100%);
+  --text-color: #1a1a1a;
+  --text-secondary: #666666;
+  --card-bg: rgba(255,255,255,0.95);
+  --card-border: rgba(0,0,0,0.08);
+  --accent: #e8184f;
+  --accent-hover: #c01540;
+  --accent-glow: rgba(232, 24, 79, 0.15);
+  --input-bg: rgba(0,0,0,0.02);
+  --input-border: rgba(0,0,0,0.12);
 }
 
-/* ----------------------------------------------------------
- * GLOBAL
- * ---------------------------------------------------------- */
-* { box-sizing: border-box; }
+* { box-sizing: border-box; margin:0; padding:0; }
+
+html, body { 
+  height: 100%; 
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
-  margin:0;
-  padding:0;
-  font-family: "Inter", Arial, sans-serif;
-  background: var(--bg-color);
+  background: var(--bg-gradient);
   color: var(--text-color);
-  transition: background 0.35s ease, color 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+  overflow-x: hidden;
 }
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
 
-/* ----------------------------------------------------------
- * HEADER
- * ---------------------------------------------------------- */
+/* Animated background elements */
+body::before, body::after {
+  content: '';
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+body::before {
+  top: -50%; right: -50%; opacity: 0.3; animation: float 20s ease-in-out infinite;
+}
+body::after {
+  bottom: -50%; left: -50%; opacity: 0.2; animation: float 25s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(30px,-30px) scale(1.1); }
+}
+
+/* HEADER */
 .header-wrapper {
   position: sticky;
-  top:0;
+  top: 0;
   background: var(--bg-color);
+  backdrop-filter: blur(20px) saturate(180%);
   padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid var(--card-border);
-  z-index: 50;
+  z-index: 40;
+  transition: all 0.3s ease;
 }
+
 .header {
-  display:flex;
-  justify-content: space-between;
+  display: flex;
   align-items: center;
-  padding:16px 20px;
+  justify-content: space-between;
+  padding: 20px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
-.logo-img { height:32px; width:auto; transition: filter 0.25s ease; cursor:pointer; }
+
+.logo-img { height:38px; width:auto; transition: all 0.3s ease; cursor:pointer; }
+.logo-img:hover { transform: scale(1.05); }
 body.light-theme .logo-img { filter: invert(1); }
 
 .theme-toggle {
-  padding:6px 14px;
-  border-radius:6px;
-  border:1px solid var(--card-border);
-  background:transparent;
-  color: var(--text-color);
-  cursor:pointer;
-  transition:0.25s ease;
-}
-.theme-toggle:hover { color:var(--accent); border-color:var(--accent); }
-
-/* ----------------------------------------------------------
- * FOOTER
- * ---------------------------------------------------------- */
-footer {
-  text-align:center;
-  padding:16px;
-  font-size:11px;
-  border-top:1px solid var(--card-border);
-  color:#888;
-}
-footer a { color:#888; margin:0 3px; transition:0.25s ease; }
-footer a:hover { color:var(--accent); }
-
-/* ----------------------------------------------------------
- * PROFILE LAYOUT
- * ---------------------------------------------------------- */
-.profile-page {
-  max-width: 960px;
-  margin:40px auto;
-  padding:0 20px;
-}
-
-.profile-header {
-  display:flex;
-  flex-wrap:wrap;
-  gap:20px;
-  align-items:center;
-}
-
-.profile-avatar {
-  width:140px;
-  height:140px;
-  border-radius:50%;
-  object-fit:cover;
-  border:4px solid var(--accent);
-}
-
-.profile-info {
-  flex:1;
-}
-
-.profile-info h1 { margin:0; font-size:28px; }
-.profile-info p { margin:4px 0; color:var(--secondary-text); font-size:14px; }
-.edit-btn {
-  margin-top:10px;
-  padding:10px 22px;
-  border:none;
-  border-radius:10px;
-  background:var(--accent);
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-  transition:0.25s ease;
-}
-.edit-btn:hover { background:var(--accent-hover); transform:translateY(-2px); }
-
-/* Stats section */
-.stats {
-  display:flex;
-  justify-content:space-between;
-  margin-top:20px;
-}
-.stats div {
-  text-align:center;
-  flex:1;
-  padding:10px 0;
-  border-radius:8px;
-  background: rgba(255,255,255,0.05);
-}
-body.light-theme .stats div { background: rgba(0,0,0,0.05); }
-.stats div h3 { margin:0; font-size:20px; }
-.stats div p { margin:2px 0 0; font-size:13px; color:var(--secondary-text); }
-
-/* Libraries section */
-.section {
-  margin-top:40px;
-}
-
-.section h2 {
-  font-size:22px;
-  margin-bottom:15px;
-}
-
-.library-grid {
-  display:grid;
-  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
-}
-
-.library-card {
-  background: var(--card-bg);
-  border:1px solid var(--card-border);
-  border-radius:16px;
-  padding:20px;
+  padding:10px 20px; font-size:14px; font-weight:500;
+  background: var(--input-bg); border-radius:10px; border:1px solid var(--input-border);
+  color: var(--text-color); cursor:pointer; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
   backdrop-filter: blur(10px);
-  transition:0.25s ease;
 }
-.library-card:hover { transform:translateY(-3px); box-shadow:0 6px 16px rgba(0,0,0,0.2); }
-.library-card h3 { color: var(--accent); margin:0 0 8px; font-size:18px; }
-.library-card p { font-size:14px; color: var(--text-color); }
+.theme-toggle:hover { border-color: var(--accent); background: var(--accent-glow); transform:translateY(-2px); }
 
-/* Recent activity list */
-.activity-list {
-  list-style:none;
-  padding-left:0;
-}
-.activity-list li {
-  margin-bottom:8px;
-  padding-left:20px;
-  position:relative;
-  font-size:14px;
-  color:var(--secondary-text);
-}
-.activity-list li:before {
-  content:'•';
-  position:absolute;
-  left:0;
-  color:var(--accent);
-  font-weight:bold;
-}
-
-/* Tags */
-.tags-container {
+/* MAIN CONTENT */
+.login-container {
+  flex:1;
   display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:10px;
+  align-items:center;
+  justify-content:center;
+  padding:calc(60px + env(safe-area-inset-top)) 24px calc(60px + env(safe-area-inset-bottom)) 24px;
+  position:relative; z-index:1;
 }
-.tag {
-  background:var(--accent);
-  color:#fff;
-  padding:6px 12px;
-  border-radius:20px;
-  font-size:13px;
-  font-weight:500;
+
+.login-card {
+  width:100%; max-width:460px;
+  padding:48px;
+  background: var(--card-bg);
+  backdrop-filter: blur(40px) saturate(180%);
+  border-radius:24px;
+  border:1px solid var(--card-border);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05) inset;
+  text-align:center;
+  animation: fadeUp 0.6s cubic-bezier(0.4,0,0.2,1) both;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  position:relative;
 }
+.login-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity:0.5; border-radius:24px 24px 0 0;
+}
+.login-card:hover { transform: translateY(-8px); box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08) inset; }
+
+.login-card h1 {
+  font-size:36px; font-weight:700; margin-bottom:12px;
+  background: linear-gradient(135deg, var(--text-color) 0%, var(--accent) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip:text; letter-spacing:-0.5px;
+}
+.login-card p { font-size:16px; margin-bottom:32px; color: var(--text-secondary); line-height:1.6; font-weight:400; }
+
+/* BUTTONS */
+.login-btn {
+  display:inline-block; padding:18px 48px; font-size:16px; font-weight:600;
+  background: linear-gradient(135deg, var(--accent) 0%, #c01540 100%);
+  color:#fff; border-radius:12px; text-decoration:none;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 8px 24px var(--accent-glow), 0 0 0 1px rgba(255,255,255,0.1) inset;
+  cursor:pointer; border:none; margin-bottom:8px; width:100%; position:relative; overflow:hidden;
+}
+.login-btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition:left 0.5s ease; }
+.login-btn:hover::before { left:100%; }
+.login-btn:hover { transform: translateY(-3px); box-shadow:0 12px 32px var(--accent-glow),0 0 0 1px rgba(255,255,255,0.2) inset; }
+.login-btn:active { transform:translateY(-1px); }
+
+.guest-text { display:inline-block; font-size:15px; color:var(--accent); margin-top:12px; cursor:pointer; font-weight:600; text-decoration:none; transition:all 0.3s ease; position:relative; }
+.guest-text::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:var(--accent); transition:width 0.3s ease; }
+.guest-text:hover::after { width:100%; }
+.guest-text:hover { color: var(--accent-hover); }
+
+/* INPUT FIELDS */
+.input-group { position:relative; margin-bottom:20px; }
+.input-field { width:100%; padding:16px; border-radius:12px; border:1.5px solid var(--input-border); background: var(--input-bg); color: var(--text-color); font-size:15px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); font-family:inherit; }
+.input-field::placeholder { color: var(--text-secondary); opacity:0.6; }
+.input-field:focus { border-color: var(--accent); outline:none; background: var(--card-bg); box-shadow: 0 0 0 4px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
+
+/* FORM TRANSITIONS */
+#loginForm, #signupForm { transition: opacity 0.3s ease; }
+
+/* Checkbox styling */
+.checkbox-label { display:flex; align-items:center; justify-content:center; margin:20px 0; font-size:13px; color:var(--text-secondary); cursor:pointer; user-select:none; }
+.checkbox-label input[type="checkbox"] { margin-right:10px; width:18px; height:18px; cursor:pointer; accent-color: var(--accent); }
+.checkbox-label a { color: var(--accent); text-decoration:none; margin:0 4px; transition: all 0.3s ease; }
+.checkbox-label a:hover { text-decoration:underline; color: var(--accent-hover); }
+
+/* Link styling */
+.form-link { margin-top:24px; font-size:14px; color: var(--text-secondary); }
+.form-link a { color: var(--accent); text-decoration:none; font-weight:600; transition: all 0.3s ease; }
+.form-link a:hover { color: var(--accent-hover); text-decoration:underline; }
+
+/* FOOTER */
+footer { text-align:center; padding:24px; font-size:12px; border-top:1px solid var(--card-border); color:var(--text-secondary); background: var(--bg-color); backdrop-filter: blur(20px); position:relative; z-index:1; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+footer a { color: var(--text-secondary); margin:0 8px; text-decoration:none; transition: all 0.3s ease; }
+footer a:hover { color: var(--accent); }
+
+/* Animations */
+@keyframes fadeUp { from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);} }
 
 /* Responsive */
-@media(max-width:640px){
-  .profile-header{flex-direction:column;align-items:center;text-align:center;}
-  .profile-info{flex:unset;}
-  .stats{flex-direction:column;gap:10px;}
+@media (max-width:640px){
+  .login-card { padding:32px 24px; border-radius:20px; max-width: calc(100% - 32px); }
+  .login-card h1 { font-size:26px; margin-bottom:10px; }
+  .login-card p { font-size:15px; margin-bottom:28px; }
+  .header { padding:14px 16px; }
+  .logo-img { height:30px; }
+  .theme-toggle { padding:8px 16px; font-size:13px; }
+  .login-btn { padding:16px 32px; font-size:15px; }
+  .input-field { padding:14px; font-size:16px; }
+  .login-container { padding:32px 16px; }
+  footer { padding:20px 16px; font-size:11px; }
 }
 </style>
 </head>
@@ -225,99 +216,111 @@ body.light-theme .stats div { background: rgba(0,0,0,0.05); }
 <!-- HEADER -->
 <div class="header-wrapper">
   <div class="header">
-    <a href="https://patholytica.com"><img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo"></a>
+    <a href="https://patholytica.com">
+      <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
+    </a>
     <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
   </div>
 </div>
 
-<!-- PROFILE PAGE -->
-<div class="profile-page">
+<!-- MAIN -->
+<div class="login-container">
+  <div class="login-card">
+    <h1>Welcome to Patholytica</h1>
+    <p>Your tool to <strong>LOVE</strong> what you learn</p>
 
-  <!-- User Header -->
-  <div class="profile-header">
-    <img src="profile-pic.jpg" alt="User Avatar" class="profile-avatar">
-    <div class="profile-info">
-      <h1>Dr. Emily Carter</h1>
-      <p>@emilycarter</p>
-      <p>Medical Educator & Library Creator</p>
-      <button class="edit-btn">Edit Profile</button>
+    <a class="login-btn" id="startLoginBtn">Login to Continue</a>
+    <span class="guest-text" id="guestBtn">Continue as Guest →</span>
 
-      <div class="stats">
-        <div>
-          <h3>15</h3>
-          <p>Libraries</p>
-        </div>
-        <div>
-          <h3>2.3k</h3>
-          <p>Followers</p>
-        </div>
-        <div>
-          <h3>180</h3>
-          <p>Following</p>
-        </div>
+    <form id="loginForm" style="display:none; margin-top:20px;">
+      <div class="input-group">
+        <input type="text" placeholder="Email or Username" class="input-field" required>
       </div>
-    </div>
-  </div>
-
-  <!-- Libraries Section -->
-  <div class="section">
-    <h2>My Libraries</h2>
-    <div class="library-grid">
-      <div class="library-card">
-        <h3>Neuroanatomy</h3>
-        <p>High-resolution slides, notes, and diagrams for brain and spinal cord studies.</p>
+      <div class="input-group">
+        <input type="password" placeholder="Password" class="input-field" required>
       </div>
-      <div class="library-card">
-        <h3>Cardiology Cases</h3>
-        <p>Curated case studies and clinical guidelines for cardiology learners.</p>
-      </div>
-      <div class="library-card">
-        <h3>Pharmacology Essentials</h3>
-        <p>Structured learning modules for rapid understanding of pharmacology concepts.</p>
-      </div>
-    </div>
-  </div>
+      <button type="submit" class="login-btn">Continue</button>
+      <p class="form-link">Don't have an account? <a href="#" id="showSignupLink">Sign up</a></p>
+    </form>
 
-  <!-- Recent Activity Section -->
-  <div class="section">
-    <h2>Recent Activity</h2>
-    <ul class="activity-list">
-      <li>Created Library: <strong>Immunology</strong></li>
-      <li>Shared 20 slides in <strong>Pathophysiology</strong></li>
-      <li>Joined <strong>Medical Quiz Challenge</strong></li>
-      <li>Added notes to <strong>Histology Basics</strong></li>
-    </ul>
+    <form id="signupForm" style="display:none; margin-top:20px;">
+      <div class="input-group"><input type="text" placeholder="Full Name" class="input-field" required></div>
+      <div class="input-group"><input type="email" placeholder="Email Address" class="input-field" required></div>
+      <div class="input-group"><input type="text" placeholder="Username" class="input-field" required></div>
+      <div class="input-group"><input type="password" placeholder="Password (min. 8 characters)" class="input-field" minlength="8" required></div>
+      <div class="input-group"><input type="password" placeholder="Confirm Password" class="input-field" required></div>
+      <label class="checkbox-label"><input type="checkbox" required>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+      <button type="submit" class="login-btn">Create Account</button>
+      <p class="form-link">Already have an account? <a href="#" id="showLoginLink">Login</a></p>
+    </form>
   </div>
-
-  <!-- Tags / Interests Section -->
-  <div class="section">
-    <h2>Tags & Interests</h2>
-    <div class="tags-container">
-      <span class="tag">Cardiology</span>
-      <span class="tag">Neurology</span>
-      <span class="tag">Histology</span>
-      <span class="tag">Medical Education</span>
-      <span class="tag">Pharmacology</span>
-    </div>
-  </div>
-
 </div>
 
 <!-- FOOTER -->
 <footer>
-  © 2025 Patholytica by MedicineBank. All rights reserved.
-  <br>
-  <a href="#">Privacy Policy</a> | 
-  <a href="#">Terms</a> | 
-  <a href="#">Contact</a>
+  © 2025 Patholytica by MedicineBank. All rights reserved.<br>
+  <a href="#">Privacy Policy</a> | <a href="#">Terms</a> | <a href="#">Contact</a>
 </footer>
 
 <script>
 function toggleTheme(){
-  document.body.classList.toggle('light-theme');
-  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
+  const isLight = document.body.classList.toggle('light-theme');
+  const themeColorMeta = document.getElementById('theme-color-meta');
+  
+  // Update meta theme color
+  themeColorMeta.setAttribute('content', isLight ? '#f8f9fa' : '#0a0a0a');
+  
+  localStorage.setItem("theme", isLight ? "light" : "dark");
 }
-if(localStorage.getItem("theme")==="light"){ document.body.classList.add("light-theme"); }
+
+// On page load, check saved theme and set meta color
+if(localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light-theme");
+  document.getElementById('theme-color-meta').setAttribute('content', '#f8f9fa');
+} else {
+  document.getElementById('theme-color-meta').setAttribute('content', '#0a0a0a');
+}
+
+/* Elements */
+const startBtn = document.getElementById("startLoginBtn");
+const guestBtn = document.getElementById("guestBtn");
+const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
+const showSignupLink = document.getElementById("showSignupLink");
+const showLoginLink = document.getElementById("showLoginLink");
+
+/* Button events */
+startBtn.addEventListener("click", ()=>{
+  startBtn.style.display="none";
+  guestBtn.style.display="none";
+  loginForm.style.display="block";
+});
+guestBtn.addEventListener("click", ()=>{ alert("Continuing as Guest..."); });
+
+showSignupLink.addEventListener("click",(e)=>{
+  e.preventDefault();
+  loginForm.style.display="none";
+  signupForm.style.display="block";
+});
+showLoginLink.addEventListener("click",(e)=>{
+  e.preventDefault();
+  signupForm.style.display="none";
+  loginForm.style.display="block";
+});
+
+/* Form submissions */
+loginForm.addEventListener("submit",(e)=>{
+  e.preventDefault();
+  alert("Login functionality would connect here.");
+});
+signupForm.addEventListener("submit",(e)=>{
+  e.preventDefault();
+  const passwords = signupForm.querySelectorAll('input[type="password"]');
+  if(passwords[0].value !== passwords[1].value){ alert("Passwords do not match!"); return; }
+  alert("Account created successfully!");
+  signupForm.style.display="none"; loginForm.style.display="block";
+});
 </script>
+
 </body>
 </html>
