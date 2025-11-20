@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -36,11 +35,7 @@ body.light-theme {
   --input-border: rgba(0,0,0,0.12);
 }
 
-* { 
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin:0; padding:0; }
 
 html, body { 
   height: 100%; 
@@ -54,57 +49,43 @@ body {
   color: var(--text-color);
   display: flex;
   flex-direction: column;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
   position: relative;
   overflow-x: hidden;
 }
 
 /* Animated background elements */
-body::before {
+body::before, body::after {
   content: '';
   position: fixed;
-  top: -50%;
-  right: -50%;
   width: 100%;
   height: 100%;
   background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-  opacity: 0.3;
-  animation: float 20s ease-in-out infinite;
   pointer-events: none;
 }
 
+body::before {
+  top: -50%; right: -50%; opacity: 0.3; animation: float 20s ease-in-out infinite;
+}
 body::after {
-  content: '';
-  position: fixed;
-  bottom: -50%;
-  left: -50%;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-  opacity: 0.2;
-  animation: float 25s ease-in-out infinite reverse;
-  pointer-events: none;
+  bottom: -50%; left: -50%; opacity: 0.2; animation: float 25s ease-in-out infinite reverse;
 }
 
 @keyframes float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(30px, -30px) scale(1.1); }
+  0%, 100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(30px,-30px) scale(1.1); }
 }
 
 /* HEADER */
 .header-wrapper {
   position: sticky;
   top: 0;
-  background: rgba(10, 10, 10, 0.8);
+  background: var(--input-bg); /* safe area matches theme toggle */
   backdrop-filter: blur(20px) saturate(180%);
   padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid var(--card-border);
   z-index: 40;
   transition: all 0.3s ease;
-}
-
-body.light-theme .header-wrapper {
-  background: rgba(248, 249, 250, 0.8);
 }
 
 .header {
@@ -116,366 +97,122 @@ body.light-theme .header-wrapper {
   margin: 0 auto;
 }
 
-.logo-img {
-  height: 38px;
-  width: auto;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.logo-img:hover {
-  transform: scale(1.05);
-}
-
-body.light-theme .logo-img {
-  filter: invert(1);
-}
+.logo-img { height:38px; width:auto; transition: all 0.3s ease; cursor:pointer; }
+.logo-img:hover { transform: scale(1.05); }
+body.light-theme .logo-img { filter: invert(1); }
 
 .theme-toggle {
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  background: var(--input-bg);
-  border-radius: 10px;
-  border: 1px solid var(--input-border);
-  color: var(--text-color);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding:10px 20px; font-size:14px; font-weight:500;
+  background: var(--input-bg); border-radius:10px; border:1px solid var(--input-border);
+  color: var(--text-color); cursor:pointer; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
   backdrop-filter: blur(10px);
 }
-
-.theme-toggle:hover {
-  border-color: var(--accent);
-  background: var(--accent-glow);
-  transform: translateY(-2px);
-}
+.theme-toggle:hover { border-color: var(--accent); background: var(--accent-glow); transform:translateY(-2px); }
 
 /* MAIN CONTENT */
 .login-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: calc(60px + env(safe-area-inset-top))
-           calc(24px + env(safe-area-inset-left))
-           calc(60px + env(safe-area-inset-bottom))
-           calc(24px + env(safe-area-inset-right));
-  position: relative;
-  z-index: 1;
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:calc(60px + env(safe-area-inset-top)) 24px calc(60px + env(safe-area-inset-bottom)) 24px;
+  position:relative; z-index:1;
 }
 
 .login-card {
-  width: 100%;
-  max-width: 460px;
-  padding: 48px;
+  width:100%; max-width:460px;
+  padding:48px;
   background: var(--card-bg);
   backdrop-filter: blur(40px) saturate(180%);
-  border-radius: 24px;
-  border: 1px solid var(--card-border);
-  box-shadow: 
-    0 20px 60px rgba(0,0,0,0.3),
-    0 0 0 1px rgba(255,255,255,0.05) inset;
-  text-align: center;
-  animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
+  border-radius:24px;
+  border:1px solid var(--card-border);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05) inset;
+  text-align:center;
+  animation: fadeUp 0.6s cubic-bezier(0.4,0,0.2,1) both;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  position:relative;
 }
-
 .login-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:2px;
   background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0.5;
-  border-radius: 24px 24px 0 0;
+  opacity:0.5; border-radius:24px 24px 0 0;
 }
-
-.login-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 
-    0 30px 80px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(255,255,255,0.08) inset;
-}
+.login-card:hover { transform: translateY(-8px); box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08) inset; }
 
 .login-card h1 {
-  font-size: 36px;
-  font-weight: 700;
-  margin-bottom: 12px;
+  font-size:36px; font-weight:700; margin-bottom:12px;
   background: linear-gradient(135deg, var(--text-color) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.5px;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip:text; letter-spacing:-0.5px;
 }
-
-.login-card p {
-  font-size: 16px;
-  margin-bottom: 32px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  font-weight: 400;
-}
+.login-card p { font-size:16px; margin-bottom:32px; color: var(--text-secondary); line-height:1.6; font-weight:400; }
 
 /* BUTTONS */
 .login-btn {
-  display: inline-block;
-  padding: 18px 48px;
-  font-size: 16px;
-  font-weight: 600;
+  display:inline-block; padding:18px 48px; font-size:16px; font-weight:600;
   background: linear-gradient(135deg, var(--accent) 0%, #c01540 100%);
-  color: #fff;
-  border-radius: 12px;
-  text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 8px 24px var(--accent-glow),
-    0 0 0 1px rgba(255,255,255,0.1) inset;
-  cursor: pointer;
-  border: none;
-  margin-bottom: 8px;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
+  color:#fff; border-radius:12px; text-decoration:none;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 8px 24px var(--accent-glow), 0 0 0 1px rgba(255,255,255,0.1) inset;
+  cursor:pointer; border:none; margin-bottom:8px; width:100%; position:relative; overflow:hidden;
 }
+.login-btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition:left 0.5s ease; }
+.login-btn:hover::before { left:100%; }
+.login-btn:hover { transform: translateY(-3px); box-shadow:0 12px 32px var(--accent-glow),0 0 0 1px rgba(255,255,255,0.2) inset; }
+.login-btn:active { transform:translateY(-1px); }
 
-.login-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-.login-btn:hover::before {
-  left: 100%;
-}
-
-.login-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 
-    0 12px 32px var(--accent-glow),
-    0 0 0 1px rgba(255,255,255,0.2) inset;
-}
-
-.login-btn:active {
-  transform: translateY(-1px);
-}
-
-.guest-text {
-  display: inline-block;
-  font-size: 15px;
-  color: var(--accent);
-  margin-top: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.guest-text::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--accent);
-  transition: width 0.3s ease;
-}
-
-.guest-text:hover::after {
-  width: 100%;
-}
-
-.guest-text:hover {
-  color: var(--accent-hover);
-}
+.guest-text { display:inline-block; font-size:15px; color:var(--accent); margin-top:12px; cursor:pointer; font-weight:600; text-decoration:none; transition:all 0.3s ease; position:relative; }
+.guest-text::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:var(--accent); transition:width 0.3s ease; }
+.guest-text:hover::after { width:100%; }
+.guest-text:hover { color: var(--accent-hover); }
 
 /* INPUT FIELDS */
-.input-group {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.input-field {
-  width: 100%;
-  padding: 16px 16px 16px 16px;
-  border-radius: 12px;
-  border: 1.5px solid var(--input-border);
-  background: var(--input-bg);
-  color: var(--text-color);
-  font-size: 15px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: inherit;
-}
-
-.input-field::placeholder {
-  color: var(--text-secondary);
-  opacity: 0.6;
-}
-
-.input-field:focus {
-  border-color: var(--accent);
-  outline: none;
-  background: var(--card-bg);
-  box-shadow: 
-    0 0 0 4px var(--accent-glow),
-    0 4px 12px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
-}
+.input-group { position:relative; margin-bottom:20px; }
+.input-field { width:100%; padding:16px; border-radius:12px; border:1.5px solid var(--input-border); background: var(--input-bg); color: var(--text-color); font-size:15px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); font-family:inherit; }
+.input-field::placeholder { color: var(--text-secondary); opacity:0.6; }
+.input-field:focus { border-color: var(--accent); outline:none; background: var(--card-bg); box-shadow: 0 0 0 4px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
 
 /* FORM TRANSITIONS */
-#loginForm, #signupForm {
-  transition: opacity 0.3s ease;
-}
+#loginForm, #signupForm { transition: opacity 0.3s ease; }
 
 /* Checkbox styling */
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 0;
-  font-size: 13px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  user-select: none;
-}
-
-.checkbox-label input[type="checkbox"] {
-  margin-right: 10px;
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: var(--accent);
-}
-
-.checkbox-label a {
-  color: var(--accent);
-  text-decoration: none;
-  margin: 0 4px;
-  transition: all 0.3s ease;
-}
-
-.checkbox-label a:hover {
-  text-decoration: underline;
-  color: var(--accent-hover);
-}
+.checkbox-label { display:flex; align-items:center; justify-content:center; margin:20px 0; font-size:13px; color:var(--text-secondary); cursor:pointer; user-select:none; }
+.checkbox-label input[type="checkbox"] { margin-right:10px; width:18px; height:18px; cursor:pointer; accent-color: var(--accent); }
+.checkbox-label a { color: var(--accent); text-decoration:none; margin:0 4px; transition: all 0.3s ease; }
+.checkbox-label a:hover { text-decoration:underline; color: var(--accent-hover); }
 
 /* Link styling */
-.form-link {
-  margin-top: 24px;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-.form-link a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.form-link a:hover {
-  color: var(--accent-hover);
-  text-decoration: underline;
-}
+.form-link { margin-top:24px; font-size:14px; color: var(--text-secondary); }
+.form-link a { color: var(--accent); text-decoration:none; font-weight:600; transition: all 0.3s ease; }
+.form-link a:hover { color: var(--accent-hover); text-decoration:underline; }
 
 /* FOOTER */
-footer {
-  text-align: center;
-  padding: 24px;
-  font-size: 12px;
-  border-top: 1px solid var(--card-border);
-  color: var(--text-secondary);
-  background: rgba(10, 10, 10, 0.5);
-  backdrop-filter: blur(20px);
-  position: relative;
-  z-index: 1;
-}
-
-body.light-theme footer {
-  background: rgba(248, 249, 250, 0.5);
-}
-
-footer a {
-  color: var(--text-secondary);
-  margin: 0 8px;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-footer a:hover { 
-  color: var(--accent);
-}
+footer { text-align:center; padding:24px; font-size:12px; border-top:1px solid var(--card-border); color:var(--text-secondary); background: rgba(10,10,10,0.5); backdrop-filter: blur(20px); position:relative; z-index:1; }
+body.light-theme footer { background: rgba(248,249,250,0.5); }
+footer a { color: var(--text-secondary); margin:0 8px; text-decoration:none; transition: all 0.3s ease; }
+footer a:hover { color: var(--accent); }
 
 /* Animations */
-@keyframes fadeUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(30px);
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0);
-  }
-}
+@keyframes fadeUp { from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);} }
 
 /* Responsive */
-@media (max-width: 640px) {
-  .login-card { 
-    padding: 32px 24px;
-    border-radius: 20px;
-    max-width: calc(100% - 32px);
-  }
-  .login-card h1 { 
-    font-size: 26px;
-    margin-bottom: 10px;
-  }
-  .login-card p {
-    font-size: 15px;
-    margin-bottom: 28px;
-  }
-  .header {
-    padding: 14px 16px;
-  }
-  .logo-img {
-    height: 30px;
-  }
-  .theme-toggle {
-    padding: 8px 16px;
-    font-size: 13px;
-  }
-  .login-btn {
-    padding: 16px 32px;
-    font-size: 15px;
-  }
-  .input-field {
-    padding: 14px;
-    font-size: 16px; /* Prevents zoom on iOS */
-  }
-  .login-container {
-    padding: 32px 16px;
-  }
-  footer {
-    padding: 20px 16px;
-    font-size: 11px;
-  }
+@media (max-width:640px){
+  .login-card { padding:32px 24px; border-radius:20px; max-width: calc(100% - 32px); }
+  .login-card h1 { font-size:26px; margin-bottom:10px; }
+  .login-card p { font-size:15px; margin-bottom:28px; }
+  .header { padding:14px 16px; }
+  .logo-img { height:30px; }
+  .theme-toggle { padding:8px 16px; font-size:13px; }
+  .login-btn { padding:16px 32px; font-size:15px; }
+  .input-field { padding:14px; font-size:16px; }
+  .login-container { padding:32px 16px; }
+  footer { padding:20px 16px; font-size:11px; }
 }
 </style>
-
 </head>
 <body>
 
 <!-- HEADER -->
-
 <div class="header-wrapper">
   <div class="header">
     <a href="https://patholytica.com">
@@ -486,174 +223,89 @@ footer a:hover {
 </div>
 
 <!-- MAIN -->
-
 <div class="login-container">
   <div class="login-card">
+    <h1>Welcome to Patholytica</h1>
+    <p>Your tool to <strong>LOVE</strong> what you learn</p>
 
-```
-<h1>Welcome to Patholytica</h1>
-<p>Your tool to <strong>LOVE</strong> what you learn</p>
+    <a class="login-btn" id="startLoginBtn">Login to Continue</a>
+    <span class="guest-text" id="guestBtn">Continue as Guest →</span>
 
-<!-- Login button -->
-<a class="login-btn" id="startLoginBtn">Login to Continue</a>
-<!-- Guest Mode text link -->
-<span class="guest-text" id="guestBtn">Continue as Guest →</span>
+    <form id="loginForm" style="display:none; margin-top:20px;">
+      <div class="input-group">
+        <input type="text" placeholder="Email or Username" class="input-field" required>
+      </div>
+      <div class="input-group">
+        <input type="password" placeholder="Password" class="input-field" required>
+      </div>
+      <button type="submit" class="login-btn">Continue</button>
+      <p class="form-link">Don't have an account? <a href="#" id="showSignupLink">Sign up</a></p>
+    </form>
 
-<!-- Hidden login form -->
-<form id="loginForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
-  <div class="input-group">
-    <input type="text" placeholder="Email or Username" class="input-field" required>
-  </div>
-  <div class="input-group">
-    <input type="password" placeholder="Password" class="input-field" required>
-  </div>
-
-  <button type="submit" class="login-btn" style="width:100%; margin-top:12px;">
-    Continue
-  </button>
-
-  <p class="form-link">
-    Don't have an account? 
-    <a href="#" id="showSignupLink">Sign up</a>
-  </p>
-</form>
-
-<!-- Hidden signup form -->
-<form id="signupForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
-  <div class="input-group">
-    <input type="text" placeholder="Full Name" class="input-field" required>
-  </div>
-  <div class="input-group">
-    <input type="email" placeholder="Email Address" class="input-field" required>
-  </div>
-  <div class="input-group">
-    <input type="text" placeholder="Username" class="input-field" required>
-  </div>
-  <div class="input-group">
-    <input type="password" placeholder="Password (min. 8 characters)" class="input-field" minlength="8" required>
-  </div>
-  <div class="input-group">
-    <input type="password" placeholder="Confirm Password" class="input-field" required>
-  </div>
-
-  <label class="checkbox-label">
-    <input type="checkbox" required>
-    I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
-  </label>
-
-  <button type="submit" class="login-btn" style="width:100%; margin-top:12px;">
-    Create Account
-  </button>
-
-  <p class="form-link">
-    Already have an account? 
-    <a href="#" id="showLoginLink">Login</a>
-  </p>
-</form>
-```
-
+    <form id="signupForm" style="display:none; margin-top:20px;">
+      <div class="input-group"><input type="text" placeholder="Full Name" class="input-field" required></div>
+      <div class="input-group"><input type="email" placeholder="Email Address" class="input-field" required></div>
+      <div class="input-group"><input type="text" placeholder="Username" class="input-field" required></div>
+      <div class="input-group"><input type="password" placeholder="Password (min. 8 characters)" class="input-field" minlength="8" required></div>
+      <div class="input-group"><input type="password" placeholder="Confirm Password" class="input-field" required></div>
+      <label class="checkbox-label"><input type="checkbox" required>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+      <button type="submit" class="login-btn">Create Account</button>
+      <p class="form-link">Already have an account? <a href="#" id="showLoginLink">Login</a></p>
+    </form>
   </div>
 </div>
 
 <!-- FOOTER -->
-
 <footer>
-  © 2025 Patholytica by MedicineBank. All rights reserved.
-  <br>
-  <a href="#">Privacy Policy</a> | 
-  <a href="#">Terms</a> | 
-  <a href="#">Contact</a>
+  © 2025 Patholytica by MedicineBank. All rights reserved.<br>
+  <a href="#">Privacy Policy</a> | <a href="#">Terms</a> | <a href="#">Contact</a>
 </footer>
 
 <script>
 function toggleTheme(){
   document.body.classList.toggle('light-theme');
-  localStorage.setItem(
-    "theme",
-    document.body.classList.contains("light-theme") ? "light" : "dark"
-  );
+  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
 }
+if(localStorage.getItem("theme") === "light") document.body.classList.add("light-theme");
 
-if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light-theme");
-}
-
-/* Login button → form reveal */
+/* Elements */
 const startBtn = document.getElementById("startLoginBtn");
-const form = document.getElementById("loginForm");
+const guestBtn = document.getElementById("guestBtn");
+const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
 const showSignupLink = document.getElementById("showSignupLink");
 const showLoginLink = document.getElementById("showLoginLink");
-const guestBtn = document.getElementById("guestBtn");
 
-startBtn.addEventListener("click", () => {
-  startBtn.style.opacity = "0";
-  guestBtn.style.opacity = "0";
-  startBtn.style.pointerEvents = "none";
-  guestBtn.style.pointerEvents = "none";
-
-  setTimeout(() => {
-    startBtn.style.display = "none";
-    guestBtn.style.display = "none";
-    form.style.display = "block";
-  }, 250);
+/* Button events */
+startBtn.addEventListener("click", ()=>{
+  startBtn.style.display="none";
+  guestBtn.style.display="none";
+  loginForm.style.display="block";
 });
+guestBtn.addEventListener("click", ()=>{ alert("Continuing as Guest..."); });
 
-// Guest mode click
-guestBtn.addEventListener("click", () => {
-  alert("Entering Guest Mode. Limited features available.");
-});
-
-// Toggle to signup form
-showSignupLink.addEventListener("click", (e) => {
+showSignupLink.addEventListener("click",(e)=>{
   e.preventDefault();
-  form.style.opacity = "0";
-  
-  setTimeout(() => {
-    form.style.display = "none";
-    signupForm.style.display = "block";
-    signupForm.style.opacity = "1";
-  }, 250);
+  loginForm.style.display="none";
+  signupForm.style.display="block";
+});
+showLoginLink.addEventListener("click",(e)=>{
+  e.preventDefault();
+  signupForm.style.display="none";
+  loginForm.style.display="block";
 });
 
-// Toggle back to login form
-showLoginLink.addEventListener("click", (e) => {
+/* Form submissions */
+loginForm.addEventListener("submit",(e)=>{
   e.preventDefault();
-  signupForm.style.opacity = "0";
-  
-  setTimeout(() => {
-    signupForm.style.display = "none";
-    form.style.display = "block";
-    form.style.opacity = "1";
-  }, 250);
+  alert("Login functionality would connect here.");
 });
-
-// Form submissions
-form.addEventListener("submit", (e) => {
+signupForm.addEventListener("submit",(e)=>{
   e.preventDefault();
-  alert("Login functionality would connect here. Welcome to Patholytica!");
-});
-
-signupForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  
   const passwords = signupForm.querySelectorAll('input[type="password"]');
-  const password = passwords[0].value;
-  const confirmPassword = passwords[1].value;
-  
-  if (password !== confirmPassword) {
-    alert("Passwords do not match. Please try again.");
-    return;
-  }
-  
-  alert("Account created successfully! Welcome to Patholytica!");
-  
-  signupForm.style.opacity = "0";
-  setTimeout(() => {
-    signupForm.style.display = "none";
-    form.style.display = "block";
-    form.style.opacity = "1";
-  }, 250);
+  if(passwords[0].value !== passwords[1].value){ alert("Passwords do not match!"); return; }
+  alert("Account created successfully!");
+  signupForm.style.display="none"; loginForm.style.display="block";
 });
 </script>
 
