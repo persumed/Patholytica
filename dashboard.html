@@ -8,31 +8,97 @@
 :root {
   --bg-color: #0d0d0d;
   --text-color: #fff;
-  --card-bg: rgba(24,24,24,0.7);
+  --card-bg: rgba(24,24,24,0.85);
   --card-border: rgba(255,255,255,0.07);
   --accent: #b0003a;
   --accent-hover: #88002a;
 }
-body { margin:0; font-family:"Inter",Arial,sans-serif; background:var(--bg-color); color:var(--text-color); display:flex; align-items:center; justify-content:center; height:100vh; }
-.card { background:var(--card-bg); padding:40px; border-radius:16px; border:1px solid var(--card-border); width:100%; max-width:450px; text-align:center; }
-.card h1 { margin-bottom:16px; font-size:28px; }
-.input-field { width:100%; padding:12px; margin:10px 0; border-radius:8px; border:1px solid var(--card-border); background:rgba(0,0,0,0.25); color:var(--text-color); font-size:15px; }
+body {
+  margin:0;
+  font-family:"Inter",Arial,sans-serif;
+  background:var(--bg-color);
+  color:var(--text-color);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  padding:20px;
+}
+.card {
+  background:var(--card-bg);
+  padding:40px 30px;
+  border-radius:16px;
+  border:1px solid var(--card-border);
+  max-width:480px;
+  width:100%;
+  text-align:center;
+  box-shadow:0 12px 30px rgba(0,0,0,0.55);
+}
+.card h1 {
+  margin-bottom:20px;
+  font-size:28px;
+}
+.input-field {
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:8px;
+  border:1px solid var(--card-border);
+  background:rgba(0,0,0,0.25);
+  color:var(--text-color);
+  font-size:15px;
+}
 .input-field:focus { outline:none; border-color:var(--accent); box-shadow:0 0 6px rgba(176,0,58,0.35); }
 textarea { resize:none; }
-button { margin-top:16px; padding:14px 24px; font-size:16px; border:none; border-radius:10px; background:var(--accent); color:#fff; cursor:pointer; transition:0.25s ease; }
+button {
+  margin-top:16px;
+  padding:14px 24px;
+  font-size:16px;
+  border:none;
+  border-radius:10px;
+  background:var(--accent);
+  color:#fff;
+  cursor:pointer;
+  transition:0.25s ease;
+}
 button:hover { background:var(--accent-hover); transform:translateY(-2px); }
+#profilePicPreview {
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  margin:10px auto 20px;
+  display:block;
+  border:2px solid var(--card-border);
+}
+label.upload-label {
+  display:inline-block;
+  margin:10px 0;
+  padding:8px 16px;
+  background:var(--accent);
+  color:#fff;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.25s;
+}
+label.upload-label:hover { background:var(--accent-hover); }
+input[type="file"] { display:none; }
 </style>
 </head>
 <body>
 
 <div class="card">
   <h1>Complete Your Profile</h1>
+  <img id="profilePicPreview" src="https://via.placeholder.com/120" alt="Profile Preview">
   <form id="profileForm">
+    <label class="upload-label" for="profilePicture">Upload Profile Picture</label>
+    <input type="file" id="profilePicture" accept="image/*">
+    
     <input type="text" id="fullName" class="input-field" placeholder="Full Name" required>
     <input type="email" id="email" class="input-field" placeholder="Email" required readonly>
     <input type="text" id="username" class="input-field" placeholder="Username" required>
     <textarea id="bio" class="input-field" placeholder="Short Bio (optional)" rows="3"></textarea>
-    <input type="text" id="profilePicture" class="input-field" placeholder="Profile Picture URL (optional)">
+    
     <button type="submit">Save Profile</button>
   </form>
 </div>
@@ -40,7 +106,8 @@ button:hover { background:var(--accent-hover); transform:translateY(-2px); }
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { getFirestore, doc, updateDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { getFirestore, doc, updateDoc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
@@ -54,17 +121,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 const fullNameInput = document.getElementById('fullName');
 const emailInput = document.getElementById('email');
 const usernameInput = document.getElementById('username');
 const bioInput = document.getElementById('bio');
-const profilePictureInput = document.getElementById('profilePicture');
+const profilePicInput = document.getElementById('profilePicture');
+const profilePicPreview = document.getElementById('profilePicPreview');
 const profileForm = document.getElementById('profileForm');
 
+// Preview selected image
+profilePicInput.addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(file){
+    profilePicPreview.src = URL.createObjectURL(file);
+  }
+});
+
 onAuthStateChanged(auth, async user => {
-  if (!user) {
-    alert("You need to be logged in to set up a profile.");
+  if(!user){
+    alert("You must be logged in to setup a profile.");
     window.location.href = "login.html";
     return;
   }
@@ -72,38 +149,13 @@ onAuthStateChanged(auth, async user => {
   const userRef = doc(db,"users",user.uid);
   const docSnap = await getDoc(userRef);
 
-  if (docSnap.exists()) {
+  if(docSnap.exists()){
     const data = docSnap.data();
     fullNameInput.value = data.fullName || user.displayName || "";
     emailInput.value = data.email || user.email || "";
     usernameInput.value = data.username || "";
     bioInput.value = data.bio || "";
-    profilePictureInput.value = data.profilePicture || "";
-  }
-});
-
-profileForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const user = auth.currentUser;
-  if (!user) return;
-
-  const userRef = doc(db,"users",user.uid);
-
-  try {
-    await updateDoc(userRef, {
-      fullName: fullNameInput.value,
-      username: usernameInput.value,
-      bio: bioInput.value,
-      profilePicture: profilePictureInput.value
-    });
-    alert("Profile saved successfully!");
-    window.location.href = "dashboard.html";
-  } catch (err) {
-    console.error("Error saving profile:", err);
-    alert("Failed to save profile: " + err.message);
-  }
-});
-</script>
-
-</body>
-</html>
+    if(data.profilePicture) profilePicPreview.src = data.profilePicture;
+  } else {
+    emailInput.value = user.email;
+    fullNameInput
