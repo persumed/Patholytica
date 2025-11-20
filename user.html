@@ -37,7 +37,6 @@ body.light-theme {
 body, html {
   margin:0;
   padding:0;
-  /* Updated font stack for broader compatibility */
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background: var(--bg-color);
   color: var(--text-color);
@@ -63,7 +62,6 @@ a:hover { text-decoration: underline; }
 .logo-img { height:32px; transition: filter 0.25s ease; }
 body.light-theme .logo-img { filter: invert(1); }
 
-/* Added Navigation */
 .main-nav a {
   margin-left: 20px;
   font-weight: 500;
@@ -106,7 +104,6 @@ body.light-theme .logo-img { filter: invert(1); }
     display: flex;
     flex-direction: column;
 }
-/* Ensure the top card in the second column doesn't have extra top margin */
 .main-profile-content .profile-card:first-child {
     margin-top: 0;
 }
@@ -119,16 +116,18 @@ body.light-theme .logo-img { filter: invert(1); }
   flex: 1 1 250px;
   min-width: 250px;
   text-align: center;
-  /* Reduced blur for performance/subtlety */
   backdrop-filter: blur(10px);
-  /* Adjusted shadow for better contrast on both themes */
   box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 8px 24px rgba(0,0,0,0.25);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .profile-card:hover {
   transform: translateY(-3px);
-  /* A slightly more pronounced hover shadow */
   box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 12px 32px rgba(0,0,0,0.35);
+}
+
+/* User Info Card (Column 1) - Slight padding increase for "look" improvement */
+.profile-container > .profile-card:first-child {
+    padding-bottom: 40px;
 }
 
 /* PROFILE IMAGE */
@@ -137,8 +136,9 @@ body.light-theme .logo-img { filter: invert(1); }
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--accent);
+  border: 4px solid var(--accent); /* Slightly thicker border for better look */
   margin-bottom: 15px;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1); /* Subtle inner shadow */
 }
 
 /* PROFILE INFO */
@@ -170,15 +170,24 @@ body.light-theme .logo-img { filter: invert(1); }
 }
 .btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
 
-/* STATS / DETAILS SECTION */
+/* STATS / DETAILS SECTION - Stat numbers are now always side-by-side */
 .stats {
   display: flex;
   justify-content: space-around;
   margin-top: 20px;
-  gap: 20px;
+  gap: 10px; /* Reduced gap */
+  width: 100%; /* Ensure it uses full width */
 }
 .stats div {
   text-align: center;
+  flex: 1; /* Make all three stat blocks equal width */
+  padding: 5px 0;
+  border-radius: 6px;
+  /* Subtle stat block distinction */
+  background: rgba(255, 255, 255, 0.05);
+}
+body.light-theme .stats div {
+    background: rgba(0, 0, 0, 0.05);
 }
 .stats div h3 {
   margin: 0;
@@ -190,9 +199,90 @@ body.light-theme .logo-img { filter: invert(1); }
   color: var(--secondary-text);
 }
 
-/* RECENT ACTIVITY LIST */
+/* ------------------------------------------------------------------
+ * 6. NEW SECTIONS (POSTS & EXHIBITION)
+ * ------------------------------------------------------------------ */
+
+.decoy-posts-section {
+    width: 100%;
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.post-card {
+    /* Style shared with profile-card but with different flex */
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    flex: 1 1 45%; /* Two posts per row on larger screens */
+    min-width: 300px; /* Minimum size for posts */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.25s ease;
+    text-align: left;
+}
+.post-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.post-card h3 {
+    color: var(--accent);
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+.post-card p {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: var(--text-color);
+}
+.post-meta {
+    font-size: 12px;
+    color: var(--secondary-text);
+    display: flex;
+    justify-content: space-between;
+}
+.post-meta a {
+    color: var(--secondary-text);
+}
+
+.exhibition-preview {
+    flex: 1 1 100%; /* Full width card */
+    padding: 30px;
+    text-align: center;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.25s ease;
+    margin-top: 30px;
+}
+.exhibition-preview h3 {
+    color: var(--text-color);
+    margin-top: 0;
+    font-size: 22px;
+}
+.exhibition-preview a {
+    color: var(--accent);
+    font-weight: 600;
+}
+.exhibition-preview:hover {
+    transform: scale(1.01);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+
+/* ------------------------------------------------------------------
+ * 7. OTHER COMPONENTS (LISTS/TAGS)
+ * ------------------------------------------------------------------ */
+
 .activity-list {
-  list-style-type: none; /* Remove default bullets */
+  list-style-type: none;
   padding-left: 0;
   text-align: left;
   margin-top: 15px;
@@ -204,7 +294,6 @@ body.light-theme .logo-img { filter: invert(1); }
   font-size: 14px;
   color: var(--secondary-text);
 }
-/* Custom bullet point */
 .activity-list li:before {
   content: '•';
   position: absolute;
@@ -213,10 +302,6 @@ body.light-theme .logo-img { filter: invert(1); }
   font-weight: bold;
 }
 
-
-/* ------------------------------------------------------------------
- * 6. SKILLS/TAGS
- * ------------------------------------------------------------------ */
 .tags-container {
   display: flex;
   flex-wrap: wrap;
@@ -239,41 +324,58 @@ body.light-theme .logo-img { filter: invert(1); }
 }
 
 /* ------------------------------------------------------------------
- * 7. FOOTER
- * ------------------------------------------------------------------ */
-footer {
-  text-align: center;
-  padding: 16px;
-  font-size: 12px;
-  border-top: 1px solid var(--card-border);
-  color: var(--secondary-text);
-}
-footer a { color: var(--secondary-text); }
-footer a:hover { color: var(--accent); }
-
-
-/* ------------------------------------------------------------------
  * 8. RESPONSIVE DESIGN
  * ------------------------------------------------------------------ */
 
-/* Tablet/Desktop: Hide Nav on smaller screens */
 @media (max-width: 768px) {
   .main-nav { display: none; }
 }
 
 /* Mobile: Stack layout, center everything */
 @media(max-width: 640px){
-  .profile-container { flex-direction: column; align-items: center; }
-  .profile-card { min-width: 90%; text-align: left; padding: 25px; } /* Increased width on mobile */
-  /* Revert alignment for the main user card image/button */
-  .profile-container > .profile-card:first-child { text-align: center; }
+  /* The main container now allows the new wide content blocks below */
+  .profile-container { 
+    flex-direction: column; 
+    align-items: center; 
+    max-width: 100%;
+  }
+  .profile-card { 
+    min-width: 90%; 
+    max-width: 90%;
+    text-align: left; 
+    padding: 25px; 
+  }
+  .profile-container > .profile-card:first-child { 
+    text-align: center; 
+  }
+  .main-profile-content {
+    min-width: 90%;
+    max-width: 90%;
+  }
+
+  .decoy-posts-section {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .post-card {
+    min-width: unset;
+    flex: 1 1 100%;
+  }
+  .exhibition-preview {
+    min-width: 90%;
+  }
 }
 
-/* Small Mobile: Stack stats vertically */
-@media(max-width: 400px){
-  .stats { flex-direction: column; gap: 10px; }
-  .profile-card { padding: 20px; }
+/* Stats are intentionally NOT vertical on small phones per request */
+/* No media query is needed to keep stats horizontal */
+
+/* Smallest screen adjustments */
+@media (max-width: 480px) {
+    .header-wrapper { padding: 10px; }
+    .logo-img { height: 28px; }
+    .theme-toggle { padding: 4px 10px; font-size: 13px; }
 }
+
 </style>
 </head>
 <body>
@@ -282,7 +384,7 @@ footer a:hover { color: var(--accent); }
   <a href="#"><img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo"></a>
   <nav class="main-nav">
     <a href="#dashboard">Dashboard</a>
-    <a href="#courses">Courses</a>
+    <a href="#libraries">Libraries</a>
     <a href="#community">Community</a>
   </nav>
   <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
@@ -300,7 +402,7 @@ footer a:hover { color: var(--accent); }
     <div class="stats">
       <div>
         <h3>32</h3>
-        <p>Courses</p>
+        <p>Libraries</p>
       </div>
       <div>
         <h3>1.2k</h3>
@@ -338,6 +440,33 @@ footer a:hover { color: var(--accent); }
           <span class="tag">Medical Spanish</span>
         </div>
       </div>
+  </div>
+
+  <div class="decoy-posts-section">
+      <div class="exhibition-preview">
+          <h3>Featured Library Exhibition: Histology Heroes 🔬</h3>
+          <p style="font-size: 15px; margin-bottom: 10px;">A curated collection of high-resolution slides and essential guides on tissue structure.</p>
+          <a href="#">Explore the Exhibition →</a>
+      </div>
+
+      <div class="post-card">
+          <h3>The Role of Telomerase in Aging</h3>
+          <p>Fascinating read on how telomere length dictates cellular lifespan. Are we close to therapeutic breakthroughs?</p>
+          <div class="post-meta">
+              <span>#Research #Genetics</span>
+              <a href="#">Read More</a>
+          </div>
+      </div>
+
+      <div class="post-card">
+          <h3>Quick Tips: Differentiating Glioblastoma Grades</h3>
+          <p>My notes from this week's neuro-pathology workshop. Remember: look for necrosis and microvascular proliferation!</p>
+          <div class="post-meta">
+              <span>#Pathology #Neurology</span>
+              <a href="#">Read More</a>
+          </div>
+      </div>
+
   </div>
 </div>
 
