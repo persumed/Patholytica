@@ -1,154 +1,394 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Patholytica — Feed</title>
+<title>Feed — Patholytica</title>
 
 <style>
-/* ROOT THEME */
-:root{
-  --bg-color:#0d0d0d;
-  --text-color:#fff;
-  --card-bg:rgba(24,24,24,0.7);
-  --card-border:rgba(255,255,255,0.07);
-  --accent:#b0003a;
-  --accent-hover:#88002a;
+:root {
+  --bg-color: #0d0d0d;
+  --text-color: #fff;
+  --card-bg: rgba(24,24,24,0.7);
+  --card-border: rgba(255,255,255,0.07);
+  --accent: #b0003a;
+  --accent-hover: #88002a;
 }
 
 body.light-theme {
-  --bg-color:#f5f5f5;
-  --text-color:#111;
-  --card-bg:rgba(255,255,255,0.65);
-  --card-border:rgba(0,0,0,0.1);
+  --bg-color: #f5f5f5;
+  --text-color: #111;
+  --card-bg: rgba(255,255,255,0.65);
+  --card-border: rgba(0,0,0,0.1);
 }
 
-/* GENERAL */
-html, body {margin:0; padding:0; height:100%; font-family: "Inter", Arial, sans-serif;}
-body{
-  background:var(--bg-color);
-  color:var(--text-color);
-  display:flex;
-  flex-direction:column;
-  transition:background .35s ease;
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; height:100%; font-family: "Inter", Arial, sans-serif; }
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  transition: background 0.35s ease;
 }
 
-/* HEADER (EXACT SAME) */
-.header-wrapper{
-  position:sticky;top:0;z-index:50;
-  background:var(--bg-color);
-  padding-top:env(safe-area-inset-top);
-  border-bottom:1px solid var(--card-border);
-}
-.header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 18px;
-}
-.logo-img{
-  height:32px;width:auto;cursor:pointer;
-  transition:filter .25s ease;
-}
-body.light-theme .logo-img{filter:invert(1)}
-.theme-toggle{
-  padding:6px 14px;font-size:12.5px;background:transparent;border-radius:6px;
-  border:1px solid var(--card-border);color:var(--text-color);
-  cursor:pointer;transition:.25s ease;
-}
-.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
-
-/* FEED AREA */
-.feed-container{
-  flex:1;
-  padding:20px calc(16px + env(safe-area-inset-left)) 40px calc(16px + env(safe-area-inset-right));
-  display:flex;
-  flex-direction:column;
-  gap:22px;
-  overflow-y:auto;
+/* ===== HEADER (EXACT SAME) ===== */
+.header-wrapper {
+  position: sticky;
+  top: 0;
+  background: var(--bg-color);
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--card-border);
+  z-index: 40;
 }
 
-/* POST CARD */
-.post{
-  background:var(--card-bg);
-  border:1px solid var(--card-border);
-  border-radius:18px;
-  padding:20px 20px 26px;
-  backdrop-filter:blur(18px);
-  box-shadow:0 8px 28px rgba(0,0,0,0.4);
-  animation:fadeUp .45s ease both;
-}
-.post-header{
-  display:flex;align-items:center;gap:12px;margin-bottom:14px;
-}
-.post-header img{
-  height:42px;width:42px;border-radius:50%;object-fit:cover;
-  border:1px solid var(--card-border);
-}
-.post-user{
-  font-size:15px;font-weight:600;
-}
-.post-time{
-  font-size:13px;color:#aaa;margin-top:2px;
-}
-.post-content{
-  margin:6px 0 14px;
-  line-height:1.55;
-  font-size:15px;
-}
-.post img.attachment-img{
-  width:100%;border-radius:12px;margin:10px 0;
-  border:1px solid var(--card-border);
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
 }
 
-/* ATTACHMENT BUTTONS */
-.attach-btn{
-  display:inline-block;padding:10px 14px;border-radius:8px;
-  margin:6px 4px 0 0;font-size:14px;
-  background:var(--accent);color:#fff;text-decoration:none;
-  transition:.25s ease;cursor:pointer;
-}
-.attach-btn:hover{background:var(--accent-hover);transform:translateY(-2px)}
-
-/* LIBRARY CARD */
-.library-card{
-  background:var(--card-bg);
-  border-radius:16px;
-  border:1px solid var(--card-border);
-  padding:20px;
-  backdrop-filter:blur(18px);
-  box-shadow:0 8px 28px rgba(0,0,0,0.4);
-  cursor:pointer;
-  animation:fadeUp .45s ease both;
-}
-.library-card:hover{transform:translateY(-3px)}
-.library-title{
-  font-size:18px;font-weight:600;margin-bottom:6px;
-}
-.library-desc{
-  font-size:14px;color:#aaa;margin-bottom:10px;
-}
-.library-count{
-  font-size:13px;color:var(--accent);
+.logo-img {
+  height: 32px;
+  width: auto;
+  transition: filter 0.25s ease;
+  cursor: pointer;
 }
 
-/* FOOTER */
-footer{
-  text-align:center;padding:16px;font-size:11px;
-  border-top:1px solid var(--card-border);
-  color:#888;
+body.light-theme .logo-img {
+  filter: invert(1);
 }
-footer a{color:#888;text-decoration:none;margin:0 3px}
-footer a:hover{color:var(--accent)}
 
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
+.theme-toggle {
+  padding: 6px 14px;
+  font-size: 12.5px;
+  background: transparent;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ===== FEED CONTAINER ===== */
+.feed-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: calc(20px + env(safe-area-inset-top)) 
+           calc(20px + env(safe-area-inset-left)) 
+           calc(20px + env(safe-area-inset-bottom)) 
+           calc(20px + env(safe-area-inset-right));
+}
+
+.feed-wrapper {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ===== POST CARD ===== */
+.post-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(22px);
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  margin-bottom: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: fadeUp 0.45s ease both;
+}
+
+.post-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.post-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+  border: 2px solid var(--card-border);
+}
+
+.post-meta {
+  flex: 1;
+}
+
+.post-author {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.post-time {
+  font-size: 12px;
+  color: #888;
+}
+
+.post-content {
+  margin-bottom: 14px;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.post-attachment {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+body.light-theme .post-attachment {
+  background: rgba(255,255,255,0.6);
+}
+
+.post-attachment:hover {
+  background: rgba(176,0,58,0.15);
+  border-color: var(--accent);
+}
+
+.attachment-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.attachment-info {
+  flex: 1;
+}
+
+.attachment-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.attachment-size {
+  font-size: 12px;
+  color: #888;
+}
+
+.post-actions {
+  display: flex;
+  gap: 20px;
+  padding-top: 12px;
+  border-top: 1px solid var(--card-border);
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.25s ease;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.action-btn:hover {
+  color: var(--accent);
+  background: rgba(176,0,58,0.1);
+}
+
+.action-btn.liked {
+  color: var(--accent);
+}
+
+/* ===== LIBRARY CARD ===== */
+.library-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(22px);
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  margin-bottom: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: fadeUp 0.45s ease both;
+  cursor: pointer;
+}
+
+.library-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  border-color: var(--accent);
+}
+
+.library-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.library-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0;
+}
+
+.library-badge {
+  background: var(--accent);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.library-description {
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.library-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: #888;
+}
+
+.library-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.library-expanded {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--card-border);
+}
+
+.library-posts {
+  display: grid;
+  gap: 12px;
+}
+
+.library-post-item {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.25s ease;
+  cursor: pointer;
+}
+
+body.light-theme .library-post-item {
+  background: rgba(255,255,255,0.5);
+}
+
+.library-post-item:hover {
+  background: rgba(176,0,58,0.15);
+  border-color: var(--accent);
+}
+
+.library-post-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.library-post-text {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 11px;
+  border-top: 1px solid var(--card-border);
+  color: #888;
+}
+footer a {
+  color: #888;
+  margin: 0 3px;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+footer a:hover { color: var(--accent); }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .feed-container {
+    padding: 16px;
+  }
+  
+  .post-card, .library-card {
+    padding: 16px;
+  }
+  
+  .library-title {
+    font-size: 18px;
+  }
+}
+
+/* ===== LOADING STATE ===== */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  font-size: 14px;
 }
 </style>
 
 </head>
 <body>
 
-<!-- HEADER (same as login/profile pages) -->
+<!-- EXACT SAME HEADER -->
+
 <div class="header-wrapper">
   <div class="header">
     <a href="https://patholytica.com">
@@ -158,113 +398,269 @@ footer a:hover{color:var(--accent)}
   </div>
 </div>
 
-<!-- FEED -->
+<!-- FEED CONTAINER -->
+
 <div class="feed-container">
-
-  <!-- LIBRARY CARD -->
-  <div class="library-card" onclick="window.location.href='library.html'">
-    <div class="library-title">Pharmacology — Complete Capsules</div>
-    <div class="library-desc">26 curated explanations, mechanisms, and memory hacks.</div>
-    <div class="library-count">26 Posts</div>
+  <div class="feed-wrapper" id="feedWrapper">
+    <div class="loading">Loading feed...</div>
   </div>
-
-  <!-- LIBRARY CARD -->
-  <div class="library-card" onclick="window.location.href='library.html'">
-    <div class="library-title">Pathology — Inflammation Master Set</div>
-    <div class="library-desc">Everything you need to remember acute & chronic inflammation.</div>
-    <div class="library-count">14 Posts</div>
-  </div>
-
-  <!-- POST 1 -->
-  <div class="post">
-    <div class="post-header">
-      <img src="https://via.placeholder.com/150" />
-      <div>
-        <div class="post-user">Dr. Ahmed</div>
-        <div class="post-time">3h ago</div>
-      </div>
-    </div>
-
-    <div class="post-content">
-      Here's a clean 2-page PDF summarizing all liver enzymes. Great for quick memorization.
-    </div>
-
-    <a class="attach-btn">View PDF</a>
-  </div>
-
-  <!-- POST 2 -->
-  <div class="post">
-    <div class="post-header">
-      <img src="https://via.placeholder.com/150" />
-      <div>
-        <div class="post-user">Julia</div>
-        <div class="post-time">7h ago</div>
-      </div>
-    </div>
-
-    <div class="post-content">
-      Short explanation: Why prostaglandins can both cause fever AND reduce gastric acid.
-    </div>
-
-    <audio controls style="width:100%;margin-top:10px;">
-      <source src="audio-sample.mp3" type="audio/mpeg">
-    </audio>
-  </div>
-
-  <!-- POST 3 -->
-  <div class="post">
-    <div class="post-header">
-      <img src="https://via.placeholder.com/150" />
-      <div>
-        <div class="post-user">Omar</div>
-        <div class="post-time">1d ago</div>
-      </div>
-    </div>
-
-    <div class="post-content">
-      Slides explaining the entire complement system. Super visual & easy to memorize.
-    </div>
-
-    <a class="attach-btn">Download PowerPoint</a>
-  </div>
-
-  <!-- POST 4 -->
-  <div class="post">
-    <div class="post-header">
-      <img src="https://via.placeholder.com/150" />
-      <div>
-        <div class="post-user">Nora</div>
-        <div class="post-time">2d ago</div>
-      </div>
-    </div>
-
-    <div class="post-content">
-      Quick chart for the coagulation cascade — extrinsic vs intrinsic.
-    </div>
-
-    <img src="https://via.placeholder.com/600x350" class="attachment-img">
-  </div>
-
 </div>
 
-<!-- FOOTER -->
 <footer>
   © 2025 Patholytica by MedicineBank. All rights reserved.
   <br>
-  <a href="#">Privacy Policy</a> | <a href="#">Terms</a> | <a href="#">Contact</a>
+  <a href="#">Privacy Policy</a> | 
+  <a href="#">Terms</a> | 
+  <a href="#">Contact</a>
 </footer>
 
-<script>
-/* THEME */
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+/* ===== FIREBASE CONFIG ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
+  authDomain: "patholytica.firebaseapp.com",
+  projectId: "patholytica",
+  storageBucket: "patholytica.firebasestorage.app",
+  messagingSenderId: "738430635282",
+  appId: "1:738430635282:web:8451ef380447c7611137cb"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+/* ===== SUPABASE CONFIG ===== */
+const SUPABASE_URL = 'https://vmgenqvsmqiphcajaclx.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3MTUzNzUsImV4cCI6MjA3OTI5MTM3NX0.a2FCNa6BzYqXJWPUkByxK1EiNzt1cZhc3cp2SVj-Ke4';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ===== THEME ===== */
 function toggleTheme(){
-  document.body.classList.toggle("light-theme");
-  localStorage.setItem("theme",
-    document.body.classList.contains("light-theme") ? "light" : "dark"
-  );
+  document.body.classList.toggle('light-theme');
+  localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
 }
-if(localStorage.getItem("theme") === "light"){
-  document.body.classList.add("light-theme");
+if(localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme');
+window.toggleTheme = toggleTheme;
+
+/* ===== MOCK DATA (Replace with Supabase queries) ===== */
+const mockPosts = [
+  {
+    id: 1,
+    type: 'post',
+    author: 'Dr. Sarah Chen',
+    avatar: 'https://via.placeholder.com/44',
+    time: '2 hours ago',
+    content: 'Just uploaded a comprehensive guide on cardiovascular pathology. This covers everything from atherosclerosis to heart failure mechanisms. Perfect for boards prep!',
+    attachments: [
+      { type: 'pdf', name: 'Cardiovascular_Pathology_Guide.pdf', size: '2.4 MB', icon: '📄' }
+    ],
+    likes: 127,
+    comments: 23,
+    shares: 18
+  },
+  {
+    id: 2,
+    type: 'library',
+    title: 'Immunology Fundamentals',
+    description: 'A curated collection of resources covering basic to advanced immunology concepts',
+    postCount: 15,
+    followers: 342,
+    lastUpdated: '1 day ago',
+    posts: [
+      { type: 'pdf', name: 'Innate Immunity Overview.pdf', icon: '📄' },
+      { type: 'audio', name: 'Adaptive Immunity Lecture.mp3', icon: '🎵' },
+      { type: 'ppt', name: 'Hypersensitivity Reactions.pptx', icon: '📊' },
+      { type: 'pdf', name: 'Autoimmune Disorders Summary.pdf', icon: '📄' },
+      { type: 'video', name: 'Complement System Explained.mp4', icon: '🎥' }
+    ]
+  },
+  {
+    id: 3,
+    type: 'post',
+    author: 'Medical Student Mike',
+    avatar: 'https://via.placeholder.com/44',
+    time: '5 hours ago',
+    content: 'Recorded my study session on renal physiology. Hope this helps anyone struggling with nephron function and acid-base balance!',
+    attachments: [
+      { type: 'audio', name: 'Renal_Physiology_Study_Session.mp3', size: '45.2 MB', icon: '🎵' },
+      { type: 'pdf', name: 'Study_Notes_Kidney.pdf', size: '1.1 MB', icon: '📄' }
+    ],
+    likes: 89,
+    comments: 12,
+    shares: 7
+  },
+  {
+    id: 4,
+    type: 'post',
+    author: 'Prof. James Martinez',
+    avatar: 'https://via.placeholder.com/44',
+    time: '1 day ago',
+    content: 'Updated lecture slides on neuroanatomy - now includes detailed 3D diagrams and clinical correlations. Essential for understanding brain lesions.',
+    attachments: [
+      { type: 'ppt', name: 'Neuroanatomy_Complete_2025.pptx', size: '18.7 MB', icon: '📊' }
+    ],
+    likes: 203,
+    comments: 34,
+    shares: 56
+  },
+  {
+    id: 5,
+    type: 'library',
+    title: 'Pharmacology Mastery',
+    description: 'Everything you need to master pharmacology - from mechanisms to clinical applications',
+    postCount: 28,
+    followers: 567,
+    lastUpdated: '3 hours ago',
+    posts: [
+      { type: 'pdf', name: 'Autonomic Drugs.pdf', icon: '📄' },
+      { type: 'pdf', name: 'Cardiovascular Pharmacology.pdf', icon: '📄' },
+      { type: 'ppt', name: 'Antibiotic Classification.pptx', icon: '📊' },
+      { type: 'audio', name: 'Drug Interactions Explained.mp3', icon: '🎵' }
+    ]
+  },
+  {
+    id: 6,
+    type: 'post',
+    author: 'Dr. Emily Roberts',
+    avatar: 'https://via.placeholder.com/44',
+    time: '3 days ago',
+    content: 'Created a comprehensive case study series on respiratory pathology. Includes X-rays, histology, and clinical pearls.',
+    attachments: [
+      { type: 'pdf', name: 'Respiratory_Cases_Vol1.pdf', size: '5.8 MB', icon: '📄' },
+      { type: 'pdf', name: 'Histology_Atlas_Lungs.pdf', size: '12.3 MB', icon: '📄' }
+    ],
+    likes: 156,
+    comments: 28,
+    shares: 41
+  }
+];
+
+/* ===== RENDER FUNCTIONS ===== */
+function renderPost(post) {
+  const attachmentsHTML = post.attachments.map(att => `
+    <div class="post-attachment" onclick="alert('Opening: ${att.name}')">
+      <div class="attachment-icon">${att.icon}</div>
+      <div class="attachment-info">
+        <div class="attachment-name">${att.name}</div>
+        <div class="attachment-size">${att.size}</div>
+      </div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="post-card">
+      <div class="post-header">
+        <img src="${post.avatar}" alt="${post.author}" class="post-avatar">
+        <div class="post-meta">
+          <div class="post-author">${post.author}</div>
+          <div class="post-time">${post.time}</div>
+        </div>
+      </div>
+      
+      <div class="post-content">${post.content}</div>
+      
+      ${attachmentsHTML}
+      
+      <div class="post-actions">
+        <button class="action-btn" onclick="toggleLike(${post.id})">
+          <span>❤️</span> <span id="likes-${post.id}">${post.likes}</span>
+        </button>
+        <button class="action-btn">
+          <span>💬</span> <span>${post.comments}</span>
+        </button>
+        <button class="action-btn">
+          <span>↗️</span> <span>${post.shares}</span>
+        </button>
+      </div>
+    </div>
+  `;
 }
+
+function renderLibrary(library) {
+  return `
+    <div class="library-card" id="library-${library.id}" onclick="toggleLibrary(${library.id})">
+      <div class="library-header">
+        <h2 class="library-title">📚 ${library.title}</h2>
+        <span class="library-badge">${library.postCount} items</span>
+      </div>
+      
+      <div class="library-description">${library.description}</div>
+      
+      <div class="library-stats">
+        <div class="library-stat">
+          <span>👥</span> ${library.followers} followers
+        </div>
+        <div class="library-stat">
+          <span>🕐</span> Updated ${library.lastUpdated}
+        </div>
+      </div>
+      
+      <div class="library-expanded" id="library-content-${library.id}" style="display:none;">
+        <div class="library-posts">
+          ${library.posts.map(item => `
+            <div class="library-post-item" onclick="event.stopPropagation(); alert('Opening: ${item.name}')">
+              <div class="library-post-icon">${item.icon}</div>
+              <div class="library-post-text">${item.name}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ===== INTERACTION FUNCTIONS ===== */
+window.toggleLike = function(postId) {
+  const likesElement = document.getElementById(`likes-${postId}`);
+  const currentLikes = parseInt(likesElement.textContent);
+  likesElement.textContent = currentLikes + 1;
+  
+  // Here you would update Supabase
+  console.log(`Liked post ${postId}`);
+};
+
+window.toggleLibrary = function(libraryId) {
+  const content = document.getElementById(`library-content-${libraryId}`);
+  if (content.style.display === 'none') {
+    content.style.display = 'block';
+  } else {
+    content.style.display = 'none';
+  }
+};
+
+/* ===== LOAD FEED ===== */
+function loadFeed() {
+  const feedWrapper = document.getElementById('feedWrapper');
+  
+  // Render all items
+  const html = mockPosts.map(item => {
+    if (item.type === 'post') {
+      return renderPost(item);
+    } else if (item.type === 'library') {
+      return renderLibrary(item);
+    }
+  }).join('');
+  
+  feedWrapper.innerHTML = html;
+}
+
+/* ===== AUTH CHECK ===== */
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    // Optionally redirect to login or show guest content
+    console.log('No user logged in');
+  } else {
+    console.log('User logged in:', user.email);
+  }
+  
+  // Load feed regardless (or restrict based on auth)
+  loadFeed();
+});
+
+/* ===== INITIALIZE ===== */
+setTimeout(loadFeed, 500);
 </script>
 
 </body>
