@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -12,96 +13,393 @@
   --card-border: rgba(255,255,255,0.07);
   --accent: #b0003a;
   --accent-hover: #88002a;
+  --success: #10b981;
+  --error: #ef4444;
 }
-body {
+body.light-theme {
+  --bg-color: #f5f5f5;
+  --text-color: #111;
+  --card-bg: rgba(255,255,255,0.75);
+  --card-border: rgba(0,0,0,0.1);
+}
+
+- { box-sizing: border-box; }
+  body {
   margin:0;
-  font-family:"Inter",Arial,sans-serif;
-  background:var(--bg-color);
-  color:var(--text-color);
+  font-family:“Inter”,Arial,sans-serif;
+  background:var(–bg-color);
+  color:var(–text-color);
   display:flex;
   justify-content:center;
   align-items:center;
   min-height:100vh;
   padding:20px;
+  transition: background 0.3s ease;
+  }
+
+/* Animated background particles */
+.bg-particles {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+overflow: hidden;
+z-index: 0;
+pointer-events: none;
 }
+.particle {
+position: absolute;
+width: 3px;
+height: 3px;
+background: var(–accent);
+border-radius: 50%;
+opacity: 0.15;
+animation: float 20s infinite ease-in-out;
+}
+@keyframes float {
+0%, 100% { transform: translate(0, 0) scale(1); }
+33% { transform: translate(30px, -30px) scale(1.2); }
+66% { transform: translate(-20px, 20px) scale(0.8); }
+}
+
+.container {
+position: relative;
+z-index: 1;
+width: 100%;
+max-width: 520px;
+}
+
+.header {
+text-align: center;
+margin-bottom: 30px;
+animation: fadeDown 0.6s ease;
+}
+.header h1 {
+font-size: 32px;
+margin: 0 0 8px 0;
+background: linear-gradient(135deg, var(–accent), #ff0055);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.header p {
+color: #888;
+font-size: 15px;
+margin: 0;
+}
+
 .card {
-  background:var(--card-bg);
-  padding:40px 30px;
-  border-radius:16px;
-  border:1px solid var(--card-border);
-  max-width:480px;
-  width:100%;
-  text-align:center;
-  box-shadow:0 12px 30px rgba(0,0,0,0.55);
+background:var(–card-bg);
+backdrop-filter: blur(20px);
+padding:40px 35px;
+border-radius:18px;
+border:1px solid var(–card-border);
+box-shadow:0 20px 60px rgba(0,0,0,0.6);
+animation: fadeUp 0.6s ease;
+transition: transform 0.3s ease;
 }
-.card h1 {
-  margin-bottom:20px;
-  font-size:28px;
+.card:hover {
+transform: translateY(-5px);
 }
-.input-field {
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border-radius:8px;
-  border:1px solid var(--card-border);
-  background:rgba(0,0,0,0.25);
-  color:var(--text-color);
-  font-size:15px;
+
+.progress-bar {
+width: 100%;
+height: 6px;
+background: rgba(255,255,255,0.1);
+border-radius: 10px;
+overflow: hidden;
+margin-bottom: 25px;
 }
-.input-field:focus { outline:none; border-color:var(--accent); box-shadow:0 0 6px rgba(176,0,58,0.35); }
-textarea { resize:none; }
-button {
-  margin-top:16px;
-  padding:14px 24px;
-  font-size:16px;
-  border:none;
-  border-radius:10px;
-  background:var(--accent);
-  color:#fff;
-  cursor:pointer;
-  transition:0.25s ease;
+.progress-fill {
+height: 100%;
+background: linear-gradient(90deg, var(–accent), #ff0055);
+width: 0%;
+transition: width 0.4s ease;
+border-radius: 10px;
 }
-button:hover { background:var(--accent-hover); transform:translateY(-2px); }
+
+.profile-pic-section {
+text-align: center;
+margin-bottom: 25px;
+}
 #profilePicPreview {
-  width:120px;
-  height:120px;
-  border-radius:50%;
-  object-fit:cover;
-  margin:10px auto 20px;
-  display:block;
-  border:2px solid var(--card-border);
+width:130px;
+height:130px;
+border-radius:50%;
+object-fit:cover;
+margin:0 auto 15px;
+display:block;
+border:3px solid var(–accent);
+box-shadow: 0 8px 25px rgba(176,0,58,0.4);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-label.upload-label {
-  display:inline-block;
-  margin:10px 0;
-  padding:8px 16px;
-  background:var(--accent);
-  color:#fff;
-  border-radius:8px;
-  cursor:pointer;
-  transition:0.25s;
+#profilePicPreview:hover {
+transform: scale(1.05);
+box-shadow: 0 12px 35px rgba(176,0,58,0.6);
 }
-label.upload-label:hover { background:var(--accent-hover); }
-input[type="file"] { display:none; }
+
+.upload-label {
+display:inline-flex;
+align-items: center;
+gap: 8px;
+padding:10px 20px;
+background:var(–accent);
+color:#fff;
+border-radius:10px;
+cursor:pointer;
+transition:0.25s ease;
+font-size: 14px;
+font-weight: 600;
+}
+.upload-label:hover {
+background:var(–accent-hover);
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(176,0,58,0.4);
+}
+input[type=“file”] { display:none; }
+
+.form-group {
+margin-bottom: 18px;
+animation: fadeIn 0.5s ease backwards;
+}
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-group:nth-child(3) { animation-delay: 0.3s; }
+.form-group:nth-child(4) { animation-delay: 0.4s; }
+
+label {
+display: block;
+font-size: 13px;
+font-weight: 600;
+margin-bottom: 6px;
+color: #999;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.input-field {
+width:100%;
+padding:13px 15px;
+border-radius:10px;
+border:1.5px solid var(–card-border);
+background:rgba(0,0,0,0.3);
+color:var(–text-color);
+font-size:15px;
+transition: all 0.25s ease;
+}
+body.light-theme .input-field {
+background: rgba(255,255,255,0.8);
+}
+.input-field:focus {
+outline:none;
+border-color:var(–accent);
+box-shadow:0 0 12px rgba(176,0,58,0.4);
+transform: translateY(-2px);
+}
+.input-field:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+textarea {
+resize:none;
+font-family: inherit;
+}
+
+.char-count {
+text-align: right;
+font-size: 12px;
+color: #666;
+margin-top: 4px;
+}
+
+.btn-group {
+display: flex;
+gap: 12px;
+margin-top: 25px;
+}
+
+button {
+flex: 1;
+padding:15px 24px;
+font-size:16px;
+font-weight: 600;
+border:none;
+border-radius:10px;
+cursor:pointer;
+transition:all 0.25s ease;
+position: relative;
+overflow: hidden;
+}
+button:disabled {
+opacity: 0.5;
+cursor: not-allowed;
+}
+
+.btn-primary {
+background:linear-gradient(135deg, var(–accent), #88002a);
+color:#fff;
+box-shadow: 0 6px 20px rgba(176,0,58,0.4);
+}
+.btn-primary:hover:not(:disabled) {
+transform:translateY(-3px);
+box-shadow: 0 10px 30px rgba(176,0,58,0.6);
+}
+.btn-primary:active:not(:disabled) {
+transform: translateY(-1px);
+}
+
+.btn-secondary {
+background: transparent;
+border: 1.5px solid var(–card-border);
+color: var(–text-color);
+}
+.btn-secondary:hover:not(:disabled) {
+border-color: var(–accent);
+color: var(–accent);
+background: rgba(176,0,58,0.1);
+}
+
+.skip-link {
+display: block;
+text-align: center;
+margin-top: 15px;
+color: #888;
+font-size: 14px;
+cursor: pointer;
+text-decoration: none;
+transition: color 0.25s ease;
+}
+.skip-link:hover {
+color: var(–accent);
+text-decoration: underline;
+}
+
+.loading-spinner {
+display: none;
+width: 20px;
+height: 20px;
+border: 2px solid rgba(255,255,255,0.3);
+border-top-color: #fff;
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+margin: 0 auto;
+}
+button.loading .loading-spinner {
+display: inline-block;
+margin-right: 8px;
+}
+
+.toast {
+position: fixed;
+top: 20px;
+right: 20px;
+padding: 15px 20px;
+background: var(–success);
+color: white;
+border-radius: 10px;
+box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+font-size: 14px;
+font-weight: 600;
+opacity: 0;
+transform: translateX(400px);
+transition: all 0.3s ease;
+z-index: 1000;
+}
+.toast.show {
+opacity: 1;
+transform: translateX(0);
+}
+.toast.error {
+background: var(–error);
+}
+
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(30px); }
+to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeDown {
+from { opacity: 0; transform: translateY(-20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+.card { padding: 35px 25px; }
+.header h1 { font-size: 26px; }
+.btn-group { flex-direction: column; }
+}
 </style>
+
 </head>
 <body>
 
-<div class="card">
-  <h1>Complete Your Profile</h1>
-  <img id="profilePicPreview" src="https://via.placeholder.com/120" alt="Profile Preview">
-  <form id="profileForm">
-    <label class="upload-label" for="profilePicture">Upload Profile Picture</label>
-    <input type="file" id="profilePicture" accept="image/*">
-    
-    <input type="text" id="fullName" class="input-field" placeholder="Full Name" required>
-    <input type="email" id="email" class="input-field" placeholder="Email" required readonly>
-    <input type="text" id="username" class="input-field" placeholder="Username" required>
-    <textarea id="bio" class="input-field" placeholder="Short Bio (optional)" rows="3"></textarea>
-    
-    <button type="submit">Save Profile</button>
-  </form>
+<div class="bg-particles" id="particles"></div>
+
+<div class="container">
+  <div class="header">
+    <h1>Complete Your Profile</h1>
+    <p>Let's personalize your learning experience</p>
+  </div>
+
+  <div class="card">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+<div class="profile-pic-section">
+  <img id="profilePicPreview" src="https://via.placeholder.com/130/1a1a1a/ffffff?text=Upload" alt="Profile Preview">
+  <label class="upload-label" for="profilePicture">
+    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+      <path d="M8.5 11.5a.5.5 0 0 1-1 0V7.707L6.354 8.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 7.707V11.5z"/>
+      <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+    </svg>
+    Upload Photo
+  </label>
+  <input type="file" id="profilePicture" accept="image/*">
 </div>
+
+<form id="profileForm">
+  <div class="form-group">
+    <label for="fullName">Full Name *</label>
+    <input type="text" id="fullName" class="input-field" placeholder="Enter your full name" required>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email Address</label>
+    <input type="email" id="email" class="input-field" placeholder="your@email.com" readonly>
+  </div>
+
+  <div class="form-group">
+    <label for="username">Username *</label>
+    <input type="text" id="username" class="input-field" placeholder="Choose a unique username" required>
+  </div>
+
+  <div class="form-group">
+    <label for="bio">Bio (Optional)</label>
+    <textarea id="bio" class="input-field" placeholder="Tell us a bit about yourself..." rows="3" maxlength="200"></textarea>
+    <div class="char-count"><span id="bioCount">0</span>/200</div>
+  </div>
+
+  <div class="btn-group">
+    <button type="button" class="btn-secondary" id="skipBtn">Skip for Now</button>
+    <button type="submit" class="btn-primary" id="saveBtn">
+      <span class="loading-spinner"></span>
+      <span class="btn-text">Save Profile</span>
+    </button>
+  </div>
+</form>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
@@ -123,30 +421,85 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
+// DOM Elements
 const fullNameInput = document.getElementById('fullName');
 const emailInput = document.getElementById('email');
 const usernameInput = document.getElementById('username');
 const bioInput = document.getElementById('bio');
+const bioCount = document.getElementById('bioCount');
 const profilePicInput = document.getElementById('profilePicture');
 const profilePicPreview = document.getElementById('profilePicPreview');
 const profileForm = document.getElementById('profileForm');
+const saveBtn = document.getElementById('saveBtn');
+const skipBtn = document.getElementById('skipBtn');
+const progressFill = document.getElementById('progressFill');
+const toast = document.getElementById('toast');
+
+// Create animated background particles
+function createParticles() {
+  const container = document.getElementById('particles');
+  for(let i = 0; i < 20; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.top = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 20 + 's';
+    particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+    container.appendChild(particle);
+  }
+}
+createParticles();
+
+// Show toast notification
+function showToast(message, isError = false) {
+  toast.textContent = message;
+  toast.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// Update progress bar based on form completion
+function updateProgress() {
+  let filled = 0;
+  if(fullNameInput.value) filled += 25;
+  if(usernameInput.value) filled += 25;
+  if(bioInput.value) filled += 25;
+  if(profilePicInput.files[0]) filled += 25;
+  progressFill.style.width = filled + '%';
+}
+
+// Bio character counter
+bioInput.addEventListener('input', () => {
+  bioCount.textContent = bioInput.value.length;
+  updateProgress();
+});
+
+// Input listeners for progress
+fullNameInput.addEventListener('input', updateProgress);
+usernameInput.addEventListener('input', updateProgress);
 
 // Preview selected image
-profilePicInput.addEventListener('change', (e)=>{
+profilePicInput.addEventListener('change', (e) => {
   const file = e.target.files[0];
   if(file){
+    if(file.size > 5 * 1024 * 1024) {
+      showToast('Image size must be less than 5MB', true);
+      profilePicInput.value = '';
+      return;
+    }
     profilePicPreview.src = URL.createObjectURL(file);
+    updateProgress();
   }
 });
 
+// Check authentication and load user data
 onAuthStateChanged(auth, async user => {
   if(!user){
-    alert("You must be logged in to setup a profile.");
-    window.location.href = "login.html";
+    showToast("You must be logged in to setup a profile.", true);
+    setTimeout(() => window.location.href = "login.html", 2000);
     return;
   }
 
-  const userRef = doc(db,"users",user.uid);
+  const userRef = doc(db, "users", user.uid);
   const docSnap = await getDoc(userRef);
 
   if(docSnap.exists()){
@@ -155,7 +508,98 @@ onAuthStateChanged(auth, async user => {
     emailInput.value = data.email || user.email || "";
     usernameInput.value = data.username || "";
     bioInput.value = data.bio || "";
+    bioCount.textContent = (data.bio || "").length;
     if(data.profilePicture) profilePicPreview.src = data.profilePicture;
   } else {
-    emailInput.value = user.email;
-    fullNameInput
+    emailInput.value = user.email || "";
+    if(user.displayName) fullNameInput.value = user.displayName;
+    if(user.photoURL) profilePicPreview.src = user.photoURL;
+  }
+  
+  updateProgress();
+});
+
+// Skip button
+skipBtn.addEventListener('click', () => {
+  if(confirm('Are you sure you want to skip profile setup? You can complete it later from settings.')) {
+    window.location.href = "dashboard.html";
+  }
+});
+
+// Form submission
+profileForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const user = auth.currentUser;
+  if(!user) {
+    showToast("Session expired. Please log in again.", true);
+    return;
+  }
+
+  // Validate username
+  const username = usernameInput.value.trim();
+  if(username.length < 3) {
+    showToast("Username must be at least 3 characters", true);
+    return;
+  }
+  if(!/^[a-zA-Z0-9_]+$/.test(username)) {
+    showToast("Username can only contain letters, numbers, and underscores", true);
+    return;
+  }
+
+  // Show loading state
+  saveBtn.disabled = true;
+  saveBtn.classList.add('loading');
+  saveBtn.querySelector('.btn-text').textContent = 'Saving...';
+
+  try {
+    let profilePictureURL = profilePicPreview.src;
+
+    // Upload profile picture if selected
+    if(profilePicInput.files[0]) {
+      const file = profilePicInput.files[0];
+      const storageRef = ref(storage, `profile-pictures/${user.uid}/${Date.now()}_${file.name}`);
+      
+      await uploadBytes(storageRef, file);
+      profilePictureURL = await getDownloadURL(storageRef);
+    }
+
+    // Update Firestore
+    const userRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(userRef);
+    
+    const userData = {
+      fullName: fullNameInput.value.trim(),
+      email: emailInput.value,
+      username: username,
+      bio: bioInput.value.trim(),
+      profilePicture: profilePictureURL,
+      updatedAt: new Date(),
+      profileCompleted: true
+    };
+
+    if(docSnap.exists()) {
+      await updateDoc(userRef, userData);
+    } else {
+      await setDoc(userRef, {
+        ...userData,
+        createdAt: new Date(),
+        settings: {theme: "dark"}
+      });
+    }
+
+    showToast("Profile saved successfully!");
+    setTimeout(() => window.location.href = "dashboard.html", 1500);
+
+  } catch(err) {
+    console.error(err);
+    showToast("Failed to save profile: " + err.message, true);
+    saveBtn.disabled = false;
+    saveBtn.classList.remove('loading');
+    saveBtn.querySelector('.btn-text').textContent = 'Save Profile';
+  }
+});
+</script>
+
+</body>
+</html>
