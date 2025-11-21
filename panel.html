@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Patholytica Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #030303;
+      --surface-0: rgba(10, 10, 10, 0.7);
+      --surface-1: rgba(18, 18, 18, 0.75);
+      --surface-2: rgba(28, 28, 28, 0.8);
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.15);
+      --text-color: #f7f7f7;
+      --muted: #b5b5b5;
+      --accent: #b0003a;
+      --accent-soft: rgba(176,0,58,0.25);
+      --accent-hover: #d50048;
+      --success: #50fa7b;
+      --warning: #f1fa8c;
+    }
+
+    body.light-theme {
+      --bg-color: #fbfbfb;
+      --surface-0: rgba(255,255,255,0.9);
+      --surface-1: rgba(255,255,255,0.85);
+      --surface-2: rgba(248,248,248,0.95);
+      --border: rgba(0,0,0,0.07);
+      --border-strong: rgba(0,0,0,0.15);
+      --text-color: #121212;
+      --muted: #555;
+      --accent: #b0003a;
+      --accent-soft: rgba(176,0,58,0.12);
+      --accent-hover: #88002a;
+      --success: #0ba360;
+      --warning: #be8a00;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    .glow-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      filter: blur(120px);
+      opacity: 0.55;
+      background: radial-gradient(circle, rgba(176,0,58,0.55) 0%, transparent 65%);
+      animation: float 18s ease-in-out infinite;
+    }
+
+    .glow:nth-child(2) {
+      top: 10%;
+      right: 5%;
+      animation-delay: -6s;
+    }
+
+    .glow:nth-child(1) {
+      bottom: 5%;
+      left: 10%;
+    }
+
+    body.light-theme .glow {
+      opacity: 0.3;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.1); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--bg-color);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: calc(12px + env(safe-area-inset-top)) calc(22px + env(safe-area-inset-right)) 12px calc(22px + env(safe-area-inset-left));
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .logo img {
+      height: 34px;
+      width: auto;
+      transition: filter 0.25s ease;
+    }
+
+    body.light-theme .logo img {
+      filter: invert(1);
+    }
+
+    .logo span {
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 14px;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    nav a.active,
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    nav a.active::after,
+    nav a:hover::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -6px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle {
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--text-color);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: border 0.2s ease, color 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface-1);
+    }
+
+    .user-pill img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent-soft);
+    }
+
+    main {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+      padding: 36px clamp(18px, 5vw, 64px) 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--surface-1);
+      padding: 22px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 15px 45px rgba(0,0,0,0.35);
+    }
+
+    body.light-theme .panel {
+      box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+    }
+
+    .hero-panel {
+      grid-column: span 12;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: flex-start;
+      background: linear-gradient(135deg, rgba(176,0,58,0.25), rgba(50,50,50,0.55));
+      border: 1px solid var(--accent-soft);
+    }
+
+    body.light-theme .hero-panel {
+      background: linear-gradient(135deg, rgba(176,0,58,0.15), rgba(255,255,255,0.8));
+    }
+
+    .hero-content {
+      flex: 1 1 320px;
+    }
+
+    .hero-content h1 {
+      margin: 0 0 10px;
+      font-size: clamp(26px, 4vw, 36px);
+    }
+
+    .hero-content p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 220px;
+    }
+
+    .primary-btn,
+    .ghost-btn {
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .primary-btn {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 12px 30px rgba(176,0,58,0.35);
+    }
+
+    .primary-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .ghost-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-color);
+    }
+
+    .ghost-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .stats-grid {
+      grid-column: span 12;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .stat-card {
+      background: var(--surface-0);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card h3 {
+      margin: 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 30px;
+      margin: 12px 0 6px;
+      font-weight: 600;
+    }
+
+    .stat-meta {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .pill.success {
+      color: var(--success);
+      border: 1px solid rgba(80,250,123,0.2);
+      background: rgba(80,250,123,0.08);
+    }
+
+    .pill.warning {
+      color: var(--warning);
+      border: 1px solid rgba(241,250,140,0.2);
+      background: rgba(241,250,140,0.08);
+    }
+
+    .progress-bar {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    .progress-bar span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: 0.04em;
+    }
+
+    .panel-title button {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 4px 0;
+    }
+
+    .chart-panel {
+      grid-column: span 7;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .chart {
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      height: 220px;
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      background: var(--accent-soft);
+      border-radius: 10px 10px 0 0;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+
+    .chart-bar span {
+      position: absolute;
+      bottom: 100%;
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .chart-bar:hover {
+      transform: translateY(-6px);
+      background: rgba(176,0,58,0.45);
+    }
+
+    .chart-label {
+      position: absolute;
+      bottom: -24px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+
+    .tasks-panel {
+      grid-column: span 5;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .task {
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface-0);
+    }
+
+    .task input {
+      margin: 0;
+      width: 18px;
+      height: 18px;
+    }
+
+    .task-details {
+      flex: 1;
+    }
+
+    .task-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .task-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .task .pill {
+      margin-left: auto;
+    }
+
+    .schedule-panel {
+      grid-column: span 5;
+    }
+
+    .schedule-item {
+      display: flex;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .schedule-item:last-child {
+      border-bottom: none;
+    }
+
+    .schedule-time {
+      font-size: 13px;
+      color: var(--muted);
+      min-width: 90px;
+    }
+
+    .schedule-info h4 {
+      margin: 0 0 4px;
+      font-size: 15px;
+    }
+
+    .schedule-info p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .community-panel {
+      grid-column: span 7;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .feed-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface-0);
+    }
+
+    .feed-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .feed-content h4 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .feed-content p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px calc(18px + env(safe-area-inset-left)) calc(20px + env(safe-area-inset-bottom)) calc(18px + env(safe-area-inset-right));
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      z-index: 1;
+      background: var(--bg-color);
+    }
+
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+      margin: 0 6px;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover {
+      color: var(--accent);
+    }
+
+    @media (max-width: 1024px) {
+      nav {
+        display: none;
+      }
+      .chart-panel,
+      .community-panel,
+      .schedule-panel,
+      .tasks-panel {
+        grid-column: span 12;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .header-inner {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .hero-actions {
+        width: 100%;
+      }
+      main {
+        padding: 24px 14px 32px;
+      }
+      .panel {
+        padding: 18px;
+      }
+      .chart {
+        height: 160px;
+      }
+      .feed-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-bg" aria-hidden="true">
+    <div class="glow"></div>
+    <div class="glow"></div>
+  </div>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo" onclick="window.location.href='login.html'">
+        <img src="IMG_0696.png" alt="Patholytica Logo">
+        <span>Patholytica</span>
+      </div>
+
+      <nav aria-label="Primary">
+        <a href="#" class="active">Dashboard</a>
+        <a href="#">Curriculum</a>
+        <a href="#">Labs</a>
+        <a href="#">Community</a>
+        <a href="#">Insights</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <span class="theme-label">Dark</span>
+        </button>
+        <div class="user-pill">
+          <img src="IMG_0749.jpeg" alt="User avatar">
+          <div>
+            <div style="font-size: 13px; font-weight: 600;">Dr. Aziz</div>
+            <div style="font-size: 12px; color: var(--muted);">Resident</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel hero-panel">
+      <div class="hero-content">
+        <p class="pill success" style="display: inline-flex; margin-bottom: 10px;">Learning Streak · 14 days</p>
+        <h1>Welcome back, Dr. Aziz</h1>
+        <p>Here’s a succinct look at your Patholytica learning journey. You’ve completed 68% of this week’s objectives—finish the remaining labs to keep your streak alive.</p>
+      </div>
+      <div class="hero-actions">
+        <button class="primary-btn">Continue Module — Renal Pathology</button>
+        <button class="ghost-btn">Launch Live Lab Session</button>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <h3>Weekly Completion</h3>
+        <div class="stat-value">68%</div>
+        <div class="stat-meta">
+          <span class="pill success">+12% vs last week</span>
+        </div>
+        <div class="progress-bar" role="presentation"><span style="width:68%;"></span></div>
+      </article>
+      <article class="stat-card">
+        <h3>Modules Active</h3>
+        <div class="stat-value">4</div>
+        <div class="stat-meta">Renal · Heme · Derm · Cytology</div>
+        <div class="progress-bar"><span style="width:40%;"></span></div>
+      </article>
+      <article class="stat-card">
+        <h3>Hours Logged</h3>
+        <div class="stat-value">12.4h</div>
+        <div class="stat-meta">Goal 15h · Reset Sunday</div>
+        <div class="progress-bar"><span style="width:82%;"></span></div>
+      </article>
+      <article class="stat-card">
+        <h3>Peer Insights</h3>
+        <div class="stat-value">23</div>
+        <div class="stat-meta">
+          <span class="pill warning">3 new threads</span>
+        </div>
+        <div class="progress-bar"><span style="width:55%;"></span></div>
+      </article>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="panel chart-panel">
+        <div class="panel-title">
+          <h2>Diagnostic Confidence</h2>
+          <button>Last 7 days</button>
+        </div>
+        <div class="chart" aria-hidden="true">
+          <div class="chart-bar" style="height: 45%;">
+            <span>72%</span>
+            <div class="chart-label">Mon</div>
+          </div>
+          <div class="chart-bar" style="height: 65%;">
+            <span>78%</span>
+            <div class="chart-label">Tue</div>
+          </div>
+          <div class="chart-bar" style="height: 55%;">
+            <span>74%</span>
+            <div class="chart-label">Wed</div>
+          </div>
+          <div class="chart-bar" style="height: 80%;">
+            <span>86%</span>
+            <div class="chart-label">Thu</div>
+          </div>
+          <div class="chart-bar" style="height: 70%;">
+            <span>79%</span>
+            <div class="chart-label">Fri</div>
+          </div>
+          <div class="chart-bar" style="height: 60%;">
+            <span>75%</span>
+            <div class="chart-label">Sat</div>
+          </div>
+          <div class="chart-bar" style="height: 90%;">
+            <span>92%</span>
+            <div class="chart-label">Sun</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel tasks-panel">
+        <div class="panel-title">
+          <h2>Focus Tasks</h2>
+          <button>View all</button>
+        </div>
+        <label class="task">
+          <input type="checkbox">
+          <div class="task-details">
+            <p class="task-title">Review renal biopsy slides</p>
+            <p class="task-meta">Due in 2 hrs · 18 high-yield slides</p>
+          </div>
+          <span class="pill success">High</span>
+        </label>
+        <label class="task">
+          <input type="checkbox" checked>
+          <div class="task-details">
+            <p class="task-title">Update dermpath flashcards</p>
+            <p class="task-meta">Completed · 44 cards synced</p>
+          </div>
+          <span class="pill warning">Auto-sync</span>
+        </label>
+        <label class="task">
+          <input type="checkbox">
+          <div class="task-details">
+            <p class="task-title">Join cytology lab briefing</p>
+            <p class="task-meta">Tomorrow · 08:00 AM PST</p>
+          </div>
+          <span class="pill">Live</span>
+        </label>
+      </article>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="panel schedule-panel">
+        <div class="panel-title">
+          <h2>Schedule</h2>
+          <button>Sync calendar</button>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">08:30 · Today</div>
+          <div class="schedule-info">
+            <h4>Renal case board</h4>
+            <p>Discuss glomerular crescents — attend with Dr. Malik</p>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">13:00 · Today</div>
+          <div class="schedule-info">
+            <h4>AI lab simulation</h4>
+            <p>Benchmark cytology triage accuracy @ 85%</p>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">Tomorrow</div>
+          <div class="schedule-info">
+            <h4>Resident roundtable</h4>
+            <p>Share findings from mucocutaneous module</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel community-panel">
+        <div class="panel-title">
+          <h2>Community Pulse</h2>
+          <button>Open hub</button>
+        </div>
+        <div class="feed-item">
+          <div class="feed-avatar">JL</div>
+          <div class="feed-content">
+            <h4>Dr. June Le — shared a renal pearl</h4>
+            <p>“When you see linear IgG along the GBM, remember to rule out anti-GBM vasculitis early. Dropped a 6-slide breakdown for quick review.”</p>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-avatar">KG</div>
+          <div class="feed-content">
+            <h4>Team update — cytology AI beta</h4>
+            <p>New model available. Early adopters are reporting 9% faster screening times. Apply the beta flag in Settings → Labs.</p>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-avatar">RA</div>
+          <div class="feed-content">
+            <h4>Resident AMA — Friday</h4>
+            <p>Join Dr. Rahim at 5 PM PST for a deep dive into immunostains that mimic infectious processes. Submit questions ahead of time.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    ©️ 2025 Patholytica by MedicineBank · <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Support</a>
+  </footer>
+
+  <script>
+    const THEME_KEY = "patholytica_theme";
+    const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    const savedTheme = localStorage.getItem(THEME_KEY);
+    if ((savedTheme === "light") || (!savedTheme && prefersLight)) {
+      document.body.classList.add("light-theme");
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("light-theme");
+      const theme = document.body.classList.contains("light-theme") ? "light" : "dark";
+      localStorage.setItem(THEME_KEY, theme);
+      updateThemeLabel(theme);
+    }
+
+    function updateThemeLabel(theme) {
+      const label = document.querySelector(".theme-label");
+      if (label) {
+        label.textContent = theme === "light" ? "Light" : "Dark";
+      }
+    }
+
+    updateThemeLabel(document.body.classList.contains("light-theme") ? "light" : "dark");
+  </script>
+</body>
+</html>
