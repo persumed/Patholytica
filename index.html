@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -100,6 +101,11 @@ body.light-theme .logo-img { filter: invert(1); }
   width: 100%;
 }
 .login-btn:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 10px 22px rgba(176,0,58,0.45); }
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
 .google-btn {
   background: #4285F4;
   box-shadow: 0 6px 16px rgba(66,133,244,0.35);
@@ -152,43 +158,44 @@ footer a:hover { color: var(--accent); }
     <h1>Welcome to Patholytica</h1>
     <p>Your tool to <strong>LOVE</strong> what you learn</p>
 
-    <div id="initialButtons">
-      <button id="googleLoginBtn" class="login-btn google-btn">Continue with Google</button>
-      <div class="divider">OR</div>
-      <button class="login-btn" id="startLoginBtn">Login with Email</button>
-      <span class="guest-text" id="guestBtn">Guest Mode</span>
-    </div>
+<div id="initialButtons">
+  <button id="googleLoginBtn" class="login-btn google-btn">Continue with Google</button>
+  <div class="divider">OR</div>
+  <button class="login-btn" id="startLoginBtn">Login with Email</button>
+  <span class="guest-text" id="guestBtn">Guest Mode</span>
+</div>
 
-    <form id="loginForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
-      <input type="email" placeholder="Email Address" class="input-field" required>
-      <input type="password" placeholder="Password" class="input-field" required>
-      <button type="submit" class="login-btn" style="width:100%; margin-top:12px;">Continue</button>
-      <p style="margin-top:20px; font-size:14px; color:#999;">
-        Don't have an account? 
-        <a href="#" id="showSignupLink" style="color:var(--accent); text-decoration:none; font-weight:600;">Sign up</a>
-      </p>
-      <p style="margin-top:10px; font-size:14px;">
-        <a href="#" id="backToInitial" style="color:#888; text-decoration:none;">← Back</a>
-      </p>
-    </form>
+<form id="loginForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
+  <input type="email" placeholder="Email Address" class="input-field" required>
+  <input type="password" placeholder="Password" class="input-field" required>
+  <button type="submit" class="login-btn" style="width:100%; margin-top:12px;">Continue</button>
+  <p style="margin-top:20px; font-size:14px; color:#999;">
+    Don't have an account? 
+    <a href="#" id="showSignupLink" style="color:var(--accent); text-decoration:none; font-weight:600;">Sign up</a>
+  </p>
+  <p style="margin-top:10px; font-size:14px;">
+    <a href="#" id="backToInitial" style="color:#888; text-decoration:none;">← Back</a>
+  </p>
+</form>
 
-    <form id="signupForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
-      <input type="text" placeholder="Full Name" class="input-field" required>
-      <input type="email" placeholder="Email Address" class="input-field" required>
-      <input type="text" placeholder="Username" class="input-field" required>
-      <input type="password" placeholder="Password (min. 8 characters)" class="input-field" minlength="8" required>
-      <input type="password" placeholder="Confirm Password" class="input-field" required>
-      <label style="display:flex; align-items:center; justify-content:center; margin:16px 0; font-size:13px; color:#999;">
-        <input type="checkbox" required style="margin-right:8px;">
-        I agree to the <a href="#" style="color:var(--accent); margin:0 3px;">Terms</a> 
-        and <a href="#" style="color:var(--accent); margin:0 3px;">Privacy Policy</a>
-      </label>
-      <button type="submit" class="login-btn" style="width:100%; margin-top:12px;">Create Account</button>
-      <p style="margin-top:20px; font-size:14px; color:#999;">
-        Already have an account?
-        <a href="#" id="showLoginLink" style="color:var(--accent); font-weight:600;">Login</a>
-      </p>
-    </form>
+<form id="signupForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
+  <input type="text" placeholder="Full Name" class="input-field" required>
+  <input type="email" placeholder="Email Address" class="input-field" required>
+  <input type="text" placeholder="Username" class="input-field" required>
+  <input type="password" placeholder="Password (min. 8 characters)" class="input-field" minlength="8" required>
+  <input type="password" placeholder="Confirm Password" class="input-field" required>
+  <label style="display:flex; align-items:center; justify-content:center; margin:16px 0; font-size:13px; color:#999;">
+    <input type="checkbox" required style="margin-right:8px;">
+    I agree to the <a href="#" style="color:var(--accent); margin:0 3px;">Terms</a> 
+    and <a href="#" style="color:var(--accent); margin:0 3px;">Privacy Policy</a>
+  </label>
+  <button type="submit" class="login-btn" style="width:100%; margin-top:12px;">Create Account</button>
+  <p style="margin-top:20px; font-size:14px; color:#999;">
+    Already have an account?
+    <a href="#" id="showLoginLink" style="color:var(--accent); font-weight:600;">Login</a>
+  </p>
+</form>
+
   </div>
 </div>
 
@@ -287,9 +294,20 @@ signupForm.addEventListener("submit", async (e)=> {
   } catch(err){ alert("Signup failed: "+err.message); console.error(err); }
 });
 
-// GOOGLE SIGN-IN
+// GOOGLE SIGN-IN (FIXED)
 const provider = new GoogleAuthProvider();
+let isGoogleSignInInProgress = false;
+
 document.getElementById("googleLoginBtn").addEventListener("click", async ()=>{
+  // Prevent multiple simultaneous sign-in attempts
+  if(isGoogleSignInInProgress) return;
+  
+  isGoogleSignInInProgress = true;
+  const btn = document.getElementById("googleLoginBtn");
+  const originalText = btn.innerHTML;
+  btn.innerHTML = "Signing in...";
+  btn.disabled = true;
+  
   try {
     const result = await signInWithPopup(auth,provider);
     const user = result.user;
@@ -307,7 +325,16 @@ document.getElementById("googleLoginBtn").addEventListener("click", async ()=>{
       });
     }
     window.location.href="dashboard.html";
-  } catch(err){ alert("Google sign-in failed: "+err.message); console.error(err); }
+  } catch(err){ 
+    // Only show error if it's not a user-cancelled action
+    if(err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request'){
+      alert("Google sign-in failed: "+err.message);
+    }
+    console.error(err);
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+    isGoogleSignInInProgress = false;
+  }
 });
 </script>
 
