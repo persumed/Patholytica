@@ -259,10 +259,19 @@ form.addEventListener("submit", async (e)=> {
     const user = userCredential.user;
     const docRef = doc(db,"users",user.uid);
     const docSnap = await getDoc(docRef);
+    
     if(!docSnap.exists()){
-      await setDoc(docRef,{email:user.email, createdAt:new Date()});
+      await setDoc(docRef,{email:user.email, createdAt:new Date(), profileCompleted: false});
+      window.location.href="dashboard.html";
+    } else {
+      // Check if profile is completed
+      const userData = docSnap.data();
+      if(userData.profileCompleted) {
+        window.location.href="main.html";
+      } else {
+        window.location.href="dashboard.html";
+      }
     }
-    window.location.href="dashboard.html";
   } catch(err){ alert("Login failed: "+err.message); console.error(err); }
 });
 
@@ -288,26 +297,18 @@ signupForm.addEventListener("submit", async (e)=> {
       createdAt: new Date(),
       bio:"",
       profilePicture:"",
+      profileCompleted: false,
       settings:{theme:"dark"}
     });
     window.location.href="dashboard.html";
   } catch(err){ alert("Signup failed: "+err.message); console.error(err); }
 });
 
-// GOOGLE SIGN-IN (FIXED)
+// GOOGLE SIGN-IN
 const provider = new GoogleAuthProvider();
 let isGoogleSignInInProgress = false;
 
-// Check if user is already signed in on page load
-auth.onAuthStateChanged(async (user) => {
-  if (user && isGoogleSignInInProgress) {
-    // User just signed in, redirect to dashboard
-    window.location.href = "dashboard.html";
-  }
-});
-
 document.getElementById("googleLoginBtn").addEventListener("click", async ()=>{
-  // Prevent multiple simultaneous sign-in attempts
   if(isGoogleSignInInProgress) return;
   
   isGoogleSignInInProgress = true;
@@ -320,27 +321,33 @@ document.getElementById("googleLoginBtn").addEventListener("click", async ()=>{
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
     
-    // Create or update user document in Firestore
     const docRef = doc(db, "users", user.uid);
     const docSnap = await getDoc(docRef);
     
     if(!docSnap.exists()){
+      // New Google user - create basic profile and send to setup
       await setDoc(docRef, {
         fullName: user.displayName || "",
         email: user.email,
         createdAt: new Date(),
         bio: "",
         profilePicture: user.photoURL || "",
+        profileCompleted: false,
         settings: {theme: "dark"},
         provider: "google"
       });
+      window.location.href = "dashboard.html";
+    } else {
+      // Existing user - check if profile is completed
+      const userData = docSnap.data();
+      if(userData.profileCompleted) {
+        window.location.href = "main.html";
+      } else {
+        window.location.href = "dashboard.html";
+      }
     }
     
-    // Redirect after everything is complete
-    window.location.href = "dashboard.html";
-    
   } catch(err){ 
-    // Only show error if it's not a user-cancelled action
     if(err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request'){
       alert("Google sign-in failed: " + err.message);
     }
