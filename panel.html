@@ -9,35 +9,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-color: #080808;
-      --bg-glass: rgba(16,16,16,0.7);
-      --surface: rgba(20,20,20,0.8);
-      --surface-soft: rgba(255,255,255,0.04);
-      --border: rgba(255,255,255,0.08);
-      --border-strong: rgba(255,255,255,0.16);
-      --text: #f8f8f8;
-      --muted: #b7b7b7;
+      --bg-color: #0d0d0d;
+      --text-color: #fff;
+      --card-bg: rgba(24,24,24,0.7);
+      --card-border: rgba(255,255,255,0.07);
+      --border: rgba(255,255,255,0.07);
       --accent: #b0003a;
-      --accent-hover: #d00048;
-      --accent-soft: rgba(176,0,58,0.25);
+      --accent-hover: #88002a;
+      --muted: #999;
+      --surface: rgba(18,18,18,0.85);
+      --surface-soft: rgba(255,255,255,0.05);
+      --border-strong: rgba(255,255,255,0.12);
       --success: #50fa7b;
       --warning: #f1fa8c;
+      --accent-soft: rgba(176,0,58,0.25);
     }
 
     body.light-theme {
       --bg-color: #f5f5f5;
-      --bg-glass: rgba(255,255,255,0.9);
-      --surface: rgba(255,255,255,0.85);
-      --surface-soft: rgba(0,0,0,0.04);
-      --border: rgba(0,0,0,0.08);
-      --border-strong: rgba(0,0,0,0.16);
-      --text: #121212;
-      --muted: #555;
+      --text-color: #111;
+      --card-bg: rgba(255,255,255,0.65);
+      --card-border: rgba(0,0,0,0.1);
+      --border: rgba(0,0,0,0.1);
       --accent: #b0003a;
       --accent-hover: #88002a;
-      --accent-soft: rgba(176,0,58,0.12);
+      --muted: #666;
+      --surface: rgba(255,255,255,0.85);
+      --surface-soft: rgba(0,0,0,0.04);
+      --border-strong: rgba(0,0,0,0.15);
       --success: #0ba360;
       --warning: #be8a00;
+      --accent-soft: rgba(176,0,58,0.12);
     }
 
     * { box-sizing: border-box; }
@@ -46,65 +48,49 @@
       margin: 0;
       min-height: 100vh;
       font-family: "Inter", Arial, sans-serif;
-      background: radial-gradient(circle at top, rgba(176,0,58,0.12), transparent 50%) var(--bg-color);
-      color: var(--text);
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
       transition: background 0.35s ease, color 0.35s ease;
     }
 
-    header {
+    .header-wrapper {
       position: sticky;
       top: 0;
-      z-index: 20;
-      backdrop-filter: blur(20px);
-      background: var(--bg-glass);
-      border-bottom: 1px solid var(--border);
+      background: var(--bg-color);
+      padding-top: env(safe-area-inset-top);
+      border-bottom: 1px solid var(--card-border);
+      z-index: 40;
     }
 
-    .header-inner {
-      padding: calc(14px + env(safe-area-inset-top)) clamp(16px, 4vw, 40px) 14px;
+    .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
+      padding: 16px 18px;
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .logo-img {
+      height: 32px;
+      width: auto;
+      transition: filter 0.25s ease;
       cursor: pointer;
     }
 
-    .logo img {
-      height: 36px;
-      width: auto;
-      transition: filter 0.25s ease;
-    }
-
-    body.light-theme .logo img {
+    body.light-theme .logo-img {
       filter: invert(1);
     }
 
-    .logo span {
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
     .theme-toggle {
-      border: 1px solid var(--border);
+      padding: 6px 14px;
+      font-size: 12.5px;
       background: transparent;
-      padding: 8px 16px;
-      border-radius: 999px;
-      color: var(--text);
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      color: var(--text-color);
       cursor: pointer;
-      font-size: 13px;
-      transition: border 0.2s ease, color 0.2s ease;
+      transition: 0.25s ease;
     }
 
     .theme-toggle:hover {
@@ -149,8 +135,8 @@
     }
 
     .hero button {
-      border-radius: 12px;
-      border: 1px solid var(--border);
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
       background: var(--accent);
       color: #fff;
       padding: 14px 22px;
@@ -162,7 +148,7 @@
 
     .hero button.secondary {
       background: transparent;
-      color: var(--text);
+      color: var(--text-color);
       box-shadow: none;
     }
 
@@ -340,19 +326,14 @@
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-inner">
-      <div class="logo" onclick="window.location.href='login.html'">
-        <img src="IMG_0696.png" alt="Patholytica Logo">
-        <span>Patholytica</span>
-      </div>
-      <div class="header-actions">
-        <button class="theme-toggle" onclick="toggleTheme()">
-          <span class="theme-label">Dark</span> Mode
-        </button>
-      </div>
+  <div class="header-wrapper">
+    <div class="header">
+      <a href="https://patholytica.com">
+        <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
+      </a>
+      <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
     </div>
-  </header>
+  </div>
 
   <main>
     <section class="hero">
@@ -418,7 +399,7 @@
   </main>
 
   <footer>
-    ©️ 2025 Patholytica by MedicineBank · <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Support</a>
+    © 2025 Patholytica by MedicineBank · <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Support</a>
   </footer>
 
   <script type="module">
@@ -460,21 +441,12 @@
     if (localStorage.getItem(THEME_KEY) === 'light') {
       document.body.classList.add('light-theme');
     }
-    updateThemeLabel();
 
     window.toggleTheme = function toggleTheme() {
       document.body.classList.toggle('light-theme');
       const mode = document.body.classList.contains('light-theme') ? 'light' : 'dark';
       localStorage.setItem(THEME_KEY, mode);
-      updateThemeLabel();
     };
-
-    function updateThemeLabel() {
-      const label = document.querySelector('.theme-label');
-      if (label) {
-        label.textContent = document.body.classList.contains('light-theme') ? 'Light' : 'Dark';
-      }
-    }
 
     function setBadge(el, status) {
       el.textContent = status;
@@ -604,3 +576,4 @@
   </script>
 </body>
 </html>
+
