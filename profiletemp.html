@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Data Studio — Patholytica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #060606;
+      --text-color: #fdfdfd;
+      --card-bg: rgba(16,16,16,0.8);
+      --card-border: rgba(255,255,255,0.08);
+      --muted: #9ba0aa;
+      --accent: #b0003a;
+      --accent-hover: #88002a;
+      --surface: rgba(18,18,18,0.9);
+      --warning: #f8d248;
+      --success: #39d98a;
+      --danger: #ff6b6b;
+      --code-bg: rgba(0,0,0,0.55);
+    }
+
+    body.light-theme {
+      --bg-color: #f8f8fb;
+      --text-color: #111;
+      --card-bg: rgba(255,255,255,0.95);
+      --card-border: rgba(0,0,0,0.08);
+      --muted: #555;
+      --surface: rgba(255,255,255,0.98);
+      --code-bg: rgba(0,0,0,0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    .header-wrapper {
+      position: sticky;
+      top: 0;
+      background: var(--bg-color);
+      padding: env(safe-area-inset-top) clamp(16px, 4vw, 40px);
+      border-bottom: 1px solid var(--card-border);
+      z-index: 50;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo-img {
+      height: 32px;
+      transition: filter 0.25s ease;
+      cursor: pointer;
+    }
+
+    body.light-theme .logo-img { filter: invert(1); }
+
+    .theme-toggle {
+      padding: 6px 16px;
+      font-size: 13px;
+      background: transparent;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      color: var(--text-color);
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+    .theme-toggle:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    main {
+      padding: 32px clamp(18px, 4vw, 70px) calc(60px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero {
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: clamp(24px, 4vw, 40px);
+      background: linear-gradient(135deg, rgba(176,0,58,0.25), rgba(12,12,12,0.9));
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4vw, 38px);
+    }
+    .hero p {
+      margin: 0;
+      max-width: 620px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hero button {
+      border-radius: 12px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      padding: 14px 24px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(176,0,58,0.4);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .hero button.secondary {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-color);
+      box-shadow: none;
+    }
+    .hero button:hover { transform: translateY(-2px); background: var(--accent-hover); }
+    .hero button.secondary:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(176,0,58,0.08);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    }
+
+    body.light-theme .card {
+      box-shadow: 0 14px 32px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0.05em;
+    }
+
+    .card small {
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: clamp(20px, 3vw, 32px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .panel-header h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .panel-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .panel button,
+    .panel input,
+    .panel select,
+    .panel textarea {
+      font: inherit;
+    }
+
+    .ghost-btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      background: transparent;
+      color: var(--text-color);
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .ghost-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .primary-btn {
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-weight: 600;
+    }
+    .primary-btn:hover { background: var(--accent-hover); }
+
+    .danger-btn {
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: none;
+      background: var(--danger);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .inputs-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .text-input,
+    .select-input {
+      flex: 1;
+      min-width: 180px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: rgba(0,0,0,0.25);
+      color: var(--text-color);
+    }
+
+    body.light-theme .text-input,
+    body.light-theme .select-input {
+      background: rgba(255,255,255,0.8);
+    }
+
+    .code-input {
+      width: 100%;
+      min-height: 140px;
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      background: var(--code-bg);
+      color: var(--text-color);
+      resize: vertical;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .data-table th,
+    .data-table td {
+      padding: 10px;
+      border-bottom: 1px solid var(--card-border);
+      text-align: left;
+    }
+    .data-table th {
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .data-table tbody tr {
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .data-table tbody tr:hover {
+      background: rgba(176,0,58,0.08);
+    }
+    .data-table tbody tr.active {
+      background: rgba(176,0,58,0.15);
+    }
+
+    .status-pill {
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .status-pill.success { color: var(--success); border-color: rgba(57,217,138,0.4); }
+    .status-pill.warning { color: var(--warning); border-color: rgba(248,210,72,0.4); }
+    .status-pill.danger { color: var(--danger); border-color: rgba(255,107,107,0.4); }
+
+    .columns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .column-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .helper-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    footer {
+      padding: 18px clamp(18px, 4vw, 60px);
+      border-top: 1px solid var(--card-border);
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 768px) {
+      .panel { padding: 20px; }
+      .header-wrapper { padding: 16px; }
+      .panel-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header-wrapper">
+    <div class="header">
+      <a href="https://patholytica.com">
+        <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
+      </a>
+      <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="status-pill success" style="display:inline-flex;">Data Studio</p>
+        <h1>One console for Firebase + Supabase</h1>
+        <p>Inspect, edit, and extend both your Firestore collections and Supabase tables from a single secured surface. You can patch individual rows, bulk import JSON, or spin up brand-new tables without leaving Patholytica.</p>
+      </div>
+      <div class="hero-actions">
+        <button id="quickSyncBtn">Sync Selected Record</button>
+        <button class="secondary" id="docsBtn">View Docs</button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <small>Firestore collection</small>
+        <h2 id="firestoreCollectionLabel">users</h2>
+        <span class="helper-text" id="firestoreStatus">Idle</span>
+      </article>
+      <article class="card">
+        <small>Supabase table</small>
+        <h2 id="supabaseTableLabel">users</h2>
+        <span class="helper-text" id="supabaseStatus">Idle</span>
+      </article>
+      <article class="card">
+        <small>Last action</small>
+        <h2 id="actionStatus">Nothing yet</h2>
+        <span class="helper-text">Auto-updates whenever you run a command.</span>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3>Firebase Editor</h3>
+        <div class="panel-actions">
+          <button class="ghost-btn" id="loadFirestoreBtn">Load documents</button>
+          <button class="ghost-btn" id="newFirestoreDocBtn">New doc</button>
+          <button class="danger-btn" id="deleteFirestoreDocBtn" disabled>Delete selected</button>
+        </div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="firestoreCollectionInput" class="text-input" placeholder="Collection name (e.g. users)" value="users">
+        <input type="text" id="firestoreDocIdInput" class="text-input" placeholder="Doc ID (auto when empty)">
+      </div>
+      <textarea id="firestoreJson" class="code-input" spellcheck="false" placeholder='{"name":"Ada Lovelace"}'></textarea>
+      <div class="panel-actions">
+        <button class="primary-btn" id="saveFirestoreBtn">Save document</button>
+        <span class="helper-text" id="firestoreHelper">Select a row below or paste JSON to upsert.</span>
+      </div>
+      <div style="overflow:auto;">
+        <table class="data-table" id="firestoreTable">
+          <thead>
+            <tr>
+              <th>Doc ID</th>
+              <th>Preview</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="2" style="text-align:center; color:var(--muted);">No documents yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3>Supabase Editor</h3>
+        <div class="panel-actions">
+          <button class="ghost-btn" id="loadSupabaseBtn">Load rows</button>
+          <button class="ghost-btn" id="newSupabaseRowBtn">New row</button>
+          <button class="danger-btn" id="deleteSupabaseRowBtn" disabled>Delete selected</button>
+        </div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="supabaseTableInput" class="text-input" value="users" placeholder="Table name">
+        <input type="text" id="supabasePrimaryKeyInput" class="text-input" value="id" placeholder="Primary key column">
+        <input type="number" id="supabaseLimitInput" class="text-input" value="50" min="1" max="200" placeholder="Row limit">
+      </div>
+      <textarea id="supabaseJson" class="code-input" spellcheck="false" placeholder='{"username":"alex","email":"alex@patholytica.com"}'></textarea>
+      <div class="panel-actions">
+        <button class="primary-btn" id="saveSupabaseBtn">Save row</button>
+        <span class="helper-text" id="supabaseHelper">The primary key is used to update existing rows.</span>
+      </div>
+      <div style="overflow:auto;">
+        <table class="data-table" id="supabaseTable">
+          <thead>
+            <tr>
+              <th>Primary</th>
+              <th>Preview</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="2" style="text-align:center; color:var(--muted);">No data yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3>Table Builder & SQL Runner</h3>
+        <div class="panel-actions">
+          <button class="ghost-btn" id="addColumnBtn">Add column</button>
+          <button class="ghost-btn" id="resetBuilderBtn">Reset</button>
+        </div>
+      </div>
+      <div class="inputs-row">
+        <input type="text" id="newTableNameInput" class="text-input" placeholder="Table name, e.g. lessons">
+        <input type="text" id="serviceKeyInput" class="text-input" placeholder="Supabase service key (only stored locally)">
+      </div>
+      <div class="columns-grid" id="columnBuilder"></div>
+      <textarea id="sqlPreview" class="code-input" spellcheck="false" placeholder="CREATE TABLE ...;"></textarea>
+      <div class="panel-actions">
+        <button class="primary-btn" id="createTableBtn">Create / migrate table</button>
+        <button class="ghost-btn" id="runSqlBtn">Run custom SQL</button>
+        <span class="helper-text">Requires service role privileges. The command uses RPC <code>run_sql</code>. Add the helper function shown in the docs section.</span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 Patholytica by MedicineBank · <a href="panel.html" style="color:inherit;text-decoration:none;">Control Panel</a>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      doc,
+      setDoc,
+      addDoc,
+      deleteDoc
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
+      authDomain: "patholytica.firebaseapp.com",
+      projectId: "patholytica",
+      storageBucket: "patholytica.firebasestorage.app",
+      messagingSenderId: "738430635282",
+      appId: "1:738430635282:web:8451ef380447c7611137cb"
+    };
+    const SUPABASE_URL = 'https://vmgenqvsmqiphcajaclx.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3MTUzNzUsImV4cCI6MjA3OTI5MTM3NX0.a2FCNa6BzYqXJWPUkByxK1EiNzt1cZhc3cp2SVj-Ke4';
+    const SQL_RPC_NAME = 'run_sql';
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let supabaseServiceClient = null;
+    let currentUser = null;
+    let selectedFirestoreId = null;
+    let selectedSupabasePk = null;
+
+    const firestoreCollectionInput = document.getElementById('firestoreCollectionInput');
+    const firestoreDocIdInput = document.getElementById('firestoreDocIdInput');
+    const firestoreJson = document.getElementById('firestoreJson');
+    const firestoreTable = document.getElementById('firestoreTable').querySelector('tbody');
+    const firestoreStatus = document.getElementById('firestoreStatus');
+    const firestoreCollectionLabel = document.getElementById('firestoreCollectionLabel');
+
+    const supabaseTableInput = document.getElementById('supabaseTableInput');
+    const supabasePrimaryKeyInput = document.getElementById('supabasePrimaryKeyInput');
+    const supabaseLimitInput = document.getElementById('supabaseLimitInput');
+    const supabaseJson = document.getElementById('supabaseJson');
+    const supabaseTableBody = document.getElementById('supabaseTable').querySelector('tbody');
+    const supabaseStatusLabel = document.getElementById('supabaseStatus');
+    const supabaseTableLabel = document.getElementById('supabaseTableLabel');
+
+    const actionStatus = document.getElementById('actionStatus');
+    const deleteFirestoreBtn = document.getElementById('deleteFirestoreDocBtn');
+    const deleteSupabaseBtn = document.getElementById('deleteSupabaseRowBtn');
+
+    const columnBuilder = document.getElementById('columnBuilder');
+    const sqlPreview = document.getElementById('sqlPreview');
+    const newTableNameInput = document.getElementById('newTableNameInput');
+    const serviceKeyInput = document.getElementById('serviceKeyInput');
+
+    const quickSyncBtn = document.getElementById('quickSyncBtn');
+    const docsBtn = document.getElementById('docsBtn');
+
+    const THEME_KEY = 'patholytica_theme';
+    if (localStorage.getItem(THEME_KEY) === 'light') {
+      document.body.classList.add('light-theme');
+    }
+    window.toggleTheme = function toggleTheme() {
+      document.body.classList.toggle('light-theme');
+      localStorage.setItem(THEME_KEY, document.body.classList.contains('light-theme') ? 'light' : 'dark');
+    };
+
+    function updateActionStatus(text, variant = 'neutral') {
+      actionStatus.textContent = text;
+      actionStatus.className = variant === 'success'
+        ? 'status-pill success'
+        : variant === 'error'
+          ? 'status-pill danger'
+          : '';
+    }
+
+    function renderFirestoreTable(rows) {
+      firestoreTable.innerHTML = '';
+      if (!rows.length) {
+        firestoreTable.innerHTML = '<tr><td colspan="2" style="text-align:center;color:var(--muted);">No documents found.</td></tr>';
+        return;
+      }
+      rows.forEach(({ id, data }) => {
+        const tr = document.createElement('tr');
+        tr.dataset.id = id;
+        if (selectedFirestoreId === id) tr.classList.add('active');
+        const preview = JSON.stringify(data).slice(0, 120);
+        tr.innerHTML = `<td>${id}</td><td><code>${preview}</code></td>`;
+        tr.addEventListener('click', () => {
+          selectedFirestoreId = id;
+          firestoreDocIdInput.value = id;
+          firestoreJson.value = JSON.stringify(data, null, 2);
+          Array.from(firestoreTable.children).forEach(row => row.classList.remove('active'));
+          tr.classList.add('active');
+          deleteFirestoreBtn.disabled = false;
+          updateActionStatus('Loaded Firestore doc ' + id);
+        });
+        firestoreTable.appendChild(tr);
+      });
+    }
+
+    async function loadFirestoreDocs() {
+      const collectionName = firestoreCollectionInput.value.trim();
+      if (!collectionName) {
+        alert('Collection name is required.');
+        return;
+      }
+      firestoreCollectionLabel.textContent = collectionName;
+      firestoreStatus.textContent = 'Loading...';
+      try {
+        const snap = await getDocs(collection(db, collectionName));
+        const rows = snap.docs.map(docSnap => ({ id: docSnap.id, data: docSnap.data() }));
+        renderFirestoreTable(rows);
+        firestoreStatus.textContent = `Loaded ${rows.length} document(s)`;
+        updateActionStatus('Firestore fetch complete', 'success');
+      } catch (error) {
+        console.error(error);
+        firestoreStatus.textContent = error.message;
+        updateActionStatus('Firestore fetch failed', 'error');
+      }
+    }
+
+    async function saveFirestoreDoc() {
+      if (!firestoreJson.value.trim()) {
+        alert('Paste JSON payload first.');
+        return;
+      }
+      try {
+        const payload = JSON.parse(firestoreJson.value);
+        const collectionName = firestoreCollectionInput.value.trim();
+        if (!collectionName) throw new Error('Collection name missing');
+        const docId = firestoreDocIdInput.value.trim();
+        if (docId) {
+          await setDoc(doc(db, collectionName, docId), payload, { merge: true });
+          selectedFirestoreId = docId;
+          updateActionStatus('Firestore document updated', 'success');
+        } else {
+          const ref = await addDoc(collection(db, collectionName), payload);
+          selectedFirestoreId = ref.id;
+          firestoreDocIdInput.value = ref.id;
+          updateActionStatus('Firestore document created', 'success');
+        }
+        await loadFirestoreDocs();
+      } catch (error) {
+        console.error(error);
+        alert('Save failed: ' + error.message);
+        updateActionStatus('Firestore save failed', 'error');
+      }
+    }
+
+    async function deleteFirestoreDoc() {
+      const collectionName = firestoreCollectionInput.value.trim();
+      const docId = selectedFirestoreId || firestoreDocIdInput.value.trim();
+      if (!collectionName || !docId) {
+        alert('Select a document first.');
+        return;
+      }
+      if (!confirm('Delete Firestore document "' + docId + '"?')) return;
+      try {
+        await deleteDoc(doc(db, collectionName, docId));
+        selectedFirestoreId = null;
+        firestoreDocIdInput.value = '';
+        firestoreJson.value = '';
+        deleteFirestoreBtn.disabled = true;
+        updateActionStatus('Firestore document deleted', 'success');
+        await loadFirestoreDocs();
+      } catch (error) {
+        console.error(error);
+        alert('Delete failed: ' + error.message);
+        updateActionStatus('Firestore delete failed', 'error');
+      }
+    }
+
+    function renderSupabaseTable(rows, pk) {
+      supabaseTableBody.innerHTML = '';
+      if (!rows.length) {
+        supabaseTableBody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:var(--muted);">No rows found.</td></tr>';
+        return;
+      }
+      rows.forEach(row => {
+        const id = row[pk] ?? '(null)';
+        const tr = document.createElement('tr');
+        tr.dataset.pk = id;
+        if (selectedSupabasePk === id) tr.classList.add('active');
+        const preview = JSON.stringify(row).slice(0, 120);
+        tr.innerHTML = `<td>${id}</td><td><code>${preview}</code></td>`;
+        tr.addEventListener('click', () => {
+          selectedSupabasePk = id;
+          supabaseJson.value = JSON.stringify(row, null, 2);
+          Array.from(supabaseTableBody.children).forEach(r => r.classList.remove('active'));
+          tr.classList.add('active');
+          deleteSupabaseBtn.disabled = false;
+          updateActionStatus('Loaded Supabase row ' + id);
+        });
+        supabaseTableBody.appendChild(tr);
+      });
+    }
+
+    async function loadSupabaseRows() {
+      const table = supabaseTableInput.value.trim();
+      const limit = Number(supabaseLimitInput.value) || 50;
+      if (!table) {
+        alert('Table name is required.');
+        return;
+      }
+      supabaseTableLabel.textContent = table;
+      supabaseStatusLabel.textContent = 'Loading...';
+      try {
+        const { data, error } = await supabase.from(table).select('*').limit(limit);
+        if (error) throw error;
+        renderSupabaseTable(data || [], supabasePrimaryKeyInput.value.trim());
+        supabaseStatusLabel.textContent = `Loaded ${data?.length ?? 0} row(s)`;
+        updateActionStatus('Supabase fetch complete', 'success');
+      } catch (error) {
+        console.error(error);
+        supabaseStatusLabel.textContent = error.message;
+        updateActionStatus('Supabase fetch failed', 'error');
+      }
+    }
+
+    async function saveSupabaseRow() {
+      if (!supabaseJson.value.trim()) {
+        alert('Paste JSON payload first.');
+        return;
+      }
+      const table = supabaseTableInput.value.trim();
+      const pk = supabasePrimaryKeyInput.value.trim();
+      if (!table || !pk) {
+        alert('Table name and primary key are required.');
+        return;
+      }
+      try {
+        const payload = JSON.parse(supabaseJson.value);
+        if (!(pk in payload)) {
+          const proceed = confirm('Primary key missing. Insert as new row?');
+          if (!proceed) return;
+          const { error } = await supabase.from(table).insert(payload).single();
+          if (error) throw error;
+          updateActionStatus('Supabase row inserted', 'success');
+        } else {
+          const value = payload[pk];
+          const { error } = await supabase.from(table).update(payload).eq(pk, value);
+          if (error) throw error;
+          selectedSupabasePk = value;
+          updateActionStatus('Supabase row updated', 'success');
+        }
+        await loadSupabaseRows();
+      } catch (error) {
+        console.error(error);
+        alert('Save failed: ' + error.message);
+        updateActionStatus('Supabase save failed', 'error');
+      }
+    }
+
+    async function deleteSupabaseRow() {
+      const table = supabaseTableInput.value.trim();
+      const pk = supabasePrimaryKeyInput.value.trim();
+      if (!table || !pk || selectedSupabasePk == null) {
+        alert('Select a row first.');
+        return;
+      }
+      if (!confirm('Delete Supabase row "' + selectedSupabasePk + '"?')) return;
+      try {
+        const { error } = await supabase.from(table).delete().eq(pk, selectedSupabasePk);
+        if (error) throw error;
+        selectedSupabasePk = null;
+        supabaseJson.value = '';
+        deleteSupabaseBtn.disabled = true;
+        updateActionStatus('Supabase row deleted', 'success');
+        await loadSupabaseRows();
+      } catch (error) {
+        console.error(error);
+        alert('Delete failed: ' + error.message);
+        updateActionStatus('Supabase delete failed', 'error');
+      }
+    }
+
+    function addColumnRow(name = '', type = 'text', options = '') {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'column-row';
+      wrapper.innerHTML = `
+        <input class="text-input" type="text" placeholder="column_name" value="${name}">
+        <select class="select-input">
+          <option value="text"${type === 'text' ? ' selected' : ''}>TEXT</option>
+          <option value="uuid"${type === 'uuid' ? ' selected' : ''}>UUID</option>
+          <option value="int"${type === 'int' ? ' selected' : ''}>INTEGER</option>
+          <option value="bigint"${type === 'bigint' ? ' selected' : ''}>BIGINT</option>
+          <option value="boolean"${type === 'boolean' ? ' selected' : ''}>BOOLEAN</option>
+          <option value="timestamp"${type === 'timestamp' ? ' selected' : ''}>TIMESTAMPTZ</option>
+          <option value="jsonb"${type === 'jsonb' ? ' selected' : ''}>JSONB</option>
+        </select>
+        <input class="text-input" type="text" placeholder="Constraints (optional)" value="${options}">
+        <button class="ghost-btn" type="button">Remove</button>
+      `;
+      const removeBtn = wrapper.querySelector('button');
+      removeBtn.addEventListener('click', () => {
+        wrapper.remove();
+        buildSqlPreview();
+      });
+      columnBuilder.appendChild(wrapper);
+      buildSqlPreview();
+    }
+
+    function buildSqlPreview() {
+      const tableName = newTableNameInput.value.trim();
+      const columnRows = Array.from(columnBuilder.children);
+      if (!tableName || !columnRows.length) {
+        sqlPreview.value = '';
+        return;
+      }
+      const defs = columnRows.map(row => {
+        const [nameInput, typeSelect, optionsInput] = row.querySelectorAll('input, select');
+        const colName = nameInput.value.trim();
+        const colType = typeSelect.value;
+        const extras = optionsInput.value.trim();
+        if (!colName) return null;
+        const typeSql = colType === 'timestamp' ? 'TIMESTAMPTZ' : colType.toUpperCase();
+        return `"${colName}" ${typeSql}${extras ? ' ' + extras : ''}`;
+      }).filter(Boolean);
+      if (!defs.length) {
+        sqlPreview.value = '';
+        return;
+      }
+      sqlPreview.value = `CREATE TABLE IF NOT EXISTS "${tableName}" (\n  ${defs.join(',\n  ')}\n);`;
+    }
+
+    async function ensureServiceClient() {
+      const key = serviceKeyInput.value.trim();
+      if (!key) {
+        throw new Error('Service key is required for SQL commands.');
+      }
+      if (!supabaseServiceClient || supabaseServiceClient?.supabaseKey !== key) {
+        supabaseServiceClient = createClient(SUPABASE_URL, key, {
+          auth: { autoRefreshToken: false, persistSession: false }
+        });
+        supabaseServiceClient.supabaseKey = key;
+      }
+      return key;
+    }
+
+    async function executeSql(sql) {
+      const key = await ensureServiceClient();
+      const endpoint = `${SUPABASE_URL}/rest/v1/rpc/${SQL_RPC_NAME}`;
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          apikey: key,
+          Authorization: `Bearer ${key}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ sql })
+      });
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || 'SQL RPC failed.');
+      }
+      const result = await response.json().catch(() => ({}));
+      return result;
+    }
+
+    async function createTable() {
+      if (!sqlPreview.value.trim()) {
+        alert('Define table name and columns first.');
+        return;
+      }
+      try {
+        await executeSql(sqlPreview.value);
+        updateActionStatus('Table created / migrated', 'success');
+        alert('Table command executed. Verify in Supabase.');
+      } catch (error) {
+        console.error(error);
+        alert('SQL failed: ' + error.message + '\\nEnsure you created the RPC `' + SQL_RPC_NAME + '` with SECURITY DEFINER privileges.');
+        updateActionStatus('SQL execution failed', 'error');
+      }
+    }
+
+    async function runCustomSql() {
+      if (!sqlPreview.value.trim()) {
+        alert('Paste a SQL statement.');
+        return;
+      }
+      try {
+        const result = await executeSql(sqlPreview.value);
+        updateActionStatus('SQL executed', 'success');
+        alert('SQL result:\\n' + JSON.stringify(result, null, 2));
+      } catch (error) {
+        console.error(error);
+        alert('SQL failed: ' + error.message);
+        updateActionStatus('SQL execution failed', 'error');
+      }
+    }
+
+    function resetBuilder() {
+      columnBuilder.innerHTML = '';
+      addColumnRow('id', 'uuid', 'PRIMARY KEY DEFAULT gen_random_uuid()');
+      addColumnRow('created_at', 'timestamp', 'DEFAULT timezone(\'utc\', now())');
+      addColumnRow('name', 'text', 'NOT NULL');
+      buildSqlPreview();
+    }
+
+    function syncRecordToFirebase() {
+      if (!supabaseJson.value.trim() && !firestoreJson.value.trim()) {
+        alert('Select a record first.');
+        return;
+      }
+      try {
+        const target = supabaseJson.value.trim()
+          ? JSON.parse(supabaseJson.value)
+          : JSON.parse(firestoreJson.value);
+        firestoreJson.value = JSON.stringify(target, null, 2);
+        supabaseJson.value = JSON.stringify(target, null, 2);
+        updateActionStatus('Payload mirrored between editors');
+      } catch (error) {
+        alert('Unable to sync: ' + error.message);
+      }
+    }
+
+    docsBtn.addEventListener('click', () => {
+      alert(`SQL helper setup:
+1. In Supabase SQL editor run:
+CREATE OR REPLACE FUNCTION public.${SQL_RPC_NAME}(sql text)
+RETURNS text
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  result text;
+BEGIN
+  EXECUTE sql;
+  result := 'ok';
+  RETURN result;
+END;
+$$;
+ALTER FUNCTION public.${SQL_RPC_NAME}(text) OWNER TO postgres;
+
+2. Restrict access via RLS/Policies or Edge Function proxy.
+
+Store the service key only in secure contexts.`);
+    });
+
+    quickSyncBtn.addEventListener('click', syncRecordToFirebase);
+
+    document.getElementById('loadFirestoreBtn').addEventListener('click', loadFirestoreDocs);
+    document.getElementById('saveFirestoreBtn').addEventListener('click', saveFirestoreDoc);
+    document.getElementById('newFirestoreDocBtn').addEventListener('click', () => {
+      selectedFirestoreId = null;
+      firestoreDocIdInput.value = '';
+      firestoreJson.value = '{\\n  "name": "",\\n  "email": ""\\n}';
+      deleteFirestoreBtn.disabled = true;
+    });
+    deleteFirestoreBtn.addEventListener('click', deleteFirestoreDoc);
+
+    document.getElementById('loadSupabaseBtn').addEventListener('click', loadSupabaseRows);
+    document.getElementById('saveSupabaseBtn').addEventListener('click', saveSupabaseRow);
+    document.getElementById('newSupabaseRowBtn').addEventListener('click', () => {
+      selectedSupabasePk = null;
+      supabaseJson.value = '{\\n  "' + supabasePrimaryKeyInput.value.trim() + '": "",\\n  "name": ""\\n}';
+      deleteSupabaseBtn.disabled = true;
+    });
+    deleteSupabaseBtn.addEventListener('click', deleteSupabaseRow);
+
+    document.getElementById('addColumnBtn').addEventListener('click', () => addColumnRow());
+    document.getElementById('resetBuilderBtn').addEventListener('click', resetBuilder);
+    newTableNameInput.addEventListener('input', buildSqlPreview);
+    sqlPreview.addEventListener('input', () => {
+      // allow manual editing without rebuilding
+    });
+    document.getElementById('createTableBtn').addEventListener('click', createTable);
+    document.getElementById('runSqlBtn').addEventListener('click', runCustomSql);
+
+    resetBuilder();
+    loadFirestoreDocs();
+    loadSupabaseRows();
+
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (!user) {
+        console.warn('No Firebase session, data writes may fail if rules block unauthenticated access.');
+      }
+    });
+  </script>
+</body>
+</html>
