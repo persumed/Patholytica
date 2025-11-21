@@ -298,6 +298,14 @@ signupForm.addEventListener("submit", async (e)=> {
 const provider = new GoogleAuthProvider();
 let isGoogleSignInInProgress = false;
 
+// Check if user is already signed in on page load
+auth.onAuthStateChanged(async (user) => {
+  if (user && isGoogleSignInInProgress) {
+    // User just signed in, redirect to dashboard
+    window.location.href = "dashboard.html";
+  }
+});
+
 document.getElementById("googleLoginBtn").addEventListener("click", async ()=>{
   // Prevent multiple simultaneous sign-in attempts
   if(isGoogleSignInInProgress) return;
@@ -309,26 +317,32 @@ document.getElementById("googleLoginBtn").addEventListener("click", async ()=>{
   btn.disabled = true;
   
   try {
-    const result = await signInWithPopup(auth,provider);
+    const result = await signInWithPopup(auth, provider);
     const user = result.user;
-    const docRef = doc(db,"users",user.uid);
+    
+    // Create or update user document in Firestore
+    const docRef = doc(db, "users", user.uid);
     const docSnap = await getDoc(docRef);
+    
     if(!docSnap.exists()){
-      await setDoc(docRef,{
-        fullName:user.displayName||"",
-        email:user.email,
-        createdAt:new Date(),
-        bio:"",
-        profilePicture:user.photoURL||"",
-        settings:{theme:"dark"},
-        provider:"google"
+      await setDoc(docRef, {
+        fullName: user.displayName || "",
+        email: user.email,
+        createdAt: new Date(),
+        bio: "",
+        profilePicture: user.photoURL || "",
+        settings: {theme: "dark"},
+        provider: "google"
       });
     }
-    window.location.href="dashboard.html";
+    
+    // Redirect after everything is complete
+    window.location.href = "dashboard.html";
+    
   } catch(err){ 
     // Only show error if it's not a user-cancelled action
     if(err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request'){
-      alert("Google sign-in failed: "+err.message);
+      alert("Google sign-in failed: " + err.message);
     }
     console.error(err);
     btn.innerHTML = originalText;
