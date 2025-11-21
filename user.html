@@ -186,6 +186,10 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
+  // Show loading state
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Loading...';
+
   // Pre-fill from Firebase auth
   emailInput.value = user.email || '';
   if(user.displayName) fullNameInput.value = user.displayName;
@@ -199,9 +203,10 @@ onAuthStateChanged(auth, async (user) => {
       .eq('firebase_uid', user.uid)
       .single();
 
-    if(error && error.code !== 'PGRST116') { /* ignore no rows */ console.warn(error); }
+    if(error && error.code !== 'PGRST116') { 
+      console.warn(error); 
+    }
     if(data){
-      // Map fields (adjust names if your DB columns differ)
       fullNameInput.value = data.name || fullNameInput.value || '';
       usernameInput.value = data.username || '';
       bioInput.value = data.bio || '';
@@ -209,6 +214,10 @@ onAuthStateChanged(auth, async (user) => {
     }
   } catch(err){
     console.error('Error fetching profile:', err);
+  } finally {
+    // Re-enable button after loading
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Save Profile';
   }
 });
 
@@ -230,7 +239,6 @@ async function uploadToSupabaseStorage(file, user) {
 
   // get public url
   const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filePath);
-  // urlData.publicUrl is the direct public URL
   return urlData?.publicUrl ?? '';
 }
 
@@ -255,6 +263,25 @@ profileForm.addEventListener('submit', async (ev) => {
   saveBtn.textContent = 'Saving...';
 
   try {
+    // Check if username is already taken (by someone else)
+    const { data: existingUser, error: checkError } = await supabase
+      .from('users')
+      .select('firebase_uid')
+      .eq('username', username)
+      .single();
+
+    if(checkError && checkError.code !== 'PGRST116') {
+      throw checkError;
+    }
+
+    // If username exists and belongs to someone else, reject it
+    if(existingUser && existingUser.firebase_uid !== user.uid){
+      alert('Username already taken. Please choose another.');
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Profile';
+      return;
+    }
+
     // If a new image was selected, upload it to Supabase Storage
     let profilePicURL = profilePicPreview.src || '';
 
@@ -275,7 +302,7 @@ profileForm.addEventListener('submit', async (ev) => {
 
     const { error } = await supabase
       .from('users')
-      .upsert(payload, { onConflict: ['firebase_uid'] });
+      .upsert(payload, { onConflict: 'firebase_uid' });
 
     if(error) throw error;
 
