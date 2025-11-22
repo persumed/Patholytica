@@ -4,6 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d0d0d" id="themeColorMeta">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Feed — Patholytica</title>
 
 <style>
@@ -28,7 +30,6 @@ html { scroll-behavior: auto; }
 html, body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background: var(--bg-color); color: var(--text-color); transition: background 0.3s, color 0.3s; }
 body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 80px; }
 
-/* HEADER */
 .header-wrapper {
   position: sticky;
   top: 0;
@@ -59,7 +60,6 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
 .logo-img:hover { transform: scale(1.05); }
 body.light-theme .logo-img { filter: invert(1); }
 
-/* BURGER MENU */
 .burger-btn {
   background: transparent;
   border: none;
@@ -92,7 +92,6 @@ body.light-theme .logo-img { filter: invert(1); }
   transform: rotate(-45deg) translate(7px, -7px);
 }
 
-/* MENU DROPDOWN */
 .menu-dropdown {
   position: fixed;
   top: 0;
@@ -151,10 +150,8 @@ body.light-theme .logo-img { filter: invert(1); }
   text-align: center;
 }
 
-/* FEED */
 .feed-container { flex:1; max-width: 700px; margin: 0 auto; padding: 16px 20px; width: 100%; }
 
-/* POSTS */
 .post { 
   border-bottom: 1px solid var(--border-color); 
   padding: 16px 0;
@@ -180,7 +177,6 @@ body.light-theme .post:hover {
 .post-text { font-size:15px; line-height:1.5; }
 .post-image { width:100%; border-radius:12px; margin-top:10px; border: 1px solid var(--border-color); }
 
-/* ACTIONS */
 .post-actions { display:flex; gap:12px; margin-top:12px; margin-left:6px; }
 .action-btn {
   display:flex; align-items:center; gap:6px;
@@ -190,8 +186,8 @@ body.light-theme .post:hover {
 }
 .action-btn:hover { background: rgba(176,0,58,0.1); color: var(--accent); }
 .action-btn.liked { color: var(--accent); font-weight: 600; }
+.action-count { font-weight: 600; margin-left: 2px; }
 
-/* COMMENTS */
 .comments-section { padding:10px 6px; }
 .comments-section.hidden { display: none; }
 .comment { padding:8px 0; display:flex; gap:10px; align-items:flex-start; }
@@ -217,7 +213,6 @@ body.light-theme .post:hover {
   background: var(--accent-hover);
 }
 
-/* FOOTER */
 footer {
   position: fixed;
   bottom: 0;
@@ -287,7 +282,6 @@ footer.hidden {
   font-size: 18px;
 }
 
-/* MODAL */
 .modal {
   position: fixed;
   inset: 0;
@@ -304,8 +298,8 @@ footer.hidden {
 }
 
 .modal-content {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 28px;
   max-width: 550px;
@@ -326,25 +320,24 @@ footer.hidden {
   cursor: pointer;
 }
 
-/* TEXTAREA */
 .modal-textarea {
   width: 100%;
   min-height: 120px;
   padding: 14px;
   border-radius: 10px;
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--border-color);
   background: var(--bg-color);
   color: var(--text-color);
   margin-bottom: 16px;
+  font-family: inherit;
 }
 
-/* IMAGE UPLOAD */
 .image-upload-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 10px 18px;
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   cursor: pointer;
   margin-bottom: 16px;
@@ -355,10 +348,9 @@ footer.hidden {
   border-radius: 10px;
   display: none;
   margin-bottom: 16px;
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--border-color);
 }
 
-/* Modal buttons */
 .modal-actions {
   display: flex;
   gap: 10px;
@@ -376,7 +368,7 @@ footer.hidden {
 
 .modal-btn.cancel {
   background: transparent;
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--border-color);
   color: var(--text-color);
 }
 
@@ -384,13 +376,11 @@ footer.hidden {
   background: var(--accent);
   color: #fff;
 }
-
 </style>
+
 </head>
 
 <body>
-
-<!-- HEADER -->
 
 <div class="header-wrapper" id="headerWrapper">
   <div class="header">
@@ -405,11 +395,7 @@ footer.hidden {
   </div>
 </div>
 
-<!-- MENU OVERLAY -->
-
 <div class="menu-overlay" id="menuOverlay"></div>
-
-<!-- MENU DROPDOWN -->
 
 <div class="menu-dropdown" id="menuDropdown">
   <a href="#" class="menu-item" id="profileBtn">
@@ -426,11 +412,7 @@ footer.hidden {
   </div>
 </div>
 
-<!-- FEED -->
-
 <div class="feed-container" id="feedContent">Loading feed...</div>
-
-<!-- FOOTER -->
 
 <footer id="footer">
   <a href="https://patholytica.com/main" class="footer-btn home">
@@ -443,8 +425,6 @@ footer.hidden {
   </button>
 </footer>
 
-<!-- POST MODAL -->
-
 <div class="modal" id="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -452,18 +432,13 @@ footer.hidden {
       <button class="modal-close" id="closeBtn">&times;</button>
     </div>
     <textarea id="postText" class="modal-textarea" placeholder="What's on your mind?"></textarea>
-
-```
-<label class="image-upload-btn" for="postImg">📷 Add Image</label>
-<input type="file" id="postImg" accept="image/*" style="display:none;">
-<img id="imgPreview" class="image-preview">
-
-<div class="modal-actions">
-  <button class="modal-btn cancel" id="cancelBtn">Cancel</button>
-  <button class="modal-btn submit" id="submitBtn">Post</button>
-</div>
-```
-
+    <label class="image-upload-btn" for="postImg">📷 Add Image</label>
+    <input type="file" id="postImg" accept="image/*" style="display:none;">
+    <img id="imgPreview" class="image-preview">
+    <div class="modal-actions">
+      <button class="modal-btn cancel" id="cancelBtn">Cancel</button>
+      <button class="modal-btn submit" id="submitBtn">Post</button>
+    </div>
   </div>
 </div>
 
@@ -492,7 +467,6 @@ const supabase = createClient(
 let currentUser = null;
 let userLikes = new Set();
 
-/* BURGER MENU */
 const burgerBtn = document.getElementById("burgerBtn");
 const menuDropdown = document.getElementById("menuDropdown");
 const menuOverlay = document.getElementById("menuOverlay");
@@ -506,12 +480,14 @@ function toggleMenu() {
 burgerBtn.onclick = toggleMenu;
 menuOverlay.onclick = toggleMenu;
 
-/* THEME */
 const themeBtn = document.getElementById("themeBtn");
 const themeText = document.getElementById("themeText");
+const themeColorMeta = document.getElementById("themeColorMeta");
 
 function updateThemeText() {
-  themeText.textContent = document.body.classList.contains("light-theme") ? "Dark Theme" : "Light Theme";
+  const isLight = document.body.classList.contains("light-theme");
+  themeText.textContent = isLight ? "Dark Theme" : "Light Theme";
+  themeColorMeta.setAttribute("content", isLight ? "#f5f5f5" : "#0d0d0d");
 }
 
 if (localStorage.getItem("theme")==="light") {
@@ -525,7 +501,6 @@ themeBtn.onclick = () => {
   updateThemeText();
 };
 
-/* MENU ITEMS */
 document.getElementById("profileBtn").onclick = (e) => {
   e.preventDefault();
   toggleMenu();
@@ -538,7 +513,6 @@ document.getElementById("settingsBtn").onclick = (e) => {
   alert("Settings page - Coming soon!");
 };
 
-/* HEADER SCROLL BEHAVIOR */
 let lastScroll = 0;
 const headerWrapper = document.getElementById("headerWrapper");
 const footer = document.getElementById("footer");
@@ -564,7 +538,6 @@ window.addEventListener("scroll", () => {
   lastScroll = currentScroll;
 });
 
-/* CREATE POST */
 const modal = document.getElementById("modal");
 const closeBtn = document.getElementById("closeBtn");
 const cancelBtn = document.getElementById("cancelBtn");
@@ -589,7 +562,6 @@ closeBtn.onclick = cancelBtn.onclick = () => {
   imgPreview.style.display = "none";
 };
 
-/* IMAGE PREVIEW */
 postImg.onchange = (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -617,13 +589,20 @@ submitBtn.onclick = async () => {
     if (postImg.files[0]) {
       const file = postImg.files[0];
       const ext = file.name.split(".").pop();
-      const path = `posts/${currentUser.uid}/${Date.now()}.${ext}`;
+      const timestamp = Date.now();
+      const path = `${currentUser.uid}/${timestamp}.${ext}`;
 
-      const { error: upErr } = await supabase.storage
+      const { data: uploadData, error: upErr } = await supabase.storage
         .from("posts")
-        .upload(path, file);
+        .upload(path, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
 
-      if (upErr) throw upErr;
+      if (upErr) {
+        console.error("Upload error:", upErr);
+        throw new Error("Failed to upload image. Please ensure the 'posts' storage bucket exists in Supabase.");
+      }
 
       const { data } = supabase.storage.from("posts").getPublicUrl(path);
       imageUrl = data.publicUrl;
@@ -646,26 +625,24 @@ submitBtn.onclick = async () => {
     alert("Post created successfully!");
   } catch(err) {
     console.error("Error creating post:", err);
-    alert("Failed to create post. Please try again.");
+    alert(err.message || "Failed to create post. Please try again.");
   }
   
   submitBtn.disabled = false;
   submitBtn.textContent = "Post";
 };
 
-/* ESCAPE HTML */
 const esc = str => { const el=document.createElement("div"); el.textContent=str; return el.innerHTML; };
 
-/* TIME AGO */
 const timeAgo = date => {
   const sec = Math.floor((Date.now() - new Date(date))/1000);
-  if(sec<60) return "now"; if(sec<3600) return Math.floor(sec/60)+"m";
+  if(sec<60) return "now"; 
+  if(sec<3600) return Math.floor(sec/60)+"m";
   if(sec<86400) return Math.floor(sec/3600)+"h";
   if(sec<604800) return Math.floor(sec/86400)+"d";
   return new Date(date).toLocaleDateString();
 };
 
-/* LOAD FEED */
 async function loadFeed() {
   const feed = document.getElementById("feedContent");
   try {
@@ -686,14 +663,27 @@ async function loadFeed() {
       return; 
     }
     
-    feed.innerHTML = data.map(renderPost).join("");
+    const postIds = data.map(p => p.id);
+    const { data: commentCounts } = await supabase
+      .from("comments")
+      .select("post_id")
+      .in("post_id", postIds);
+    
+    const countMap = {};
+    if (commentCounts) {
+      commentCounts.forEach(c => {
+        countMap[c.post_id] = (countMap[c.post_id] || 0) + 1;
+      });
+    }
+    
+    feed.innerHTML = data.map(p => renderPost(p, countMap[p.id] || 0)).join("");
   } catch(err) {
     console.error("Error:", err);
     feed.innerHTML = `<div style="padding:20px;text-align:center;">Error loading feed. Please check your connection.</div>`;
   }
 }
 
-function renderPost(p){
+function renderPost(p, commentCount = 0){
   const u = p.users||{};
   const liked = userLikes.has(p.id);
   return `
@@ -712,7 +702,7 @@ function renderPost(p){
     </div>`:""}
     <div class="post-actions">
       <button class="action-btn ${liked?"liked":""}" onclick="likePost('${p.id}')">♥ Like</button>
-      <button class="action-btn" onclick="toggleComments('${p.id}')">💬 Comment</button>
+      <button class="action-btn" onclick="toggleComments('${p.id}')">💬 Comment${commentCount > 0 ? `<span class="action-count">${commentCount}</span>` : ''}</button>
     </div>
     <div class="comments-section hidden" id="c-${p.id}"><div id="cl-${p.id}"></div>
       <div class="comment-input-wrapper">
@@ -723,7 +713,6 @@ function renderPost(p){
   </div>`;
 }
 
-/* LIKE FUNCTION */
 window.likePost = async (id) => {
   if(!currentUser) {
     alert("Please sign in to like posts");
@@ -733,7 +722,6 @@ window.likePost = async (id) => {
   await loadFeed();
 };
 
-/* COMMENT FUNCTIONS */
 window.toggleComments = id => {
   const sec = document.getElementById(`c-${id}`);
   sec.classList.toggle("hidden");
@@ -775,20 +763,27 @@ window.addComment = async id=>{
   if(!input.value.trim()) return;
   
   try {
-    await supabase.from("comments").insert({
-      post_id:id,
-      firebase_uid:currentUser.uid,
-      content:input.value
+    const { error } = await supabase.from("comments").insert({
+      post_id: id,
+      firebase_uid: currentUser.uid,
+      content: input.value.trim(),
+      created_at: new Date().toISOString()
     });
+    
+    if (error) {
+      console.error("Comment insert error:", error);
+      throw error;
+    }
+    
     input.value=""; 
-    loadComments(id);
+    await loadComments(id);
+    await loadFeed();
   } catch(err) {
     console.error("Error adding comment:", err);
-    alert("Failed to add comment");
+    alert("Failed to add comment: " + (err.message || "Unknown error"));
   }
 };
 
-/* AUTH STATE */
 onAuthStateChanged(auth, async user => {
   currentUser = user;
   await loadFeed();
