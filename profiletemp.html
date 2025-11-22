@@ -1,1 +1,800 @@
-later
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Feed — Patholytica</title>
+
+<style>
+/* ===================== */
+/* FIXED THEME VARIABLES */
+/* ===================== */
+:root {
+  --bg-color: #0d0d0d;
+  --text-color: #fff;
+  --card-bg: rgba(24,24,24,0.9);
+  --card-border: rgba(255,255,255,0.07);
+  --accent: #b0003a;
+  --accent-hover: #88002a;
+}
+
+body.light-theme {
+  --bg-color: #f5f5f5;
+  --text-color: #111;
+  --card-bg: rgba(255,255,255,0.9);
+  --card-border: rgba(0,0,0,0.1);
+}
+
+/* FIXED UNIVERSAL SELECTOR */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
+  padding-bottom: 80px;
+}
+
+/* ========== HEADER ========== */
+.header-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-color);
+  border-bottom: 1px solid var(--card-border);
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+
+.header-wrapper.hidden {
+  transform: translateY(-100%);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.theme-toggle {
+  padding: 8px 16px;
+  font-size: 13px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-weight: 500;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ========== FEED CONTAINER ========== */
+.feed-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding-top: 65px;
+}
+
+.post {
+  margin-bottom: 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.post-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--card-border);
+  background: var(--card-bg);
+}
+
+.post-author-info {
+  flex: 1;
+}
+
+.post-author-name {
+  font-weight: 600;
+  font-size: 15px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.post-author-username {
+  font-size: 13px;
+  color: #888;
+}
+
+.post-time {
+  font-size: 12px;
+  color: #888;
+}
+
+/* CONTENT */
+.post-content {
+  padding: 18px;
+}
+
+.post-text {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.post-image {
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+/* ACTIONS */
+.post-actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 18px;
+  border-top: 1px solid var(--card-border);
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.action-btn:hover {
+  background: rgba(176, 0, 58, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.action-btn.liked {
+  background: rgba(176,0,58,0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* COMMENTS */
+.comments-section {
+  padding: 16px 18px;
+  border-top: 1px solid var(--card-border);
+  background: rgba(0,0,0,0.2);
+}
+
+body.light-theme .comments-section {
+  background: rgba(0,0,0,0.03);
+}
+
+.comments-section.hidden {
+  display: none;
+}
+
+.comment {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.comment:last-of-type {
+  border-bottom: none;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comment-author {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.comment-text {
+  font-size: 14px;
+  line-height: 1.5;
+  padding-left: 42px;
+}
+
+/* COMMENT INPUT */
+.comment-input-wrapper {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--card-border);
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.comment-submit {
+  padding: 10px 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.comment-submit:hover {
+  background: var(--accent-hover);
+}
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-color);
+  border-top: 1px solid var(--card-border);
+  padding: 12px;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  border-radius: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-btn:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.nav-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 550px;
+  width: 100%;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 32px;
+  cursor: pointer;
+}
+
+/* TEXTAREA */
+.modal-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--bg-color);
+  color: var(--text-color);
+  margin-bottom: 16px;
+}
+
+/* IMAGE UPLOAD */
+.image-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.image-preview {
+  max-width: 100%;
+  border-radius: 10px;
+  display: none;
+  margin-bottom: 16px;
+  border: 1px solid var(--card-border);
+}
+
+/* Modal buttons */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.modal-btn {
+  padding: 12px 28px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-btn.cancel {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+}
+
+.modal-btn.submit {
+  background: var(--accent);
+  color: #fff;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header-wrapper" id="header">
+  <div class="header">
+    <a class="logo">Patholytica</a>
+    <button class="theme-toggle" id="themeBtn">🌙 Dark</button>
+  </div>
+</div>
+
+<!-- FEED -->
+<div class="feed-container">
+  <div id="feedContent" class="loading">Loading feed...</div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <a class="nav-btn">🏠<span>Home</span></a>
+  <button class="nav-btn primary" id="createBtn">✏️<span>Create</span></button>
+  <a class="nav-btn">👤<span>Profile</span></a>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Create Post</h2>
+      <button class="modal-close" id="closeBtn">&times;</button>
+    </div>
+
+    <form id="postForm">
+      <textarea id="postText" class="modal-textarea" placeholder="What's on your mind?"></textarea>
+
+      <label class="image-upload-btn" for="postImg">📷 Add Image</label>
+      <input type="file" id="postImg" accept="image/*" style="display:none;">
+      <img id="imgPreview" class="image-preview">
+
+      <div class="modal-actions">
+        <button type="button" class="modal-btn cancel" id="cancelBtn">Cancel</button>
+        <button type="submit" class="modal-btn submit" id="submitBtn">Post</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+/* FIREBASE + SUPABASE */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
+  authDomain: "patholytica.firebaseapp.com",
+  projectId: "patholytica",
+  storageBucket: "patholytica.firebasestorage.app",
+  messagingSenderId: "738430635282",
+  appId: "1:738430635282:web:8451ef380447c7611137cb"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const supabase = createClient(
+  "https://vmgenqvsmqiphcajaclx.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3MTUzNzUsImV4cCI6MjA3OTI5MTM3NX0.a2FCNa6BzYqXJWPUkByxK1EiNzt1cZhc3cp2SVj-Ke4"
+);
+
+let currentUser = null;
+let userLikes = new Set();
+
+/* THEME */
+const themeBtn = document.getElementById("themeBtn");
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light-theme");
+  themeBtn.textContent = "☀️ Light";
+}
+
+themeBtn.addEventListener("click", () => {
+  const isLight = document.body.classList.toggle("light-theme");
+  themeBtn.textContent = isLight ? "☀️ Light" : "🌙 Dark";
+  localStorage.setItem("theme", isLight ? "light" : "dark");
+});
+
+/* HEADER SCROLL */
+let lastScroll = 0;
+window.addEventListener("scroll", () => {
+  const scroll = window.pageYOffset;
+  document.getElementById("header").classList.toggle("hidden", scroll > lastScroll && scroll > 100);
+  lastScroll = scroll;
+});
+
+/* MODAL */
+const modal = document.getElementById("modal");
+const createBtn = document.getElementById("createBtn");
+const closeBtn = document.getElementById("closeBtn");
+const cancelBtn = document.getElementById("cancelBtn");
+const postForm = document.getElementById("postForm");
+const postImg = document.getElementById("postImg");
+const imgPreview = document.getElementById("imgPreview");
+
+createBtn.onclick = () => modal.classList.add("active");
+closeBtn.onclick = cancelBtn.onclick = () => {
+  modal.classList.remove("active");
+  postForm.reset();
+  imgPreview.style.display = "none";
+};
+
+/* IMAGE PREVIEW */
+postImg.onchange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    alert("Image must be under 5MB");
+    postImg.value = "";
+    return;
+  }
+  imgPreview.src = URL.createObjectURL(file);
+  imgPreview.style.display = "block";
+};
+
+/* ESCAPE HTML */
+const esc = (str) => {
+  const el = document.createElement("div");
+  el.textContent = str;
+  return el.innerHTML;
+};
+
+/* TIME AGO */
+const timeAgo = (date) => {
+  const sec = Math.floor((Date.now() - new Date(date)) / 1000);
+  if (sec < 60) return "now";
+  if (sec < 3600) return Math.floor(sec / 60) + "m";
+  if (sec < 86400) return Math.floor(sec / 3600) + "h";
+  if (sec < 604800) return Math.floor(sec / 86400) + "d";
+  return new Date(date).toLocaleDateString();
+};
+
+/* LOAD USER LIKES */
+async function loadLikes() {
+  if (!currentUser) return;
+  const { data } = await supabase
+    .from("post_likes")
+    .select("post_id")
+    .eq("firebase_uid", currentUser.uid);
+
+  userLikes = new Set(data?.map(l => l.post_id) || []);
+}
+
+/* LOAD FEED */
+async function loadFeed() {
+  const feed = document.getElementById("feedContent");
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*, users(name, username, profile_pic)")
+    .order("created_at", { ascending: false })
+    .limit(30);
+
+  if (error) {
+    feed.innerHTML = `<div class="error-state"><h2>Error</h2><p>${error.message}</p></div>`;
+    return;
+  }
+
+  if (!data?.length) {
+    feed.innerHTML = `<div class="empty-state"><h2>No posts yet</h2><p>Be the first to post.</p></div>`;
+    return;
+  }
+
+  feed.innerHTML = data.map(renderPost).join("");
+}
+
+/* RENDER POST */
+function renderPost(p) {
+  const u = p.users || {};
+  const liked = userLikes.has(p.id);
+
+  return `
+  <div class="post" data-id="${p.id}">
+    <div class="post-header">
+      <img class="post-avatar" src="${u.profile_pic || "https://ui-avatars.com/api/?name=" + encodeURIComponent(u.name || "User")}">
+      <div class="post-author-info">
+        <span class="post-author-name">${esc(u.name || "User")}</span>
+        <span class="post-author-username">@${esc(u.username || "user")}</span>
+      </div>
+      <span class="post-time">${timeAgo(p.created_at)}</span>
+    </div>
+
+    ${(p.content || p.image_url) ? `
+    <div class="post-content">
+      ${p.content ? `<div class="post-text">${esc(p.content)}</div>` : ""}
+      ${p.image_url ? `<img class="post-image" src="${p.image_url}">` : ""}
+    </div>
+    ` : ""}
+
+    <div class="post-actions">
+      <button class="action-btn ${liked ? "liked" : ""}" onclick="like('${p.id}')">
+        <span>${liked ? "❤️" : "🤍"}</span>
+        <span class="like-count">${p.likes_count || 0}</span>
+      </button>
+
+      <button class="action-btn" onclick="showComments('${p.id}')">
+        <span>💬</span>
+        <span class="comment-count">${p.comments_count || 0}</span>
+      </button>
+    </div>
+
+    <div class="comments-section hidden" id="c-${p.id}">
+      <div id="cl-${p.id}"></div>
+      <div class="comment-input-wrapper">
+        <input class="comment-input" id="ci-${p.id}" placeholder="Add comment...">
+        <button class="comment-submit" onclick="addComment('${p.id}')">Post</button>
+      </div>
+    </div>
+  </div>
+  `;
+}
+
+/* LIKE POST */
+window.like = async (id) => {
+  if (!currentUser) return alert("Login required");
+
+  const post = document.querySelector(`[data-id="${id}"]`);
+  const btn = post.querySelector(".action-btn");
+  const count = post.querySelector(".like-count");
+
+  const liked = userLikes.has(id);
+
+  if (liked) {
+    await supabase.from("post_likes").delete()
+      .eq("post_id", id)
+      .eq("firebase_uid", currentUser.uid);
+
+    userLikes.delete(id);
+    btn.classList.remove("liked");
+    btn.querySelector("span").textContent = "🤍";
+    count.textContent = +count.textContent - 1;
+  } else {
+    await supabase.from("post_likes").insert({ post_id: id, firebase_uid: currentUser.uid });
+
+    userLikes.add(id);
+    btn.classList.add("liked");
+    btn.querySelector("span").textContent = "❤️";
+    count.textContent = +count.textContent + 1;
+  }
+};
+
+/* TOGGLE COMMENTS */
+window.showComments = async (id) => {
+  const sec = document.getElementById(`c-${id}`);
+  const hidden = sec.classList.toggle("hidden");
+
+  if (!hidden) loadComments(id);
+};
+
+/* LOAD COMMENTS */
+async function loadComments(id) {
+  const list = document.getElementById(`cl-${id}`);
+
+  const { data } = await supabase
+    .from("post_comments")
+    .select("*, users(name, profile_pic)")
+    .eq("post_id", id)
+    .order("created_at", { ascending: true });
+
+  if (!data?.length) {
+    list.innerHTML = `<p style="text-align:center;color:#888;padding:16px">No comments yet</p>`;
+    return;
+  }
+
+  list.innerHTML = data.map(c => `
+    <div class="comment">
+      <div class="comment-header">
+        <img class="comment-avatar" src="${c.users?.profile_pic || "https://ui-avatars.com/api/?name=" + encodeURIComponent(c.users?.name || "User")}">
+        <span class="comment-author">${esc(c.users?.name || "User")}</span>
+      </div>
+      <div class="comment-text">${esc(c.comment_text)}</div>
+    </div>
+  `).join("");
+}
+
+/* ADD COMMENT */
+window.addComment = async (id) => {
+  if (!currentUser) return alert("Login required");
+
+  const input = document.getElementById(`ci-${id}`);
+  const text = input.value.trim();
+  
+  if (!text) return;
+
+  await supabase.from("post_comments").insert({
+    post_id: id,
+    firebase_uid: currentUser.uid,
+    comment_text: text
+  });
+
+  input.value = "";
+  await loadComments(id);
+
+  const post = document.querySelector(`[data-id="${id}"]`);
+  const commentCount = post.querySelector(".comment-count");
+  commentCount.textContent = +commentCount.textContent + 1;
+};
+
+/* CREATE POST */
+postForm.onsubmit = async (e) => {
+  e.preventDefault();
+  if (!currentUser) return alert("Login required");
+
+  const submitBtn = document.getElementById("submitBtn");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Posting...";
+
+  try {
+    const content = document.getElementById("postText").value.trim();
+    let imageUrl = null;
+
+    if (postImg.files[0]) {
+      const file = postImg.files[0];
+      const ext = file.name.split(".").pop();
+      const path = `posts/${currentUser.uid}/${Date.now()}.${ext}`;
+
+      const { error: upErr } = await supabase.storage
+        .from("posts")
+        .upload(path, file);
+
+      if (upErr) throw upErr;
+
+      const { data } = supabase.storage.from("posts").getPublicUrl(path);
+      imageUrl = data.publicUrl;
+    }
+
+    if (!content && !imageUrl) {
+      alert("Add text or an image");
+      return;
+    }
+
+    await supabase.from("posts").insert({
+      firebase_uid: currentUser.uid,
+      content: content || null,
+      image_url: imageUrl
+    });
+
+    modal.classList.remove("active");
+    postForm.reset();
+    imgPreview.style.display = "none";
+
+    await loadFeed();
+
+  } catch (err) {
+    alert("Error: " + err.message);
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Post";
+};
+
+/* AUTH */
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
+
+  if (!user) {
+    document.getElementById("feedContent").innerHTML =
+      `<div class="empty-state"><h2>Please log in</h2></div>`;
+    return;
+  }
+
+  await loadLikes();
+  await loadFeed();
+});
+</script>
+
+</body>
+</html>
