@@ -9,7 +9,7 @@
 :root {
   --bg-color: #0d0d0d;
   --text-color: #fff;
-  --card-bg: rgba(24,24,24,0.7);
+  --card-bg: rgba(24,24,24,0.9);
   --card-border: rgba(255,255,255,0.07);
   --accent: #b0003a;
   --accent-hover: #88002a;
@@ -18,20 +18,21 @@
 body.light-theme {
 –bg-color: #f5f5f5;
 –text-color: #111;
-–card-bg: rgba(255,255,255,0.65);
+–card-bg: rgba(255,255,255,0.9);
 –card-border: rgba(0,0,0,0.1);
 }
 
 - { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; font-family: “Inter”, Arial, sans-serif; }
+  html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, “Segoe UI”, Arial, sans-serif; }
 
 body {
 background: var(–bg-color);
 color: var(–text-color);
-transition: background 0.35s ease;
-padding-bottom: 70px;
+transition: background 0.3s ease, color 0.3s ease;
+padding-bottom: 80px;
 }
 
+/* Header */
 .header-wrapper {
 position: fixed;
 top: 0;
@@ -41,7 +42,6 @@ background: var(–bg-color);
 border-bottom: 1px solid var(–card-border);
 z-index: 100;
 transition: transform 0.3s ease;
-padding-top: env(safe-area-inset-top);
 }
 
 .header-wrapper.hidden {
@@ -52,60 +52,72 @@ transform: translateY(-100%);
 display: flex;
 align-items: center;
 justify-content: space-between;
-padding: 16px 18px;
-max-width: 800px;
+padding: 12px 20px;
+max-width: 700px;
 margin: 0 auto;
 }
 
-.logo-img {
-height: 32px;
-width: auto;
-cursor: pointer;
-transition: filter 0.25s ease;
+.logo {
+font-size: 22px;
+font-weight: 700;
+color: var(–accent);
+text-decoration: none;
 }
 
-body.light-theme .logo-img { filter: invert(1); }
-
 .theme-toggle {
-padding: 6px 14px;
-font-size: 12.5px;
-background: transparent;
-border-radius: 6px;
+padding: 8px 16px;
+font-size: 13px;
+background: var(–card-bg);
+border-radius: 8px;
 border: 1px solid var(–card-border);
 color: var(–text-color);
 cursor: pointer;
-transition: 0.25s ease;
+transition: 0.2s ease;
+font-weight: 500;
 }
 
 .theme-toggle:hover {
 border-color: var(–accent);
-color: var(–accent);
+background: var(–accent);
+color: #fff;
 }
 
+/* Feed */
 .feed-container {
-max-width: 800px;
+max-width: 700px;
 margin: 0 auto;
-padding: calc(70px + env(safe-area-inset-top)) 0 0 0;
+padding-top: 65px;
 }
 
 .post {
-margin-bottom: 32px;
-animation: fadeIn 0.4s ease;
+margin-bottom: 24px;
+background: var(–card-bg);
+border: 1px solid var(–card-border);
+border-radius: 12px;
+overflow: hidden;
+animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
 }
 
 .post-header {
 display: flex;
 align-items: center;
 gap: 12px;
-padding: 0 18px 12px;
+padding: 16px 18px;
+border-bottom: 1px solid var(–card-border);
 }
 
 .post-avatar {
-width: 42px;
-height: 42px;
+width: 44px;
+height: 44px;
 border-radius: 50%;
 object-fit: cover;
 border: 2px solid var(–card-border);
+background: var(–card-bg);
 }
 
 .post-author-info {
@@ -116,6 +128,7 @@ flex: 1;
 font-weight: 600;
 font-size: 15px;
 display: block;
+margin-bottom: 2px;
 }
 
 .post-author-username {
@@ -124,19 +137,19 @@ color: #888;
 }
 
 .post-time {
-font-size: 13px;
+font-size: 12px;
 color: #888;
 }
 
+/* Content */
 .post-content {
-padding: 0 18px;
-margin-bottom: 12px;
+padding: 18px;
 }
 
 .post-text {
 font-size: 15px;
 line-height: 1.6;
-margin-bottom: 12px;
+margin-bottom: 14px;
 white-space: pre-wrap;
 word-wrap: break-word;
 }
@@ -149,39 +162,50 @@ border-radius: 8px;
 margin-top: 12px;
 }
 
+/* Actions */
 .post-actions {
 display: flex;
-gap: 24px;
+gap: 8px;
 padding: 12px 18px;
-border-bottom: 1px solid var(–card-border);
+border-top: 1px solid var(–card-border);
 }
 
 .action-btn {
 display: flex;
 align-items: center;
-gap: 8px;
+gap: 6px;
 background: none;
-border: none;
+border: 1px solid var(–card-border);
 color: var(–text-color);
 cursor: pointer;
 font-size: 14px;
 transition: 0.2s ease;
-padding: 6px 10px;
-border-radius: 6px;
+padding: 8px 16px;
+border-radius: 20px;
+font-weight: 500;
 }
 
 .action-btn:hover {
 background: rgba(176, 0, 58, 0.1);
+border-color: var(–accent);
 color: var(–accent);
 }
 
 .action-btn.liked {
+background: rgba(176, 0, 58, 0.15);
+border-color: var(–accent);
 color: var(–accent);
 }
 
+/* Comments */
 .comments-section {
 padding: 16px 18px;
-border-bottom: 1px solid var(–card-border);
+border-top: 1px solid var(–card-border);
+background: rgba(0,0,0,0.2);
+}
+
+body.light-theme .comments-section {
+background: rgba(0,0,0,0.03);
 }
 
 .comments-section.hidden {
@@ -189,21 +213,21 @@ display: none;
 }
 
 .comment {
-margin-bottom: 16px;
-padding-bottom: 12px;
+margin-bottom: 14px;
+padding-bottom: 14px;
 border-bottom: 1px solid var(–card-border);
 }
 
-.comment:last-child {
+.comment:last-of-type {
 border-bottom: none;
-margin-bottom: 0;
+margin-bottom: 8px;
 }
 
 .comment-header {
 display: flex;
 align-items: center;
 gap: 10px;
-margin-bottom: 6px;
+margin-bottom: 8px;
 }
 
 .comment-avatar {
@@ -211,6 +235,7 @@ width: 32px;
 height: 32px;
 border-radius: 50%;
 object-fit: cover;
+background: var(–card-bg);
 }
 
 .comment-author {
@@ -221,12 +246,12 @@ font-size: 14px;
 .comment-text {
 font-size: 14px;
 line-height: 1.5;
-margin-left: 42px;
+padding-left: 42px;
 }
 
 .comment-input-wrapper {
 display: flex;
-gap: 10px;
+gap: 8px;
 margin-top: 12px;
 }
 
@@ -235,10 +260,9 @@ flex: 1;
 padding: 10px 14px;
 border-radius: 20px;
 border: 1px solid var(–card-border);
-background: var(–card-bg);
+background: var(–bg-color);
 color: var(–text-color);
 font-size: 14px;
-resize: none;
 font-family: inherit;
 }
 
@@ -248,12 +272,13 @@ border-color: var(–accent);
 }
 
 .comment-submit {
-padding: 8px 16px;
+padding: 10px 20px;
 background: var(–accent);
 color: #fff;
 border: none;
 border-radius: 20px;
 font-size: 14px;
+font-weight: 600;
 cursor: pointer;
 transition: 0.2s ease;
 }
@@ -262,6 +287,7 @@ transition: 0.2s ease;
 background: var(–accent-hover);
 }
 
+/* Bottom Nav */
 .bottom-nav {
 position: fixed;
 bottom: 0;
@@ -269,31 +295,33 @@ left: 0;
 right: 0;
 background: var(–bg-color);
 border-top: 1px solid var(–card-border);
-padding: 12px 18px;
-padding-bottom: calc(12px + env(safe-area-inset-bottom));
+padding: 12px;
 z-index: 100;
 display: flex;
 justify-content: center;
-gap: 16px;
+gap: 12px;
+box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
 }
 
 .nav-btn {
 display: flex;
 align-items: center;
 gap: 8px;
-padding: 10px 20px;
-background: transparent;
+padding: 12px 24px;
+background: var(–card-bg);
 border: 1px solid var(–card-border);
 color: var(–text-color);
-border-radius: 8px;
+border-radius: 12px;
 cursor: pointer;
 font-size: 14px;
+font-weight: 600;
 transition: 0.2s ease;
+text-decoration: none;
 }
 
 .nav-btn:hover {
 border-color: var(–accent);
-color: var(–accent);
+transform: translateY(-2px);
 }
 
 .nav-btn.primary {
@@ -306,19 +334,24 @@ border-color: var(–accent);
 background: var(–accent-hover);
 }
 
-.loading, .empty-state {
+/* States */
+.loading, .empty-state, .error-state {
 text-align: center;
-padding: 60px 20px;
+padding: 80px 20px;
 color: #888;
 }
 
+.empty-state h2, .error-state h2 {
+font-size: 24px;
+margin-bottom: 8px;
+color: var(–text-color);
+}
+
+/* Modal */
 .modal {
 position: fixed;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-background: rgba(0, 0, 0, 0.8);
+inset: 0;
+background: rgba(0, 0, 0, 0.85);
 z-index: 200;
 display: none;
 align-items: center;
@@ -332,12 +365,13 @@ display: flex;
 
 .modal-content {
 background: var(–card-bg);
-backdrop-filter: blur(22px);
+backdrop-filter: blur(20px);
 border-radius: 16px;
 border: 1px solid var(–card-border);
-padding: 30px;
-max-width: 600px;
+padding: 28px;
+max-width: 550px;
 width: 100%;
+box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
 
 .modal-header {
@@ -347,21 +381,37 @@ align-items: center;
 margin-bottom: 20px;
 }
 
+.modal-header h2 {
+font-size: 20px;
+}
+
 .modal-close {
 background: none;
 border: none;
 color: var(–text-color);
-font-size: 28px;
+font-size: 32px;
 cursor: pointer;
+line-height: 1;
+width: 36px;
+height: 36px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 8px;
+transition: 0.2s;
+}
+
+.modal-close:hover {
+background: rgba(255,255,255,0.1);
 }
 
 .modal-textarea {
 width: 100%;
 min-height: 120px;
 padding: 14px;
-border-radius: 8px;
+border-radius: 10px;
 border: 1px solid var(–card-border);
-background: rgba(0, 0, 0, 0.25);
+background: var(–bg-color);
 color: var(–text-color);
 font-size: 15px;
 resize: vertical;
@@ -369,50 +419,51 @@ margin-bottom: 16px;
 font-family: inherit;
 }
 
-body.light-theme .modal-textarea {
-background: rgba(255, 255, 255, 0.7);
-}
-
 .modal-textarea:focus {
 outline: none;
 border-color: var(–accent);
 }
 
-.image-upload-label {
-display: inline-block;
-padding: 10px 16px;
-background: transparent;
+.image-upload-btn {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+padding: 10px 18px;
+background: var(–bg-color);
 border: 1px solid var(–card-border);
 border-radius: 8px;
 cursor: pointer;
 transition: 0.2s ease;
 font-size: 14px;
+color: var(–text-color);
 margin-bottom: 16px;
 }
 
-.image-upload-label:hover {
+.image-upload-btn:hover {
 border-color: var(–accent);
 }
 
 .image-preview {
 max-width: 100%;
-border-radius: 8px;
+border-radius: 10px;
 display: none;
 margin-bottom: 16px;
+border: 1px solid var(–card-border);
 }
 
 .modal-actions {
 display: flex;
-gap: 12px;
+gap: 10px;
 justify-content: flex-end;
 }
 
 .modal-btn {
-padding: 12px 24px;
-border-radius: 8px;
+padding: 12px 28px;
+border-radius: 10px;
 border: none;
 cursor: pointer;
 font-size: 15px;
+font-weight: 600;
 transition: 0.2s ease;
 }
 
@@ -422,9 +473,17 @@ border: 1px solid var(–card-border);
 color: var(–text-color);
 }
 
+.modal-btn.cancel:hover {
+background: rgba(255,255,255,0.05);
+}
+
 .modal-btn.submit {
 background: var(–accent);
 color: #fff;
+}
+
+.modal-btn.submit:hover {
+background: var(–accent-hover);
 }
 
 .modal-btn:disabled {
@@ -432,9 +491,14 @@ opacity: 0.5;
 cursor: not-allowed;
 }
 
-@keyframes fadeIn {
-from { opacity: 0; transform: translateY(10px); }
-to { opacity: 1; transform: translateY(0); }
+@media (max-width: 640px) {
+.feed-container {
+padding-left: 12px;
+padding-right: 12px;
+}
+.nav-btn span:last-child {
+display: none;
+}
 }
 </style>
 
@@ -443,8 +507,8 @@ to { opacity: 1; transform: translateY(0); }
 
 <div class="header-wrapper" id="header">
   <div class="header">
-    <img src="https://via.placeholder.com/150x40/b0003a/ffffff?text=Patholytica" class="logo-img" alt="Logo">
-    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+    <a href="#" class="logo">Patholytica</a>
+    <button class="theme-toggle" id="themeBtn">🌙 Dark</button>
   </div>
 </div>
 
@@ -453,31 +517,41 @@ to { opacity: 1; transform: translateY(0); }
 </div>
 
 <div class="bottom-nav">
-  <button class="nav-btn">🏠 Home</button>
-  <button class="nav-btn primary" onclick="openModal()">✏️ Create Post</button>
-  <button class="nav-btn">👤 Profile</button>
+  <a href="#" class="nav-btn">
+    <span>🏠</span>
+    <span>Home</span>
+  </a>
+  <button class="nav-btn primary" id="createBtn">
+    <span>✏️</span>
+    <span>Create</span>
+  </button>
+  <a href="#" class="nav-btn">
+    <span>👤</span>
+    <span>Profile</span>
+  </a>
 </div>
 
-<div class="modal" id="createPostModal">
+<div class="modal" id="modal">
   <div class="modal-content">
     <div class="modal-header">
       <h2>Create Post</h2>
-      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <button class="modal-close" id="closeBtn">&times;</button>
     </div>
-    <form id="createPostForm">
-      <textarea id="postContent" class="modal-textarea" placeholder="What's on your mind?"></textarea>
+    <form id="postForm">
+      <textarea id="postText" class="modal-textarea" placeholder="What's on your mind?" maxlength="2000"></textarea>
 
-
-  <label class="image-upload-label" for="postImage">📷 Add Image</label>
-  <input type="file" id="postImage" accept="image/*" style="display: none;">
-  <img id="imagePreview" class="image-preview" alt="Preview">
+  <label class="image-upload-btn" for="postImg">
+    <span>📷</span>
+    <span>Add Image</span>
+  </label>
+  <input type="file" id="postImg" accept="image/*" style="display:none;">
+  <img id="imgPreview" class="image-preview" alt="Preview">
 
   <div class="modal-actions">
-    <button type="button" class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+    <button type="button" class="modal-btn cancel" id="cancelBtn">Cancel</button>
     <button type="submit" class="modal-btn submit" id="submitBtn">Post</button>
   </div>
 </form>
-
 
   </div>
 </div>
@@ -485,7 +559,7 @@ to { opacity: 1; transform: translateY(0); }
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
@@ -495,274 +569,304 @@ const firebaseConfig = {
   messagingSenderId: "738430635282",
   appId: "1:738430635282:web:8451ef380447c7611137cb"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const SUPABASE_URL = 'https://vmgenqvsmqiphcajaclx.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3MTUzNzUsImV4cCI6MjA3OTI5MTM3NX0.a2FCNa6BzYqXJWPUkByxK1EiNzt1cZhc3cp2SVj-Ke4';
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = createClient(
+  'https://vmgenqvsmqiphcajaclx.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3MTUzNzUsImV4cCI6MjA3OTI5MTM3NX0.a2FCNa6BzYqXJWPUkByxK1EiNzt1cZhc3cp2SVj-Ke4'
+);
 
 let currentUser = null;
 let userLikes = new Set();
 
-function toggleTheme() {
-  document.body.classList.toggle('light-theme');
-  localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
-}
-if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme');
-window.toggleTheme = toggleTheme;
+// Theme
+const themeBtn = document.getElementById('themeBtn');
+themeBtn.addEventListener('click', () => {
+  const isLight = document.body.classList.toggle('light-theme');
+  themeBtn.textContent = isLight ? '☀️ Light' : '🌙 Dark';
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+});
 
+if (localStorage.getItem('theme') === 'light') {
+  document.body.classList.add('light-theme');
+  themeBtn.textContent = '☀️ Light';
+}
+
+// Header scroll
 let lastScroll = 0;
 window.addEventListener('scroll', () => {
-  const currentScroll = window.pageYOffset;
-  const header = document.getElementById('header');
-  if (currentScroll > lastScroll && currentScroll > 80) {
-    header.classList.add('hidden');
-  } else {
-    header.classList.remove('hidden');
-  }
-  lastScroll = currentScroll;
+  const scroll = window.pageYOffset;
+  document.getElementById('header').classList.toggle('hidden', scroll > lastScroll && scroll > 100);
+  lastScroll = scroll;
 });
 
-window.openModal = () => document.getElementById('createPostModal').classList.add('active');
-window.closeModal = () => {
-  document.getElementById('createPostModal').classList.remove('active');
-  document.getElementById('createPostForm').reset();
-  document.getElementById('imagePreview').style.display = 'none';
+// Modal
+const modal = document.getElementById('modal');
+const createBtn = document.getElementById('createBtn');
+const closeBtn = document.getElementById('closeBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const postForm = document.getElementById('postForm');
+const postImg = document.getElementById('postImg');
+const imgPreview = document.getElementById('imgPreview');
+
+createBtn.onclick = () => modal.classList.add('active');
+closeBtn.onclick = cancelBtn.onclick = () => {
+  modal.classList.remove('active');
+  postForm.reset();
+  imgPreview.style.display = 'none';
 };
 
-document.getElementById('postImage').addEventListener('change', (e) => {
+postImg.onchange = (e) => {
   const file = e.target.files[0];
   if (!file) return;
-  if (file.size > 5 * 1024 * 1024) {
-    alert('Image must be smaller than 5MB.');
-    e.target.value = '';
+  if (file.size > 5242880) {
+    alert('Image must be under 5MB');
+    postImg.value = '';
     return;
   }
-  const preview = document.getElementById('imagePreview');
-  preview.src = URL.createObjectURL(file);
-  preview.style.display = 'block';
-});
+  imgPreview.src = URL.createObjectURL(file);
+  imgPreview.style.display = 'block';
+};
 
-function timeAgo(date) {
-  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-  if (seconds < 60) return 'just now';
-  if (seconds < 3600) return Math.floor(seconds / 60) + 'm';
-  if (seconds < 86400) return Math.floor(seconds / 3600) + 'h';
-  if (seconds < 604800) return Math.floor(seconds / 86400) + 'd';
+// Utils
+const esc = (str) => {
+  const el = document.createElement('div');
+  el.textContent = str;
+  return el.innerHTML;
+};
+
+const timeAgo = (date) => {
+  const sec = Math.floor((Date.now() - new Date(date)) / 1000);
+  if (sec < 60) return 'now';
+  if (sec < 3600) return Math.floor(sec / 60) + 'm';
+  if (sec < 86400) return Math.floor(sec / 3600) + 'h';
+  if (sec < 604800) return Math.floor(sec / 86400) + 'd';
   return new Date(date).toLocaleDateString();
-}
+};
 
-async function loadUserLikes() {
+// Load likes
+async function loadLikes() {
   if (!currentUser) return;
-  const { data } = await supabase
-    .from('post_likes')
-    .select('post_id')
-    .eq('firebase_uid', currentUser.uid);
-  userLikes = new Set(data?.map(like => like.post_id) || []);
-}
-
-async function loadFeed() {
-  const feedContent = document.getElementById('feedContent');
   try {
-    const { data: posts, error } = await supabase
-      .from('posts')
-      .select(`*, users(name, username, profile_pic)`)
-      .order('created_at', { ascending: false })
-      .limit(50);
-    
-    if (error) throw error;
-    if (!posts || posts.length === 0) {
-      feedContent.innerHTML = '<div class="empty-state"><h2>No posts yet</h2><p>Be the first to share!</p></div>';
-      return;
-    }
-    feedContent.innerHTML = posts.map(renderPost).join('');
+    const { data } = await supabase
+      .from('post_likes')
+      .select('post_id')
+      .eq('firebase_uid', currentUser.uid);
+    userLikes = new Set(data?.map(l => l.post_id) || []);
   } catch (err) {
-    feedContent.innerHTML = `<div class="empty-state"><h2>Error</h2><p>${err.message}</p></div>`;
+    console.error('Load likes error:', err);
   }
 }
 
-function renderPost(post) {
-  const user = post.users;
-  const isLiked = userLikes.has(post.id);
+// Load feed
+async function loadFeed() {
+  const feed = document.getElementById('feedContent');
+  try {
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*, users(name, username, profile_pic)')
+      .order('created_at', { ascending: false })
+      .limit(30);
+    
+    if (error) throw error;
+    
+    if (!data?.length) {
+      feed.innerHTML = '<div class="empty-state"><h2>No posts yet</h2><p>Be the first to share!</p></div>';
+      return;
+    }
+    
+    feed.innerHTML = data.map(renderPost).join('');
+  } catch (err) {
+    console.error('Feed error:', err);
+    feed.innerHTML = `<div class="error-state"><h2>Error</h2><p>${err.message}</p></div>`;
+  }
+}
+
+// Render post
+function renderPost(p) {
+  const u = p.users || {};
+  const liked = userLikes.has(p.id);
   return `
-    <div class="post" data-id="${post.id}">
+    <div class="post" data-id="${p.id}">
       <div class="post-header">
-        <img src="${user?.profile_pic || 'https://via.placeholder.com/42'}" class="post-avatar" alt="${user?.name}">
+        <img src="${u.profile_pic || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(u.name || 'User')}" class="post-avatar" alt="${u.name}">
         <div class="post-author-info">
-          <span class="post-author-name">${user?.name || 'Anonymous'}</span>
-          <span class="post-author-username">@${user?.username || 'user'}</span>
+          <span class="post-author-name">${esc(u.name || 'Anonymous')}</span>
+          <span class="post-author-username">@${esc(u.username || 'user')}</span>
         </div>
-        <span class="post-time">${timeAgo(post.created_at)}</span>
+        <span class="post-time">${timeAgo(p.created_at)}</span>
       </div>
-      <div class="post-content">
-        ${post.content ? `<div class="post-text">${escapeHtml(post.content)}</div>` : ''}
-        ${post.image_url ? `<img src="${post.image_url}" class="post-image" alt="Post">` : ''}
-      </div>
+      ${p.content || p.image_url ? `<div class="post-content">
+        ${p.content ? `<div class="post-text">${esc(p.content)}</div>` : ''}
+        ${p.image_url ? `<img src="${p.image_url}" class="post-image" alt="Post">` : ''}
+      </div>` : ''}
       <div class="post-actions">
-        <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
-          <span>${isLiked ? '❤️' : '🤍'}</span>
-          <span class="like-count">${post.likes_count}</span>
+        <button class="action-btn ${liked ? 'liked' : ''}" onclick="like('${p.id}')">
+          <span>${liked ? '❤️' : '🤍'}</span>
+          <span class="like-count">${p.likes_count || 0}</span>
         </button>
-        <button class="action-btn" onclick="toggleComments('${post.id}')">
+        <button class="action-btn" onclick="showComments('${p.id}')">
           <span>💬</span>
-          <span>${post.comments_count}</span>
+          <span>${p.comments_count || 0}</span>
         </button>
       </div>
-      <div class="comments-section hidden" id="comments-${post.id}">
-        <div id="comments-list-${post.id}"></div>
+      <div class="comments-section hidden" id="c-${p.id}">
+        <div id="cl-${p.id}"></div>
         <div class="comment-input-wrapper">
-          <textarea class="comment-input" placeholder="Comment..." rows="1" id="input-${post.id}"></textarea>
-
-
-      <button class="comment-submit" onclick="submitComment('${post.id}')">Post</button>
+          <input type="text" class="comment-input" placeholder="Add comment..." id="ci-${p.id}">
+          <button class="comment-submit" onclick="addComment('${p.id}')">Post</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
-
-`;
+  `;
 }
 
-function escapeHtml(text) {
-const div = document.createElement(‘div’);
-div.textContent = text;
-return div.innerHTML;
-}
-
-window.toggleLike = async (postId) => {
-if (!currentUser) return alert(‘Please log in’);
-const isLiked = userLikes.has(postId);
-const postEl = document.querySelector(`[data-id="${postId}"]`);
-const btn = postEl.querySelector(’.action-btn’);
-const count = postEl.querySelector(’.like-count’);
-
-try {
-if (isLiked) {
-await supabase.from(‘post_likes’).delete().eq(‘post_id’, postId).eq(‘firebase_uid’, currentUser.uid);
-userLikes.delete(postId);
-btn.classList.remove(‘liked’);
-btn.querySelector(‘span’).textContent = ‘🤍’;
-count.textContent = parseInt(count.textContent) - 1;
-} else {
-await supabase.from(‘post_likes’).insert({ post_id: postId, firebase_uid: currentUser.uid });
-userLikes.add(postId);
-btn.classList.add(‘liked’);
-btn.querySelector(‘span’).textContent = ‘❤️’;
-count.textContent = parseInt(count.textContent) + 1;
-}
-} catch (err) {
-alert(’Error: ’ + err.message);
-}
+// Like
+window.like = async (id) => {
+  if (!currentUser) return alert('Login required');
+  const liked = userLikes.has(id);
+  const post = document.querySelector(`[data-id="${id}"]`);
+  const btn = post.querySelector('.action-btn');
+  const count = post.querySelector('.like-count');
+  
+  try {
+    if (liked) {
+      await supabase.from('post_likes').delete().eq('post_id', id).eq('firebase_uid', currentUser.uid);
+      userLikes.delete(id);
+      btn.classList.remove('liked');
+      btn.querySelector('span').textContent = '🤍';
+      count.textContent = +count.textContent - 1;
+    } else {
+      await supabase.from('post_likes').insert({ post_id: id, firebase_uid: currentUser.uid });
+      userLikes.add(id);
+      btn.classList.add('liked');
+      btn.querySelector('span').textContent = '❤️';
+      count.textContent = +count.textContent + 1;
+    }
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
 };
 
-window.toggleComments = async (postId) => {
-const section = document.getElementById(`comments-${postId}`);
-const isHidden = section.classList.contains(‘hidden’);
-if (isHidden) {
-section.classList.remove(‘hidden’);
-await loadComments(postId);
-} else {
-section.classList.add(‘hidden’);
-}
+// Comments
+window.showComments = async (id) => {
+  const sec = document.getElementById(`c-${id}`);
+  const hidden = sec.classList.toggle('hidden');
+  if (!hidden) await loadComments(id);
 };
 
-async function loadComments(postId) {
-const list = document.getElementById(`comments-list-${postId}`);
-try {
-const { data, error } = await supabase
-.from(‘post_comments’)
-.select(`*, users(name, profile_pic)`)
-.eq(‘post_id’, postId)
-.order(‘created_at’, { ascending: true });
-if (error) throw error;
-if (!data || data.length === 0) {
-list.innerHTML = ‘<p style="color:#888;text-align:center;padding:20px">No comments yet</p>’;
-return;
-}
-list.innerHTML = data.map(c => `<div class="comment"> <div class="comment-header"> <img src="${c.users?.profile_pic || 'https://via.placeholder.com/32'}" class="comment-avatar" alt="${c.users?.name}"> <span class="comment-author">${c.users?.name || 'User'}</span> </div> <div class="comment-text">${escapeHtml(c.comment_text)}</div> </div>`).join(’’);
-} catch (err) {
-list.innerHTML = ‘<p style="color:#888">Error loading comments</p>’;
-}
+async function loadComments(id) {
+  const list = document.getElementById(`cl-${id}`);
+  try {
+    const { data, error } = await supabase
+      .from('post_comments')
+      .select('*, users(name, profile_pic)')
+      .eq('post_id', id)
+      .order('created_at', { ascending: true });
+    
+    if (error) throw error;
+    
+    if (!data?.length) {
+      list.innerHTML = '<p style="text-align:center;color:#888;padding:16px">No comments yet</p>';
+      return;
+    }
+    
+    list.innerHTML = data.map(c => {
+      const u = c.users || {};
+      return `
+        <div class="comment">
+          <div class="comment-header">
+            <img src="${u.profile_pic || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(u.name || 'User')}" class="comment-avatar" alt="${u.name}">
+            <span class="comment-author">${esc(u.name || 'User')}</span>
+          </div>
+          <div class="comment-text">${esc(c.comment_text)}</div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    list.innerHTML = '<p style="color:#888">Error loading comments</p>';
+  }
 }
 
-window.submitComment = async (postId) => {
-if (!currentUser) return alert(‘Please log in’);
-const input = document.getElementById(`input-${postId}`);
-const text = input.value.trim();
-if (!text) return;
-
-try {
-await supabase.from(‘post_comments’).insert({
-post_id: postId,
-firebase_uid: currentUser.uid,
-comment_text: text
-});
-input.value = ‘’;
-await loadComments(postId);
-} catch (err) {
-alert(’Error: ’ + err.message);
-}
+window.addComment = async (id) => {
+  if (!currentUser) return alert('Login required');
+  const input = document.getElementById(`ci-${id}`);
+  const text = input.value.trim();
+  if (!text) return;
+  
+  try {
+    await supabase.from('post_comments').insert({
+      post_id: id,
+      firebase_uid: currentUser.uid,
+      comment_text: text
+    });
+    input.value = '';
+    await loadComments(id);
+    
+    const post = document.querySelector(`[data-id="${id}"]`);
+    const commentCount = post.querySelector('.action-btn:nth-child(2) span:last-child');
+    commentCount.textContent = +commentCount.textContent + 1;
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
 };
 
-async function uploadImage(file) {
-const ext = file.name.split(’.’).pop();
-const path = `posts/${currentUser.uid}/${Date.now()}.${ext}`;
-const { error } = await supabase.storage.from(‘profile-pictures’).upload(path, file);
-if (error) throw error;
-const { data } = supabase.storage.from(‘profile-pictures’).getPublicUrl(path);
-return data.publicUrl;
-}
+// Create post
+postForm.onsubmit = async (e) => {
+  e.preventDefault();
+  if (!currentUser) return alert('Login required');
+  
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Posting...';
+  
+  try {
+    const content = document.getElementById('postText').value.trim();
+    let imageUrl = null;
+    
+    if (postImg.files[0]) {
+      const file = postImg.files[0];
+      const path = `posts/${currentUser.uid}/${Date.now()}.${file.name.split('.').pop()}`;
+      const { error: upErr } = await supabase.storage.from('profile-pictures').upload(path, file);
+      if (upErr) throw upErr;
+      const { data: urlData } = supabase.storage.from('profile-pictures').getPublicUrl(path);
+      imageUrl = urlData.publicUrl;
+    }
+    
+    if (!content && !imageUrl) {
+      alert('Please add text or image');
+      return;
+    }
+    
+    await supabase.from('posts').insert({
+      firebase_uid: currentUser.uid,
+      content: content || null,
+      image_url: imageUrl
+    });
+    
+    modal.classList.remove('active');
+    postForm.reset();
+    imgPreview.style.display = 'none';
+    await loadFeed();
+  } catch (err) {
+    alert('Error: ' + err.message);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Post';
+  }
+};
 
-document.getElementById(‘createPostForm’).addEventListener(‘submit’, async (e) => {
-e.preventDefault();
-if (!currentUser) return alert(‘Please log in’);
-
-const btn = document.getElementById(‘submitBtn’);
-btn.disabled = true;
-btn.textContent = ‘Posting…’;
-
-try {
-const content = document.getElementById(‘postContent’).value.trim();
-const fileInput = document.getElementById(‘postImage’);
-let imageUrl = null;
-
-
-if (fileInput.files[0]) {
-  imageUrl = await uploadImage(fileInput.files[0]);
-}
-
-if (!content && !imageUrl) {
-  alert('Please add text or image');
-  return;
-}
-
-await supabase.from('posts').insert({
-  firebase_uid: currentUser.uid,
-  content: content || null,
-  image_url: imageUrl
-});
-
-closeModal();
-await loadFeed();
-
-
-} catch (err) {
-alert(’Error: ’ + err.message);
-} finally {
-btn.disabled = false;
-btn.textContent = ‘Post’;
-}
-});
-
+// Auth
 onAuthStateChanged(auth, async (user) => {
-currentUser = user;
-if (!user) {
-document.getElementById(‘feedContent’).innerHTML = ‘<div class="empty-state"><h2>Please log in</h2></div>’;
-return;
-}
-await loadUserLikes();
-await loadFeed();
+  currentUser = user;
+  if (!user) {
+    document.getElementById('feedContent').innerHTML = '<div class="empty-state"><h2>Please log in</h2><p>Sign in to see posts</p></div>';
+    return;
+  }
+  await loadLikes();
+  await loadFeed();
 });
 </script>
 
