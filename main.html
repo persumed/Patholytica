@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,7 +25,7 @@ body.light-theme {
 
 * { box-sizing: border-box; margin:0; padding:0; }
 html, body { font-family: "Inter", Arial, sans-serif; background: var(--bg-color); color: var(--text-color); transition: 0.3s; }
-body { display: flex; flex-direction: column; min-height: 100vh; }
+body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 60px; }
 
 /* HEADER */
 .header-wrapper {
@@ -43,6 +44,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; }
   padding: 16px 18px;
 }
 
+.logo-link { display: inline-block; line-height: 0; }
 .logo-img { height:32px; width:auto; cursor:pointer; transition:filter 0.25s ease; }
 body.light-theme .logo-img { filter: invert(1); }
 
@@ -80,6 +82,7 @@ body.light-theme .logo-img { filter: invert(1); }
 
 /* COMMENTS */
 .comments-section { padding:6px 6px; }
+.comments-section.hidden { display: none; }
 .comment { padding:4px 0; display:flex; gap:6px; align-items:flex-start; }
 .comment-avatar { width:28px; height:28px; border-radius:50%; object-fit:cover; flex-shrink:0; }
 .comment-content { flex:1; }
@@ -94,17 +97,40 @@ body.light-theme .logo-img { filter: invert(1); }
 
 /* FOOTER */
 footer {
-  text-align:center;
-  padding:14px 10px;
-  font-size:13px;
-  border-top:1px solid var(--border-color);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 16px 10px;
+  font-size: 13px;
+  background: rgba(13, 13, 13, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border-color);
+  transition: transform 0.3s ease;
+  z-index: 30;
 }
+
+body.light-theme footer {
+  background: rgba(245, 245, 245, 0.85);
+}
+
+footer.hidden {
+  transform: translateY(100%);
+}
+
 footer a {
-  color:var(--accent);
-  text-decoration:none;
-  margin:0 6px;
+  color: var(--accent);
+  text-decoration: none;
+  margin: 0 8px;
+  font-weight: 500;
+  transition: 0.2s;
 }
-footer a:hover { text-decoration:underline; }
+footer a:hover { 
+  text-decoration: underline;
+  color: var(--accent-hover);
+}
 
 /* MODAL */
 .modal { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; }
@@ -119,29 +145,34 @@ footer a:hover { text-decoration:underline; }
 .modal-btn.submit { background:var(--accent); color:#fff; }
 
 </style>
+
 </head>
 <body>
 
 <!-- HEADER -->
+
 <div class="header-wrapper">
   <div class="header">
-    <a href="https://patholytica.com"><img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo"></a>
+    <a href="https://patholytica.com/main" class="logo-link"><img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo"></a>
     <button class="theme-toggle" id="themeBtn">Theme</button>
   </div>
 </div>
 
 <!-- FEED -->
+
 <div class="feed-container" id="feedContent">Loading feed...</div>
 
 <!-- FOOTER -->
-<footer>
-  <a href="#">Home</a> | 
+
+<footer id="footer">
+  <a href="https://patholytica.com/main">Home</a> | 
   <a href="#">Create</a> | 
   <a href="#">Profile</a> | 
   <a href="#">Settings</a>
 </footer>
 
 <!-- POST MODAL -->
+
 <div class="modal" id="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -173,9 +204,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Replace with your actual Supabase anon key
 const supabase = createClient(
   "https://vmgenqvsmqiphcajaclx.supabase.co",
-  "PUBLIC_ANON_KEY"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIzMTMxNDEsImV4cCI6MjA0Nzg4OTE0MX0.PLACEHOLDER"
 );
 
 let currentUser = null;
@@ -188,6 +220,23 @@ themeBtn.onclick = () => {
   const isLight = document.body.classList.toggle("light-theme");
   localStorage.setItem("theme", isLight ? "light" : "dark");
 };
+
+/* FOOTER SCROLL BEHAVIOR */
+let lastScroll = 0;
+const footer = document.getElementById("footer");
+window.addEventListener("scroll", () => {
+  const currentScroll = window.pageYOffset;
+  if (currentScroll <= 0) {
+    footer.classList.remove("hidden");
+    return;
+  }
+  if (currentScroll > lastScroll && currentScroll > 100) {
+    footer.classList.add("hidden");
+  } else {
+    footer.classList.remove("hidden");
+  }
+  lastScroll = currentScroll;
+});
 
 /* MODAL */
 const modal = document.getElementById("modal");
@@ -211,10 +260,29 @@ const timeAgo = date => {
 /* LOAD FEED */
 async function loadFeed() {
   const feed = document.getElementById("feedContent");
-  const { data, error } = await supabase.from("posts").select("*, users(name, username, profile_pic)").order("created_at",{ascending:false}).limit(30);
-  if(error){ feed.innerHTML="Error loading feed."; return; }
-  if(!data?.length){ feed.innerHTML="No posts yet."; return; }
-  feed.innerHTML = data.map(renderPost).join("");
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select("*, users(name, username, profile_pic)")
+      .order("created_at",{ascending:false})
+      .limit(30);
+    
+    if(error) {
+      console.error("Supabase error:", error);
+      feed.innerHTML = `<div style="padding:20px;text-align:center;">Error loading feed: ${error.message}</div>`;
+      return;
+    }
+    
+    if(!data?.length){ 
+      feed.innerHTML = "<div style='padding:20px;text-align:center;'>No posts yet.</div>"; 
+      return; 
+    }
+    
+    feed.innerHTML = data.map(renderPost).join("");
+  } catch(err) {
+    console.error("Error:", err);
+    feed.innerHTML = `<div style="padding:20px;text-align:center;">Error loading feed. Please check your connection.</div>`;
+  }
 }
 
 function renderPost(p){
@@ -235,7 +303,7 @@ function renderPost(p){
       ${p.image_url?`<img class="post-image" src="${p.image_url}">`:""}
     </div>`:""}
     <div class="post-actions">
-      <button class="action-btn ${liked?"liked":""}" onclick="like('${p.id}')">Like</button>
+      <button class="action-btn ${liked?"liked":""}" onclick="likePost('${p.id}')">Like</button>
       <button class="action-btn" onclick="toggleComments('${p.id}')">Comment</button>
     </div>
     <div class="comments-section hidden" id="c-${p.id}"><div id="cl-${p.id}"></div>
@@ -247,36 +315,77 @@ function renderPost(p){
   </div>`;
 }
 
+/* LIKE FUNCTION */
+window.likePost = async (id) => {
+  if(!currentUser) {
+    alert("Please sign in to like posts");
+    return;
+  }
+  userLikes.has(id) ? userLikes.delete(id) : userLikes.add(id);
+  await loadFeed();
+};
+
 /* COMMENT FUNCTIONS */
 window.toggleComments = id => {
   const sec = document.getElementById(`c-${id}`);
   sec.classList.toggle("hidden");
   if(!sec.classList.contains("hidden")) loadComments(id);
 };
+
 async function loadComments(id){
-  const { data } = await supabase.from("comments").select("*, users(name, profile_pic)").eq("post_id",id).order("created_at",{ascending:true});
-  const container = document.getElementById(`cl-${id}`);
-  container.innerHTML = data.map(c=>`
-    <div class="comment">
-      <img class="comment-avatar" src="${c.users?.profile_pic||"https://ui-avatars.com/api/?name="+encodeURIComponent(c.users?.name||"User")}">
-      <div class="comment-content">
-        <span class="comment-author">${esc(c.users?.name||"User")}</span>
-        <div class="comment-text">${esc(c.content)}</div>
-      </div>
-    </div>`).join("");
+  try {
+    const { data } = await supabase
+      .from("comments")
+      .select("*, users(name, profile_pic)")
+      .eq("post_id",id)
+      .order("created_at",{ascending:true});
+    
+    const container = document.getElementById(`cl-${id}`);
+    if(data && data.length > 0) {
+      container.innerHTML = data.map(c=>`
+        <div class="comment">
+          <img class="comment-avatar" src="${c.users?.profile_pic||"https://ui-avatars.com/api/?name="+encodeURIComponent(c.users?.name||"User")}">
+          <div class="comment-content">
+            <span class="comment-author">${esc(c.users?.name||"User")}</span>
+            <div class="comment-text">${esc(c.content)}</div>
+          </div>
+        </div>`).join("");
+    } else {
+      container.innerHTML = "";
+    }
+  } catch(err) {
+    console.error("Error loading comments:", err);
+  }
 }
+
 window.addComment = async id=>{
+  if(!currentUser) {
+    alert("Please sign in to comment");
+    return;
+  }
   const input=document.getElementById(`ci-${id}`);
   if(!input.value.trim()) return;
-  await supabase.from("comments").insert({post_id:id,firebase_uid:currentUser.uid,content:input.value});
-  input.value=""; loadComments(id);
+  
+  try {
+    await supabase.from("comments").insert({
+      post_id:id,
+      firebase_uid:currentUser.uid,
+      content:input.value
+    });
+    input.value=""; 
+    loadComments(id);
+  } catch(err) {
+    console.error("Error adding comment:", err);
+    alert("Failed to add comment");
+  }
 };
 
 /* AUTH STATE */
-onAuthStateChanged(auth,async user=>{
-  currentUser=user;
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
   await loadFeed();
 });
 </script>
+
 </body>
 </html>
