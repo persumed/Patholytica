@@ -288,90 +288,54 @@ footer.hidden {
 }
 
 /* MODAL */
-.modal { 
-  position:fixed; 
-  inset:0; 
-  background:rgba(0,0,0,0.75); 
-  backdrop-filter: blur(4px);
-  z-index:200; 
-  display:none; 
-  align-items:center; 
-  justify-content:center; 
-  padding:20px;
-  animation: fadeIn 0.3s;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.modal.active { display:flex; }
-.modal-content { 
-  background: var(--bg-color); 
-  border-radius:20px; 
-  border:1px solid var(--border-color); 
-  padding:32px; 
-  max-width:550px; 
-  width:100%;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  animation: slideUp 0.3s;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.modal-header { 
-  display:flex; 
-  justify-content:space-between; 
-  align-items: center;
-  margin-bottom:24px; 
-}
-
-.modal-header h2 {
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.modal-close { 
-  background:none; 
-  border:none; 
-  color:var(--text-color); 
-  font-size:28px; 
-  cursor:pointer;
-  width: 36px;
-  height: 36px;
-  display: flex;
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 200;
+  display: none;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  transition: 0.2s;
+  padding: 20px;
 }
 
-.modal-close:hover {
-  background: rgba(255,255,255,0.1);
+.modal.active {
+  display: flex;
 }
 
-.modal-textarea { 
-  width:100%; 
-  min-height:120px; 
-  padding:16px; 
-  border-radius:12px; 
-  border:1px solid var(--border-color); 
-  background:var(--bg-color); 
-  color:var(--text-color); 
-  margin-bottom:16px;
-  font-size: 15px;
-  font-family: inherit;
-  resize: vertical;
-  transition: border-color 0.2s;
+.modal-content {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 550px;
+  width: 100%;
 }
 
-.modal-textarea:focus {
-  outline: none;
-  border-color: var(--accent);
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 32px;
+  cursor: pointer;
+}
+
+/* TEXTAREA */
+.modal-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--bg-color);
+  color: var(--text-color);
+  margin-bottom: 16px;
 }
 
 /* IMAGE UPLOAD */
@@ -380,18 +344,10 @@ footer.hidden {
   align-items: center;
   gap: 8px;
   padding: 10px 18px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   cursor: pointer;
   margin-bottom: 16px;
-  background: var(--bg-color);
-  color: var(--text-color);
-  transition: 0.2s;
-}
-
-.image-upload-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
 }
 
 .image-preview {
@@ -399,50 +355,39 @@ footer.hidden {
   border-radius: 10px;
   display: none;
   margin-bottom: 16px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--card-border);
 }
 
-.modal-actions { display:flex; gap:12px; justify-content:flex-end; }
-.modal-btn { 
-  padding:12px 28px; 
-  border-radius:12px; 
-  border:none; 
-  font-size:15px; 
-  font-weight:600; 
-  cursor:pointer;
-  transition: all 0.2s;
-}
-.modal-btn.cancel { 
-  background:transparent; 
-  border:2px solid var(--border-color); 
-  color:var(--text-color); 
-}
-.modal-btn.cancel:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.modal-btn.submit { 
-  background:var(--accent); 
-  color:#fff;
-}
-.modal-btn.submit:hover {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
+/* Modal buttons */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
 }
 
-@media (max-width: 600px) {
-  .footer-btn {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
-  
-  .menu-dropdown {
-    width: 100%;
-  }
+.modal-btn {
+  padding: 12px 28px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
 }
+
+.modal-btn.cancel {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+}
+
+.modal-btn.submit {
+  background: var(--accent);
+  color: #fff;
+}
+
 </style>
-
 </head>
+
 <body>
 
 <!-- HEADER -->
