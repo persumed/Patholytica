@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -14,15 +13,11 @@
   --accent: #b0003a;
   --accent-hover: #88002a;
 }
-
 body.light-theme {
   --bg-color: #f5f5f5;
   --text-color: #111;
   --border-color: rgba(0,0,0,0.15);
-  --accent: #b0003a;
-  --accent-hover: #88002a;
 }
-
 * { box-sizing: border-box; margin:0; padding:0; }
 html, body { font-family: "Inter", Arial, sans-serif; background: var(--bg-color); color: var(--text-color); transition: 0.3s; }
 body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 60px; }
@@ -36,23 +31,28 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
   border-bottom: 1px solid var(--border-color);
   z-index: 40;
 }
-
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 18px;
 }
-
 .logo-link { display: inline-block; line-height: 0; }
 .logo-img { height:32px; width:auto; cursor:pointer; transition:filter 0.25s ease; }
 body.light-theme .logo-img { filter: invert(1); }
+.burger-btn { font-size: 24px; background:none; border:none; color: var(--text-color); cursor:pointer; }
 
-.theme-toggle {
-  padding: 6px 14px; font-size: 12.5px; background: transparent;
-  border-radius: 6px; border: 1px solid var(--border-color); color: var(--text-color); cursor:pointer; transition:0.25s ease;
+/* BURGER MENU */
+.burger-menu {
+  position: fixed; top:0; right:-300px; width:250px; height:100%; background:var(--bg-color);
+  box-shadow: -4px 0 12px rgba(0,0,0,0.25); transition: 0.3s; z-index: 150; padding: 40px 20px;
 }
-.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.burger-menu.active { right:0; }
+.burger-close { font-size:28px; background:none; border:none; color: var(--text-color); cursor:pointer; display:block; margin-bottom:20px; }
+.burger-menu ul { list-style:none; padding:0; }
+.burger-menu ul li { margin: 16px 0; }
+.burger-menu ul li button, .burger-menu ul li a { background:none; border:none; color: var(--text-color); font-size:16px; cursor:pointer; text-decoration:none; transition:0.2s; }
+.burger-menu ul li button:hover, .burger-menu ul li a:hover { color: var(--accent); }
 
 /* FEED */
 .feed-container { flex:1; max-width: 700px; margin: 0 auto; padding: 10px 14px; }
@@ -65,18 +65,11 @@ body.light-theme .logo-img { filter: invert(1); }
 .post-author-name { font-weight:600; font-size:14px; }
 .post-author-username { font-size:12px; color:#888; }
 .post-time { font-size:12px; color:#888; }
-
 .post-content { margin-top:6px; }
 .post-text { font-size:14px; line-height:1.4; }
 .post-image { width:100%; border-radius:6px; margin-top:6px; }
-
-/* ACTIONS */
 .post-actions { display:flex; gap:8px; margin-top:6px; margin-left:6px; }
-.action-btn {
-  display:flex; align-items:center; gap:4px;
-  background:none; border:none; color:var(--text-color);
-  font-size:13px; cursor:pointer; padding:2px 6px; border-radius:6px; transition:0.2s;
-}
+.action-btn { display:flex; align-items:center; gap:4px; background:none; border:none; color:var(--text-color); font-size:13px; cursor:pointer; padding:2px 6px; border-radius:6px; transition:0.2s; }
 .action-btn:hover { background: rgba(176,0,58,0.1); color: var(--accent); }
 .action-btn.liked { color: var(--accent); }
 
@@ -88,49 +81,14 @@ body.light-theme .logo-img { filter: invert(1); }
 .comment-content { flex:1; }
 .comment-author { font-weight:600; font-size:13px; }
 .comment-text { font-size:13px; line-height:1.3; margin-top:2px; }
-
 .comment-input-wrapper { display:flex; gap:6px; margin-top:4px; align-items:center; max-width:300px; }
-.comment-input {
-  flex:1; padding:6px 10px; border-radius:16px; border:1px solid var(--border-color); font-size:13px; background:var(--bg-color); color:var(--text-color);
-}
+.comment-input { flex:1; padding:6px 10px; border-radius:16px; border:1px solid var(--border-color); font-size:13px; background:var(--bg-color); color:var(--text-color); }
 .comment-submit { padding:6px 12px; font-size:13px; border-radius:16px; background:var(--accent); color:#fff; border:none; cursor:pointer; }
 
 /* FOOTER */
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
-  padding: 16px 10px;
-  font-size: 13px;
-  background: rgba(13, 13, 13, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-top: 1px solid var(--border-color);
-  transition: transform 0.3s ease;
-  z-index: 30;
-}
-
-body.light-theme footer {
-  background: rgba(245, 245, 245, 0.85);
-}
-
-footer.hidden {
-  transform: translateY(100%);
-}
-
-footer a {
-  color: var(--accent);
-  text-decoration: none;
-  margin: 0 8px;
-  font-weight: 500;
-  transition: 0.2s;
-}
-footer a:hover { 
-  text-decoration: underline;
-  color: var(--accent-hover);
-}
+footer { display:flex; justify-content:space-around; align-items:center; padding:12px 0; font-size:14px; background: rgba(13,13,13,0.85); backdrop-filter: blur(10px); position: fixed; bottom:0; width:100%; border-top:1px solid var(--border-color); }
+footer button { background: var(--accent); border:none; color:#fff; padding:8px 16px; border-radius:12px; cursor:pointer; }
+footer button:hover { background: var(--accent-hover); }
 
 /* MODAL */
 .modal { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; }
@@ -143,36 +101,40 @@ footer a:hover {
 .modal-btn { padding:10px 24px; border-radius:10px; border:none; font-size:14px; font-weight:600; cursor:pointer; }
 .modal-btn.cancel { background:transparent; border:1px solid var(--border-color); color:var(--text-color); }
 .modal-btn.submit { background:var(--accent); color:#fff; }
-
 </style>
-
 </head>
 <body>
 
 <!-- HEADER -->
-
 <div class="header-wrapper">
   <div class="header">
-    <a href="https://patholytica.com/main" class="logo-link"><img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo"></a>
-    <button class="theme-toggle" id="themeBtn">Theme</button>
+    <a href="https://patholytica.com/main" class="logo-link">
+      <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
+    </a>
+    <button class="burger-btn" id="burgerBtn">&#9776;</button>
   </div>
 </div>
 
-<!-- FEED -->
+<!-- BURGER MENU -->
+<div class="burger-menu" id="burgerMenu">
+  <button class="burger-close" id="burgerClose">&times;</button>
+  <ul>
+    <li><button id="themeToggleBtn">Toggle Theme</button></li>
+    <li><a href="#">Profile</a></li>
+    <li><a href="#">Settings</a></li>
+  </ul>
+</div>
 
+<!-- FEED -->
 <div class="feed-container" id="feedContent">Loading feed...</div>
 
 <!-- FOOTER -->
-
 <footer id="footer">
-  <a href="https://patholytica.com/main">Home</a> | 
-  <a href="#">Create</a> | 
-  <a href="#">Profile</a> | 
-  <a href="#">Settings</a>
+  <a href="https://patholytica.com/main">Home</a>
+  <button id="createPostBtn">Create</button>
 </footer>
 
 <!-- POST MODAL -->
-
 <div class="modal" id="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -200,50 +162,39 @@ const firebaseConfig = {
   messagingSenderId: "738430635282",
   appId: "1:738430635282:web:8451ef380447c7611137cb"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Replace with your actual Supabase anon key
-const supabase = createClient(
-  "https://vmgenqvsmqiphcajaclx.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIzMTMxNDEsImV4cCI6MjA0Nzg4OTE0MX0.PLACEHOLDER"
-);
+// ✅ Use the correct Supabase v2 anon key
+const SUPABASE_URL = "https://vmgenqvsmqiphcajaclx.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3MTUzNzUsImV4cCI6MjA3OTI5MTM3NX0.a2FCNa6BzYqXJWPUkByxK1EiNzt1cZhc3cp2SVj-Ke4";
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
 let userLikes = new Set();
 
-/* THEME */
-const themeBtn = document.getElementById("themeBtn");
-if (localStorage.getItem("theme")==="light") document.body.classList.add("light-theme");
-themeBtn.onclick = () => {
+/* BURGER MENU */
+const burgerBtn = document.getElementById("burgerBtn");
+const burgerMenu = document.getElementById("burgerMenu");
+const burgerClose = document.getElementById("burgerClose");
+const themeToggleBtn = document.getElementById("themeToggleBtn");
+burgerBtn.onclick = () => burgerMenu.classList.add("active");
+burgerClose.onclick = () => burgerMenu.classList.remove("active");
+themeToggleBtn.onclick = () => {
   const isLight = document.body.classList.toggle("light-theme");
   localStorage.setItem("theme", isLight ? "light" : "dark");
+  burgerMenu.classList.remove("active");
 };
 
-/* FOOTER SCROLL BEHAVIOR */
-let lastScroll = 0;
-const footer = document.getElementById("footer");
-window.addEventListener("scroll", () => {
-  const currentScroll = window.pageYOffset;
-  if (currentScroll <= 0) {
-    footer.classList.remove("hidden");
-    return;
-  }
-  if (currentScroll > lastScroll && currentScroll > 100) {
-    footer.classList.add("hidden");
-  } else {
-    footer.classList.remove("hidden");
-  }
-  lastScroll = currentScroll;
-});
+/* FOOTER CREATE BUTTON */
+const createPostBtn = document.getElementById("createPostBtn");
+createPostBtn.onclick = () => document.getElementById("modal").classList.add("active");
 
-/* MODAL */
-const modal = document.getElementById("modal");
-const closeBtn = document.getElementById("closeBtn");
-const cancelBtn = document.getElementById("cancelBtn");
+/* MODAL CLOSE */
+document.getElementById("closeBtn").onclick = document.getElementById("cancelBtn").onclick = () => document.getElementById("modal").classList.remove("active");
 
-closeBtn.onclick = cancelBtn.onclick = () => modal.classList.remove("active");
+/* THEME INIT */
+if(localStorage.getItem("theme")==="light") document.body.classList.add("light-theme");
 
 /* ESCAPE HTML */
 const esc = str => { const el=document.createElement("div"); el.textContent=str; return el.innerHTML; };
@@ -266,30 +217,15 @@ async function loadFeed() {
       .select("*, users(name, username, profile_pic)")
       .order("created_at",{ascending:false})
       .limit(30);
-    
-    if(error) {
-      console.error("Supabase error:", error);
-      feed.innerHTML = `<div style="padding:20px;text-align:center;">Error loading feed: ${error.message}</div>`;
-      return;
-    }
-    
-    if(!data?.length){ 
-      feed.innerHTML = "<div style='padding:20px;text-align:center;'>No posts yet.</div>"; 
-      return; 
-    }
-    
+    if(error){ feed.innerHTML = `<div style="padding:20px;text-align:center;">Error: ${error.message}</div>`; return; }
+    if(!data?.length){ feed.innerHTML = "<div style='padding:20px;text-align:center;'>No posts yet.</div>"; return; }
     feed.innerHTML = data.map(renderPost).join("");
-  } catch(err) {
-    console.error("Error:", err);
-    feed.innerHTML = `<div style="padding:20px;text-align:center;">Error loading feed. Please check your connection.</div>`;
-  }
+  } catch(err){ feed.innerHTML = `<div style="padding:20px;text-align:center;">Error loading feed.</div>`; }
 }
-
 function renderPost(p){
   const u = p.users||{};
   const liked = userLikes.has(p.id);
-  return `
-  <div class="post" data-id="${p.id}">
+  return `<div class="post" data-id="${p.id}">
     <div class="post-header">
       <img class="post-avatar" src="${u.profile_pic||"https://ui-avatars.com/api/?name="+encodeURIComponent(u.name||"User")}">
       <div class="post-author-info">
@@ -315,77 +251,32 @@ function renderPost(p){
   </div>`;
 }
 
-/* LIKE FUNCTION */
-window.likePost = async (id) => {
-  if(!currentUser) {
-    alert("Please sign in to like posts");
-    return;
-  }
-  userLikes.has(id) ? userLikes.delete(id) : userLikes.add(id);
-  await loadFeed();
-};
-
-/* COMMENT FUNCTIONS */
-window.toggleComments = id => {
-  const sec = document.getElementById(`c-${id}`);
-  sec.classList.toggle("hidden");
-  if(!sec.classList.contains("hidden")) loadComments(id);
-};
-
+/* LIKE & COMMENT FUNCTIONS */
+window.likePost = async (id) => { if(!currentUser){ alert("Please sign in"); return; } userLikes.has(id)?userLikes.delete(id):userLikes.add(id); await loadFeed(); };
+window.toggleComments = id => { const sec = document.getElementById(`c-${id}`); sec.classList.toggle("hidden"); if(!sec.classList.contains("hidden")) loadComments(id); };
 async function loadComments(id){
   try {
-    const { data } = await supabase
-      .from("comments")
-      .select("*, users(name, profile_pic)")
-      .eq("post_id",id)
-      .order("created_at",{ascending:true});
-    
+    const { data } = await supabase.from("comments").select("*, users(name, profile_pic)").eq("post_id",id).order("created_at",{ascending:true});
     const container = document.getElementById(`cl-${id}`);
-    if(data && data.length > 0) {
-      container.innerHTML = data.map(c=>`
-        <div class="comment">
-          <img class="comment-avatar" src="${c.users?.profile_pic||"https://ui-avatars.com/api/?name="+encodeURIComponent(c.users?.name||"User")}">
-          <div class="comment-content">
-            <span class="comment-author">${esc(c.users?.name||"User")}</span>
-            <div class="comment-text">${esc(c.content)}</div>
-          </div>
-        </div>`).join("");
-    } else {
-      container.innerHTML = "";
-    }
-  } catch(err) {
-    console.error("Error loading comments:", err);
-  }
+    container.innerHTML = data?.map(c=>`<div class="comment">
+      <img class="comment-avatar" src="${c.users?.profile_pic||"https://ui-avatars.com/api/?name="+encodeURIComponent(c.users?.name||"User")}">
+      <div class="comment-content">
+        <span class="comment-author">${esc(c.users?.name||"User")}</span>
+        <div class="comment-text">${esc(c.content)}</div>
+      </div>
+    </div>`).join("") || "";
+  } catch(err){ console.error(err); }
 }
-
-window.addComment = async id=>{
-  if(!currentUser) {
-    alert("Please sign in to comment");
-    return;
-  }
+window.addComment = async id => {
+  if(!currentUser){ alert("Sign in"); return; }
   const input=document.getElementById(`ci-${id}`);
   if(!input.value.trim()) return;
-  
-  try {
-    await supabase.from("comments").insert({
-      post_id:id,
-      firebase_uid:currentUser.uid,
-      content:input.value
-    });
-    input.value=""; 
-    loadComments(id);
-  } catch(err) {
-    console.error("Error adding comment:", err);
-    alert("Failed to add comment");
-  }
+  await supabase.from("comments").insert({ post_id:id, firebase_uid:currentUser.uid, content:input.value });
+  input.value=""; loadComments(id);
 };
 
 /* AUTH STATE */
-onAuthStateChanged(auth, async user => {
-  currentUser = user;
-  await loadFeed();
-});
+onAuthStateChanged(auth, async user => { currentUser = user; await loadFeed(); });
 </script>
-
 </body>
 </html>
