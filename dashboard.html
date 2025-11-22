@@ -1,128 +1,197 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Setup Your Profile — Patholytica</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Feed — Patholytica</title>
+
 <style>
-:root{
-  --bg-color:#0d0d0d;
-  --text-color:#fff;
-  --card-bg:rgba(24,24,24,0.7);
-  --card-border:rgba(255,255,255,0.07);
-  --accent:#b0003a;
-  --accent-hover:#88002a;
+:root {
+  --bg-color: #0d0d0d;
+  --text-color: #fff;
+  --border-color: rgba(255,255,255,0.1);
+  --accent: #b0003a;
+  --accent-hover: #88002a;
 }
-body.light-theme{
-  --bg-color:#f5f5f5;
-  --text-color:#111;
-  --card-bg:rgba(255,255,255,0.65);
-  --card-border:rgba(0,0,0,0.1);
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;height:100%;font-family:"Inter",Arial,sans-serif}
-body{
-  background:var(--bg-color);
-  color:var(--text-color);
-  display:flex;flex-direction:column;transition:background 0.35s ease;
-}
-/* Header */
-.header-wrapper{
-  position:sticky;top:0;background:var(--bg-color);padding-top:env(safe-area-inset-top);
-  border-bottom:1px solid var(--card-border);z-index:40;
-}
-.header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px}
-.logo-img{height:32px;width:auto;cursor:pointer;transition:filter 0.25s ease}
-body.light-theme .logo-img{filter:invert(1)}
-.theme-toggle{
-  padding:6px 14px;font-size:12.5px;background:transparent;border-radius:6px;border:1px solid var(--card-border);
-  color:var(--text-color);cursor:pointer;transition:0.25s ease;
-}
-.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
 
-/* Card */
-.setup-container{flex:1;display:flex;align-items:center;justify-content:center;padding:calc(40px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-left)) calc(40px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-right))}
-.setup-card{
-  width:100%;max-width:430px;padding:55px 42px;background:var(--card-bg);backdrop-filter:blur(22px);
-  border-radius:16px;border:1px solid var(--card-border);box-shadow:0 8px 28px rgba(0,0,0,0.45);text-align:center;
-  animation:fadeUp .45s ease both;transition:transform .25s ease,box-shadow .25s ease
+body.light-theme {
+  --bg-color: #f5f5f5;
+  --text-color: #111;
+  --border-color: rgba(0,0,0,0.15);
+  --accent: #b0003a;
+  --accent-hover: #88002a;
 }
-.setup-card:hover{transform:translateY(-4px);box-shadow:0 12px 35px rgba(0,0,0,0.55)}
-.setup-card h1{font-size:32px;margin-bottom:12px}
-.setup-card p{font-size:15px;margin-bottom:20px;color:#999;line-height:1.55}
 
-#profilePicPreview{
-  width:120px;height:120px;border-radius:50%;object-fit:cover;margin:10px auto 20px;display:block;border:2px solid var(--card-border);
-  transition:transform .25s ease;
+* { box-sizing: border-box; margin:0; padding:0; }
+html, body { font-family: "Inter", Arial, sans-serif; background: var(--bg-color); color: var(--text-color); transition: 0.3s; }
+body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 60px; }
+
+/* HEADER */
+.header-wrapper {
+  position: sticky;
+  top: 0;
+  background: var(--bg-color);
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 40;
 }
-#profilePicPreview:hover{transform:scale(1.05)}
-.upload-label{display:inline-block;margin:10px 0 20px;padding:8px 16px;background:var(--accent);color:#fff;border-radius:8px;cursor:pointer;transition:.25s;font-size:14px}
-.upload-label:hover{background:var(--accent-hover);transform:translateY(-2px)}
-input[type="file"]{display:none}
-.input-field{width:100%;padding:14px;margin-bottom:14px;border-radius:8px;border:1px solid var(--card-border);background:rgba(0,0,0,0.25);color:var(--text-color);font-size:15px;transition:.25s}
-body.light-theme .input-field{background:rgba(255,255,255,0.7)}
-.input-field:focus{border-color:var(--accent);outline:none;box-shadow:0 0 8px rgba(176,0,58,0.35)}
-.setup-btn{display:inline-block;padding:16px 42px;font-size:16px;font-weight:600;background:var(--accent);color:#fff;border-radius:10px;text-decoration:none;transition:.25s;box-shadow:0 6px 16px rgba(176,0,58,0.35);cursor:pointer;border:none;width:100%;margin-top:12px}
-.setup-btn:hover{background:var(--accent-hover);transform:translateY(-2px);box-shadow:0 10px 22px rgba(176,0,58,0.45)}
-.setup-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.skip-link{display:block;margin-top:12px;color:#888;font-size:14px;cursor:pointer;text-decoration:none}
-.skip-link:hover{color:var(--accent);text-decoration:underline}
-footer{ text-align:center;padding:16px;font-size:11px;border-top:1px solid var(--card-border);color:#888}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@media (max-width:640px){.setup-card{padding:45px 30px}.setup-card h1{font-size:27px}}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+}
+
+.logo-link { display: inline-block; line-height: 0; }
+.logo-img { height:32px; width:auto; cursor:pointer; transition:filter 0.25s ease; }
+body.light-theme .logo-img { filter: invert(1); }
+
+.theme-toggle {
+  padding: 6px 14px; font-size: 12.5px; background: transparent;
+  border-radius: 6px; border: 1px solid var(--border-color); color: var(--text-color); cursor:pointer; transition:0.25s ease;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+/* FEED */
+.feed-container { flex:1; max-width: 700px; margin: 0 auto; padding: 10px 14px; }
+
+/* POSTS */
+.post { border-bottom: 1px solid var(--border-color); padding: 12px 0; }
+.post-header { display:flex; align-items:center; gap:10px; margin-left:6px; margin-right:6px; }
+.post-avatar { width:38px; height:38px; border-radius:50%; object-fit:cover; border:1px solid var(--border-color); }
+.post-author-info { flex:1; }
+.post-author-name { font-weight:600; font-size:14px; }
+.post-author-username { font-size:12px; color:#888; }
+.post-time { font-size:12px; color:#888; }
+
+.post-content { margin-top:6px; }
+.post-text { font-size:14px; line-height:1.4; }
+.post-image { width:100%; border-radius:6px; margin-top:6px; }
+
+/* ACTIONS */
+.post-actions { display:flex; gap:8px; margin-top:6px; margin-left:6px; }
+.action-btn {
+  display:flex; align-items:center; gap:4px;
+  background:none; border:none; color:var(--text-color);
+  font-size:13px; cursor:pointer; padding:2px 6px; border-radius:6px; transition:0.2s;
+}
+.action-btn:hover { background: rgba(176,0,58,0.1); color: var(--accent); }
+.action-btn.liked { color: var(--accent); }
+
+/* COMMENTS */
+.comments-section { padding:6px 6px; }
+.comments-section.hidden { display: none; }
+.comment { padding:4px 0; display:flex; gap:6px; align-items:flex-start; }
+.comment-avatar { width:28px; height:28px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+.comment-content { flex:1; }
+.comment-author { font-weight:600; font-size:13px; }
+.comment-text { font-size:13px; line-height:1.3; margin-top:2px; }
+
+.comment-input-wrapper { display:flex; gap:6px; margin-top:4px; align-items:center; max-width:300px; }
+.comment-input {
+  flex:1; padding:6px 10px; border-radius:16px; border:1px solid var(--border-color); font-size:13px; background:var(--bg-color); color:var(--text-color);
+}
+.comment-submit { padding:6px 12px; font-size:13px; border-radius:16px; background:var(--accent); color:#fff; border:none; cursor:pointer; }
+
+/* FOOTER */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 16px 10px;
+  font-size: 13px;
+  background: rgba(13, 13, 13, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border-color);
+  transition: transform 0.3s ease;
+  z-index: 30;
+}
+
+body.light-theme footer {
+  background: rgba(245, 245, 245, 0.85);
+}
+
+footer.hidden {
+  transform: translateY(100%);
+}
+
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+  margin: 0 8px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+footer a:hover { 
+  text-decoration: underline;
+  color: var(--accent-hover);
+}
+
+/* MODAL */
+.modal { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; }
+.modal.active { display:flex; }
+.modal-content { background: var(--bg-color); border-radius:16px; border:1px solid var(--border-color); padding:28px; max-width:550px; width:100%; }
+.modal-header { display:flex; justify-content:space-between; margin-bottom:20px; }
+.modal-close { background:none; border:none; color:var(--text-color); font-size:32px; cursor:pointer; }
+.modal-textarea { width:100%; min-height:100px; padding:14px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-color); color:var(--text-color); margin-bottom:12px; }
+.modal-actions { display:flex; gap:10px; justify-content:flex-end; }
+.modal-btn { padding:10px 24px; border-radius:10px; border:none; font-size:14px; font-weight:600; cursor:pointer; }
+.modal-btn.cancel { background:transparent; border:1px solid var(--border-color); color:var(--text-color); }
+.modal-btn.submit { background:var(--accent); color:#fff; }
+
 </style>
+
 </head>
 <body>
 
+<!-- HEADER -->
+
 <div class="header-wrapper">
   <div class="header">
-    <a href="https://patholytica.com"><img src="IMG_0696.png" class="logo-img" alt="Patholytica"></a>
-    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+    <a href="https://patholytica.com/main" class="logo-link"><img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo"></a>
+    <button class="theme-toggle" id="themeBtn">Theme</button>
   </div>
 </div>
 
-<div class="setup-container">
-  <div class="setup-card">
-    <h1>Complete Your Profile</h1>
-    <p>Let's personalize your learning experience</p>
+<!-- FEED -->
 
-    <img id="profilePicPreview" src="https://via.placeholder.com/120" alt="Profile Preview">
+<div class="feed-container" id="feedContent">Loading feed...</div>
 
-    <form id="profileForm" autocomplete="off">
-      <label class="upload-label" for="profilePicture">Upload Profile Picture</label>
-      <input type="file" id="profilePicture" accept="image/*">
+<!-- FOOTER -->
 
-      <input type="text" id="fullName" class="input-field" placeholder="Full Name" required>
-      <input type="email" id="email" class="input-field" placeholder="Email" readonly disabled>
-      <input type="text" id="username" class="input-field" placeholder="Username" required>
-      <textarea id="bio" class="input-field" placeholder="Short Bio (optional)" rows="3"></textarea>
-
-      <button type="submit" class="setup-btn" id="saveBtn">Save Profile</button>
-      <a href="#" class="skip-link" id="skipBtn">Skip for Now</a>
-    </form>
-  </div>
-</div>
-
-<footer>
-  © 2025 Patholytica by MedicineBank. All rights reserved.
-  <br>
-  <a href="#">Privacy Policy</a> | <a href="#">Terms</a> | <a href="#">Contact</a>
+<footer id="footer">
+  <a href="https://patholytica.com/main">Home</a> | 
+  <a href="#">Create</a> | 
+  <a href="#">Profile</a> | 
+  <a href="#">Settings</a>
 </footer>
 
+<!-- POST MODAL -->
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Create Post</h2>
+      <button class="modal-close" id="closeBtn">&times;</button>
+    </div>
+    <textarea id="postText" class="modal-textarea" placeholder="What's on your mind?"></textarea>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" id="cancelBtn">Cancel</button>
+      <button class="modal-btn submit" id="submitBtn">Post</button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
-/*
-  FULL PROFILE SETUP PAGE:
-  - Firebase Auth is used for authentication.
-  - Supabase stores user profiles in `users` table and images in Storage bucket `profile-pictures`.
-  IMPORTANT: create a public bucket named "profile-pictures" in your Supabase project beforehand.
-*/
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-/* ===== IMPORTS ===== */
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-/* ===== FIREBASE CONFIG ===== */
 const firebaseConfig = {
   apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
   authDomain: "patholytica.firebaseapp.com",
@@ -131,191 +200,191 @@ const firebaseConfig = {
   messagingSenderId: "738430635282",
   appId: "1:738430635282:web:8451ef380447c7611137cb"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-/* ===== SUPABASE CONFIG ===== */
-const SUPABASE_URL = 'https://vmgenqvsmqiphcajaclx.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3MTUzNzUsImV4cCI6MjA3OTI5MTM3NX0.a2FCNa6BzYqXJWPUkByxK1EiNzt1cZhc3cp2SVj-Ke4';
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = createClient(
+  "https://vmgenqvsmqiphcajaclx.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3MTUzNzUsImV4cCI6MjA3OTI5MTM3NX0.a2FCNa6BzYqXJWPUkByxK1EiNzt1cZhc3cp2SVj-Ke4"
+);
 
-/* ===== DOM REFS ===== */
-const fullNameInput = document.getElementById('fullName');
-const emailInput = document.getElementById('email');
-const usernameInput = document.getElementById('username');
-const bioInput = document.getElementById('bio');
-const profilePicInput = document.getElementById('profilePicture');
-const profilePicPreview = document.getElementById('profilePicPreview');
-const profileForm = document.getElementById('profileForm');
-const saveBtn = document.getElementById('saveBtn');
-const skipBtn = document.getElementById('skipBtn');
+let currentUser = null;
+let userLikes = new Set();
 
-/* ===== THEME ===== */
-function toggleTheme(){
-  document.body.classList.toggle('light-theme');
-  localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
-}
-if(localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme');
-window.toggleTheme = toggleTheme;
+/* THEME */
+const themeBtn = document.getElementById("themeBtn");
+if (localStorage.getItem("theme")==="light") document.body.classList.add("light-theme");
+themeBtn.onclick = () => {
+  const isLight = document.body.classList.toggle("light-theme");
+  localStorage.setItem("theme", isLight ? "light" : "dark");
+};
 
-/* ===== IMAGE PREVIEW ===== */
-profilePicInput.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if(!file) return;
-  if(file.size > 5 * 1024 * 1024){
-    alert('Image must be smaller than 5MB.');
-    profilePicInput.value = '';
+/* FOOTER SCROLL BEHAVIOR */
+let lastScroll = 0;
+const footer = document.getElementById("footer");
+window.addEventListener("scroll", () => {
+  const currentScroll = window.pageYOffset;
+  if (currentScroll <= 0) {
+    footer.classList.remove("hidden");
     return;
   }
-  profilePicPreview.src = URL.createObjectURL(file);
+  if (currentScroll > lastScroll && currentScroll > 100) {
+    footer.classList.add("hidden");
+  } else {
+    footer.classList.remove("hidden");
+  }
+  lastScroll = currentScroll;
 });
 
-/* ===== SKIP BUTTON ===== */
-skipBtn.addEventListener('click', (ev) => {
-  ev.preventDefault();
-  if(confirm('Skip profile setup? You can complete it later from settings.')) {
-    window.location.href = 'main.html';
-  }
-});
+/* MODAL */
+const modal = document.getElementById("modal");
+const closeBtn = document.getElementById("closeBtn");
+const cancelBtn = document.getElementById("cancelBtn");
 
-/* ===== LOAD EXISTING PROFILE (if any) ===== */
-onAuthStateChanged(auth, async (user) => {
-  if(!user){
-    alert('You must be logged in to complete your profile.');
-    window.location.href = 'index.html';
-    return;
-  }
+closeBtn.onclick = cancelBtn.onclick = () => modal.classList.remove("active");
 
-  // Show loading state
-  saveBtn.disabled = true;
-  saveBtn.textContent = 'Loading...';
+/* ESCAPE HTML */
+const esc = str => { const el=document.createElement("div"); el.textContent=str; return el.innerHTML; };
 
-  // Pre-fill from Firebase auth
-  emailInput.value = user.email || '';
-  if(user.displayName) fullNameInput.value = user.displayName;
-  if(user.photoURL) profilePicPreview.src = user.photoURL;
+/* TIME AGO */
+const timeAgo = date => {
+  const sec = Math.floor((Date.now() - new Date(date))/1000);
+  if(sec<60) return "now"; if(sec<3600) return Math.floor(sec/60)+"m";
+  if(sec<86400) return Math.floor(sec/3600)+"h";
+  if(sec<604800) return Math.floor(sec/86400)+"d";
+  return new Date(date).toLocaleDateString();
+};
 
-  // Try fetch from Supabase 'users' table
+/* LOAD FEED */
+async function loadFeed() {
+  const feed = document.getElementById("feedContent");
   try {
     const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('firebase_uid', user.uid)
-      .single();
-
-    if(error && error.code !== 'PGRST116') { 
-      console.warn(error); 
-    }
-    if(data){
-      fullNameInput.value = data.name || fullNameInput.value || '';
-      usernameInput.value = data.username || '';
-      bioInput.value = data.bio || '';
-      if(data.profile_pic) profilePicPreview.src = data.profile_pic;
-    }
-  } catch(err){
-    console.error('Error fetching profile:', err);
-  } finally {
-    // Re-enable button after loading
-    saveBtn.disabled = false;
-    saveBtn.textContent = 'Save Profile';
-  }
-});
-
-/* ===== SUPABASE STORAGE IMAGE UPLOAD =====
-   - expects a public bucket named "profile-pictures"
-   - returns the public URL string
-*/
-async function uploadToSupabaseStorage(file, user) {
-  const bucket = 'profile-pictures';
-  const ext = file.name.split('.').pop();
-  const filePath = `users/${user.uid}/${Date.now()}.${ext}`;
-
-  // upload
-  const { error: uploadError } = await supabase.storage
-    .from(bucket)
-    .upload(filePath, file, { upsert: true });
-
-  if(uploadError) throw uploadError;
-
-  // get public url
-  const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filePath);
-  return urlData?.publicUrl ?? '';
-}
-
-/* ===== FORM SUBMIT ===== */
-profileForm.addEventListener('submit', async (ev) => {
-  ev.preventDefault();
-
-  const user = auth.currentUser;
-  if(!user){
-    alert('Session expired. Please log in again.');
-    window.location.href = 'index.html';
-    return;
-  }
-
-  const username = usernameInput.value.trim();
-  if(username.length < 3){
-    alert('Username must be at least 3 characters.');
-    return;
-  }
-
-  saveBtn.disabled = true;
-  saveBtn.textContent = 'Saving...';
-
-  try {
-    // Check if username is already taken (by someone else)
-    const { data: existingUser, error: checkError } = await supabase
-      .from('users')
-      .select('firebase_uid')
-      .eq('username', username)
-      .single();
-
-    if(checkError && checkError.code !== 'PGRST116') {
-      throw checkError;
-    }
-
-    // If username exists and belongs to someone else, reject it
-    if(existingUser && existingUser.firebase_uid !== user.uid){
-      alert('Username already taken. Please choose another.');
-      saveBtn.disabled = false;
-      saveBtn.textContent = 'Save Profile';
+      .from("posts")
+      .select("*, users(name, username, profile_pic)")
+      .order("created_at",{ascending:false})
+      .limit(30);
+    
+    if(error) {
+      console.error("Supabase error:", error);
+      feed.innerHTML = `<div style="padding:20px;text-align:center;">Error loading feed: ${error.message}</div>`;
       return;
     }
-
-    // If a new image was selected, upload it to Supabase Storage
-    let profilePicURL = profilePicPreview.src || '';
-
-    if(profilePicInput.files && profilePicInput.files[0]) {
-      profilePicURL = await uploadToSupabaseStorage(profilePicInput.files[0], user);
+    
+    if(!data?.length){ 
+      feed.innerHTML = "<div style='padding:20px;text-align:center;'>No posts yet.</div>"; 
+      return; 
     }
-
-    // Upsert into Supabase 'users' table
-    const payload = {
-      firebase_uid: user.uid,
-      name: fullNameInput.value.trim(),
-      email: user.email,
-      username: username,
-      bio: bioInput.value.trim(),
-      profile_pic: profilePicURL,
-      updated_at: new Date().toISOString()
-    };
-
-    const { error } = await supabase
-      .from('users')
-      .upsert(payload, { onConflict: 'firebase_uid' });
-
-    if(error) throw error;
-
-    alert('Profile saved successfully!');
-    window.location.href = 'main.html';
-
-  } catch (err) {
-    console.error(err);
-    alert('Failed to save profile: ' + (err.message || err));
-    saveBtn.disabled = false;
-    saveBtn.textContent = 'Save Profile';
+    
+    feed.innerHTML = data.map(renderPost).join("");
+  } catch(err) {
+    console.error("Error:", err);
+    feed.innerHTML = `<div style="padding:20px;text-align:center;">Error loading feed. Please check your connection.</div>`;
   }
+}
+
+function renderPost(p){
+  const u = p.users||{};
+  const liked = userLikes.has(p.id);
+  return `
+  <div class="post" data-id="${p.id}">
+    <div class="post-header">
+      <img class="post-avatar" src="${u.profile_pic||"https://ui-avatars.com/api/?name="+encodeURIComponent(u.name||"User")}">
+      <div class="post-author-info">
+        <span class="post-author-name">${esc(u.name||"User")}</span>
+        <span class="post-author-username">@${esc(u.username||"user")}</span>
+      </div>
+      <span class="post-time">${timeAgo(p.created_at)}</span>
+    </div>
+    ${(p.content||p.image_url)?`<div class="post-content">
+      ${p.content?`<div class="post-text">${esc(p.content)}</div>`:""}
+      ${p.image_url?`<img class="post-image" src="${p.image_url}">`:""}
+    </div>`:""}
+    <div class="post-actions">
+      <button class="action-btn ${liked?"liked":""}" onclick="likePost('${p.id}')">Like</button>
+      <button class="action-btn" onclick="toggleComments('${p.id}')">Comment</button>
+    </div>
+    <div class="comments-section hidden" id="c-${p.id}"><div id="cl-${p.id}"></div>
+      <div class="comment-input-wrapper">
+        <input class="comment-input" id="ci-${p.id}" placeholder="Add comment...">
+        <button class="comment-submit" onclick="addComment('${p.id}')">Post</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* LIKE FUNCTION */
+window.likePost = async (id) => {
+  if(!currentUser) {
+    alert("Please sign in to like posts");
+    return;
+  }
+  userLikes.has(id) ? userLikes.delete(id) : userLikes.add(id);
+  await loadFeed();
+};
+
+/* COMMENT FUNCTIONS */
+window.toggleComments = id => {
+  const sec = document.getElementById(`c-${id}`);
+  sec.classList.toggle("hidden");
+  if(!sec.classList.contains("hidden")) loadComments(id);
+};
+
+async function loadComments(id){
+  try {
+    const { data } = await supabase
+      .from("comments")
+      .select("*, users(name, profile_pic)")
+      .eq("post_id",id)
+      .order("created_at",{ascending:true});
+    
+    const container = document.getElementById(`cl-${id}`);
+    if(data && data.length > 0) {
+      container.innerHTML = data.map(c=>`
+        <div class="comment">
+          <img class="comment-avatar" src="${c.users?.profile_pic||"https://ui-avatars.com/api/?name="+encodeURIComponent(c.users?.name||"User")}">
+          <div class="comment-content">
+            <span class="comment-author">${esc(c.users?.name||"User")}</span>
+            <div class="comment-text">${esc(c.content)}</div>
+          </div>
+        </div>`).join("");
+    } else {
+      container.innerHTML = "";
+    }
+  } catch(err) {
+    console.error("Error loading comments:", err);
+  }
+}
+
+window.addComment = async id=>{
+  if(!currentUser) {
+    alert("Please sign in to comment");
+    return;
+  }
+  const input=document.getElementById(`ci-${id}`);
+  if(!input.value.trim()) return;
+  
+  try {
+    await supabase.from("comments").insert({
+      post_id:id,
+      firebase_uid:currentUser.uid,
+      content:input.value
+    });
+    input.value=""; 
+    loadComments(id);
+  } catch(err) {
+    console.error("Error adding comment:", err);
+    alert("Failed to add comment");
+  }
+};
+
+/* AUTH STATE */
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  await loadFeed();
 });
 </script>
+
 </body>
 </html>
