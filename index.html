@@ -246,29 +246,32 @@ footer a:hover { color: var(--accent); }
 
 <div class="login-container">
   <div class="login-card">
-    
+
 <h1>Welcome to Patholytica</h1>
 <p>Your tool to <strong>LOVE</strong> what you learn</p>
 
 <!-- Initial buttons -->
+
 <div id="initialButtons">
   <button id="googleLoginBtn" class="login-btn google-btn">
     Continue with Google
   </button>
-  
+
   <div class="divider">OR</div>
-  
-  <button class="login-btn" id="startLoginBtn">Login with Email</button>
-  
-  <span class="guest-text" id="guestBtn">Guest Mode</span>
+
+<button class="login-btn" id="startLoginBtn">Login with Email</button>
+
+<span class="guest-text" id="guestBtn">Guest Mode</span>
+
 </div>
 
 <!-- Login form -->
+
 <form id="loginForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
   <input type="email" placeholder="Email Address" class="input-field" required>
   <input type="password" placeholder="Password" class="input-field" required>
 
-  <button type="submit" class="login-btn" style="width:100%; margin-top:12px;">Continue</button>
+<button type="submit" class="login-btn" style="width:100%; margin-top:12px;">Continue</button>
 
   <p style="margin-top:20px; font-size:14px; color:#999;">
     Don't have an account? 
@@ -276,13 +279,14 @@ footer a:hover { color: var(--accent); }
       Sign up
     </a>
   </p>
-  
+
   <p style="margin-top:10px; font-size:14px;">
     <a href="#" id="backToInitial" style="color:#888; text-decoration:none;">← Back</a>
   </p>
 </form>
 
 <!-- Signup form -->
+
 <form id="signupForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
   <input type="text" placeholder="Full Name" class="input-field" required>
   <input type="email" placeholder="Email Address" class="input-field" required>
@@ -296,7 +300,7 @@ footer a:hover { color: var(--accent); }
     and <a href="#" style="color:var(--accent); margin:0 3px;">Privacy Policy</a>
   </label>
 
-  <button type="submit" class="login-btn" style="width:100%; margin-top:12px;">Create Account</button>
+<button type="submit" class="login-btn" style="width:100%; margin-top:12px;">Create Account</button>
 
   <p style="margin-top:20px; font-size:14px; color:#999;">
     Already have an account?
@@ -317,7 +321,7 @@ footer a:hover { color: var(--accent); }
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
@@ -330,6 +334,21 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+// Check for redirect result on page load (for mobile Safari)
+getRedirectResult(auth)
+  .then((result) => {
+    if (result && result.user) {
+      console.log("Google User signed in via redirect:", result.user.email);
+      window.location.href = "dashboard.html";
+    }
+  })
+  .catch((error) => {
+    console.error("Redirect sign-in error:", error);
+    if (error.code !== 'auth/cancelled-popup-request') {
+      alert("Sign-in failed: " + error.message);
+    }
+  });
 
 // THEME
 function toggleTheme(){
@@ -448,24 +467,32 @@ signupForm.addEventListener("submit", (e) => {
 const provider = new GoogleAuthProvider();
 const googleBtn = document.getElementById("googleLoginBtn");
 
+// Detect if user is on mobile/Safari
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 googleBtn.addEventListener("click", () => {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      console.log("Google User signed in:", result.user.email);
-      window.location.href = "dashboard.html";
-    })
-    .catch((error) => {
-      console.error("Google sign-in error:", error);
-      
-      // Provide user-friendly error messages
-      if (error.code === 'auth/popup-closed-by-user') {
-        alert("Sign-in cancelled. Please try again.");
-      } else if (error.code === 'auth/popup-blocked') {
-        alert("Popup was blocked. Please allow popups for this site and try again.");
-      } else {
-        alert("Google sign-in failed: " + error.message);
-      }
-    });
+  // Use redirect for mobile devices (works better on Safari)
+  if (isMobile) {
+    signInWithRedirect(auth, provider);
+  } else {
+    // Use popup for desktop (faster, no page reload)
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log("Google User signed in:", result.user.email);
+        window.location.href = "dashboard.html";
+      })
+      .catch((error) => {
+        console.error("Google sign-in error:", error);
+        
+        if (error.code === 'auth/popup-closed-by-user') {
+          alert("Sign-in cancelled. Please try again.");
+        } else if (error.code === 'auth/popup-blocked') {
+          alert("Popup was blocked. Please allow popups for this site and try again.");
+        } else if (error.code !== 'auth/cancelled-popup-request') {
+          alert("Google sign-in failed: " + error.message);
+        }
+      });
+  }
 });
 </script>
 
