@@ -340,7 +340,7 @@ getRedirectResult(auth)
   .then((result) => {
     if (result && result.user) {
       console.log("Google User signed in via redirect:", result.user.email);
-      window.location.href = "dashboard.html";
+      window.location.href = "profile-setup.html";
     }
   })
   .catch((error) => {
@@ -432,7 +432,7 @@ form.addEventListener("submit", (e) => {
 
   signInWithEmailAndPassword(auth, email, password)
     .then(() => {
-      window.location.href = "dashboard.html";
+      window.location.href = "profile-setup.html";
     })
     .catch(err => {
       console.error("Login error:", err);
@@ -455,7 +455,7 @@ signupForm.addEventListener("submit", (e) => {
 
   createUserWithEmailAndPassword(auth, email, password)
     .then(() => {
-      window.location.href = "dashboard.html";
+      window.location.href = "profile-setup.html";
     })
     .catch(err => {
       console.error("Signup error:", err);
@@ -479,7 +479,7 @@ googleBtn.addEventListener("click", () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         console.log("Google User signed in:", result.user.email);
-        window.location.href = "dashboard.html";
+        window.location.href = "profile-setup.html";
       })
       .catch((error) => {
         console.error("Google sign-in error:", error);
