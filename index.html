@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -6,11 +7,13 @@
 <title>Patholytica — by MedicineBank</title>
 
 <!-- Inter Font -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- Font Awesome Icons -->
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
@@ -112,13 +115,11 @@ body {
 
 .logo-img {
   height: 36px;
-  width: auto;
-  transition: transform 0.3s ease, filter 0.25s ease;
+  width: 36px;
+  background: linear-gradient(135deg, var(--accent), #ff4081);
+  border-radius: 8px;
+  transition: transform 0.3s ease;
   cursor: pointer;
-}
-
-body.light-theme .logo-img {
-  filter: invert(1);
 }
 
 .logo-container:hover .logo-img {
@@ -149,6 +150,10 @@ body.light-theme .logo-img {
   cursor: pointer;
   transition: all 0.25s ease;
   background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.light-theme .theme-toggle {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .theme-toggle:hover {
@@ -259,7 +264,12 @@ body.light-theme .logo-img {
   z-index: 1;
 }
 
-.login-btn::before {
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-btn:not(:disabled)::before {
   content: '';
   position: absolute;
   top: 0;
@@ -271,17 +281,17 @@ body.light-theme .logo-img {
   z-index: -1;
 }
 
-.login-btn:hover::before {
+.login-btn:not(:disabled):hover::before {
   left: 100%;
 }
 
-.login-btn:hover {
+.login-btn:not(:disabled):hover {
   background: var(--accent-hover);
   transform: translateY(-4px);
   box-shadow: 0 12px 32px rgba(176, 0, 58, 0.45);
 }
 
-.login-btn:active {
+.login-btn:not(:disabled):active {
   transform: translateY(-1px);
 }
 
@@ -290,7 +300,7 @@ body.light-theme .logo-img {
   box-shadow: 0 8px 24px rgba(66, 133, 244, 0.35);
 }
 
-.google-btn:hover {
+.google-btn:not(:disabled):hover {
   background: #357ae8;
   box-shadow: 0 12px 32px rgba(66, 133, 244, 0.45);
 }
@@ -344,10 +354,15 @@ body.light-theme .logo-img {
 .guest-text:hover {
   text-decoration: none;
   background-color: var(--accent-light);
-  padding: 12px 16px;
 }
 
 /* Forms */
+.form-container {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
 .input-group {
   margin-bottom: 20px;
   text-align: left;
@@ -384,6 +399,10 @@ body.light-theme .input-field {
   background: rgba(0, 0, 0, 0.2);
 }
 
+body.light-theme .input-field:focus {
+  background: rgba(255, 255, 255, 1);
+}
+
 .input-field::placeholder {
   color: var(--gray-400);
 }
@@ -409,14 +428,27 @@ body.light-theme .input-field {
   font-size: 12px;
 }
 
+.input-hint a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.input-hint a:hover {
+  text-decoration: underline;
+}
+
 .input-error {
   font-size: 13px;
   margin-top: 6px;
   color: var(--error);
-  display: flex;
+  display: none;
   align-items: center;
   gap: 6px;
-  display: none;
+}
+
+.input-error i {
+  font-size: 12px;
 }
 
 /* Checkbox */
@@ -497,13 +529,16 @@ body.light-theme .input-field {
 /* Notification */
 .notification {
   position: fixed;
-  top: 100px;
+  top: calc(80px + env(safe-area-inset-top));
   right: 24px;
+  left: auto;
   padding: 16px 24px;
   background: var(--card-bg);
   border-radius: 12px;
   border: 1px solid var(--card-border);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -519,18 +554,43 @@ body.light-theme .input-field {
 
 .notification-icon {
   font-size: 20px;
+  flex-shrink: 0;
+}
+
+.notification-message {
+  flex: 1;
 }
 
 .notification.success {
   border-left: 4px solid var(--success);
 }
 
+.notification.success .notification-icon {
+  color: var(--success);
+}
+
 .notification.error {
   border-left: 4px solid var(--error);
 }
 
+.notification.error .notification-icon {
+  color: var(--error);
+}
+
 .notification.warning {
   border-left: 4px solid var(--warning);
+}
+
+.notification.warning .notification-icon {
+  color: var(--warning);
+}
+
+.notification.info {
+  border-left: 4px solid var(--accent);
+}
+
+.notification.info .notification-icon {
+  color: var(--accent);
 }
 
 /* Loading spinner */
@@ -542,6 +602,10 @@ body.light-theme .input-field {
   border-radius: 50%;
   border-top-color: white;
   animation: spin 1s linear infinite;
+}
+
+.spinner.show {
+  display: inline-block;
 }
 
 @keyframes spin {
@@ -595,11 +659,6 @@ body.light-theme footer {
   }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
 /* Responsive */
 @media (max-width: 640px) {
   .login-card { 
@@ -630,6 +689,10 @@ body.light-theme footer {
     gap: 12px;
     align-items: center;
   }
+
+  .theme-toggle span {
+    display: none;
+  }
 }
 
 @media (max-height: 700px) {
@@ -643,21 +706,23 @@ body.light-theme footer {
   }
 }
 </style>
+
 </head>
 <body>
 
 <div class="background-pattern"></div>
 
 <!-- Notification Area -->
+
 <div id="notificationArea"></div>
 
 <div class="header-wrapper">
   <div class="header">
     <a href="https://patholytica.com" class="logo-container">
-      <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
+      <div class="logo-img"></div>
       <span class="logo-text">Patholytica</span>
     </a>
-    <button class="theme-toggle" onclick="toggleTheme()">
+    <button class="theme-toggle" id="themeToggleBtn">
       <i class="fas fa-moon"></i>
       <span>Theme</span>
     </button>
@@ -669,140 +734,144 @@ body.light-theme footer {
     <h1>Welcome to Patholytica</h1>
     <p>Your tool to <span class="highlight">LOVE</span> what you learn in pathology</p>
 
-    <!-- Initial buttons -->
-    <div id="initialButtons">
-      <button id="googleLoginBtn" class="login-btn google-btn">
-        <i class="fab fa-google btn-icon"></i>
-        <span>Continue with Google</span>
-      </button>
+```
+<!-- Initial buttons -->
+<div id="initialButtons" class="form-container">
+  <button id="googleLoginBtn" class="login-btn google-btn">
+    <i class="fab fa-google btn-icon"></i>
+    <span>Continue with Google</span>
+    <div class="spinner" id="googleSpinner"></div>
+  </button>
 
-      <div class="divider">OR</div>
+  <div class="divider">OR</div>
 
-      <button class="login-btn" id="startLoginBtn">
-        <i class="fas fa-envelope btn-icon"></i>
-        <span>Login with Email</span>
-      </button>
+  <button class="login-btn" id="startLoginBtn">
+    <i class="fas fa-envelope btn-icon"></i>
+    <span>Login with Email</span>
+  </button>
 
-      <div class="guest-text" id="guestBtn">
-        <i class="fas fa-user-secret"></i>
-        <span>Continue as Guest</span>
-      </div>
+  <div class="guest-text" id="guestBtn">
+    <i class="fas fa-user-secret"></i>
+    <span>Continue as Guest</span>
+  </div>
+</div>
+
+<!-- Login form -->
+<form id="loginForm" class="form-container" style="display:none;">
+  <div class="input-group">
+    <label class="input-label">Email Address</label>
+    <input type="email" placeholder="you@example.com" class="input-field" id="loginEmail" required autocomplete="email">
+    <div class="input-error" id="loginEmailError">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>Please enter a valid email address</span>
     </div>
+  </div>
 
-    <!-- Login form -->
-    <form id="loginForm" style="display:none;">
-      <div class="input-group">
-        <label class="input-label">Email Address</label>
-        <input type="email" placeholder="you@example.com" class="input-field" id="loginEmail" required>
-        <div class="input-error" id="loginEmailError">
-          <i class="fas fa-exclamation-circle"></i>
-          <span>Please enter a valid email address</span>
-        </div>
-      </div>
+  <div class="input-group">
+    <label class="input-label">Password</label>
+    <input type="password" placeholder="Enter your password" class="input-field" id="loginPassword" required autocomplete="current-password">
+    <div class="input-error" id="loginPasswordError">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>Password is required</span>
+    </div>
+    <div class="input-hint">
+      <a href="#" id="forgotPassword">Forgot password?</a>
+    </div>
+  </div>
 
-      <div class="input-group">
-        <label class="input-label">Password</label>
-        <input type="password" placeholder="Enter your password" class="input-field" id="loginPassword" required>
-        <div class="input-error" id="loginPasswordError">
-          <i class="fas fa-exclamation-circle"></i>
-          <span>Password is required</span>
-        </div>
-        <div class="input-hint">
-          <a href="#" id="forgotPassword" style="color: var(--accent);">Forgot password?</a>
-        </div>
-      </div>
+  <button type="submit" class="login-btn" id="loginSubmitBtn">
+    <span>Continue</span>
+    <div class="spinner" id="loginSpinner"></div>
+  </button>
 
-      <button type="submit" class="login-btn" id="loginSubmitBtn">
-        <span>Continue</span>
-        <div class="spinner" id="loginSpinner"></div>
-      </button>
+  <div class="form-links">
+    <a href="#" id="backToInitial">
+      <i class="fas fa-arrow-left"></i>
+      <span>Back</span>
+    </a>
+    <a href="#" id="showSignupLink">
+      <span>Don't have an account?</span>
+      <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+</form>
 
-      <div class="form-links">
-        <a href="#" id="backToInitial">
-          <i class="fas fa-arrow-left"></i>
-          <span>Back</span>
-        </a>
-        <a href="#" id="showSignupLink">
-          <span>Don't have an account?</span>
-          <i class="fas fa-arrow-right"></i>
-        </a>
-      </div>
-    </form>
+<!-- Signup form -->
+<form id="signupForm" class="form-container" style="display:none;">
+  <div class="input-group">
+    <label class="input-label">Full Name</label>
+    <input type="text" placeholder="John Doe" class="input-field" id="signupName" required autocomplete="name">
+    <div class="input-error" id="signupNameError">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>Please enter your full name</span>
+    </div>
+  </div>
 
-    <!-- Signup form -->
-    <form id="signupForm" style="display:none;">
-      <div class="input-group">
-        <label class="input-label">Full Name</label>
-        <input type="text" placeholder="John Doe" class="input-field" id="signupName" required>
-        <div class="input-error" id="signupNameError">
-          <i class="fas fa-exclamation-circle"></i>
-          <span>Please enter your full name</span>
-        </div>
-      </div>
+  <div class="input-group">
+    <label class="input-label">Email Address</label>
+    <input type="email" placeholder="you@example.com" class="input-field" id="signupEmail" required autocomplete="email">
+    <div class="input-error" id="signupEmailError">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>Please enter a valid email address</span>
+    </div>
+  </div>
 
-      <div class="input-group">
-        <label class="input-label">Email Address</label>
-        <input type="email" placeholder="you@example.com" class="input-field" id="signupEmail" required>
-        <div class="input-error" id="signupEmailError">
-          <i class="fas fa-exclamation-circle"></i>
-          <span>Please enter a valid email address</span>
-        </div>
-      </div>
+  <div class="input-group">
+    <label class="input-label">Username</label>
+    <input type="text" placeholder="johndoe_med" class="input-field" id="signupUsername" required autocomplete="username">
+    <div class="input-error" id="signupUsernameError">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>Username must be 3-20 characters</span>
+    </div>
+  </div>
 
-      <div class="input-group">
-        <label class="input-label">Username</label>
-        <input type="text" placeholder="johndoe_med" class="input-field" id="signupUsername" required>
-        <div class="input-error" id="signupUsernameError">
-          <i class="fas fa-exclamation-circle"></i>
-          <span>Username must be 3-20 characters</span>
-        </div>
-      </div>
+  <div class="input-group">
+    <label class="input-label">Password</label>
+    <input type="password" placeholder="Create a strong password" class="input-field" id="signupPassword" minlength="8" required autocomplete="new-password">
+    <div class="password-strength">
+      <div class="password-strength-bar" id="passwordStrengthBar"></div>
+    </div>
+    <div class="input-hint" id="passwordHint">
+      <i class="fas fa-info-circle"></i>
+      <span>Minimum 8 characters with letters and numbers</span>
+    </div>
+    <div class="input-error" id="signupPasswordError">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>Password must be at least 8 characters</span>
+    </div>
+  </div>
 
-      <div class="input-group">
-        <label class="input-label">Password</label>
-        <input type="password" placeholder="Create a strong password" class="input-field" id="signupPassword" minlength="8" required>
-        <div class="password-strength">
-          <div class="password-strength-bar" id="passwordStrengthBar"></div>
-        </div>
-        <div class="input-hint" id="passwordHint">
-          <i class="fas fa-info-circle"></i>
-          <span>Minimum 8 characters with letters and numbers</span>
-        </div>
-        <div class="input-error" id="signupPasswordError">
-          <i class="fas fa-exclamation-circle"></i>
-          <span>Password must be at least 8 characters</span>
-        </div>
-      </div>
+  <div class="input-group">
+    <label class="input-label">Confirm Password</label>
+    <input type="password" placeholder="Re-enter your password" class="input-field" id="signupConfirmPassword" required autocomplete="new-password">
+    <div class="input-error" id="signupConfirmPasswordError">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>Passwords do not match</span>
+    </div>
+  </div>
 
-      <div class="input-group">
-        <label class="input-label">Confirm Password</label>
-        <input type="password" placeholder="Re-enter your password" class="input-field" id="signupConfirmPassword" required>
-        <div class="input-error" id="signupConfirmPasswordError">
-          <i class="fas fa-exclamation-circle"></i>
-          <span>Passwords do not match</span>
-        </div>
-      </div>
+  <div class="checkbox-container">
+    <input type="checkbox" id="termsCheckbox" required>
+    <label for="termsCheckbox">
+      I agree to the <a href="#" id="termsLink">Terms of Service</a> 
+      and <a href="#" id="privacyLink">Privacy Policy</a>
+    </label>
+  </div>
 
-      <div class="checkbox-container">
-        <input type="checkbox" id="termsCheckbox" required>
-        <label for="termsCheckbox">
-          I agree to the <a href="#" id="termsLink">Terms of Service</a> 
-          and <a href="#" id="privacyLink">Privacy Policy</a>
-        </label>
-      </div>
+  <button type="submit" class="login-btn" id="signupSubmitBtn">
+    <span>Create Account</span>
+    <div class="spinner" id="signupSpinner"></div>
+  </button>
 
-      <button type="submit" class="login-btn" id="signupSubmitBtn">
-        <span>Create Account</span>
-        <div class="spinner" id="signupSpinner"></div>
-      </button>
+  <div class="form-links">
+    <a href="#" id="showLoginLink">
+      <i class="fas fa-arrow-left"></i>
+      <span>Back to Login</span>
+    </a>
+  </div>
+</form>
+```
 
-      <div class="form-links">
-        <a href="#" id="showLoginLink">
-          <i class="fas fa-arrow-left"></i>
-          <span>Back to Login</span>
-        </a>
-      </div>
-    </form>
   </div>
 </div>
 
@@ -853,6 +922,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Check for existing session
+let isProcessingRedirect = false;
+
 // Theme Management
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
@@ -872,448 +944,9 @@ if (savedTheme === "light") {
   themeIcon.className = 'fas fa-sun';
 }
 
+document.getElementById('themeToggleBtn').addEventListener('click', toggleTheme);
+
 // Form Transitions
 const initialButtons = document.getElementById('initialButtons');
 const loginForm = document.getElementById('loginForm');
-const signupForm = document.getElementById('signupForm');
-
-function showForm(formToShow, formToHide) {
-  formToHide.style.opacity = '0';
-  formToHide.style.transform = 'translateY(10px)';
-  
-  setTimeout(() => {
-    formToHide.style.display = 'none';
-    formToShow.style.display = 'block';
-    
-    setTimeout(() => {
-      formToShow.style.opacity = '1';
-      formToShow.style.transform = 'translateY(0)';
-    }, 50);
-    
-    // Focus first input
-    const firstInput = formToShow.querySelector('input');
-    if (firstInput) firstInput.focus();
-  }, 300);
-}
-
-// Event Listeners for Form Navigation
-document.getElementById('startLoginBtn').addEventListener('click', () => {
-  showForm(loginForm, initialButtons);
-});
-
-document.getElementById('backToInitial').addEventListener('click', (e) => {
-  e.preventDefault();
-  showForm(initialButtons, loginForm);
-});
-
-document.getElementById('showSignupLink').addEventListener('click', (e) => {
-  e.preventDefault();
-  showForm(signupForm, loginForm);
-});
-
-document.getElementById('showLoginLink').addEventListener('click', (e) => {
-  e.preventDefault();
-  showForm(loginForm, signupForm);
-});
-
-// Guest Mode
-document.getElementById('guestBtn').addEventListener('click', () => {
-  showNotification('Entering Guest Mode. Limited features available.', 'info');
-  // In a real app, you might set a guest flag or redirect
-  setTimeout(() => {
-    window.location.href = "dashboard.html?guest=true";
-  }, 1000);
-});
-
-// Notification System
-function showNotification(message, type = 'info') {
-  const notificationArea = document.getElementById('notificationArea');
-  const notification = document.createElement('div');
-  notification.className = `notification ${type}`;
-  
-  let icon = 'fas fa-info-circle';
-  if (type === 'success') icon = 'fas fa-check-circle';
-  if (type === 'error') icon = 'fas fa-exclamation-circle';
-  if (type === 'warning') icon = 'fas fa-exclamation-triangle';
-  
-  notification.innerHTML = `
-    <i class="${icon} notification-icon"></i>
-    <span>${message}</span>
-  `;
-  
-  notificationArea.appendChild(notification);
-  
-  setTimeout(() => {
-    notification.classList.add('show');
-  }, 10);
-  
-  // Auto-remove after 5 seconds
-  setTimeout(() => {
-    notification.classList.remove('show');
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    }, 400);
-  }, 5000);
-}
-
-// Input Validation
-function validateEmail(email) {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(email);
-}
-
-function validatePassword(password) {
-  return password.length >= 8;
-}
-
-function checkPasswordStrength(password) {
-  const bar = document.getElementById('passwordStrengthBar');
-  let strength = 0;
-  
-  if (password.length >= 8) strength += 25;
-  if (/[A-Z]/.test(password)) strength += 25;
-  if (/[0-9]/.test(password)) strength += 25;
-  if (/[^A-Za-z0-9]/.test(password)) strength += 25;
-  
-  bar.style.width = `${strength}%`;
-  
-  if (strength < 50) {
-    bar.style.backgroundColor = 'var(--error)';
-  } else if (strength < 75) {
-    bar.style.backgroundColor = 'var(--warning)';
-  } else {
-    bar.style.backgroundColor = 'var(--success)';
-  }
-}
-
-// Real-time password strength
-document.getElementById('signupPassword')?.addEventListener('input', (e) => {
-  checkPasswordStrength(e.target.value);
-});
-
-// Form Submission with Validation
-document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
-  const loginSpinner = document.getElementById('loginSpinner');
-  const submitBtn = document.getElementById('loginSubmitBtn');
-  
-  // Validation
-  let isValid = true;
-  
-  if (!validateEmail(email)) {
-    document.getElementById('loginEmailError').style.display = 'flex';
-    isValid = false;
-  } else {
-    document.getElementById('loginEmailError').style.display = 'none';
-  }
-  
-  if (!validatePassword(password)) {
-    document.getElementById('loginPasswordError').style.display = 'flex';
-    isValid = false;
-  } else {
-    document.getElementById('loginPasswordError').style.display = 'none';
-  }
-  
-  if (!isValid) {
-    showNotification('Please fix the errors in the form', 'error');
-    return;
-  }
-  
-  // Show loading state
-  loginSpinner.style.display = 'inline-block';
-  submitBtn.disabled = true;
-  
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    showNotification('Login successful! Redirecting...', 'success');
-    setTimeout(() => {
-      window.location.href = "profile-setup.html";
-    }, 1500);
-  } catch (error) {
-    console.error("Login error:", error);
-    let errorMessage = "Login failed. ";
-    
-    switch (error.code) {
-      case 'auth/invalid-email':
-        errorMessage += "Invalid email address.";
-        break;
-      case 'auth/user-disabled':
-        errorMessage += "This account has been disabled.";
-        break;
-      case 'auth/user-not-found':
-        errorMessage += "No account found with this email.";
-        break;
-      case 'auth/wrong-password':
-        errorMessage += "Incorrect password.";
-        break;
-      default:
-        errorMessage += error.message;
-    }
-    
-    showNotification(errorMessage, 'error');
-  } finally {
-    loginSpinner.style.display = 'none';
-    submitBtn.disabled = false;
-  }
-});
-
-// Signup Form Submission
-document.getElementById('signupForm')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const name = document.getElementById('signupName').value;
-  const email = document.getElementById('signupEmail').value;
-  const username = document.getElementById('signupUsername').value;
-  const password = document.getElementById('signupPassword').value;
-  const confirmPassword = document.getElementById('signupConfirmPassword').value;
-  const termsChecked = document.getElementById('termsCheckbox').checked;
-  const signupSpinner = document.getElementById('signupSpinner');
-  const submitBtn = document.getElementById('signupSubmitBtn');
-  
-  // Validation
-  let isValid = true;
-  
-  if (!name.trim()) {
-    document.getElementById('signupNameError').style.display = 'flex';
-    isValid = false;
-  } else {
-    document.getElementById('signupNameError').style.display = 'none';
-  }
-  
-  if (!validateEmail(email)) {
-    document.getElementById('signupEmailError').style.display = 'flex';
-    isValid = false;
-  } else {
-    document.getElementById('signupEmailError').style.display = 'none';
-  }
-  
-  if (!username || username.length < 3 || username.length > 20) {
-    document.getElementById('signupUsernameError').style.display = 'flex';
-    isValid = false;
-  } else {
-    document.getElementById('signupUsernameError').style.display = 'none';
-  }
-  
-  if (!validatePassword(password)) {
-    document.getElementById('signupPasswordError').style.display = 'flex';
-    isValid = false;
-  } else {
-    document.getElementById('signupPasswordError').style.display = 'none';
-  }
-  
-  if (password !== confirmPassword) {
-    document.getElementById('signupConfirmPasswordError').style.display = 'flex';
-    isValid = false;
-  } else {
-    document.getElementById('signupConfirmPasswordError').style.display = 'none';
-  }
-  
-  if (!termsChecked) {
-    showNotification('Please agree to the Terms and Privacy Policy', 'error');
-    isValid = false;
-  }
-  
-  if (!isValid) {
-    showNotification('Please fix the errors in the form', 'error');
-    return;
-  }
-  
-  // Show loading state
-  signupSpinner.style.display = 'inline-block';
-  submitBtn.disabled = true;
-  
-  try {
-    await createUserWithEmailAndPassword(auth, email, password);
-    showNotification('Account created successfully! Redirecting...', 'success');
-    setTimeout(() => {
-      window.location.href = "profile-setup.html";
-    }, 1500);
-  } catch (error) {
-    console.error("Signup error:", error);
-    let errorMessage = "Signup failed. ";
-    
-    switch (error.code) {
-      case 'auth/email-already-in-use':
-        errorMessage += "Email is already registered.";
-        break;
-      case 'auth/invalid-email':
-        errorMessage += "Invalid email address.";
-        break;
-      case 'auth/weak-password':
-        errorMessage += "Password is too weak.";
-        break;
-      default:
-        errorMessage += error.message;
-    }
-    
-    showNotification(errorMessage, 'error');
-  } finally {
-    signupSpinner.style.display = 'none';
-    submitBtn.disabled = false;
-  }
-});
-
-// Forgot Password
-document.getElementById('forgotPassword')?.addEventListener('click', async (e) => {
-  e.preventDefault();
-  
-  const email = document.getElementById('loginEmail').value;
-  
-  if (!email || !validateEmail(email)) {
-    const emailInput = prompt('Please enter your email address to reset your password:');
-    if (!emailInput || !validateEmail(emailInput)) {
-      showNotification('Please enter a valid email address', 'error');
-      return;
-    }
-    
-    try {
-      await sendPasswordResetEmail(auth, emailInput);
-      showNotification('Password reset email sent! Check your inbox.', 'success');
-    } catch (error) {
-      console.error("Password reset error:", error);
-      showNotification('Failed to send reset email: ' + error.message, 'error');
-    }
-  } else {
-    try {
-      await sendPasswordResetEmail(auth, email);
-      showNotification('Password reset email sent! Check your inbox.', 'success');
-    } catch (error) {
-      console.error("Password reset error:", error);
-      showNotification('Failed to send reset email: ' + error.message, 'error');
-    }
-  }
-});
-
-// Google Sign-In
-const provider = new GoogleAuthProvider();
-const googleBtn = document.getElementById('googleLoginBtn');
-
-// Detect if user is on mobile/Safari
-const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-// Check for redirect result on page load (for mobile Safari)
-getRedirectResult(auth)
-  .then((result) => {
-    if (result && result.user) {
-      console.log("Google User signed in via redirect:", result.user.email);
-      showNotification('Welcome back! Redirecting...', 'success');
-      setTimeout(() => {
-        window.location.href = "profile-setup.html";
-      }, 1500);
-    }
-  })
-  .catch((error) => {
-    console.error("Redirect sign-in error:", error);
-    if (error.code !== 'auth/cancelled-popup-request') {
-      showNotification('Sign-in failed: ' + error.message, 'error');
-    }
-  });
-
-googleBtn.addEventListener('click', () => {
-  // Use redirect for mobile Safari (works better)
-  if (isMobile && isSafari) {
-    signInWithRedirect(auth, provider);
-  } else {
-    // Use popup for desktop and other mobile browsers
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log("Google User signed in:", result.user.email);
-        showNotification('Welcome to Patholytica!', 'success');
-        setTimeout(() => {
-          window.location.href = "profile-setup.html";
-        }, 1500);
-      })
-      .catch((error) => {
-        console.error("Google sign-in error:", error);
-        
-        if (error.code === 'auth/popup-closed-by-user') {
-          showNotification('Sign-in cancelled. Please try again.', 'warning');
-        } else if (error.code === 'auth/popup-blocked') {
-          showNotification('Popup was blocked. Please allow popups for this site.', 'warning');
-        } else if (error.code !== 'auth/cancelled-popup-request') {
-          showNotification('Google sign-in failed: ' + error.message, 'error');
-        }
-      });
-  }
-});
-
-// Terms and Privacy links
-document.getElementById('termsLink')?.addEventListener('click', (e) => {
-  e.preventDefault();
-  showNotification('Terms of Service page would open here', 'info');
-});
-
-document.getElementById('privacyLink')?.addEventListener('click', (e) => {
-  e.preventDefault();
-  showNotification('Privacy Policy page would open here', 'info');
-});
-
-// Form field real-time validation
-const setupRealTimeValidation = () => {
-  // Email validation on blur
-  document.getElementById('loginEmail')?.addEventListener('blur', (e) => {
-    if (e.target.value && !validateEmail(e.target.value)) {
-      document.getElementById('loginEmailError').style.display = 'flex';
-    } else {
-      document.getElementById('loginEmailError').style.display = 'none';
-    }
-  });
-  
-  document.getElementById('signupEmail')?.addEventListener('blur', (e) => {
-    if (e.target.value && !validateEmail(e.target.value)) {
-      document.getElementById('signupEmailError').style.display = 'flex';
-    } else {
-      document.getElementById('signupEmailError').style.display = 'none';
-    }
-  });
-  
-  // Password match validation
-  document.getElementById('signupConfirmPassword')?.addEventListener('input', (e) => {
-    const password = document.getElementById('signupPassword').value;
-    const confirmPassword = e.target.value;
-    
-    if (confirmPassword && password !== confirmPassword) {
-      document.getElementById('signupConfirmPasswordError').style.display = 'flex';
-    } else {
-      document.getElementById('signupConfirmPasswordError').style.display = 'none';
-    }
-  });
-};
-
-// Initialize real-time validation
-setupRealTimeValidation();
-
-// Keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-  // Escape to go back
-  if (e.key === 'Escape') {
-    if (loginForm.style.display === 'block') {
-      document.getElementById('backToInitial').click();
-    } else if (signupForm.style.display === 'block') {
-      document.getElementById('showLoginLink').click();
-    }
-  }
-  
-  // Ctrl/Cmd + / to toggle theme
-  if ((e.ctrlKey || e.metaKey) && e.key === '/') {
-    e.preventDefault();
-    toggleTheme();
-  }
-});
-
-// Initialize with a welcome message
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    showNotification('Welcome to Patholytica! Start your pathology journey.', 'info');
-  }, 1000);
-});
-</script>
-
-</body>
-</html>
+const signupForm =
