@@ -4,7 +4,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Feed — Patholytica</title>
+<title>Patholytica — Messaging</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 :root {
@@ -14,6 +16,14 @@
   --card-border: rgba(255,255,255,0.07);
   --accent: #b0003a;
   --accent-hover: #88002a;
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  --chat-bg: #111;
+  --message-sent: #b0003a;
+  --message-received: rgba(40,40,40,0.9);
+  --input-bg: rgba(30,30,30,0.8);
 }
 
 body.light-theme {
@@ -21,10 +31,16 @@ body.light-theme {
   --text-color: #111;
   --card-bg: rgba(255,255,255,0.65);
   --card-border: rgba(0,0,0,0.1);
+  --accent: #b0003a;
+  --accent-hover: #88002a;
+  --chat-bg: #e5ddd5;
+  --message-sent: #dcf8c6;
+  --message-received: #fff;
+  --input-bg: rgba(255,255,255,0.95);
 }
 
-* { box-sizing: border-box; }
-html, body { margin:0; padding:0; height:100%; font-family: "Inter", Arial, sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: "Inter", Arial, sans-serif; }
 
 body {
   background: var(--bg-color);
@@ -34,7 +50,6 @@ body {
   transition: background 0.35s ease;
 }
 
-/* ===== HEADER (EXACT SAME) ===== */
 .header-wrapper {
   position: sticky;
   top: 0;
@@ -77,590 +92,774 @@ body.light-theme .logo-img {
   color: var(--accent);
 }
 
-/* ===== FEED CONTAINER ===== */
-.feed-container {
+.chat-container {
   flex: 1;
-  overflow-y: auto;
-  padding: calc(20px + env(safe-area-inset-top)) 
-           calc(20px + env(safe-area-inset-left)) 
-           calc(20px + env(safe-area-inset-bottom)) 
-           calc(20px + env(safe-area-inset-right));
+  display: flex;
+  overflow: hidden;
 }
 
-.feed-wrapper {
-  max-width: 680px;
-  margin: 0 auto;
-}
-
-/* ===== POST CARD ===== */
-.post-card {
+/* Sidebar */
+.sidebar {
+  width: 350px;
   background: var(--card-bg);
   backdrop-filter: blur(22px);
-  border-radius: 16px;
-  border: 1px solid var(--card-border);
-  margin-bottom: 20px;
-  padding: 20px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  animation: fadeUp 0.45s ease both;
-}
-
-.post-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
-}
-
-.post-header {
+  border-right: 1px solid var(--card-border);
   display: flex;
-  align-items: center;
-  margin-bottom: 14px;
+  flex-direction: column;
+  transition: transform 0.3s ease;
 }
 
-.post-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 12px;
-  border: 2px solid var(--card-border);
-}
-
-.post-meta {
-  flex: 1;
-}
-
-.post-author {
-  font-weight: 600;
-  font-size: 15px;
-  margin-bottom: 2px;
-}
-
-.post-time {
-  font-size: 12px;
-  color: #888;
-}
-
-.post-content {
-  margin-bottom: 14px;
-  line-height: 1.6;
-  font-size: 15px;
-}
-
-.post-attachment {
-  background: rgba(0,0,0,0.3);
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  padding: 14px;
-  margin-bottom: 14px;
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--card-border);
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-bottom: 12px;
+}
+
+.sidebar-logo {
+  height: 32px;
+  width: auto;
+  transition: filter 0.25s ease;
   cursor: pointer;
+}
+
+body.light-theme .sidebar-logo {
+  filter: invert(1);
+}
+
+.search-box {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 14px;
   transition: 0.25s ease;
 }
 
-body.light-theme .post-attachment {
-  background: rgba(255,255,255,0.6);
-}
-
-.post-attachment:hover {
-  background: rgba(176,0,58,0.15);
+.search-box:focus {
   border-color: var(--accent);
+  outline: none;
 }
 
-.attachment-icon {
-  width: 40px;
-  height: 40px;
-  background: var(--accent);
-  border-radius: 8px;
+.chat-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.chat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.chat-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+body.light-theme .chat-item:hover {
+  background: rgba(0,0,0,0.03);
+}
+
+.chat-item.active {
+  background: rgba(176,0,58,0.15);
+}
+
+.chat-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
   flex-shrink: 0;
 }
 
-.attachment-info {
+.chat-info {
   flex: 1;
+  min-width: 0;
 }
 
-.attachment-name {
+.chat-name {
   font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 2px;
+  font-size: 15px;
+  margin-bottom: 4px;
 }
 
-.attachment-size {
+.chat-preview {
+  font-size: 13px;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.chat-time {
   font-size: 12px;
   color: #888;
 }
 
-.post-actions {
+.chat-badge {
+  background: var(--accent);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Main Chat Area */
+.chat-main {
+  flex: 1;
   display: flex;
-  gap: 20px;
-  padding-top: 12px;
-  border-top: 1px solid var(--card-border);
+  flex-direction: column;
+  background: var(--chat-bg);
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--card-bg);
+  backdrop-filter: blur(22px);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.chat-header-info {
+  flex: 1;
+}
+
+.chat-header-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.chat-header-status {
+  font-size: 13px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.chat-actions {
+  display: flex;
+  gap: 12px;
 }
 
 .action-btn {
   background: none;
   border: none;
-  color: #888;
+  color: var(--text-color);
+  font-size: 18px;
   cursor: pointer;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: 0.25s ease;
-  padding: 6px 10px;
-  border-radius: 6px;
+  padding: 8px;
+  transition: color 0.2s ease;
 }
 
 .action-btn:hover {
   color: var(--accent);
-  background: rgba(176,0,58,0.1);
 }
 
-.action-btn.liked {
-  color: var(--accent);
-}
-
-/* ===== LIBRARY CARD ===== */
-.library-card {
-  background: var(--card-bg);
-  backdrop-filter: blur(22px);
-  border-radius: 16px;
-  border: 1px solid var(--card-border);
-  margin-bottom: 20px;
-  padding: 24px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  animation: fadeUp 0.45s ease both;
-  cursor: pointer;
-}
-
-.library-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
-  border-color: var(--accent);
-}
-
-.library-header {
+/* Messages */
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.library-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--accent);
-  margin: 0;
-}
-
-.library-badge {
-  background: var(--accent);
-  color: #fff;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.library-description {
-  color: #999;
-  font-size: 14px;
-  margin-bottom: 16px;
-  line-height: 1.5;
-}
-
-.library-stats {
-  display: flex;
-  gap: 20px;
-  font-size: 13px;
-  color: #888;
-}
-
-.library-stat {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.library-expanded {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--card-border);
-}
-
-.library-posts {
-  display: grid;
+  flex-direction: column;
   gap: 12px;
 }
 
-.library-post-item {
-  background: rgba(0,0,0,0.3);
-  border: 1px solid var(--card-border);
-  border-radius: 8px;
-  padding: 12px;
+.message {
   display: flex;
+  gap: 8px;
+  max-width: 70%;
+  animation: fadeIn 0.3s ease;
+}
+
+.message.sent {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.message.received {
+  align-self: flex-start;
+}
+
+.message-bubble {
+  background: var(--message-received);
+  padding: 10px 14px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.message.sent .message-bubble {
+  background: var(--message-sent);
+  color: white;
+}
+
+body.light-theme .message.sent .message-bubble {
+  color: #111;
+}
+
+.message-text {
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.message-time {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 4px;
+  text-align: right;
+}
+
+body.light-theme .message-time {
+  color: rgba(0,0,0,0.5);
+}
+
+.message.sent .message-time {
+  color: rgba(255,255,255,0.7);
+}
+
+body.light-theme .message.sent .message-time {
+  color: rgba(0,0,0,0.6);
+}
+
+/* Input Area */
+.input-area {
+  padding: 16px 20px;
+  background: var(--card-bg);
+  backdrop-filter: blur(22px);
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  gap: 12px;
   align-items: center;
-  gap: 10px;
-  transition: 0.25s ease;
+}
+
+.attach-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 20px;
   cursor: pointer;
+  padding: 8px;
+  transition: color 0.2s ease;
 }
 
-body.light-theme .library-post-item {
-  background: rgba(255,255,255,0.5);
+.attach-btn:hover {
+  color: var(--accent);
 }
 
-.library-post-item:hover {
-  background: rgba(176,0,58,0.15);
+.message-input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 24px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 14px;
+  font-family: inherit;
+  resize: none;
+  max-height: 120px;
+  transition: 0.25s ease;
+}
+
+.message-input:focus {
   border-color: var(--accent);
+  outline: none;
 }
 
-.library-post-icon {
-  width: 32px;
-  height: 32px;
+.send-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
   background: var(--accent);
-  border-radius: 6px;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.25s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
 }
 
-.library-post-text {
+.send-btn:hover {
+  background: var(--accent-hover);
+  transform: scale(1.05);
+}
+
+.send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+/* Empty State */
+.empty-state {
   flex: 1;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-/* ===== FOOTER ===== */
-footer {
-  text-align: center;
-  padding: 16px;
-  font-size: 11px;
-  border-top: 1px solid var(--card-border);
-  color: #888;
-}
-footer a {
-  color: #888;
-  margin: 0 3px;
-  text-decoration: none;
-  transition: color 0.25s ease;
-}
-footer a:hover { color: var(--accent); }
-
-/* ===== ANIMATIONS ===== */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 640px) {
-  .feed-container {
-    padding: 16px;
-  }
-  
-  .post-card, .library-card {
-    padding: 16px;
-  }
-  
-  .library-title {
-    font-size: 18px;
-  }
-}
-
-/* ===== LOADING STATE ===== */
-.loading {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 40px;
-  color: #888;
+  text-align: center;
+  color: #999;
+}
+
+.empty-state i {
+  font-size: 64px;
+  margin-bottom: 20px;
+  opacity: 0.3;
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.empty-state p {
   font-size: 14px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 50;
+    transform: translateX(-100%);
+    width: 85%;
+    max-width: 350px;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .menu-toggle {
+    display: block;
+  }
+  
+  .message {
+    max-width: 85%;
+  }
+  
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 45;
+  }
+  
+  .sidebar-overlay.show {
+    display: block;
+  }
 }
 </style>
 
 </head>
 <body>
 
-<!-- EXACT SAME HEADER -->
+None
 
-<div class="header-wrapper">
-  <div class="header">
-    <a href="https://patholytica.com">
-      <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
-    </a>
-    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+<div class="chat-container">
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="https://patholytica.com">
+        <img src="IMG_0696.png" class="sidebar-logo" alt="Patholytica Logo">
+      </a>
+      <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+    </div>
+
+<div style="padding: 0 20px 16px 20px;">
+  <input type="text" class="search-box" placeholder="Search conversations..." id="searchBox">
+</div>
+
+<div class="chat-list" id="chatList">
+  <div class="chat-item active" data-chat="1">
+    <div class="chat-avatar">AI</div>
+    <div class="chat-info">
+      <div class="chat-name">AI Assistant</div>
+      <div class="chat-preview">How can I help you today?</div>
+    </div>
+    <div class="chat-meta">
+      <div class="chat-time">12:30</div>
+      <div class="chat-badge">2</div>
+    </div>
+  </div>
+  
+  <div class="chat-item" data-chat="2">
+    <div class="chat-avatar">DR</div>
+    <div class="chat-info">
+      <div class="chat-name">Dr. Smith</div>
+      <div class="chat-preview">Lab results are ready</div>
+    </div>
+    <div class="chat-meta">
+      <div class="chat-time">11:45</div>
+    </div>
+  </div>
+  
+  <div class="chat-item" data-chat="3">
+    <div class="chat-avatar">SU</div>
+    <div class="chat-info">
+      <div class="chat-name">Support Team</div>
+      <div class="chat-preview">Thank you for reaching out</div>
+    </div>
+    <div class="chat-meta">
+      <div class="chat-time">Yesterday</div>
+    </div>
   </div>
 </div>
 
-<!-- FEED CONTAINER -->
+  </div>
 
-<div class="feed-container">
-  <div class="feed-wrapper" id="feedWrapper">
-    <div class="loading">Loading feed...</div>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Main Chat -->
+
+  <div class="chat-main">
+    <div class="chat-header">
+      <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="chat-avatar">AI</div>
+      <div class="chat-header-info">
+        <div class="chat-header-name">AI Assistant</div>
+        <div class="chat-header-status">Online</div>
+      </div>
+      <div class="chat-actions">
+        <button class="action-btn"><i class="fas fa-phone"></i></button>
+        <button class="action-btn"><i class="fas fa-video"></i></button>
+        <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+      </div>
+    </div>
+
+<div class="messages-container" id="messagesContainer">
+  <div class="message received">
+    <div class="message-bubble">
+      <div class="message-text">Hello! Welcome to Patholytica. How can I assist you today?</div>
+      <div class="message-time">12:28</div>
+    </div>
+  </div>
+  
+  <div class="message sent">
+    <div class="message-bubble">
+      <div class="message-text">Hi! I need help understanding my test results.</div>
+      <div class="message-time">12:29</div>
+    </div>
+  </div>
+  
+  <div class="message received">
+    <div class="message-bubble">
+      <div class="message-text">I'd be happy to help you with that. Could you please share which specific test results you'd like me to explain?</div>
+      <div class="message-time">12:30</div>
+    </div>
   </div>
 </div>
 
-<footer>
-  © 2025 Patholytica by MedicineBank. All rights reserved.
-  <br>
-  <a href="#">Privacy Policy</a> | 
-  <a href="#">Terms</a> | 
-  <a href="#">Contact</a>
-</footer>
+<div class="input-area">
+  <button class="attach-btn">
+    <i class="fas fa-paperclip"></i>
+  </button>
+  <textarea 
+    class="message-input" 
+    id="messageInput" 
+    placeholder="Type a message..." 
+    rows="1"
+  ></textarea>
+  <button class="send-btn" id="sendBtn">
+    <i class="fas fa-paper-plane"></i>
+  </button>
+</div>
 
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+  </div>
+</div>
 
-/* ===== FIREBASE CONFIG ===== */
-const firebaseConfig = {
-  apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
-  authDomain: "patholytica.firebaseapp.com",
-  projectId: "patholytica",
-  storageBucket: "patholytica.firebasestorage.app",
-  messagingSenderId: "738430635282",
-  appId: "1:738430635282:web:8451ef380447c7611137cb"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-/* ===== SUPABASE CONFIG ===== */
-const SUPABASE_URL = 'https://vmgenqvsmqiphcajaclx.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3MTUzNzUsImV4cCI6MjA3OTI5MTM3NX0.a2FCNa6BzYqXJWPUkByxK1EiNzt1cZhc3cp2SVj-Ke4';
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-/* ===== THEME ===== */
+<script>
 function toggleTheme(){
   document.body.classList.toggle('light-theme');
-  localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+  localStorage.setItem(
+    "theme",
+    document.body.classList.contains("light-theme") ? "light" : "dark"
+  );
 }
-if(localStorage.getItem('theme') === 'light') document.body.classList.add('light-theme');
-window.toggleTheme = toggleTheme;
 
-/* ===== MOCK DATA (Replace with Supabase queries) ===== */
-const mockPosts = [
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light-theme");
+}
+
+// Mobile menu toggle
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  sidebarOverlay.classList.toggle('show');
+});
+
+sidebarOverlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('show');
+});
+
+// Chat selection
+const chatItems = document.querySelectorAll('.chat-item');
+chatItems.forEach(item => {
+  item.addEventListener('click', () => {
+    chatItems.forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    
+    // Close sidebar on mobile
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('show');
+    }
+  });
+});
+
+// Message sending
+const messageInput = document.getElementById('messageInput');
+const sendBtn = document.getElementById('sendBtn');
+const messagesContainer = document.getElementById('messagesContainer');
+
+function getCurrentTime() {
+  const now = new Date();
+  return now.getHours().toString().padStart(2, '0') + ':' + 
+         now.getMinutes().toString().padStart(2, '0');
+}
+
+// Store conversation history
+let conversationHistory = [
   {
-    id: 1,
-    type: 'post',
-    author: 'Dr. Sarah Chen',
-    avatar: 'https://via.placeholder.com/44',
-    time: '2 hours ago',
-    content: 'Just uploaded a comprehensive guide on cardiovascular pathology. This covers everything from atherosclerosis to heart failure mechanisms. Perfect for boards prep!',
-    attachments: [
-      { type: 'pdf', name: 'Cardiovascular_Pathology_Guide.pdf', size: '2.4 MB', icon: '📄' }
-    ],
-    likes: 127,
-    comments: 23,
-    shares: 18
+    role: "user",
+    content: "Hello! Welcome to Patholytica. How can I assist you today?"
   },
   {
-    id: 2,
-    type: 'library',
-    title: 'Immunology Fundamentals',
-    description: 'A curated collection of resources covering basic to advanced immunology concepts',
-    postCount: 15,
-    followers: 342,
-    lastUpdated: '1 day ago',
-    posts: [
-      { type: 'pdf', name: 'Innate Immunity Overview.pdf', icon: '📄' },
-      { type: 'audio', name: 'Adaptive Immunity Lecture.mp3', icon: '🎵' },
-      { type: 'ppt', name: 'Hypersensitivity Reactions.pptx', icon: '📊' },
-      { type: 'pdf', name: 'Autoimmune Disorders Summary.pdf', icon: '📄' },
-      { type: 'video', name: 'Complement System Explained.mp4', icon: '🎥' }
-    ]
+    role: "assistant", 
+    content: "Hello! Welcome to Patholytica. How can I assist you today?"
   },
   {
-    id: 3,
-    type: 'post',
-    author: 'Medical Student Mike',
-    avatar: 'https://via.placeholder.com/44',
-    time: '5 hours ago',
-    content: 'Recorded my study session on renal physiology. Hope this helps anyone struggling with nephron function and acid-base balance!',
-    attachments: [
-      { type: 'audio', name: 'Renal_Physiology_Study_Session.mp3', size: '45.2 MB', icon: '🎵' },
-      { type: 'pdf', name: 'Study_Notes_Kidney.pdf', size: '1.1 MB', icon: '📄' }
-    ],
-    likes: 89,
-    comments: 12,
-    shares: 7
+    role: "user",
+    content: "Hi! I need help understanding my test results."
   },
   {
-    id: 4,
-    type: 'post',
-    author: 'Prof. James Martinez',
-    avatar: 'https://via.placeholder.com/44',
-    time: '1 day ago',
-    content: 'Updated lecture slides on neuroanatomy - now includes detailed 3D diagrams and clinical correlations. Essential for understanding brain lesions.',
-    attachments: [
-      { type: 'ppt', name: 'Neuroanatomy_Complete_2025.pptx', size: '18.7 MB', icon: '📊' }
-    ],
-    likes: 203,
-    comments: 34,
-    shares: 56
-  },
-  {
-    id: 5,
-    type: 'library',
-    title: 'Pharmacology Mastery',
-    description: 'Everything you need to master pharmacology - from mechanisms to clinical applications',
-    postCount: 28,
-    followers: 567,
-    lastUpdated: '3 hours ago',
-    posts: [
-      { type: 'pdf', name: 'Autonomic Drugs.pdf', icon: '📄' },
-      { type: 'pdf', name: 'Cardiovascular Pharmacology.pdf', icon: '📄' },
-      { type: 'ppt', name: 'Antibiotic Classification.pptx', icon: '📊' },
-      { type: 'audio', name: 'Drug Interactions Explained.mp3', icon: '🎵' }
-    ]
-  },
-  {
-    id: 6,
-    type: 'post',
-    author: 'Dr. Emily Roberts',
-    avatar: 'https://via.placeholder.com/44',
-    time: '3 days ago',
-    content: 'Created a comprehensive case study series on respiratory pathology. Includes X-rays, histology, and clinical pearls.',
-    attachments: [
-      { type: 'pdf', name: 'Respiratory_Cases_Vol1.pdf', size: '5.8 MB', icon: '📄' },
-      { type: 'pdf', name: 'Histology_Atlas_Lungs.pdf', size: '12.3 MB', icon: '📄' }
-    ],
-    likes: 156,
-    comments: 28,
-    shares: 41
+    role: "assistant",
+    content: "Hi! I need help understanding my test results."
   }
 ];
 
-/* ===== RENDER FUNCTIONS ===== */
-function renderPost(post) {
-  const attachmentsHTML = post.attachments.map(att => `
-    <div class="post-attachment" onclick="alert('Opening: ${att.name}')">
-      <div class="attachment-icon">${att.icon}</div>
-      <div class="attachment-info">
-        <div class="attachment-name">${att.name}</div>
-        <div class="attachment-size">${att.size}</div>
-      </div>
-    </div>
-  `).join('');
-
-  return `
-    <div class="post-card">
-      <div class="post-header">
-        <img src="${post.avatar}" alt="${post.author}" class="post-avatar">
-        <div class="post-meta">
-          <div class="post-author">${post.author}</div>
-          <div class="post-time">${post.time}</div>
+async function getAIResponse(userMessage) {
+  try {
+    // Show typing indicator
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message received typing-indicator';
+    typingDiv.id = 'typingIndicator';
+    typingDiv.innerHTML = `
+      <div class="message-bubble">
+        <div class="message-text">
+          <i class="fas fa-circle" style="font-size: 8px; opacity: 0.5; animation: pulse 1.5s ease-in-out infinite;"></i>
+          <i class="fas fa-circle" style="font-size: 8px; opacity: 0.5; animation: pulse 1.5s ease-in-out 0.2s infinite;"></i>
+          <i class="fas fa-circle" style="font-size: 8px; opacity: 0.5; animation: pulse 1.5s ease-in-out 0.4s infinite;"></i>
         </div>
       </div>
-      
-      <div class="post-content">${post.content}</div>
-      
-      ${attachmentsHTML}
-      
-      <div class="post-actions">
-        <button class="action-btn" onclick="toggleLike(${post.id})">
-          <span>❤️</span> <span id="likes-${post.id}">${post.likes}</span>
-        </button>
-        <button class="action-btn">
-          <span>💬</span> <span>${post.comments}</span>
-        </button>
-        <button class="action-btn">
-          <span>↗️</span> <span>${post.shares}</span>
-        </button>
-      </div>
-    </div>
-  `;
-}
+    `;
+    messagesContainer.appendChild(typingDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-function renderLibrary(library) {
-  return `
-    <div class="library-card" id="library-${library.id}" onclick="toggleLibrary(${library.id})">
-      <div class="library-header">
-        <h2 class="library-title">📚 ${library.title}</h2>
-        <span class="library-badge">${library.postCount} items</span>
-      </div>
-      
-      <div class="library-description">${library.description}</div>
-      
-      <div class="library-stats">
-        <div class="library-stat">
-          <span>👥</span> ${library.followers} followers
-        </div>
-        <div class="library-stat">
-          <span>🕐</span> Updated ${library.lastUpdated}
-        </div>
-      </div>
-      
-      <div class="library-expanded" id="library-content-${library.id}" style="display:none;">
-        <div class="library-posts">
-          ${library.posts.map(item => `
-            <div class="library-post-item" onclick="event.stopPropagation(); alert('Opening: ${item.name}')">
-              <div class="library-post-icon">${item.icon}</div>
-              <div class="library-post-text">${item.name}</div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    </div>
-  `;
-}
+    // Add user message to history
+    conversationHistory.push({
+      role: "user",
+      content: userMessage
+    });
 
-/* ===== INTERACTION FUNCTIONS ===== */
-window.toggleLike = function(postId) {
-  const likesElement = document.getElementById(`likes-${postId}`);
-  const currentLikes = parseInt(likesElement.textContent);
-  likesElement.textContent = currentLikes + 1;
-  
-  // Here you would update Supabase
-  console.log(`Liked post ${postId}`);
-};
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system: "You are a helpful medical AI assistant for Patholytica, a healthcare platform. Provide clear, concise, and empathetic responses. Keep answers professional but friendly. If discussing medical topics, remind users to consult healthcare professionals for diagnosis and treatment.",
+        messages: conversationHistory.slice(-10) // Keep last 10 messages for context
+      })
+    });
 
-window.toggleLibrary = function(libraryId) {
-  const content = document.getElementById(`library-content-${libraryId}`);
-  if (content.style.display === 'none') {
-    content.style.display = 'block';
-  } else {
-    content.style.display = 'none';
-  }
-};
+    const data = await response.json();
+    
+    // Remove typing indicator
+    const typing = document.getElementById('typingIndicator');
+    if (typing) typing.remove();
 
-/* ===== LOAD FEED ===== */
-function loadFeed() {
-  const feedWrapper = document.getElementById('feedWrapper');
-  
-  // Render all items
-  const html = mockPosts.map(item => {
-    if (item.type === 'post') {
-      return renderPost(item);
-    } else if (item.type === 'library') {
-      return renderLibrary(item);
+    if (data.content && data.content[0]) {
+      const aiMessage = data.content[0].text;
+      
+      // Add AI response to history
+      conversationHistory.push({
+        role: "assistant",
+        content: aiMessage
+      });
+
+      return aiMessage;
+    } else {
+      throw new Error("Invalid response from AI");
     }
-  }).join('');
-  
-  feedWrapper.innerHTML = html;
+  } catch (error) {
+    console.error("AI Error:", error);
+    
+    // Remove typing indicator
+    const typing = document.getElementById('typingIndicator');
+    if (typing) typing.remove();
+    
+    return "I apologize, but I'm having trouble responding right now. Please try again in a moment.";
+  }
 }
 
-/* ===== AUTH CHECK ===== */
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    // Optionally redirect to login or show guest content
-    console.log('No user logged in');
-  } else {
-    console.log('User logged in:', user.email);
-  }
+async function sendMessage() {
+  const text = messageInput.value.trim();
+  if (!text) return;
   
-  // Load feed regardless (or restrict based on auth)
-  loadFeed();
+  // Disable input while processing
+  messageInput.disabled = true;
+  sendBtn.disabled = true;
+  
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message sent';
+  messageDiv.innerHTML = `
+    <div class="message-bubble">
+      <div class="message-text">${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+      <div class="message-time">${getCurrentTime()}</div>
+    </div>
+  `;
+  
+  messagesContainer.appendChild(messageDiv);
+  messageInput.value = '';
+  messageInput.style.height = 'auto';
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  
+  // Get AI response
+  const aiResponse = await getAIResponse(text);
+  
+  const responseDiv = document.createElement('div');
+  responseDiv.className = 'message received';
+  responseDiv.innerHTML = `
+    <div class="message-bubble">
+      <div class="message-text">${aiResponse.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+      <div class="message-time">${getCurrentTime()}</div>
+    </div>
+  `;
+  messagesContainer.appendChild(responseDiv);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  
+  // Re-enable input
+  messageInput.disabled = false;
+  sendBtn.disabled = false;
+  messageInput.focus();
+}
+
+sendBtn.addEventListener('click', sendMessage);
+
+messageInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
 });
 
-/* ===== INITIALIZE ===== */
-setTimeout(loadFeed, 500);
+// Auto-resize textarea
+messageInput.addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+
+// Search functionality
+const searchBox = document.getElementById('searchBox');
+searchBox.addEventListener('input', (e) => {
+  const searchTerm = e.target.value.toLowerCase();
+  chatItems.forEach(item => {
+    const name = item.querySelector('.chat-name').textContent.toLowerCase();
+    const preview = item.querySelector('.chat-preview').textContent.toLowerCase();
+    if (name.includes(searchTerm) || preview.includes(searchTerm)) {
+      item.style.display = 'flex';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+});
 </script>
 
 </body>
