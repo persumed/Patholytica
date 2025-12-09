@@ -112,11 +112,21 @@ body.light-theme .logo-img {
 .sidebar-header {
   padding: 20px;
   border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
-.sidebar-header h2 {
-  font-size: 20px;
-  margin-bottom: 12px;
+.sidebar-logo {
+  height: 32px;
+  width: auto;
+  transition: filter 0.25s ease;
+  cursor: pointer;
+}
+
+body.light-theme .sidebar-logo {
+  filter: invert(1);
 }
 
 .search-box {
@@ -517,22 +527,21 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 </head>
 <body>
 
-<div class="header-wrapper">
-  <div class="header">
-    <a href="https://patholytica.com">
-      <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
-    </a>
-    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
-  </div>
-</div>
+None
 
 <div class="chat-container">
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2>Messages</h2>
-      <input type="text" class="search-box" placeholder="Search conversations..." id="searchBox">
+      <a href="https://patholytica.com">
+        <img src="IMG_0696.png" class="sidebar-logo" alt="Patholytica Logo">
+      </a>
+      <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
     </div>
+
+<div style="padding: 0 20px 16px 20px;">
+  <input type="text" class="search-box" placeholder="Search conversations..." id="searchBox">
+</div>
 
 <div class="chat-list" id="chatList">
   <div class="chat-item active" data-chat="1">
