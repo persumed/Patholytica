@@ -5,7 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Academic Library Manager</title>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
 :root {
   --bg-color: #000;
@@ -24,1185 +26,926 @@
 }
 
 body.light-theme {
-–bg-color: #f2f2f7;
-–text-color: #111;
-–card-bg: rgba(255,255,255,0.65);
-–card-border: rgba(0,0,0,0.1);
-–accent: #b0003a;
-–accent-hover: #88002a;
-–content-bg: #e5e5e5;
-–item-bg: #fff;
-–input-bg: rgba(255,255,255,0.95);
+  --bg-color: #f2f2f7;
+  --text-color: #111;
+  --card-bg: rgba(255,255,255,0.65);
+  --card-border: rgba(0,0,0,0.1);
+  --accent: #b0003a;
+  --accent-hover: #88002a;
+  --content-bg: #e5e5e5;
+  --item-bg: #fff;
+  --input-bg: rgba(255,255,255,0.95);
 }
 
-- { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; font-family: “Inter”, Arial, sans-serif; overflow-x: hidden; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: "Inter", Arial, sans-serif; overflow-x: hidden; }
 
 body {
-background: var(–bg-color);
-color: var(–text-color);
-display: flex;
-flex-direction: column;
-transition: background 0.35s ease;
-max-width: 100vw;
+  background: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  transition: background 0.35s ease;
+  max-width: 100vw;
 }
 
 .main-container {
-flex: 1;
-display: flex;
-overflow: hidden;
-max-width: 100vw;
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  max-width: 100vw;
 }
 
-/* Sidebar - Enhanced */
+/* Sidebar */
 .sidebar {
-width: 350px;
-background: var(–bg-color);
-border-right: 1px solid var(–card-border);
-display: flex;
-flex-direction: column;
-transition: transform 0.3s ease;
-padding-top: env(safe-area-inset-top);
+  width: 350px;
+  background: var(--bg-color);
+  border-right: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+  padding-top: env(safe-area-inset-top);
 }
 
 .sidebar-header {
-padding: 20px;
-border-bottom: 1px solid var(–card-border);
-display: flex;
-flex-direction: column;
-gap: 12px;
+  padding: 20px;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .sidebar-title {
-font-size: 20px;
-font-weight: 700;
-color: var(–text-color);
-display: flex;
-align-items: center;
-gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .new-library-btn {
-width: 100%;
-padding: 10px 16px;
-border-radius: 8px;
-border: none;
-background: var(–accent);
-color: white;
-font-size: 14px;
-font-weight: 600;
-cursor: pointer;
-transition: 0.25s ease;
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .new-library-btn:hover {
-background: var(–accent-hover);
-transform: translateY(-1px);
+  background: var(--accent-hover);
+  transform: translateY(-1px);
 }
 
 .search-box {
-width: 100%;
-padding: 10px 14px;
-border-radius: 8px;
-border: 1px solid var(–card-border);
-background: var(–input-bg);
-color: var(–text-color);
-font-size: 14px;
-transition: 0.25s ease;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 14px;
+  transition: 0.25s ease;
 }
 
 .search-box:focus {
-border-color: var(–accent);
-outline: none;
+  border-color: var(--accent);
+  outline: none;
 }
 
 .library-list {
-flex: 1;
-overflow-y: auto;
-padding: 8px 0;
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
 }
 
 .library-item {
-display: flex;
-align-items: center;
-gap: 12px;
-padding: 16px 20px;
-cursor: pointer;
-transition: background 0.2s ease;
-border-bottom: 1px solid var(–card-border);
-position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid var(--card-border);
+  position: relative;
 }
 
 .library-item:hover {
-background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.05);
 }
 
 body.light-theme .library-item:hover {
-background: rgba(0,0,0,0.03);
+  background: rgba(0,0,0,0.03);
 }
 
 .library-item.active {
-background: rgba(176,0,58,0.15);
-border-left: 3px solid var(–accent);
+  background: rgba(176,0,58,0.15);
+  border-left: 3px solid var(--accent);
 }
 
-/* Custom Library Images */
 .library-icon {
-width: 48px;
-height: 48px;
-border-radius: 10px;
-background: linear-gradient(135deg, var(–accent), var(–accent-hover));
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 22px;
-color: white;
-flex-shrink: 0;
-overflow: hidden;
-position: relative;
-}
-
-.library-icon img {
-width: 100%;
-height: 100%;
-object-fit: cover;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: white;
+  flex-shrink: 0;
 }
 
 .library-info {
-flex: 1;
-min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .library-name {
-font-weight: 600;
-font-size: 15px;
-margin-bottom: 4px;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 4px;
 }
 
 .library-meta {
-font-size: 13px;
-color: #999;
-display: flex;
-align-items: center;
-gap: 8px;
+  font-size: 13px;
+  color: #999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .item-count {
-background: rgba(176,0,58,0.2);
-color: var(–accent);
-border-radius: 10px;
-padding: 2px 8px;
-font-size: 11px;
-font-weight: 600;
+  background: rgba(176,0,58,0.2);
+  color: var(--accent);
+  border-radius: 10px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .unread-badge {
-position: absolute;
-top: 12px;
-right: 12px;
-background: var(–accent);
-color: white;
-border-radius: 10px;
-padding: 2px 6px;
-font-size: 10px;
-font-weight: 700;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--accent);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 /* Main Content */
 .content-main {
-flex: 1;
-display: flex;
-flex-direction: column;
-background: var(–content-bg);
-max-width: 100%;
-overflow-x: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--content-bg);
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .content-header {
-display: flex;
-align-items: center;
-gap: 12px;
-padding: 16px 20px;
-padding-top: calc(env(safe-area-inset-top) + 16px);
-background: var(–bg-color);
-border-bottom: 1px solid var(–card-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  padding-top: calc(env(safe-area-inset-top) + 16px);
+  background: var(--bg-color);
+  border-bottom: 1px solid var(--card-border);
 }
 
 .menu-toggle {
-display: none;
-background: none;
-border: none;
-color: var(–text-color);
-font-size: 20px;
-cursor: pointer;
-padding: 8px;
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
 }
 
 .content-header-info {
-flex: 1;
-min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .content-header-name {
-font-size: 18px;
-font-weight: 600;
-display: flex;
-align-items: center;
-gap: 8px;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .content-header-details {
-font-size: 13px;
-color: #999;
-margin-top: 2px;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
+  font-size: 13px;
+  color: #999;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .content-actions {
-display: flex;
-gap: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .action-btn {
-padding: 8px 14px;
-border-radius: 6px;
-border: 1px solid var(–card-border);
-background: transparent;
-color: var(–text-color);
-font-size: 13px;
-cursor: pointer;
-transition: 0.25s ease;
-display: flex;
-align-items: center;
-gap: 6px;
-white-space: nowrap;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--text-color);
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 .action-btn:hover {
-border-color: var(–accent);
-color: var(–accent);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .action-btn.primary {
-background: var(–accent);
-border-color: var(–accent);
-color: white;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
 }
 
 .action-btn.primary:hover {
-background: var(–accent-hover);
+  background: var(--accent-hover);
 }
 
 .action-btn.chat-btn {
-position: relative;
+  position: relative;
 }
 
 .chat-notification {
-position: absolute;
-top: -4px;
-right: -4px;
-background: var(–accent);
-color: white;
-border-radius: 10px;
-padding: 2px 6px;
-font-size: 10px;
-font-weight: 700;
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--accent);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 /* Tab Navigation */
 .tab-navigation {
-display: flex;
-border-bottom: 1px solid var(–card-border);
-background: var(–card-bg);
-backdrop-filter: blur(22px);
-padding: 0 20px;
-overflow-x: auto;
+  display: flex;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--card-bg);
+  backdrop-filter: blur(22px);
+  padding: 0 20px;
+  overflow-x: auto;
 }
 
 .tab-btn {
-padding: 12px 20px;
-background: none;
-border: none;
-color: #999;
-font-size: 14px;
-font-weight: 600;
-cursor: pointer;
-transition: 0.25s ease;
-border-bottom: 2px solid transparent;
-white-space: nowrap;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
 }
 
 .tab-btn:hover {
-color: var(–text-color);
+  color: var(--text-color);
 }
 
 .tab-btn.active {
-color: var(–accent);
-border-bottom-color: var(–accent);
+  color: var(--accent);
+  border-bottom-color: var(--accent);
 }
 
-/* Materials Container - Enhanced with Subgroups */
+/* Materials Grid */
 .materials-container {
-flex: 1;
-overflow-y: auto;
-overflow-x: hidden;
-padding: 20px;
-max-width: 100%;
-display: none;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  max-width: 100%;
+  display: none;
 }
 
 .materials-container.active {
-display: block;
-}
-
-.subgroup-section {
-margin-bottom: 32px;
-}
-
-.subgroup-header {
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 12px 0;
-margin-bottom: 16px;
-border-bottom: 2px solid var(–card-border);
-}
-
-.subgroup-title {
-font-size: 18px;
-font-weight: 700;
-color: var(–text-color);
-display: flex;
-align-items: center;
-gap: 10px;
-}
-
-.subgroup-actions {
-display: flex;
-gap: 8px;
-}
-
-.add-subgroup-btn {
-padding: 8px 16px;
-border-radius: 6px;
-border: 1px dashed var(–card-border);
-background: transparent;
-color: var(–text-color);
-font-size: 13px;
-cursor: pointer;
-transition: 0.25s ease;
-display: flex;
-align-items: center;
-gap: 6px;
-margin-bottom: 20px;
-}
-
-.add-subgroup-btn:hover {
-border-color: var(–accent);
-color: var(–accent);
-background: rgba(176,0,58,0.05);
+  display: block;
 }
 
 .materials-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-gap: 16px;
-max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  max-width: 100%;
 }
 
-/* Material Card - Enhanced with Preview & Pin */
 .material-card {
-background: var(–item-bg);
-border: 1px solid var(–card-border);
-border-radius: 12px;
-padding: 16px;
-cursor: pointer;
-transition: all 0.25s ease;
-animation: fadeIn 0.3s ease;
-max-width: 100%;
-overflow: hidden;
-position: relative;
-}
-
-.material-card.pinned {
-border-color: var(–accent);
-box-shadow: 0 0 0 1px var(–accent);
+  background: var(--item-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  animation: fadeIn 0.3s ease;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .material-card:hover {
-transform: translateY(-2px);
-box-shadow: 0 8px 24px rgba(176,0,58,0.15);
-border-color: var(–accent);
-}
-
-.pin-badge {
-position: absolute;
-top: 12px;
-right: 12px;
-background: var(–accent);
-color: white;
-width: 24px;
-height: 24px;
-border-radius: 50%;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 12px;
-z-index: 2;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(176,0,58,0.15);
+  border-color: var(--accent);
 }
 
 .material-header {
-display: flex;
-align-items: flex-start;
-gap: 12px;
-margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .material-type-icon {
-width: 48px;
-height: 48px;
-border-radius: 8px;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 20px;
-flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
 }
 
 .material-type-icon.pdf {
-background: rgba(239, 68, 68, 0.15);
-color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
 }
 
 .material-type-icon.image {
-background: rgba(59, 130, 246, 0.15);
-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
 }
 
 .material-type-icon.text {
-background: rgba(16, 185, 129, 0.15);
-color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
 }
 
 .material-type-icon.record {
-background: rgba(245, 158, 11, 0.15);
-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
 }
 
 .material-info {
-flex: 1;
-min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .material-title {
-font-weight: 600;
-font-size: 15px;
-margin-bottom: 4px;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .material-type {
-font-size: 12px;
-color: #999;
-text-transform: uppercase;
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
 }
 
 .material-preview {
-font-size: 13px;
-color: #aaa;
-line-height: 1.5;
-margin-bottom: 12px;
-display: -webkit-box;
--webkit-line-clamp: 3;
--webkit-box-orient: vertical;
-overflow: hidden;
-cursor: pointer;
-}
-
-.material-preview:hover {
-color: var(–text-color);
-}
-
-.material-preview.expanded {
--webkit-line-clamp: unset;
-display: block;
-}
-
-.preview-toggle {
-color: var(–accent);
-font-size: 12px;
-cursor: pointer;
-margin-top: 4px;
-display: inline-block;
-}
-
-.preview-toggle:hover {
-text-decoration: underline;
+  font-size: 13px;
+  color: #aaa;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .material-footer {
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding-top: 12px;
-border-top: 1px solid var(–card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--card-border);
 }
 
 .material-date {
-font-size: 12px;
-color: #888;
+  font-size: 12px;
+  color: #888;
 }
 
 .material-actions {
-display: flex;
-gap: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .icon-btn {
-background: none;
-border: none;
-color: var(–text-color);
-font-size: 14px;
-cursor: pointer;
-padding: 4px;
-transition: color 0.2s ease;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s ease;
 }
 
 .icon-btn:hover {
-color: var(–accent);
+  color: var(--accent);
 }
 
-.icon-btn.pinned {
-color: var(–accent);
-}
-
-/* Chat Container - Enhanced with Material References */
+/* Chat Container */
 .chat-container {
-flex: 1;
-display: none;
-flex-direction: column;
-overflow: hidden;
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .chat-container.active {
-display: flex;
+  display: flex;
 }
 
 .messages-area {
-flex: 1;
-overflow-y: auto;
-padding: 20px;
-display: flex;
-flex-direction: column;
-gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .message {
-display: flex;
-gap: 10px;
-max-width: 75%;
-animation: fadeIn 0.3s ease;
+  display: flex;
+  gap: 10px;
+  max-width: 75%;
+  animation: fadeIn 0.3s ease;
 }
 
 .message.sent {
-align-self: flex-end;
-flex-direction: row-reverse;
+  align-self: flex-end;
+  flex-direction: row-reverse;
 }
 
 .message-avatar {
-width: 32px;
-height: 32px;
-border-radius: 50%;
-background: linear-gradient(135deg, var(–accent), var(–accent-hover));
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 14px;
-font-weight: 600;
-color: white;
-flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  flex-shrink: 0;
 }
 
 .message-content {
-display: flex;
-flex-direction: column;
-gap: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .message-header {
-display: flex;
-align-items: center;
-gap: 8px;
-font-size: 12px;
-color: #999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #999;
 }
 
 .message-author {
-font-weight: 600;
+  font-weight: 600;
 }
 
 .message-bubble {
-background: var(–item-bg);
-padding: 10px 14px;
-border-radius: 12px;
-box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: var(--item-bg);
+  padding: 10px 14px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .message.sent .message-bubble {
-background: var(–accent);
-color: white;
+  background: var(--accent);
+  color: white;
 }
 
 body.light-theme .message.sent .message-bubble {
-color: white;
+  color: white;
 }
 
 .message-text {
-font-size: 14px;
-line-height: 1.5;
-word-wrap: break-word;
-}
-
-.material-reference {
-display: flex;
-align-items: center;
-gap: 8px;
-margin-top: 8px;
-padding: 8px;
-background: rgba(0,0,0,0.2);
-border-radius: 8px;
-border-left: 3px solid var(–accent);
-cursor: pointer;
-transition: 0.2s ease;
-}
-
-.message.sent .material-reference {
-background: rgba(0,0,0,0.3);
-}
-
-body.light-theme .material-reference {
-background: rgba(0,0,0,0.05);
-}
-
-body.light-theme .message.sent .material-reference {
-background: rgba(0,0,0,0.2);
-}
-
-.material-reference:hover {
-background: rgba(0,0,0,0.3);
-transform: translateX(4px);
-}
-
-.material-reference-icon {
-font-size: 16px;
-color: var(–accent);
-}
-
-.message.sent .material-reference-icon {
-color: white;
-}
-
-.material-reference-text {
-flex: 1;
-font-size: 13px;
-font-weight: 500;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
 }
 
 .chat-input-area {
-padding: 16px 20px;
-padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
-background: var(–card-bg);
-backdrop-filter: blur(22px);
-border-top: 1px solid var(–card-border);
-display: flex;
-gap: 12px;
-align-items: flex-end;
-position: relative;
-}
-
-.chat-input-wrapper {
-flex: 1;
-position: relative;
-display: flex;
-flex-direction: column;
-gap: 8px;
-}
-
-.material-picker {
-display: flex;
-gap: 6px;
-flex-wrap: wrap;
-padding: 0 4px;
-}
-
-.material-tag {
-display: inline-flex;
-align-items: center;
-gap: 6px;
-padding: 4px 10px;
-background: rgba(176,0,58,0.15);
-border: 1px solid var(–accent);
-border-radius: 16px;
-font-size: 12px;
-color: var(–accent);
-cursor: pointer;
-transition: 0.2s ease;
-}
-
-.material-tag:hover {
-background: rgba(176,0,58,0.25);
-}
-
-.material-tag i {
-font-size: 10px;
+  padding: 16px 20px;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+  background: var(--card-bg);
+  backdrop-filter: blur(22px);
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 .chat-input {
-flex: 1;
-padding: 10px 16px;
-border-radius: 20px;
-border: 1px solid var(–card-border);
-background: var(–input-bg);
-color: var(–text-color);
-font-size: 14px;
-font-family: inherit;
-resize: none;
-max-height: 100px;
-transition: 0.25s ease;
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 14px;
+  font-family: inherit;
+  resize: none;
+  max-height: 100px;
+  transition: 0.25s ease;
 }
 
 .chat-input:focus {
-border-color: var(–accent);
-outline: none;
-}
-
-.chat-buttons {
-display: flex;
-gap: 8px;
-align-items: center;
-}
-
-.attach-btn {
-width: 40px;
-height: 40px;
-border-radius: 50%;
-border: 1px solid var(–card-border);
-background: transparent;
-color: var(–text-color);
-font-size: 16px;
-cursor: pointer;
-transition: 0.25s ease;
-display: flex;
-align-items: center;
-justify-content: center;
-flex-shrink: 0;
-}
-
-.attach-btn:hover {
-background: rgba(255,255,255,0.05);
-border-color: var(–accent);
-color: var(–accent);
-}
-
-body.light-theme .attach-btn:hover {
-background: rgba(0,0,0,0.05);
+  border-color: var(--accent);
+  outline: none;
 }
 
 .send-btn {
-width: 40px;
-height: 40px;
-border-radius: 50%;
-border: none;
-background: var(–accent);
-color: white;
-font-size: 16px;
-cursor: pointer;
-transition: 0.25s ease;
-display: flex;
-align-items: center;
-justify-content: center;
-flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .send-btn:hover {
-background: var(–accent-hover);
-transform: scale(1.05);
+  background: var(--accent-hover);
+  transform: scale(1.05);
 }
 
 /* Floating Action Button */
 .fab {
-position: fixed;
-bottom: calc(env(safe-area-inset-bottom) + 20px);
-right: 20px;
-width: 56px;
-height: 56px;
-border-radius: 50%;
-background: var(–accent);
-color: white;
-border: none;
-font-size: 24px;
-cursor: pointer;
-box-shadow: 0 4px 12px rgba(176,0,58,0.4);
-transition: 0.25s ease;
-z-index: 100;
-display: flex;
-align-items: center;
-justify-content: center;
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 20px);
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(176,0,58,0.4);
+  transition: 0.25s ease;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .fab:hover {
-background: var(–accent-hover);
-transform: scale(1.1);
+  background: var(--accent-hover);
+  transform: scale(1.1);
 }
 
 /* Modal */
 .modal {
-display: none;
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.7);
-z-index: 200;
-align-items: center;
-justify-content: center;
-padding: 20px;
-animation: fadeIn 0.2s ease;
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
 }
 
 .modal.show {
-display: flex;
+  display: flex;
 }
 
 .modal-content {
-background: var(–bg-color);
-border-radius: 16px;
-max-width: 500px;
-width: 100%;
-max-height: 80vh;
-overflow: hidden;
-display: flex;
-flex-direction: column;
-animation: slideUp 0.3s ease;
-border: 1px solid var(–card-border);
+  background: var(--bg-color);
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+  border: 1px solid var(--card-border);
 }
 
 .modal-header {
-padding: 20px;
-border-bottom: 1px solid var(–card-border);
-display: flex;
-align-items: center;
-justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .modal-title {
-font-size: 18px;
-font-weight: 700;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .modal-close {
-background: none;
-border: none;
-color: var(–text-color);
-font-size: 24px;
-cursor: pointer;
-padding: 0;
-width: 32px;
-height: 32px;
-display: flex;
-align-items: center;
-justify-content: center;
-border-radius: 50%;
-transition: 0.25s ease;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: 0.25s ease;
 }
 
 .modal-close:hover {
-background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.1);
 }
 
 body.light-theme .modal-close:hover {
-background: rgba(0,0,0,0.05);
+  background: rgba(0,0,0,0.05);
 }
 
 .modal-body {
-padding: 20px;
-overflow-y: auto;
-flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .form-group {
-margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 
 .form-label {
-display: block;
-font-size: 14px;
-font-weight: 600;
-margin-bottom: 8px;
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 .form-input {
-width: 100%;
-padding: 10px 14px;
-border-radius: 8px;
-border: 1px solid var(–card-border);
-background: var(–input-bg);
-color: var(–text-color);
-font-size: 14px;
-font-family: inherit;
-transition: 0.25s ease;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 14px;
+  font-family: inherit;
+  transition: 0.25s ease;
 }
 
 .form-input:focus {
-border-color: var(–accent);
-outline: none;
+  border-color: var(--accent);
+  outline: none;
 }
 
 .form-textarea {
-min-height: 100px;
-resize: vertical;
+  min-height: 100px;
+  resize: vertical;
 }
 
 .form-select {
-appearance: none;
-background-image: url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘12’ height=‘12’ viewBox=‘0 0 12 12’%3E%3Cpath fill=’%23999’ d=‘M6 9L1 4h10z’/%3E%3C/svg%3E”);
-background-repeat: no-repeat;
-background-position: right 12px center;
-padding-right: 36px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
 }
 
 .file-upload-area {
-border: 2px dashed var(–card-border);
-border-radius: 8px;
-padding: 30px;
-text-align: center;
-cursor: pointer;
-transition: 0.25s ease;
+  border: 2px dashed var(--card-border);
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.25s ease;
 }
 
 .file-upload-area:hover {
-border-color: var(–accent);
-background: rgba(176,0,58,0.05);
+  border-color: var(--accent);
+  background: rgba(176,0,58,0.05);
 }
 
 .file-upload-icon {
-font-size: 48px;
-color: var(–accent);
-margin-bottom: 12px;
+  font-size: 48px;
+  color: var(--accent);
+  margin-bottom: 12px;
 }
 
 .file-upload-text {
-font-size: 14px;
-color: #999;
-}
-
-.image-preview {
-margin-top: 12px;
-border-radius: 8px;
-overflow: hidden;
-max-height: 200px;
-}
-
-.image-preview img {
-width: 100%;
-height: auto;
-display: block;
+  font-size: 14px;
+  color: #999;
 }
 
 .modal-footer {
-padding: 20px;
-border-top: 1px solid var(–card-border);
-display: flex;
-gap: 12px;
-justify-content: flex-end;
+  padding: 20px;
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
 }
 
 .btn {
-padding: 10px 20px;
-border-radius: 8px;
-border: none;
-font-size: 14px;
-font-weight: 600;
-cursor: pointer;
-transition: 0.25s ease;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
 }
 
 .btn-secondary {
-background: transparent;
-border: 1px solid var(–card-border);
-color: var(–text-color);
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
 }
 
 .btn-secondary:hover {
-background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.05);
 }
 
 body.light-theme .btn-secondary:hover {
-background: rgba(0,0,0,0.05);
+  background: rgba(0,0,0,0.05);
 }
 
 .btn-primary {
-background: var(–accent);
-color: white;
+  background: var(--accent);
+  color: white;
 }
 
 .btn-primary:hover {
-background: var(–accent-hover);
-transform: translateY(-1px);
-}
-
-.color-picker-grid {
-display: grid;
-grid-template-columns: repeat(6, 1fr);
-gap: 8px;
-margin-top: 8px;
-}
-
-.color-option {
-width: 40px;
-height: 40px;
-border-radius: 8px;
-cursor: pointer;
-border: 2px solid transparent;
-transition: 0.2s ease;
-}
-
-.color-option:hover {
-transform: scale(1.1);
-}
-
-.color-option.selected {
-border-color: var(–text-color);
-box-shadow: 0 0 0 2px var(–card-bg), 0 0 0 4px var(–text-color);
+  background: var(--accent-hover);
+  transform: translateY(-1px);
 }
 
 /* Empty State */
 .empty-state {
-flex: 1;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-padding: 40px;
-text-align: center;
-color: #999;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+  color: #999;
 }
 
 .empty-state i {
-font-size: 64px;
-margin-bottom: 20px;
-opacity: 0.3;
+  font-size: 64px;
+  margin-bottom: 20px;
+  opacity: 0.3;
 }
 
 .empty-state h3 {
-font-size: 20px;
-margin-bottom: 8px;
-color: var(–text-color);
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: var(--text-color);
 }
 
 .empty-state p {
-font-size: 14px;
-margin-bottom: 20px;
+  font-size: 14px;
+  margin-bottom: 20px;
 }
 
 @keyframes fadeIn {
-from { opacity: 0; transform: translateY(10px); }
-to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideUp {
-from { opacity: 0; transform: translateY(30px); }
-to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-width: 6px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-background: transparent;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-background: rgba(255,255,255,0.1);
-border-radius: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.2);
 }
 
 body.light-theme ::-webkit-scrollbar-thumb {
-background: rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.1);
 }
 
 body.light-theme ::-webkit-scrollbar-thumb:hover {
-background: rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.2);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-.sidebar {
-position: fixed;
-left: 0;
-top: 0;
-bottom: 0;
-z-index: 50;
-transform: translateX(-100%);
-width: 85%;
-max-width: 350px;
-}
-
-.sidebar.open {
-transform: translateX(0);
-}
-
-.menu-toggle {
-display: block;
-}
-
-.materials-grid {
-grid-template-columns: 1fr;
-}
-
-.sidebar-overlay {
-display: none;
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.5);
-z-index: 45;
-}
-
-.sidebar-overlay.show {
-display: block;
-}
-
-.content-actions .action-btn:not(.chat-btn) {
-display: none;
-}
-
-.content-header {
-padding-left: 12px;
-padding-right: 12px;
-}
-
-.materials-container {
-padding: 12px;
-}
-
-.message {
-max-width: 85%;
-}
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 50;
+    transform: translateX(-100%);
+    width: 85%;
+    max-width: 350px;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .menu-toggle {
+    display: block;
+  }
+  
+  .materials-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 45;
+  }
+  
+  .sidebar-overlay.show {
+    display: block;
+  }
+  
+  .content-actions .action-btn:not(.chat-btn) {
+    display: none;
+  }
+  
+  .content-header {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
+  .materials-container {
+    padding: 12px;
+  }
+  
+  .message {
+    max-width: 85%;
+  }
 }
 </style>
 
@@ -1230,12 +973,10 @@ max-width: 85%;
     </div>
 
 <div class="library-list" id="libraryList">
-  <div class="library-item active" data-library="1" data-name="Anatomy" data-members="5" data-accent="#b0003a">
-    <div class="library-icon" style="background: linear-gradient(135deg, #b0003a, #88002a);">
-      <i class="fas fa-microscope"></i>
-    </div>
+  <div class="library-item active" data-library="1" data-name="Medical Research" data-members="5">
+    <div class="library-icon"><i class="fas fa-microscope"></i></div>
     <div class="library-info">
-      <div class="library-name">Anatomy</div>
+      <div class="library-name">Medical Research</div>
       <div class="library-meta">
         <span class="item-count">24 items</span>
         <span>5 members</span>
@@ -1243,11 +984,9 @@ max-width: 85%;
     </div>
     <span class="unread-badge">3</span>
   </div>
-  
-  <div class="library-item" data-library="2" data-name="Neuroscience Papers" data-members="3" data-accent="#3b82f6">
-    <div class="library-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
-      <i class="fas fa-brain"></i>
-    </div>
+
+  <div class="library-item" data-library="2" data-name="Neuroscience Papers" data-members="3">
+    <div class="library-icon"><i class="fas fa-brain"></i></div>
     <div class="library-info">
       <div class="library-name">Neuroscience Papers</div>
       <div class="library-meta">
@@ -1256,11 +995,9 @@ max-width: 85%;
       </div>
     </div>
   </div>
-  
-  <div class="library-item" data-library="3" data-name="Genetics Studies" data-members="8" data-accent="#10b981">
-    <div class="library-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
-      <i class="fas fa-dna"></i>
-    </div>
+
+  <div class="library-item" data-library="3" data-name="Genetics Studies" data-members="8">
+    <div class="library-icon"><i class="fas fa-dna"></i></div>
     <div class="library-info">
       <div class="library-name">Genetics Studies</div>
       <div class="library-meta">
@@ -1269,6 +1006,17 @@ max-width: 85%;
       </div>
     </div>
     <span class="unread-badge">1</span>
+  </div>
+
+  <div class="library-item" data-library="4" data-name="Lab Protocols" data-members="2">
+    <div class="library-icon"><i class="fas fa-flask"></i></div>
+    <div class="library-info">
+      <div class="library-name">Lab Protocols</div>
+      <div class="library-meta">
+        <span class="item-count">12 items</span>
+        <span>2 members</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1283,11 +1031,11 @@ max-width: 85%;
       <button class="menu-toggle" id="menuToggle">
         <i class="fas fa-bars"></i>
       </button>
-      <div class="library-icon" style="width: 40px; height: 40px; font-size: 18px; background: linear-gradient(135deg, #b0003a, #88002a);">
+      <div class="library-icon" style="width: 40px; height: 40px; font-size: 18px;">
         <i class="fas fa-microscope"></i>
       </div>
       <div class="content-header-info">
-        <div class="content-header-name">Anatomy</div>
+        <div class="content-header-name">Medical Research</div>
         <div class="content-header-details">24 items • 5 members • Last updated today</div>
       </div>
       <div class="content-actions">
@@ -1316,116 +1064,109 @@ max-width: 85%;
   </button>
 </div>
 
-<!-- Materials Tab with Subgroups -->
-<div class="materials-container active" id="materialsTab">
-  <button class="add-subgroup-btn" onclick="addSubgroup()">
-    <i class="fas fa-plus"></i>
-    Add Subgroup
-  </button>
+<!-- Materials Tab -->
 
-  <div class="subgroup-section" data-subgroup="lecture1">
-    <div class="subgroup-header">
-      <div class="subgroup-title">
-        <i class="fas fa-folder-open"></i>
-        Lecture 1: Introduction to Anatomy
+<div class="materials-container active" id="materialsTab">
+  <div class="materials-grid" id="materialsGrid">
+    <div class="material-card">
+      <div class="material-header">
+        <div class="material-type-icon pdf">
+          <i class="fas fa-file-pdf"></i>
+        </div>
+        <div class="material-info">
+          <div class="material-title">Cancer Research Study 2024</div>
+          <div class="material-type">PDF Document</div>
+        </div>
       </div>
-      <div class="subgroup-actions">
-        <button class="icon-btn" title="Edit subgroup" onclick="editSubgroup('lecture1')"><i class="fas fa-pen"></i></button>
-        <button class="icon-btn" title="Delete subgroup" onclick="deleteSubgroup('lecture1')"><i class="fas fa-trash"></i></button>
+      <div class="material-preview">
+        Comprehensive analysis of novel immunotherapy approaches in treating advanced stage cancers...
+      </div>
+      <div class="material-footer">
+        <div class="material-date">Added Dec 10, 2025</div>
+        <div class="material-actions">
+          <button class="icon-btn" title="Download" onclick="downloadMaterial('Cancer Research Study 2024')"><i class="fas fa-download"></i></button>
+          <button class="icon-btn" title="Share" onclick="shareMaterial('Cancer Research Study 2024')"><i class="fas fa-share"></i></button>
+          <button class="icon-btn" title="More" onclick="showMoreOptions('Cancer Research Study 2024')"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
       </div>
     </div>
-    <div class="materials-grid">
-      <div class="material-card pinned" data-material="1">
-        <span class="pin-badge"><i class="fas fa-thumbtack"></i></span>
-        <div class="material-header">
-          <div class="material-type-icon pdf">
-            <i class="fas fa-file-pdf"></i>
-          </div>
-          <div class="material-info">
-            <div class="material-title">Basic Anatomy Overview</div>
-            <div class="material-type">PDF Document</div>
-          </div>
-        </div>
-        <div class="material-preview" onclick="togglePreview(this)">
-          Comprehensive introduction to human anatomy covering skeletal system, muscular system, and basic organ structures. This document provides foundational knowledge essential for understanding more advanced anatomical concepts...
-          <span class="preview-toggle">Show more</span>
-        </div>
-        <div class="material-footer">
-          <div class="material-date">Added Dec 10, 2025</div>
-          <div class="material-actions">
-            <button class="icon-btn pinned" title="Unpin" onclick="togglePin(1)"><i class="fas fa-thumbtack"></i></button>
-            <button class="icon-btn" title="Download" onclick="downloadMaterial('Basic Anatomy Overview')"><i class="fas fa-download"></i></button>
-            <button class="icon-btn" title="Share" onclick="shareMaterial('Basic Anatomy Overview')"><i class="fas fa-share"></i></button>
-          </div>
-        </div>
-      </div>
 
-      <div class="material-card" data-material="2">
-        <div class="material-header">
-          <div class="material-type-icon image">
-            <i class="fas fa-image"></i>
-          </div>
-          <div class="material-info">
-            <div class="material-title">Skeletal System Diagrams</div>
-            <div class="material-type">Image Collection</div>
-          </div>
-        </div>
-        <div class="material-preview" onclick="togglePreview(this)">
-          High-resolution labeled diagrams of the human skeletal system including anterior and posterior views...
-          <span class="preview-toggle">Show more</span>
-        </div>
-        <div class="material-footer">
-          <div class="material-date">Added Dec 9, 2025</div>
-          <div class="material-actions">
-            <button class="icon-btn" title="Pin" onclick="togglePin(2)"><i class="fas fa-thumbtack"></i></button>
-            <button class="icon-btn" title="Download" onclick="downloadMaterial('Skeletal System Diagrams')"><i class="fas fa-download"></i></button>
-            <button class="icon-btn" title="Share" onclick="shareMaterial('Skeletal System Diagrams')"><i class="fas fa-share"></i></button>
-          </div>
-        </div>
-      </div>
+```
+<div class="material-card">
+  <div class="material-header">
+    <div class="material-type-icon image">
+      <i class="fas fa-image"></i>
+    </div>
+    <div class="material-info">
+      <div class="material-title">Cell Structure Diagrams</div>
+      <div class="material-type">Image Collection</div>
     </div>
   </div>
-
-  <div class="subgroup-section" data-subgroup="lecture2">
-    <div class="subgroup-header">
-      <div class="subgroup-title">
-        <i class="fas fa-folder-open"></i>
-        Lecture 2: Muscular System
-      </div>
-      <div class="subgroup-actions">
-        <button class="icon-btn" title="Edit subgroup" onclick="editSubgroup('lecture2')"><i class="fas fa-pen"></i></button>
-        <button class="icon-btn" title="Delete subgroup" onclick="deleteSubgroup('lecture2')"><i class="fas fa-trash"></i></button>
-      </div>
-    </div>
-    <div class="materials-grid">
-      <div class="material-card" data-material="3">
-        <div class="material-header">
-          <div class="material-type-icon text">
-            <i class="fas fa-file-lines"></i>
-          </div>
-          <div class="material-info">
-            <div class="material-title">Muscle Types & Functions</div>
-            <div class="material-type">Text Document</div>
-          </div>
-        </div>
-        <div class="material-preview" onclick="togglePreview(this)">
-          Detailed notes on skeletal, smooth, and cardiac muscle tissue types, their structures, and physiological functions...
-          <span class="preview-toggle">Show more</span>
-        </div>
-        <div class="material-footer">
-          <div class="material-date">Added Dec 8, 2025</div>
-          <div class="material-actions">
-            <button class="icon-btn" title="Pin" onclick="togglePin(3)"><i class="fas fa-thumbtack"></i></button>
-            <button class="icon-btn" title="Download" onclick="downloadMaterial('Muscle Types & Functions')"><i class="fas fa-download"></i></button>
-            <button class="icon-btn" title="Share" onclick="shareMaterial('Muscle Types & Functions')"><i class="fas fa-share"></i></button>
-          </div>
-        </div>
-      </div>
+  <div class="material-preview">
+    High-resolution microscopy images showing cellular structures and organelles...
+  </div>
+  <div class="material-footer">
+    <div class="material-date">Added Dec 9, 2025</div>
+    <div class="material-actions">
+      <button class="icon-btn" title="Download" onclick="downloadMaterial('Cell Structure Diagrams')"><i class="fas fa-download"></i></button>
+      <button class="icon-btn" title="Share" onclick="shareMaterial('Cell Structure Diagrams')"><i class="fas fa-share"></i></button>
+      <button class="icon-btn" title="More" onclick="showMoreOptions('Cell Structure Diagrams')"><i class="fas fa-ellipsis-v"></i></button>
     </div>
   </div>
 </div>
 
+<div class="material-card">
+  <div class="material-header">
+    <div class="material-type-icon text">
+      <i class="fas fa-file-lines"></i>
+    </div>
+    <div class="material-info">
+      <div class="material-title">Research Notes - December</div>
+      <div class="material-type">Text Document</div>
+    </div>
+  </div>
+  <div class="material-preview">
+    Daily observations and experimental findings from the ongoing clinical trials...
+  </div>
+  <div class="material-footer">
+    <div class="material-date">Added Dec 8, 2025</div>
+    <div class="material-actions">
+      <button class="icon-btn" title="Download" onclick="downloadMaterial('Research Notes - December')"><i class="fas fa-download"></i></button>
+      <button class="icon-btn" title="Share" onclick="shareMaterial('Research Notes - December')"><i class="fas fa-share"></i></button>
+      <button class="icon-btn" title="More" onclick="showMoreOptions('Research Notes - December')"><i class="fas fa-ellipsis-v"></i></button>
+    </div>
+  </div>
+</div>
+
+<div class="material-card">
+  <div class="material-header">
+    <div class="material-type-icon record">
+      <i class="fas fa-database"></i>
+    </div>
+    <div class="material-info">
+      <div class="material-title">Patient Data Records</div>
+      <div class="material-type">Database Record</div>
+    </div>
+  </div>
+  <div class="material-preview">
+    Anonymized patient data from the Phase III clinical trials with statistical analysis...
+  </div>
+  <div class="material-footer">
+    <div class="material-date">Added Dec 7, 2025</div>
+    <div class="material-actions">
+      <button class="icon-btn" title="Download" onclick="downloadMaterial('Patient Data Records')"><i class="fas fa-download"></i></button>
+      <button class="icon-btn" title="Share" onclick="shareMaterial('Patient Data Records')"><i class="fas fa-share"></i></button>
+      <button class="icon-btn" title="More" onclick="showMoreOptions('Patient Data Records')"><i class="fas fa-ellipsis-v"></i></button>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
 <!-- Chat Tab -->
+
 <div class="chat-container" id="chatTab">
   <div class="messages-area" id="messagesArea">
     <div class="message">
@@ -1436,61 +1177,46 @@ max-width: 85%;
           <span>10:23 AM</span>
         </div>
         <div class="message-bubble">
-          <div class="message-text">I've uploaded the skeletal system diagrams. Please review for tomorrow's lecture!</div>
-          <div class="material-reference" onclick="openMaterial(2)">
-            <i class="fas fa-image material-reference-icon"></i>
-            <span class="material-reference-text">Skeletal System Diagrams</span>
-            <i class="fas fa-arrow-right"></i>
-          </div>
+          <div class="message-text">I've uploaded the latest cancer research study. Please review and share your thoughts!</div>
         </div>
       </div>
     </div>
 
-    <div class="message">
-      <div class="message-avatar">JL</div>
-      <div class="message-content">
-        <div class="message-header">
-          <span class="message-author">Dr. Johnson</span>
-          <span>10:45 AM</span>
-        </div>
-        <div class="message-bubble">
-          <div class="message-text">Great! The diagrams look comprehensive. I've also added notes on muscle functions.</div>
-          <div class="material-reference" onclick="openMaterial(3)">
-            <i class="fas fa-file-lines material-reference-icon"></i>
-            <span class="material-reference-text">Muscle Types & Functions</span>
-            <i class="fas fa-arrow-right"></i>
-          </div>
-        </div>
-      </div>
+```
+<div class="message">
+  <div class="message-avatar">JL</div>
+  <div class="message-content">
+    <div class="message-header">
+      <span class="message-author">Dr. Johnson</span>
+      <span>10:45 AM</span>
     </div>
+    <div class="message-bubble">
+      <div class="message-text">Great work! The methodology section is particularly impressive. Have we considered expanding the sample size?</div>
+    </div>
+  </div>
+</div>
 
-    <div class="message sent">
-      <div class="message-avatar">ME</div>
-      <div class="message-content">
-        <div class="message-header">
-          <span class="message-author">You</span>
-          <span>11:02 AM</span>
-        </div>
-        <div class="message-bubble">
-          <div class="message-text">Perfect! I'll review both before the session.</div>
-        </div>
-      </div>
+<div class="message sent">
+  <div class="message-avatar">ME</div>
+  <div class="message-content">
+    <div class="message-header">
+      <span class="message-author">You</span>
+      <span>11:02 AM</span>
     </div>
+    <div class="message-bubble">
+      <div class="message-text">I agree! I'll add some notes about potential sample expansion in the discussion section.</div>
+    </div>
+  </div>
+</div>
+```
+
   </div>
 
   <div class="chat-input-area">
-    <div class="chat-input-wrapper">
-      <div class="material-picker" id="materialPicker"></div>
-      <textarea class="chat-input" id="chatInput" placeholder="Type a message..." rows="1"></textarea>
-    </div>
-    <div class="chat-buttons">
-      <button class="attach-btn" onclick="attachMaterial()" title="Attach material">
-        <i class="fas fa-paperclip"></i>
-      </button>
-      <button class="send-btn" onclick="sendChatMessage()">
-        <i class="fas fa-paper-plane"></i>
-      </button>
-    </div>
+    <textarea class="chat-input" id="chatInput" placeholder="Type a message..." rows="1"></textarea>
+    <button class="send-btn" onclick="sendChatMessage()">
+      <i class="fas fa-paper-plane"></i>
+    </button>
   </div>
 </div>
 
@@ -1515,36 +1241,27 @@ max-width: 85%;
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label class="form-label">Subgroup</label>
-        <select class="form-input form-select" id="materialSubgroup">
-          <option value="lecture1">Lecture 1: Introduction to Anatomy</option>
-          <option value="lecture2">Lecture 2: Muscular System</option>
-          <option value="">No subgroup</option>
+        <label class="form-label">Material Type</label>
+        <select class="form-input form-select" id="materialType">
+          <option value="pdf">PDF Document</option>
+          <option value="image">Image Collection</option>
+          <option value="text">Text Document</option>
+          <option value="record">Database Record</option>
+          <option value="video">Video</option>
+          <option value="link">Web Link</option>
         </select>
       </div>
-
-  <div class="form-group">
-    <label class="form-label">Material Type</label>
-    <select class="form-input form-select" id="materialType">
-      <option value="pdf">PDF Document</option>
-      <option value="image">Image Collection</option>
-      <option value="text">Text Document</option>
-      <option value="record">Database Record</option>
-      <option value="video">Video</option>
-      <option value="link">Web Link</option>
-    </select>
-  </div>
 
   <div class="form-group">
     <label class="form-label">Title</label>
     <input type="text" class="form-input" id="materialTitleInput" placeholder="Enter material title">
   </div>
-  
+
   <div class="form-group">
     <label class="form-label">Description</label>
     <textarea class="form-input form-textarea" id="materialDescription" placeholder="Add a description..."></textarea>
   </div>
-  
+
   <div class="form-group">
     <label class="form-label">Upload File (Optional)</label>
     <div class="file-upload-area" onclick="triggerFileUpload()">
@@ -1557,6 +1274,11 @@ max-width: 85%;
       </div>
     </div>
   </div>
+
+  <div class="form-group">
+    <label class="form-label">URL (Optional)</label>
+    <input type="url" class="form-input" id="materialUrl" placeholder="https://...">
+  </div>
 </div>
 <div class="modal-footer">
   <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
@@ -1566,63 +1288,8 @@ max-width: 85%;
   </div>
 </div>
 
-<!-- Create Library Modal -->
-
-<div class="modal" id="createLibraryModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">Create New Library</h2>
-      <button class="modal-close" onclick="closeCreateLibraryModal()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Library Name</label>
-        <input type="text" class="form-input" id="libraryNameInput" placeholder="Enter library name">
-      </div>
-
-  <div class="form-group">
-    <label class="form-label">Library Icon/Image</label>
-    <div class="file-upload-area" onclick="uploadLibraryImage()">
-      <div class="file-upload-icon">
-        <i class="fas fa-image"></i>
-      </div>
-      <div class="file-upload-text">
-        Upload custom image<br>
-        <small>JPG, PNG up to 5MB</small>
-      </div>
-    </div>
-    <div class="image-preview" id="libraryImagePreview" style="display:none;">
-      <img id="libraryImagePreviewImg" src="" alt="Preview">
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Accent Color</label>
-    <div class="color-picker-grid">
-      <div class="color-option selected" style="background: #b0003a;" data-color="#b0003a" onclick="selectColor(this)"></div>
-      <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6" onclick="selectColor(this)"></div>
-      <div class="color-option" style="background: #10b981;" data-color="#10b981" onclick="selectColor(this)"></div>
-      <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b" onclick="selectColor(this)"></div>
-      <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6" onclick="selectColor(this)"></div>
-      <div class="color-option" style="background: #ec4899;" data-color="#ec4899" onclick="selectColor(this)"></div>
-    </div>
-  </div>
-</div>
-<div class="modal-footer">
-  <button class="btn btn-secondary" onclick="closeCreateLibraryModal()">Cancel</button>
-  <button class="btn btn-primary" onclick="submitLibrary()">Create Library</button>
-</div>
-
-  </div>
-</div>
-
 <script>
 let currentTab = 'materials';
-let selectedColor = '#b0003a';
-let selectedMaterials = [];
-let pinnedMaterials = [1];
 
 function toggleTheme(){
   document.body.classList.toggle('light-theme');
@@ -1661,13 +1328,9 @@ libraryItems.forEach(item => {
     const libraryName = item.dataset.name;
     const itemCount = item.querySelector('.item-count').textContent;
     const members = item.dataset.members;
-    const accent = item.dataset.accent || '#b0003a';
     
     document.querySelector('.content-header-name').textContent = libraryName;
     document.querySelector('.content-header-details').textContent = `${itemCount} • ${members} members • Last updated today`;
-    
-    // Update accent colors
-    document.documentElement.style.setProperty('--accent', accent);
     
     // Remove unread badge
     const badge = item.querySelector('.unread-badge');
@@ -1699,11 +1362,13 @@ searchBox.addEventListener('input', (e) => {
 function switchTab(tab) {
   currentTab = tab;
   
+  // Update tab buttons
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.remove('active');
   });
   document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
   
+  // Update content
   document.getElementById('materialsTab').classList.remove('active');
   document.getElementById('chatTab').classList.remove('active');
   
@@ -1711,46 +1376,13 @@ function switchTab(tab) {
     document.getElementById('materialsTab').classList.add('active');
   } else if (tab === 'chat') {
     document.getElementById('chatTab').classList.add('active');
+    // Remove chat notification
     const notification = document.querySelector('.chat-notification');
     if (notification) notification.remove();
     
+    // Scroll to bottom of chat
     const messagesArea = document.getElementById('messagesArea');
     messagesArea.scrollTop = messagesArea.scrollHeight;
-  }
-}
-
-// Preview toggle
-function togglePreview(element) {
-  element.classList.toggle('expanded');
-  const toggle = element.querySelector('.preview-toggle');
-  if (element.classList.contains('expanded')) {
-    toggle.textContent = 'Show less';
-  } else {
-    toggle.textContent = 'Show more';
-  }
-}
-
-// Pin/Unpin materials
-function togglePin(materialId) {
-  const card = document.querySelector(`[data-material="${materialId}"]`);
-  const btn = card.querySelector('.material-actions .icon-btn');
-  
-  if (pinnedMaterials.includes(materialId)) {
-    pinnedMaterials = pinnedMaterials.filter(id => id !== materialId);
-    card.classList.remove('pinned');
-    const badge = card.querySelector('.pin-badge');
-    if (badge) badge.remove();
-    btn.classList.remove('pinned');
-    btn.title = 'Pin';
-  } else {
-    pinnedMaterials.push(materialId);
-    card.classList.add('pinned');
-    const badge = document.createElement('span');
-    badge.className = 'pin-badge';
-    badge.innerHTML = '<i class="fas fa-thumbtack"></i>';
-    card.insertBefore(badge, card.firstChild);
-    btn.classList.add('pinned');
-    btn.title = 'Unpin';
   }
 }
 
@@ -1759,7 +1391,7 @@ function sendChatMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   
-  if (!text && selectedMaterials.length === 0) return;
+  if (!text) return;
   
   const messagesArea = document.getElementById('messagesArea');
   const now = new Date();
@@ -1767,18 +1399,6 @@ function sendChatMessage() {
   
   const messageDiv = document.createElement('div');
   messageDiv.className = 'message sent';
-  
-  let materialsHtml = '';
-  selectedMaterials.forEach(mat => {
-    materialsHtml += `
-      <div class="material-reference" onclick="openMaterial(${mat.id})">
-        <i class="fas ${mat.icon} material-reference-icon"></i>
-        <span class="material-reference-text">${mat.name}</span>
-        <i class="fas fa-arrow-right"></i>
-      </div>
-    `;
-  });
-  
   messageDiv.innerHTML = `
     <div class="message-avatar">ME</div>
     <div class="message-content">
@@ -1787,8 +1407,7 @@ function sendChatMessage() {
         <span>${time}</span>
       </div>
       <div class="message-bubble">
-        ${text ? `<div class="message-text">${text}</div>` : ''}
-        ${materialsHtml}
+        <div class="message-text">${text}</div>
       </div>
     </div>
   `;
@@ -1796,63 +1415,7 @@ function sendChatMessage() {
   messagesArea.appendChild(messageDiv);
   input.value = '';
   input.style.height = 'auto';
-  selectedMaterials = [];
-  document.getElementById('materialPicker').innerHTML = '';
   messagesArea.scrollTop = messagesArea.scrollHeight;
-}
-
-// Attach material to chat
-function attachMaterial() {
-  const materials = [
-    { id: 1, name: 'Basic Anatomy Overview', icon: 'fa-file-pdf' },
-    { id: 2, name: 'Skeletal System Diagrams', icon: 'fa-image' },
-    { id: 3, name: 'Muscle Types & Functions', icon: 'fa-file-lines' }
-  ];
-  
-  const choices = materials.map((m, i) => `${i + 1}. ${m.name}`).join('\n');
-  const choice = prompt(`Select material to attach:\n\n${choices}\n\nEnter number (1-${materials.length}):`);
-  
-  if (choice && choice >= 1 && choice <= materials.length) {
-    const selected = materials[choice - 1];
-    if (!selectedMaterials.find(m => m.id === selected.id)) {
-      selectedMaterials.push(selected);
-      updateMaterialPicker();
-    }
-  }
-}
-
-function updateMaterialPicker() {
-  const picker = document.getElementById('materialPicker');
-  picker.innerHTML = selectedMaterials.map(mat => `
-    <div class="material-tag" onclick="removeMaterial(${mat.id})">
-      <i class="fas ${mat.icon}"></i>
-      <span>${mat.name}</span>
-      <i class="fas fa-times"></i>
-    </div>
-  `).join('');
-}
-
-function removeMaterial(id) {
-  selectedMaterials = selectedMaterials.filter(m => m.id !== id);
-  updateMaterialPicker();
-}
-
-function openMaterial(materialId) {
-  switchTab('materials');
-  setTimeout(() => {
-    const card = document.querySelector(`[data-material="${materialId}"]`);
-    if (card) {
-      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      card.style.animation = 'none';
-      setTimeout(() => {
-        card.style.animation = '';
-        card.style.boxShadow = '0 0 0 3px var(--accent)';
-        setTimeout(() => {
-          card.style.boxShadow = '';
-        }, 1500);
-      }, 10);
-    }
-  }, 300);
 }
 
 // Chat input auto-resize
@@ -1868,78 +1431,6 @@ document.getElementById('chatInput').addEventListener('keypress', (e) => {
   }
 });
 
-// Subgroup functions
-function addSubgroup() {
-  const name = prompt('Enter subgroup name (e.g., "Lecture 3: Cardiovascular System"):');
-  if (name && name.trim()) {
-    const materialsTab = document.getElementById('materialsTab');
-    const subgroupId = 'subgroup_' + Date.now();
-    
-    const newSubgroup = document.createElement('div');
-    newSubgroup.className = 'subgroup-section';
-    newSubgroup.dataset.subgroup = subgroupId;
-    newSubgroup.innerHTML = `
-      <div class="subgroup-header">
-        <div class="subgroup-title">
-          <i class="fas fa-folder-open"></i>
-          ${name.trim()}
-        </div>
-        <div class="subgroup-actions">
-          <button class="icon-btn" title="Edit subgroup" onclick="editSubgroup('${subgroupId}')"><i class="fas fa-pen"></i></button>
-          <button class="icon-btn" title="Delete subgroup" onclick="deleteSubgroup('${subgroupId}')"><i class="fas fa-trash"></i></button>
-        </div>
-      </div>
-      <div class="materials-grid"></div>
-    `;
-    
-    materialsTab.appendChild(newSubgroup);
-    
-    // Add to subgroup selector in modal
-    const select = document.getElementById('materialSubgroup');
-    const option = document.createElement('option');
-    option.value = subgroupId;
-    option.textContent = name.trim();
-    select.insertBefore(option, select.lastElementChild);
-    
-    alert(`✅ Subgroup "${name.trim()}" created successfully!`);
-  }
-}
-
-function editSubgroup(subgroupId) {
-  const subgroup = document.querySelector(`[data-subgroup="${subgroupId}"]`);
-  const titleElement = subgroup.querySelector('.subgroup-title');
-  const currentName = titleElement.textContent.trim();
-  
-  const newName = prompt('Edit subgroup name:', currentName);
-  if (newName && newName.trim() && newName !== currentName) {
-    titleElement.innerHTML = `
-      <i class="fas fa-folder-open"></i>
-      ${newName.trim()}
-    `;
-    
-    // Update in selector
-    const select = document.getElementById('materialSubgroup');
-    const option = select.querySelector(`option[value="${subgroupId}"]`);
-    if (option) option.textContent = newName.trim();
-  }
-}
-
-function deleteSubgroup(subgroupId) {
-  const subgroup = document.querySelector(`[data-subgroup="${subgroupId}"]`);
-  const name = subgroup.querySelector('.subgroup-title').textContent.trim();
-  
-  if (confirm(`Delete subgroup "${name}"?\n\nAll materials will be moved to "No subgroup".`)) {
-    subgroup.remove();
-    
-    // Remove from selector
-    const select = document.getElementById('materialSubgroup');
-    const option = select.querySelector(`option[value="${subgroupId}"]`);
-    if (option) option.remove();
-    
-    alert(`✅ Subgroup deleted successfully!`);
-  }
-}
-
 // Modal functions
 function openAddModal() {
   document.getElementById('addModal').classList.add('show');
@@ -1953,8 +1444,8 @@ function closeAddModal() {
   // Reset form
   document.getElementById('materialTitleInput').value = '';
   document.getElementById('materialDescription').value = '';
+  document.getElementById('materialUrl').value = '';
   document.getElementById('materialType').value = 'pdf';
-  document.getElementById('materialSubgroup').selectedIndex = 0;
 }
 
 function triggerFileUpload() {
@@ -1965,7 +1456,7 @@ function submitMaterial() {
   const title = document.getElementById('materialTitleInput').value.trim();
   const description = document.getElementById('materialDescription').value.trim();
   const type = document.getElementById('materialType').value;
-  const subgroupId = document.getElementById('materialSubgroup').value;
+  const url = document.getElementById('materialUrl').value.trim();
   
   if (!title) {
     alert('⚠️ Please enter a material title');
@@ -1982,11 +1473,10 @@ function submitMaterial() {
   };
   
   const selected = typeMap[type];
-  const materialId = Date.now();
+  const materialsGrid = document.getElementById('materialsGrid');
   
   const newCard = document.createElement('div');
   newCard.className = 'material-card';
-  newCard.dataset.material = materialId;
   newCard.innerHTML = `
     <div class="material-header">
       <div class="material-type-icon ${selected.class}">
@@ -1997,33 +1487,24 @@ function submitMaterial() {
         <div class="material-type">${selected.type}</div>
       </div>
     </div>
-    <div class="material-preview" onclick="togglePreview(this)">
+    <div class="material-preview">
       ${description || 'New material added to your library...'}
-      <span class="preview-toggle">Show more</span>
     </div>
     <div class="material-footer">
       <div class="material-date">Added just now</div>
       <div class="material-actions">
-        <button class="icon-btn" title="Pin" onclick="togglePin(${materialId})"><i class="fas fa-thumbtack"></i></button>
         <button class="icon-btn" title="Download" onclick="downloadMaterial('${title}')"><i class="fas fa-download"></i></button>
         <button class="icon-btn" title="Share" onclick="shareMaterial('${title}')"><i class="fas fa-share"></i></button>
+        <button class="icon-btn" title="More" onclick="showMoreOptions('${title}')"><i class="fas fa-ellipsis-v"></i></button>
       </div>
     </div>
   `;
   
-  // Find target grid
-  let targetGrid;
-  if (subgroupId) {
-    const subgroup = document.querySelector(`[data-subgroup="${subgroupId}"]`);
-    targetGrid = subgroup.querySelector('.materials-grid');
-  } else {
-    targetGrid = document.querySelector('.materials-grid');
-  }
-  
-  targetGrid.insertBefore(newCard, targetGrid.firstChild);
+  materialsGrid.insertBefore(newCard, materialsGrid.firstChild);
   
   closeAddModal();
   
+  // Show success and switch to materials tab if needed
   if (currentTab !== 'materials') {
     switchTab('materials');
   }
@@ -2031,109 +1512,51 @@ function submitMaterial() {
   alert(`✅ "${title}" added successfully!`);
 }
 
-// Create Library Modal
 function createNewLibrary() {
-  document.getElementById('createLibraryModal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeCreateLibraryModal() {
-  document.getElementById('createLibraryModal').classList.remove('show');
-  document.body.style.overflow = '';
-  document.getElementById('libraryNameInput').value = '';
-  document.getElementById('libraryImagePreview').style.display = 'none';
-  selectedColor = '#b0003a';
-  document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
-  document.querySelector('.color-option[data-color="#b0003a"]').classList.add('selected');
-}
-
-function uploadLibraryImage() {
-  alert('📸 Image browser would open here\n\nSelect an image:\n• JPG, PNG formats\n• Max size: 5MB\n• Recommended: 512x512px\n\nThe accent color will be extracted from this image!\n\n(Demo mode)');
-  
-  // Demo: show preview
-  const preview = document.getElementById('libraryImagePreview');
-  const img = document.getElementById('libraryImagePreviewImg');
-  img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23' + selectedColor.substring(1) + '" width="200" height="200"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="white" font-size="60"%3E📚%3C/text%3E%3C/svg%3E';
-  preview.style.display = 'block';
-}
-
-function selectColor(element) {
-  document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
-  element.classList.add('selected');
-  selectedColor = element.dataset.color;
-}
-
-function submitLibrary() {
-  const libraryName = document.getElementById('libraryNameInput').value.trim();
-  
-  if (!libraryName) {
-    alert('⚠️ Please enter a library name');
-    return;
-  }
-  
-  const libraryList = document.getElementById('libraryList');
-  const libraryId = Date.now();
-  
-  const newLibrary = document.createElement('div');
-  newLibrary.className = 'library-item';
-  newLibrary.dataset.library = libraryId;
-  newLibrary.dataset.name = libraryName;
-  newLibrary.dataset.members = '1';
-  newLibrary.dataset.accent = selectedColor;
-  
-  // Create gradient from selected color
-  const color1 = selectedColor;
-  const color2 = adjustBrightness(selectedColor, -20);
-  
-  newLibrary.innerHTML = `
-    <div class="library-icon" style="background: linear-gradient(135deg, ${color1}, ${color2});">
-      <i class="fas fa-book"></i>
-    </div>
-    <div class="library-info">
-      <div class="library-name">${libraryName}</div>
-      <div class="library-meta">
-        <span class="item-count">0 items</span>
-        <span>1 member</span>
+  const libraryName = prompt('Enter library name:');
+  if (libraryName && libraryName.trim()) {
+    const libraryList = document.getElementById('libraryList');
+    const icons = ['fa-microscope', 'fa-brain', 'fa-dna', 'fa-flask', 'fa-atom', 'fa-graduation-cap', 'fa-book-medical', 'fa-laptop-medical'];
+    const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+    
+    const newLibrary = document.createElement('div');
+    newLibrary.className = 'library-item';
+    newLibrary.dataset.library = Date.now();
+    newLibrary.dataset.name = libraryName.trim();
+    newLibrary.dataset.members = '1';
+    newLibrary.innerHTML = `
+      <div class="library-icon"><i class="fas ${randomIcon}"></i></div>
+      <div class="library-info">
+        <div class="library-name">${libraryName.trim()}</div>
+        <div class="library-meta">
+          <span class="item-count">0 items</span>
+          <span>1 member</span>
+        </div>
       </div>
-    </div>
-  `;
-  
-  libraryList.insertBefore(newLibrary, libraryList.firstChild);
-  
-  // Add click handler
-  newLibrary.addEventListener('click', function() {
-    document.querySelectorAll('.library-item').forEach(i => i.classList.remove('active'));
-    this.classList.add('active');
+    `;
     
-    const libraryName = this.dataset.name;
-    const itemCount = this.querySelector('.item-count').textContent;
-    const members = this.dataset.members;
-    const accent = this.dataset.accent;
+    libraryList.insertBefore(newLibrary, libraryList.firstChild);
     
-    document.querySelector('.content-header-name').textContent = libraryName;
-    document.querySelector('.content-header-details').textContent = `${itemCount} • ${members} member${members > 1 ? 's' : ''} • Just created`;
-    document.documentElement.style.setProperty('--accent', accent);
+    // Add click handler
+    newLibrary.addEventListener('click', function() {
+      document.querySelectorAll('.library-item').forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+      
+      const libraryName = this.dataset.name;
+      const itemCount = this.querySelector('.item-count').textContent;
+      const members = this.dataset.members;
+      
+      document.querySelector('.content-header-name').textContent = libraryName;
+      document.querySelector('.content-header-details').textContent = `${itemCount} • ${members} member${members > 1 ? 's' : ''} • Just created`;
+      
+      if (window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+      }
+    });
     
-    if (window.innerWidth <= 768) {
-      document.getElementById('sidebar').classList.remove('open');
-      document.getElementById('sidebarOverlay').classList.remove('show');
-    }
-  });
-  
-  closeCreateLibraryModal();
-  alert(`✅ Library "${libraryName}" created successfully!`);
-}
-
-function adjustBrightness(hex, percent) {
-  const num = parseInt(hex.replace('#', ''), 16);
-  const amt = Math.round(2.55 * percent);
-  const R = (num >> 16) + amt;
-  const G = (num >> 8 & 0x00FF) + amt;
-  const B = (num & 0x0000FF) + amt;
-  return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-    (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-    (B < 255 ? B < 1 ? 0 : B : 255))
-    .toString(16).slice(1);
+    alert(`✅ Library "${libraryName.trim()}" created successfully!`);
+  }
 }
 
 function showMembers() {
@@ -2141,7 +1564,7 @@ function showMembers() {
 }
 
 function shareLibrary() {
-  alert('📤 Share Library\n\nShare "Anatomy" with:\n\n• Generate invite link\n• Email invitation\n• QR code\n• Set permissions (View/Edit)\n• Manage access\n\n(Demo mode)');
+  alert('📤 Share Library\n\nShare "Medical Research" with:\n\n• Generate invite link\n• Email invitation\n• QR code\n• Set permissions (View/Edit)\n• Manage access\n\n(Demo mode)');
 }
 
 function downloadMaterial(materialName) {
@@ -2152,16 +1575,14 @@ function shareMaterial(materialName) {
   alert(`📤 Share: ${materialName}\n\nShare via:\n• Copy link\n• Email\n• Social media\n• Download & share\n\n(Demo mode)`);
 }
 
-// Close modals when clicking outside
+function showMoreOptions(materialName) {
+  alert(`Options for: ${materialName}\n\n• Open\n• Edit details\n• Move to another library\n• Duplicate\n• Add to favorites\n• Delete\n• View history\n\n(Demo mode)`);
+}
+
+// Close modal when clicking outside
 document.getElementById('addModal').addEventListener('click', (e) => {
   if (e.target.id === 'addModal') {
     closeAddModal();
-  }
-});
-
-document.getElementById('createLibraryModal').addEventListener('click', (e) => {
-  if (e.target.id === 'createLibraryModal') {
-    closeCreateLibraryModal();
   }
 });
 </script>
