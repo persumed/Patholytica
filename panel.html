@@ -10,7 +10,7 @@
 
 <style>
 :root {
-  --bg-color: #0d0d0d;
+  --bg-color: #000;
   --text-color: #fff;
   --card-bg: rgba(24,24,24,0.7);
   --card-border: rgba(255,255,255,0.07);
@@ -38,7 +38,7 @@ body.light-theme {
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; font-family: "Inter", Arial, sans-serif; }
+html, body { height: 100%; font-family: "Inter", Arial, sans-serif; overflow-x: hidden; }
 
 body {
   background: var(--bg-color);
@@ -46,71 +46,29 @@ body {
   display: flex;
   flex-direction: column;
   transition: background 0.35s ease;
+  max-width: 100vw;
 }
 
 .header-wrapper {
-  position: sticky;
-  top: 0;
-  background: var(--bg-color);
-  padding-top: env(safe-area-inset-top);
-  border-bottom: 1px solid var(--card-border);
-  z-index: 40;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 18px;
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo-img {
-  height: 24px;
-  width: auto;
-  transition: filter 0.25s ease;
-  cursor: pointer;
-}
-
-body.light-theme .logo-img {
-  filter: invert(1);
-}
-
-.theme-toggle {
-  padding: 6px 10px;
-  font-size: 16px;
-  background: transparent;
-  border-radius: 6px;
-  border: 1px solid var(--card-border);
-  color: var(--text-color);
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  display: none;
 }
 
 .main-container {
   flex: 1;
   display: flex;
   overflow: hidden;
+  max-width: 100vw;
 }
 
 /* Sidebar */
 .sidebar {
   width: 350px;
-  background: var(--card-bg);
-  backdrop-filter: blur(22px);
+  background: var(--bg-color);
   border-right: 1px solid var(--card-border);
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease;
+  padding-top: env(safe-area-inset-top);
 }
 
 .sidebar-header {
@@ -124,7 +82,7 @@ body.light-theme .logo-img {
 .sidebar-title {
   font-size: 20px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--text-color);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -244,6 +202,8 @@ body.light-theme .library-item:hover {
   display: flex;
   flex-direction: column;
   background: var(--content-bg);
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .content-header {
@@ -251,8 +211,8 @@ body.light-theme .library-item:hover {
   align-items: center;
   gap: 12px;
   padding: 16px 20px;
-  background: var(--card-bg);
-  backdrop-filter: blur(22px);
+  padding-top: calc(env(safe-area-inset-top) + 16px);
+  background: var(--bg-color);
   border-bottom: 1px solid var(--card-border);
 }
 
@@ -268,6 +228,7 @@ body.light-theme .library-item:hover {
 
 .content-header-info {
   flex: 1;
+  min-width: 0;
 }
 
 .content-header-name {
@@ -276,12 +237,18 @@ body.light-theme .library-item:hover {
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .content-header-details {
   font-size: 13px;
   color: #999;
   margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .content-actions {
@@ -322,13 +289,16 @@ body.light-theme .library-item:hover {
 .materials-container {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 20px;
+  max-width: 100%;
 }
 
 .materials-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
+  max-width: 100%;
 }
 
 .material-card {
@@ -339,6 +309,8 @@ body.light-theme .library-item:hover {
   cursor: pointer;
   transition: all 0.25s ease;
   animation: fadeIn 0.3s ease;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .material-card:hover {
@@ -451,12 +423,15 @@ body.light-theme .library-item:hover {
 /* Add Material Bar */
 .add-material-bar {
   padding: 16px 20px;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
   background: var(--card-bg);
   backdrop-filter: blur(22px);
   border-top: 1px solid var(--card-border);
   display: flex;
   gap: 12px;
   align-items: center;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .upload-btn {
@@ -578,7 +553,7 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 /* Responsive */
 @media (max-width: 768px) {
   .sidebar {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
@@ -615,32 +590,40 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   .content-actions {
     display: none;
   }
+  
+  .content-header {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
+  .materials-container {
+    padding: 12px;
+  }
+  
+  .add-material-bar {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 }
 </style>
 
 </head>
 <body>
 
-<div class="header-wrapper">
-  <div class="header">
-    <div class="logo-section">
-      <a href="https://patholytica.com">
-        <img src="IMG_0696.png" class="logo-img" alt="Logo">
-      </a>
-      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-        <i class="fas fa-circle-half-stroke"></i>
-      </button>
-    </div>
-  </div>
-</div>
+None
 
 <div class="main-container">
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <div class="sidebar-title">
-        <i class="fas fa-book-open"></i>
-        My Libraries
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="sidebar-title">
+          <i class="fas fa-book-open"></i>
+          My Libraries
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" style="padding: 6px 10px; font-size: 16px; background: transparent; border-radius: 6px; border: 1px solid var(--card-border); color: var(--text-color); cursor: pointer; transition: 0.25s ease;">
+          <i class="fas fa-circle-half-stroke"></i>
+        </button>
       </div>
       <button class="new-library-btn" onclick="createNewLibrary()">
         <i class="fas fa-plus"></i>
@@ -716,15 +699,15 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
         <div class="content-header-details">24 items • Last updated today</div>
       </div>
       <div class="content-actions">
-        <button class="action-btn">
+        <button class="action-btn" onclick="showSortOptions()">
           <i class="fas fa-sort"></i>
           Sort
         </button>
-        <button class="action-btn">
+        <button class="action-btn" onclick="showFilterOptions()">
           <i class="fas fa-filter"></i>
           Filter
         </button>
-        <button class="action-btn primary">
+        <button class="action-btn primary" onclick="shareLibrary()">
           <i class="fas fa-share-nodes"></i>
           Share
         </button>
@@ -749,9 +732,9 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
       <div class="material-footer">
         <div class="material-date">Added Dec 10, 2025</div>
         <div class="material-actions">
-          <button class="icon-btn" title="Download"><i class="fas fa-download"></i></button>
-          <button class="icon-btn" title="Share"><i class="fas fa-share"></i></button>
-          <button class="icon-btn" title="More"><i class="fas fa-ellipsis-v"></i></button>
+          <button class="icon-btn" title="Download" onclick="downloadMaterial('Cancer Research Study 2024')"><i class="fas fa-download"></i></button>
+          <button class="icon-btn" title="Share" onclick="shareMaterial('Cancer Research Study 2024')"><i class="fas fa-share"></i></button>
+          <button class="icon-btn" title="More" onclick="showMoreOptions('Cancer Research Study 2024')"><i class="fas fa-ellipsis-v"></i></button>
         </div>
       </div>
     </div>
@@ -772,9 +755,9 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
       <div class="material-footer">
         <div class="material-date">Added Dec 9, 2025</div>
         <div class="material-actions">
-          <button class="icon-btn" title="Download"><i class="fas fa-download"></i></button>
-          <button class="icon-btn" title="Share"><i class="fas fa-share"></i></button>
-          <button class="icon-btn" title="More"><i class="fas fa-ellipsis-v"></i></button>
+          <button class="icon-btn" title="Download" onclick="downloadMaterial('Cell Structure Diagrams')"><i class="fas fa-download"></i></button>
+          <button class="icon-btn" title="Share" onclick="shareMaterial('Cell Structure Diagrams')"><i class="fas fa-share"></i></button>
+          <button class="icon-btn" title="More" onclick="showMoreOptions('Cell Structure Diagrams')"><i class="fas fa-ellipsis-v"></i></button>
         </div>
       </div>
     </div>
@@ -795,9 +778,9 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
       <div class="material-footer">
         <div class="material-date">Added Dec 8, 2025</div>
         <div class="material-actions">
-          <button class="icon-btn" title="Download"><i class="fas fa-download"></i></button>
-          <button class="icon-btn" title="Share"><i class="fas fa-share"></i></button>
-          <button class="icon-btn" title="More"><i class="fas fa-ellipsis-v"></i></button>
+          <button class="icon-btn" title="Download" onclick="downloadMaterial('Research Notes - December')"><i class="fas fa-download"></i></button>
+          <button class="icon-btn" title="Share" onclick="shareMaterial('Research Notes - December')"><i class="fas fa-share"></i></button>
+          <button class="icon-btn" title="More" onclick="showMoreOptions('Research Notes - December')"><i class="fas fa-ellipsis-v"></i></button>
         </div>
       </div>
     </div>
@@ -818,9 +801,9 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
       <div class="material-footer">
         <div class="material-date">Added Dec 7, 2025</div>
         <div class="material-actions">
-          <button class="icon-btn" title="Download"><i class="fas fa-download"></i></button>
-          <button class="icon-btn" title="Share"><i class="fas fa-share"></i></button>
-          <button class="icon-btn" title="More"><i class="fas fa-ellipsis-v"></i></button>
+          <button class="icon-btn" title="Download" onclick="downloadMaterial('Patient Data Records')"><i class="fas fa-download"></i></button>
+          <button class="icon-btn" title="Share" onclick="shareMaterial('Patient Data Records')"><i class="fas fa-share"></i></button>
+          <button class="icon-btn" title="More" onclick="showMoreOptions('Patient Data Records')"><i class="fas fa-ellipsis-v"></i></button>
         </div>
       </div>
     </div>
@@ -907,13 +890,72 @@ searchBox.addEventListener('input', (e) => {
 
 function createNewLibrary() {
   const libraryName = prompt('Enter library name:');
-  if (libraryName) {
-    alert('Library "' + libraryName + '" created! (Demo functionality)');
+  if (libraryName && libraryName.trim()) {
+    const libraryList = document.getElementById('libraryList');
+    const icons = ['fa-microscope', 'fa-brain', 'fa-dna', 'fa-flask', 'fa-atom', 'fa-graduation-cap'];
+    const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+    
+    const newLibrary = document.createElement('div');
+    newLibrary.className = 'library-item';
+    newLibrary.innerHTML = `
+      <div class="library-icon"><i class="fas ${randomIcon}"></i></div>
+      <div class="library-info">
+        <div class="library-name">${libraryName.trim()}</div>
+        <div class="library-meta">
+          <span class="item-count">0 items</span>
+          <span>Created just now</span>
+        </div>
+      </div>
+    `;
+    
+    libraryList.insertBefore(newLibrary, libraryList.firstChild);
+    
+    // Add click handler
+    newLibrary.addEventListener('click', function() {
+      document.querySelectorAll('.library-item').forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+      
+      const libraryName = this.querySelector('.library-name').textContent;
+      const libraryMeta = this.querySelector('.library-meta').textContent;
+      document.querySelector('.content-header-name').textContent = libraryName;
+      document.querySelector('.content-header-details').textContent = libraryMeta;
+      
+      if (window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+      }
+    });
+    
+    alert(`Library "${libraryName.trim()}" created successfully!`);
   }
 }
 
 function uploadFile() {
-  alert('File upload dialog would open here (Demo functionality)');
+  alert('📁 File upload dialog would appear here.\n\nYou could select:\n• PDF documents\n• Images\n• Text files\n• Database records\n\n(Demo mode - no actual upload)');
+}
+
+function showSortOptions() {
+  alert('Sort by:\n• Date added (newest first)\n• Date added (oldest first)\n• Name (A-Z)\n• Name (Z-A)\n• File type\n\n(Demo mode)');
+}
+
+function showFilterOptions() {
+  alert('Filter by:\n☐ PDF Documents\n☐ Images\n☐ Text Files\n☐ Database Records\n\n(Demo mode)');
+}
+
+function shareLibrary() {
+  alert('📤 Share "Medical Research" library\n\nShare options:\n• Copy link\n• Email\n• Generate QR code\n• Set permissions\n\n(Demo mode)');
+}
+
+function downloadMaterial(materialName) {
+  alert(`⬇️ Downloading: ${materialName}\n\nFile would be downloaded to your device.\n\n(Demo mode - no actual download)`);
+}
+
+function shareMaterial(materialName) {
+  alert(`📤 Share: ${materialName}\n\nShare via:\n• Copy link\n• Email\n• Social media\n\n(Demo mode)`);
+}
+
+function showMoreOptions(materialName) {
+  alert(`Options for: ${materialName}\n\n• Open\n• Rename\n• Move to another library\n• Duplicate\n• Delete\n• View details\n\n(Demo mode)`);
 }
 
 function addMaterial() {
@@ -921,22 +963,30 @@ function addMaterial() {
   const materialTitle = input.value.trim();
   
   if (!materialTitle) {
-    alert('Please enter a material title or URL');
+    alert('⚠️ Please enter a material title or URL');
     return;
   }
   
   // Create new material card
   const materialsGrid = document.getElementById('materialsGrid');
+  const types = [
+    { icon: 'fa-file-pdf', class: 'pdf', type: 'PDF Document' },
+    { icon: 'fa-image', class: 'image', type: 'Image Collection' },
+    { icon: 'fa-file-lines', class: 'text', type: 'Text Document' },
+    { icon: 'fa-database', class: 'record', type: 'Database Record' }
+  ];
+  const randomType = types[Math.floor(Math.random() * types.length)];
+  
   const newCard = document.createElement('div');
   newCard.className = 'material-card';
   newCard.innerHTML = `
     <div class="material-header">
-      <div class="material-type-icon text">
-        <i class="fas fa-file-lines"></i>
+      <div class="material-type-icon ${randomType.class}">
+        <i class="fas ${randomType.icon}"></i>
       </div>
       <div class="material-info">
         <div class="material-title">${materialTitle}</div>
-        <div class="material-type">Text Document</div>
+        <div class="material-type">${randomType.type}</div>
       </div>
     </div>
     <div class="material-preview">
@@ -945,15 +995,18 @@ function addMaterial() {
     <div class="material-footer">
       <div class="material-date">Added just now</div>
       <div class="material-actions">
-        <button class="icon-btn" title="Download"><i class="fas fa-download"></i></button>
-        <button class="icon-btn" title="Share"><i class="fas fa-share"></i></button>
-        <button class="icon-btn" title="More"><i class="fas fa-ellipsis-v"></i></button>
+        <button class="icon-btn" title="Download" onclick="downloadMaterial('${materialTitle}')"><i class="fas fa-download"></i></button>
+        <button class="icon-btn" title="Share" onclick="shareMaterial('${materialTitle}')"><i class="fas fa-share"></i></button>
+        <button class="icon-btn" title="More" onclick="showMoreOptions('${materialTitle}')"><i class="fas fa-ellipsis-v"></i></button>
       </div>
     </div>
   `;
   
   materialsGrid.insertBefore(newCard, materialsGrid.firstChild);
   input.value = '';
+  
+  // Show success message
+  alert(`✅ "${materialTitle}" added successfully to Medical Research!`);
 }
 
 // Enter key to add material
