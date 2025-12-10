@@ -49,10 +49,6 @@ body {
   max-width: 100vw;
 }
 
-.header-wrapper {
-  display: none;
-}
-
 .main-container {
   flex: 1;
   display: flex;
@@ -140,6 +136,7 @@ body {
   cursor: pointer;
   transition: background 0.2s ease;
   border-bottom: 1px solid var(--card-border);
+  position: relative;
 }
 
 .library-item:hover {
@@ -194,6 +191,18 @@ body.light-theme .library-item:hover {
   padding: 2px 8px;
   font-size: 11px;
   font-weight: 600;
+}
+
+.unread-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--accent);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 /* Main Content */
@@ -268,6 +277,7 @@ body.light-theme .library-item:hover {
   display: flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 
 .action-btn:hover {
@@ -285,6 +295,54 @@ body.light-theme .library-item:hover {
   background: var(--accent-hover);
 }
 
+.action-btn.chat-btn {
+  position: relative;
+}
+
+.chat-notification {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--accent);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--card-bg);
+  backdrop-filter: blur(22px);
+  padding: 0 20px;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  color: var(--text-color);
+}
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
 /* Materials Grid */
 .materials-container {
   flex: 1;
@@ -292,6 +350,11 @@ body.light-theme .library-item:hover {
   overflow-x: hidden;
   padding: 20px;
   max-width: 100%;
+  display: none;
+}
+
+.materials-container.active {
+  display: block;
 }
 
 .materials-grid {
@@ -420,8 +483,94 @@ body.light-theme .library-item:hover {
   color: var(--accent);
 }
 
-/* Add Material Bar */
-.add-material-bar {
+/* Chat Container */
+.chat-container {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-container.active {
+  display: flex;
+}
+
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message {
+  display: flex;
+  gap: 10px;
+  max-width: 75%;
+  animation: fadeIn 0.3s ease;
+}
+
+.message.sent {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  flex-shrink: 0;
+}
+
+.message-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #999;
+}
+
+.message-author {
+  font-weight: 600;
+}
+
+.message-bubble {
+  background: var(--item-bg);
+  padding: 10px 14px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.message.sent .message-bubble {
+  background: var(--accent);
+  color: white;
+}
+
+body.light-theme .message.sent .message-bubble {
+  color: white;
+}
+
+.message-text {
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.chat-input-area {
   padding: 16px 20px;
   padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
   background: var(--card-bg);
@@ -430,32 +579,161 @@ body.light-theme .library-item:hover {
   display: flex;
   gap: 12px;
   align-items: center;
-  max-width: 100%;
-  overflow: hidden;
 }
 
-.upload-btn {
-  background: none;
+.chat-input {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 20px;
   border: 1px solid var(--card-border);
+  background: var(--input-bg);
   color: var(--text-color);
+  font-size: 14px;
+  font-family: inherit;
+  resize: none;
+  max-height: 100px;
+  transition: 0.25s ease;
+}
+
+.chat-input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.send-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: white;
   font-size: 16px;
   cursor: pointer;
-  padding: 10px 14px;
-  border-radius: 8px;
   transition: 0.25s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.upload-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+.send-btn:hover {
+  background: var(--accent-hover);
+  transform: scale(1.05);
 }
 
-.material-input {
+/* Floating Action Button */
+.fab {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 20px);
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(176,0,58,0.4);
+  transition: 0.25s ease;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab:hover {
+  background: var(--accent-hover);
+  transform: scale(1.1);
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--bg-color);
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+  border: 1px solid var(--card-border);
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: 0.25s ease;
+}
+
+.modal-close:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+body.light-theme .modal-close:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
   flex: 1;
-  padding: 10px 16px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid var(--card-border);
   background: var(--input-bg);
@@ -465,27 +743,87 @@ body.light-theme .library-item:hover {
   transition: 0.25s ease;
 }
 
-.material-input:focus {
+.form-input:focus {
   border-color: var(--accent);
   outline: none;
 }
 
-.add-btn {
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.file-upload-area {
+  border: 2px dashed var(--card-border);
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.file-upload-area:hover {
+  border-color: var(--accent);
+  background: rgba(176,0,58,0.05);
+}
+
+.file-upload-icon {
+  font-size: 48px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.file-upload-text {
+  font-size: 14px;
+  color: #999;
+}
+
+.modal-footer {
+  padding: 20px;
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn {
   padding: 10px 20px;
   border-radius: 8px;
   border: none;
-  background: var(--accent);
-  color: white;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: 0.25s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
-.add-btn:hover {
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+body.light-theme .btn-secondary:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
   background: var(--accent-hover);
   transform: translateY(-1px);
 }
@@ -521,6 +859,11 @@ body.light-theme .library-item:hover {
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -587,7 +930,7 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
     display: block;
   }
   
-  .content-actions {
+  .content-actions .action-btn:not(.chat-btn) {
     display: none;
   }
   
@@ -600,9 +943,8 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
     padding: 12px;
   }
   
-  .add-material-bar {
-    padding-left: 12px;
-    padding-right: 12px;
+  .message {
+    max-width: 85%;
   }
 }
 </style>
@@ -631,46 +973,48 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
     </div>
 
 <div class="library-list" id="libraryList">
-  <div class="library-item active" data-library="1">
+  <div class="library-item active" data-library="1" data-name="Medical Research" data-members="5">
     <div class="library-icon"><i class="fas fa-microscope"></i></div>
     <div class="library-info">
       <div class="library-name">Medical Research</div>
       <div class="library-meta">
         <span class="item-count">24 items</span>
-        <span>Updated today</span>
+        <span>5 members</span>
       </div>
     </div>
+    <span class="unread-badge">3</span>
   </div>
   
-  <div class="library-item" data-library="2">
+  <div class="library-item" data-library="2" data-name="Neuroscience Papers" data-members="3">
     <div class="library-icon"><i class="fas fa-brain"></i></div>
     <div class="library-info">
       <div class="library-name">Neuroscience Papers</div>
       <div class="library-meta">
         <span class="item-count">18 items</span>
-        <span>Updated yesterday</span>
+        <span>3 members</span>
       </div>
     </div>
   </div>
   
-  <div class="library-item" data-library="3">
+  <div class="library-item" data-library="3" data-name="Genetics Studies" data-members="8">
     <div class="library-icon"><i class="fas fa-dna"></i></div>
     <div class="library-info">
       <div class="library-name">Genetics Studies</div>
       <div class="library-meta">
         <span class="item-count">31 items</span>
-        <span>Updated 2 days ago</span>
+        <span>8 members</span>
       </div>
     </div>
+    <span class="unread-badge">1</span>
   </div>
   
-  <div class="library-item" data-library="4">
+  <div class="library-item" data-library="4" data-name="Lab Protocols" data-members="2">
     <div class="library-icon"><i class="fas fa-flask"></i></div>
     <div class="library-info">
       <div class="library-name">Lab Protocols</div>
       <div class="library-meta">
         <span class="item-count">12 items</span>
-        <span>Updated last week</span>
+        <span>2 members</span>
       </div>
     </div>
   </div>
@@ -691,28 +1035,37 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
         <i class="fas fa-microscope"></i>
       </div>
       <div class="content-header-info">
-        <div class="content-header-name">
-          Medical Research
-        </div>
-        <div class="content-header-details">24 items • Last updated today</div>
+        <div class="content-header-name">Medical Research</div>
+        <div class="content-header-details">24 items • 5 members • Last updated today</div>
       </div>
       <div class="content-actions">
-        <button class="action-btn" onclick="showSortOptions()">
-          <i class="fas fa-sort"></i>
-          Sort
+        <button class="action-btn chat-btn" onclick="switchTab('chat')">
+          <i class="fas fa-comments"></i>
+          <span>Chat</span>
+          <span class="chat-notification">3</span>
         </button>
-        <button class="action-btn" onclick="showFilterOptions()">
-          <i class="fas fa-filter"></i>
-          Filter
+        <button class="action-btn" onclick="showMembers()">
+          <i class="fas fa-users"></i>
+          <span>Members</span>
         </button>
         <button class="action-btn primary" onclick="shareLibrary()">
           <i class="fas fa-share-nodes"></i>
-          Share
+          <span>Share</span>
         </button>
       </div>
     </div>
 
-<div class="materials-container" id="materialsContainer">
+<div class="tab-navigation">
+  <button class="tab-btn active" data-tab="materials" onclick="switchTab('materials')">
+    <i class="fas fa-folder"></i> Materials
+  </button>
+  <button class="tab-btn" data-tab="chat" onclick="switchTab('chat')">
+    <i class="fas fa-comments"></i> Discussion
+  </button>
+</div>
+
+<!-- Materials Tab -->
+<div class="materials-container active" id="materialsTab">
   <div class="materials-grid" id="materialsGrid">
     <div class="material-card">
       <div class="material-header">
@@ -808,22 +1161,128 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
   </div>
 </div>
 
-<div class="add-material-bar">
-  <button class="upload-btn" onclick="uploadFile()">
-    <i class="fas fa-upload"></i>
-    <span>Upload</span>
-  </button>
-  <input type="text" class="material-input" id="materialInput" placeholder="Add material title or paste URL...">
-  <button class="add-btn" onclick="addMaterial()">
-    <i class="fas fa-plus"></i>
-    Add
-  </button>
+<!-- Chat Tab -->
+<div class="chat-container" id="chatTab">
+  <div class="messages-area" id="messagesArea">
+    <div class="message">
+      <div class="message-avatar">DR</div>
+      <div class="message-content">
+        <div class="message-header">
+          <span class="message-author">Dr. Smith</span>
+          <span>10:23 AM</span>
+        </div>
+        <div class="message-bubble">
+          <div class="message-text">I've uploaded the latest cancer research study. Please review and share your thoughts!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="message-avatar">JL</div>
+      <div class="message-content">
+        <div class="message-header">
+          <span class="message-author">Dr. Johnson</span>
+          <span>10:45 AM</span>
+        </div>
+        <div class="message-bubble">
+          <div class="message-text">Great work! The methodology section is particularly impressive. Have we considered expanding the sample size?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="message sent">
+      <div class="message-avatar">ME</div>
+      <div class="message-content">
+        <div class="message-header">
+          <span class="message-author">You</span>
+          <span>11:02 AM</span>
+        </div>
+        <div class="message-bubble">
+          <div class="message-text">I agree! I'll add some notes about potential sample expansion in the discussion section.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-area">
+    <textarea class="chat-input" id="chatInput" placeholder="Type a message..." rows="1"></textarea>
+    <button class="send-btn" onclick="sendChatMessage()">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+</div>
+
+  </div>
+</div>
+
+<!-- Floating Action Button -->
+
+<button class="fab" onclick="openAddModal()" title="Add Material">
+  <i class="fas fa-plus"></i>
+</button>
+
+<!-- Add Material Modal -->
+
+<div class="modal" id="addModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">Add Material</h2>
+      <button class="modal-close" onclick="closeAddModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Material Type</label>
+        <select class="form-input form-select" id="materialType">
+          <option value="pdf">PDF Document</option>
+          <option value="image">Image Collection</option>
+          <option value="text">Text Document</option>
+          <option value="record">Database Record</option>
+          <option value="video">Video</option>
+          <option value="link">Web Link</option>
+        </select>
+      </div>
+
+  <div class="form-group">
+    <label class="form-label">Title</label>
+    <input type="text" class="form-input" id="materialTitleInput" placeholder="Enter material title">
+  </div>
+  
+  <div class="form-group">
+    <label class="form-label">Description</label>
+    <textarea class="form-input form-textarea" id="materialDescription" placeholder="Add a description..."></textarea>
+  </div>
+  
+  <div class="form-group">
+    <label class="form-label">Upload File (Optional)</label>
+    <div class="file-upload-area" onclick="triggerFileUpload()">
+      <div class="file-upload-icon">
+        <i class="fas fa-cloud-arrow-up"></i>
+      </div>
+      <div class="file-upload-text">
+        Click to upload or drag and drop<br>
+        <small>PDF, Images, Documents, Videos up to 50MB</small>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label class="form-label">URL (Optional)</label>
+    <input type="url" class="form-input" id="materialUrl" placeholder="https://...">
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+  <button class="btn btn-primary" onclick="submitMaterial()">Add Material</button>
 </div>
 
   </div>
 </div>
 
 <script>
+let currentTab = 'materials';
+
 function toggleTheme(){
   document.body.classList.toggle('light-theme');
   localStorage.setItem(
@@ -858,11 +1317,16 @@ libraryItems.forEach(item => {
     libraryItems.forEach(i => i.classList.remove('active'));
     item.classList.add('active');
     
-    // Update header
-    const libraryName = item.querySelector('.library-name').textContent;
-    const libraryMeta = item.querySelector('.library-meta').textContent;
+    const libraryName = item.dataset.name;
+    const itemCount = item.querySelector('.item-count').textContent;
+    const members = item.dataset.members;
+    
     document.querySelector('.content-header-name').textContent = libraryName;
-    document.querySelector('.content-header-details').textContent = libraryMeta;
+    document.querySelector('.content-header-details').textContent = `${itemCount} • ${members} members • Last updated today`;
+    
+    // Remove unread badge
+    const badge = item.querySelector('.unread-badge');
+    if (badge) badge.remove();
     
     // Close sidebar on mobile
     if (window.innerWidth <= 768) {
@@ -886,22 +1350,179 @@ searchBox.addEventListener('input', (e) => {
   });
 });
 
+// Tab switching
+function switchTab(tab) {
+  currentTab = tab;
+  
+  // Update tab buttons
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  
+  // Update content
+  document.getElementById('materialsTab').classList.remove('active');
+  document.getElementById('chatTab').classList.remove('active');
+  
+  if (tab === 'materials') {
+    document.getElementById('materialsTab').classList.add('active');
+  } else if (tab === 'chat') {
+    document.getElementById('chatTab').classList.add('active');
+    // Remove chat notification
+    const notification = document.querySelector('.chat-notification');
+    if (notification) notification.remove();
+    
+    // Scroll to bottom of chat
+    const messagesArea = document.getElementById('messagesArea');
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+  }
+}
+
+// Chat functionality
+function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  
+  if (!text) return;
+  
+  const messagesArea = document.getElementById('messagesArea');
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'message sent';
+  messageDiv.innerHTML = `
+    <div class="message-avatar">ME</div>
+    <div class="message-content">
+      <div class="message-header">
+        <span class="message-author">You</span>
+        <span>${time}</span>
+      </div>
+      <div class="message-bubble">
+        <div class="message-text">${text}</div>
+      </div>
+    </div>
+  `;
+  
+  messagesArea.appendChild(messageDiv);
+  input.value = '';
+  input.style.height = 'auto';
+  messagesArea.scrollTop = messagesArea.scrollHeight;
+}
+
+// Chat input auto-resize
+document.getElementById('chatInput').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+});
+
+document.getElementById('chatInput').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChatMessage();
+  }
+});
+
+// Modal functions
+function openAddModal() {
+  document.getElementById('addModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAddModal() {
+  document.getElementById('addModal').classList.remove('show');
+  document.body.style.overflow = '';
+  
+  // Reset form
+  document.getElementById('materialTitleInput').value = '';
+  document.getElementById('materialDescription').value = '';
+  document.getElementById('materialUrl').value = '';
+  document.getElementById('materialType').value = 'pdf';
+}
+
+function triggerFileUpload() {
+  alert('📂 File browser would open here\n\nSelect files to upload:\n• Documents (PDF, DOC, DOCX)\n• Images (JPG, PNG, GIF)\n• Videos (MP4, MOV)\n• Data files (CSV, XLSX)\n\nMax size: 50MB per file\n\n(Demo mode)');
+}
+
+function submitMaterial() {
+  const title = document.getElementById('materialTitleInput').value.trim();
+  const description = document.getElementById('materialDescription').value.trim();
+  const type = document.getElementById('materialType').value;
+  const url = document.getElementById('materialUrl').value.trim();
+  
+  if (!title) {
+    alert('⚠️ Please enter a material title');
+    return;
+  }
+  
+  const typeMap = {
+    pdf: { icon: 'fa-file-pdf', class: 'pdf', type: 'PDF Document' },
+    image: { icon: 'fa-image', class: 'image', type: 'Image Collection' },
+    text: { icon: 'fa-file-lines', class: 'text', type: 'Text Document' },
+    record: { icon: 'fa-database', class: 'record', type: 'Database Record' },
+    video: { icon: 'fa-video', class: 'image', type: 'Video' },
+    link: { icon: 'fa-link', class: 'text', type: 'Web Link' }
+  };
+  
+  const selected = typeMap[type];
+  const materialsGrid = document.getElementById('materialsGrid');
+  
+  const newCard = document.createElement('div');
+  newCard.className = 'material-card';
+  newCard.innerHTML = `
+    <div class="material-header">
+      <div class="material-type-icon ${selected.class}">
+        <i class="fas ${selected.icon}"></i>
+      </div>
+      <div class="material-info">
+        <div class="material-title">${title}</div>
+        <div class="material-type">${selected.type}</div>
+      </div>
+    </div>
+    <div class="material-preview">
+      ${description || 'New material added to your library...'}
+    </div>
+    <div class="material-footer">
+      <div class="material-date">Added just now</div>
+      <div class="material-actions">
+        <button class="icon-btn" title="Download" onclick="downloadMaterial('${title}')"><i class="fas fa-download"></i></button>
+        <button class="icon-btn" title="Share" onclick="shareMaterial('${title}')"><i class="fas fa-share"></i></button>
+        <button class="icon-btn" title="More" onclick="showMoreOptions('${title}')"><i class="fas fa-ellipsis-v"></i></button>
+      </div>
+    </div>
+  `;
+  
+  materialsGrid.insertBefore(newCard, materialsGrid.firstChild);
+  
+  closeAddModal();
+  
+  // Show success and switch to materials tab if needed
+  if (currentTab !== 'materials') {
+    switchTab('materials');
+  }
+  
+  alert(`✅ "${title}" added successfully!`);
+}
+
 function createNewLibrary() {
   const libraryName = prompt('Enter library name:');
   if (libraryName && libraryName.trim()) {
     const libraryList = document.getElementById('libraryList');
-    const icons = ['fa-microscope', 'fa-brain', 'fa-dna', 'fa-flask', 'fa-atom', 'fa-graduation-cap'];
+    const icons = ['fa-microscope', 'fa-brain', 'fa-dna', 'fa-flask', 'fa-atom', 'fa-graduation-cap', 'fa-book-medical', 'fa-laptop-medical'];
     const randomIcon = icons[Math.floor(Math.random() * icons.length)];
     
     const newLibrary = document.createElement('div');
     newLibrary.className = 'library-item';
+    newLibrary.dataset.library = Date.now();
+    newLibrary.dataset.name = libraryName.trim();
+    newLibrary.dataset.members = '1';
     newLibrary.innerHTML = `
       <div class="library-icon"><i class="fas ${randomIcon}"></i></div>
       <div class="library-info">
         <div class="library-name">${libraryName.trim()}</div>
         <div class="library-meta">
           <span class="item-count">0 items</span>
-          <span>Created just now</span>
+          <span>1 member</span>
         </div>
       </div>
     `;
@@ -913,10 +1534,12 @@ function createNewLibrary() {
       document.querySelectorAll('.library-item').forEach(i => i.classList.remove('active'));
       this.classList.add('active');
       
-      const libraryName = this.querySelector('.library-name').textContent;
-      const libraryMeta = this.querySelector('.library-meta').textContent;
+      const libraryName = this.dataset.name;
+      const itemCount = this.querySelector('.item-count').textContent;
+      const members = this.dataset.members;
+      
       document.querySelector('.content-header-name').textContent = libraryName;
-      document.querySelector('.content-header-details').textContent = libraryMeta;
+      document.querySelector('.content-header-details').textContent = `${itemCount} • ${members} member${members > 1 ? 's' : ''} • Just created`;
       
       if (window.innerWidth <= 768) {
         document.getElementById('sidebar').classList.remove('open');
@@ -924,93 +1547,34 @@ function createNewLibrary() {
       }
     });
     
-    alert(`Library "${libraryName.trim()}" created successfully!`);
+    alert(`✅ Library "${libraryName.trim()}" created successfully!`);
   }
 }
 
-function uploadFile() {
-  alert('📁 File upload dialog would appear here.\n\nYou could select:\n• PDF documents\n• Images\n• Text files\n• Database records\n\n(Demo mode - no actual upload)');
-}
-
-function showSortOptions() {
-  alert('Sort by:\n• Date added (newest first)\n• Date added (oldest first)\n• Name (A-Z)\n• Name (Z-A)\n• File type\n\n(Demo mode)');
-}
-
-function showFilterOptions() {
-  alert('Filter by:\n☐ PDF Documents\n☐ Images\n☐ Text Files\n☐ Database Records\n\n(Demo mode)');
+function showMembers() {
+  alert('👥 Library Members\n\n• Dr. Smith (Owner)\n• Dr. Johnson\n• Dr. Williams\n• Dr. Brown\n• You\n\n[+ Invite Members]\n\n(Demo mode)');
 }
 
 function shareLibrary() {
-  alert('📤 Share "Medical Research" library\n\nShare options:\n• Copy link\n• Email\n• Generate QR code\n• Set permissions\n\n(Demo mode)');
+  alert('📤 Share Library\n\nShare "Medical Research" with:\n\n• Generate invite link\n• Email invitation\n• QR code\n• Set permissions (View/Edit)\n• Manage access\n\n(Demo mode)');
 }
 
 function downloadMaterial(materialName) {
-  alert(`⬇️ Downloading: ${materialName}\n\nFile would be downloaded to your device.\n\n(Demo mode - no actual download)`);
+  alert(`⬇️ Downloading: ${materialName}\n\nFile will be saved to your device.\n\n(Demo mode - no actual download)`);
 }
 
 function shareMaterial(materialName) {
-  alert(`📤 Share: ${materialName}\n\nShare via:\n• Copy link\n• Email\n• Social media\n\n(Demo mode)`);
+  alert(`📤 Share: ${materialName}\n\nShare via:\n• Copy link\n• Email\n• Social media\n• Download & share\n\n(Demo mode)`);
 }
 
 function showMoreOptions(materialName) {
-  alert(`Options for: ${materialName}\n\n• Open\n• Rename\n• Move to another library\n• Duplicate\n• Delete\n• View details\n\n(Demo mode)`);
+  alert(`Options for: ${materialName}\n\n• Open\n• Edit details\n• Move to another library\n• Duplicate\n• Add to favorites\n• Delete\n• View history\n\n(Demo mode)`);
 }
 
-function addMaterial() {
-  const input = document.getElementById('materialInput');
-  const materialTitle = input.value.trim();
-  
-  if (!materialTitle) {
-    alert('⚠️ Please enter a material title or URL');
-    return;
-  }
-  
-  // Create new material card
-  const materialsGrid = document.getElementById('materialsGrid');
-  const types = [
-    { icon: 'fa-file-pdf', class: 'pdf', type: 'PDF Document' },
-    { icon: 'fa-image', class: 'image', type: 'Image Collection' },
-    { icon: 'fa-file-lines', class: 'text', type: 'Text Document' },
-    { icon: 'fa-database', class: 'record', type: 'Database Record' }
-  ];
-  const randomType = types[Math.floor(Math.random() * types.length)];
-  
-  const newCard = document.createElement('div');
-  newCard.className = 'material-card';
-  newCard.innerHTML = `
-    <div class="material-header">
-      <div class="material-type-icon ${randomType.class}">
-        <i class="fas ${randomType.icon}"></i>
-      </div>
-      <div class="material-info">
-        <div class="material-title">${materialTitle}</div>
-        <div class="material-type">${randomType.type}</div>
-      </div>
-    </div>
-    <div class="material-preview">
-      New material added to your library...
-    </div>
-    <div class="material-footer">
-      <div class="material-date">Added just now</div>
-      <div class="material-actions">
-        <button class="icon-btn" title="Download" onclick="downloadMaterial('${materialTitle}')"><i class="fas fa-download"></i></button>
-        <button class="icon-btn" title="Share" onclick="shareMaterial('${materialTitle}')"><i class="fas fa-share"></i></button>
-        <button class="icon-btn" title="More" onclick="showMoreOptions('${materialTitle}')"><i class="fas fa-ellipsis-v"></i></button>
-      </div>
-    </div>
-  `;
-  
-  materialsGrid.insertBefore(newCard, materialsGrid.firstChild);
-  input.value = '';
-  
-  // Show success message
-  alert(`✅ "${materialTitle}" added successfully to Medical Research!`);
-}
-
-// Enter key to add material
-document.getElementById('materialInput').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    addMaterial();
+// Close modal when clicking outside
+document.getElementById('addModal').addEventListener('click', (e) => {
+  if (e.target.id === 'addModal') {
+    closeAddModal();
   }
 });
 </script>
