@@ -56,155 +56,6 @@ body {
   max-width: 100vw;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 350px;
-  background: var(--bg-color);
-  border-right: 1px solid var(--card-border);
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease;
-  padding-top: env(safe-area-inset-top);
-}
-
-.sidebar-header {
-  padding: 20px;
-  border-bottom: 1px solid var(--card-border);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.sidebar-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-color);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.new-library-btn {
-  width: 100%;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  background: var(--accent);
-  color: white;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.new-library-btn:hover {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
-}
-
-.search-box {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--card-border);
-  background: var(--input-bg);
-  color: var(--text-color);
-  font-size: 14px;
-  transition: 0.25s ease;
-}
-
-.search-box:focus {
-  border-color: var(--accent);
-  outline: none;
-}
-
-.library-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px 0;
-}
-
-.library-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  border-bottom: 1px solid var(--card-border);
-  position: relative;
-}
-
-.library-item:hover {
-  background: rgba(255,255,255,0.05);
-}
-
-body.light-theme .library-item:hover {
-  background: rgba(0,0,0,0.03);
-}
-
-.library-item.active {
-  background: rgba(176,0,58,0.15);
-  border-left: 3px solid var(--accent);
-}
-
-.library-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  color: white;
-  flex-shrink: 0;
-}
-
-.library-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.library-name {
-  font-weight: 600;
-  font-size: 15px;
-  margin-bottom: 4px;
-}
-
-.library-meta {
-  font-size: 13px;
-  color: #999;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.item-count {
-  background: rgba(176,0,58,0.2);
-  color: var(--accent);
-  border-radius: 10px;
-  padding: 2px 8px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.unread-badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: var(--accent);
-  color: white;
-  border-radius: 10px;
-  padding: 2px 6px;
-  font-size: 10px;
-  font-weight: 700;
-}
-
 /* Main Content */
 .content-main {
   flex: 1;
@@ -223,16 +74,6 @@ body.light-theme .library-item:hover {
   padding-top: calc(env(safe-area-inset-top) + 16px);
   background: var(--bg-color);
   border-bottom: 1px solid var(--card-border);
-}
-
-.menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: var(--text-color);
-  font-size: 20px;
-  cursor: pointer;
-  padding: 8px;
 }
 
 .content-header-info {
@@ -295,20 +136,20 @@ body.light-theme .library-item:hover {
   background: var(--accent-hover);
 }
 
-.action-btn.chat-btn {
-  position: relative;
+.theme-toggle {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--text-color);
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.25s ease;
 }
 
-.chat-notification {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: var(--accent);
-  color: white;
-  border-radius: 10px;
-  padding: 2px 6px;
-  font-size: 10px;
-  font-weight: 700;
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* Tab Navigation */
@@ -481,6 +322,19 @@ body.light-theme .library-item:hover {
 
 .icon-btn:hover {
   color: var(--accent);
+}
+
+.library-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: white;
+  flex-shrink: 0;
 }
 
 /* Chat Container */
@@ -895,42 +749,11 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 50;
-    transform: translateX(-100%);
-    width: 85%;
-    max-width: 350px;
-  }
-  
-  .sidebar.open {
-    transform: translateX(0);
-  }
-  
-  .menu-toggle {
-    display: block;
-  }
-  
   .materials-grid {
     grid-template-columns: 1fr;
   }
   
-  .sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 45;
-  }
-  
-  .sidebar-overlay.show {
-    display: block;
-  }
-  
-  .content-actions .action-btn:not(.chat-btn) {
+  .content-actions .action-btn:not(.primary) {
     display: none;
   }
   
@@ -953,84 +776,9 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 <body>
 
 <div class="main-container">
-  <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div style="display: flex; align-items: center; justify-content: space-between;">
-        <div class="sidebar-title">
-          <i class="fas fa-book-open"></i>
-          My Libraries
-        </div>
-        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" style="padding: 6px 10px; font-size: 16px; background: transparent; border-radius: 6px; border: 1px solid var(--card-border); color: var(--text-color); cursor: pointer; transition: 0.25s ease;">
-          <i class="fas fa-circle-half-stroke"></i>
-        </button>
-      </div>
-      <button class="new-library-btn" onclick="createNewLibrary()">
-        <i class="fas fa-plus"></i>
-        New Library
-      </button>
-      <input type="text" class="search-box" placeholder="Search libraries..." id="searchBox">
-    </div>
-
-<div class="library-list" id="libraryList">
-  <div class="library-item active" data-library="1" data-name="Medical Research" data-members="5">
-    <div class="library-icon"><i class="fas fa-microscope"></i></div>
-    <div class="library-info">
-      <div class="library-name">Medical Research</div>
-      <div class="library-meta">
-        <span class="item-count">24 items</span>
-        <span>5 members</span>
-      </div>
-    </div>
-    <span class="unread-badge">3</span>
-  </div>
-
-  <div class="library-item" data-library="2" data-name="Neuroscience Papers" data-members="3">
-    <div class="library-icon"><i class="fas fa-brain"></i></div>
-    <div class="library-info">
-      <div class="library-name">Neuroscience Papers</div>
-      <div class="library-meta">
-        <span class="item-count">18 items</span>
-        <span>3 members</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="library-item" data-library="3" data-name="Genetics Studies" data-members="8">
-    <div class="library-icon"><i class="fas fa-dna"></i></div>
-    <div class="library-info">
-      <div class="library-name">Genetics Studies</div>
-      <div class="library-meta">
-        <span class="item-count">31 items</span>
-        <span>8 members</span>
-      </div>
-    </div>
-    <span class="unread-badge">1</span>
-  </div>
-
-  <div class="library-item" data-library="4" data-name="Lab Protocols" data-members="2">
-    <div class="library-icon"><i class="fas fa-flask"></i></div>
-    <div class="library-info">
-      <div class="library-name">Lab Protocols</div>
-      <div class="library-meta">
-        <span class="item-count">12 items</span>
-        <span>2 members</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-  </div>
-
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
   <!-- Main Content -->
-
   <div class="content-main">
     <div class="content-header">
-      <button class="menu-toggle" id="menuToggle">
-        <i class="fas fa-bars"></i>
-      </button>
       <div class="library-icon" style="width: 40px; height: 40px; font-size: 18px;">
         <i class="fas fa-microscope"></i>
       </div>
@@ -1039,10 +787,8 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
         <div class="content-header-details">24 items • 5 members • Last updated today</div>
       </div>
       <div class="content-actions">
-        <button class="action-btn chat-btn" onclick="switchTab('chat')">
-          <i class="fas fa-comments"></i>
-          <span>Chat</span>
-          <span class="chat-notification">3</span>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+          <i class="fas fa-circle-half-stroke"></i>
         </button>
         <button class="action-btn" onclick="showMembers()">
           <i class="fas fa-users"></i>
@@ -1299,61 +1045,6 @@ if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
 }
 
-// Mobile menu toggle
-const menuToggle = document.getElementById('menuToggle');
-const sidebar = document.getElementById('sidebar');
-const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-menuToggle.addEventListener('click', () => {
-  sidebar.classList.toggle('open');
-  sidebarOverlay.classList.toggle('show');
-});
-
-sidebarOverlay.addEventListener('click', () => {
-  sidebar.classList.remove('open');
-  sidebarOverlay.classList.remove('show');
-});
-
-// Library selection
-const libraryItems = document.querySelectorAll('.library-item');
-libraryItems.forEach(item => {
-  item.addEventListener('click', () => {
-    libraryItems.forEach(i => i.classList.remove('active'));
-    item.classList.add('active');
-    
-    const libraryName = item.dataset.name;
-    const itemCount = item.querySelector('.item-count').textContent;
-    const members = item.dataset.members;
-    
-    document.querySelector('.content-header-name').textContent = libraryName;
-    document.querySelector('.content-header-details').textContent = `${itemCount} • ${members} members • Last updated today`;
-    
-    // Remove unread badge
-    const badge = item.querySelector('.unread-badge');
-    if (badge) badge.remove();
-    
-    // Close sidebar on mobile
-    if (window.innerWidth <= 768) {
-      sidebar.classList.remove('open');
-      sidebarOverlay.classList.remove('show');
-    }
-  });
-});
-
-// Search functionality
-const searchBox = document.getElementById('searchBox');
-searchBox.addEventListener('input', (e) => {
-  const searchTerm = e.target.value.toLowerCase();
-  libraryItems.forEach(item => {
-    const name = item.querySelector('.library-name').textContent.toLowerCase();
-    if (name.includes(searchTerm)) {
-      item.style.display = 'flex';
-    } else {
-      item.style.display = 'none';
-    }
-  });
-});
-
 // Tab switching
 function switchTab(tab) {
   currentTab = tab;
@@ -1372,9 +1063,6 @@ function switchTab(tab) {
     document.getElementById('materialsTab').classList.add('active');
   } else if (tab === 'chat') {
     document.getElementById('chatTab').classList.add('active');
-    // Remove chat notification
-    const notification = document.querySelector('.chat-notification');
-    if (notification) notification.remove();
     
     // Scroll to bottom of chat
     const messagesArea = document.getElementById('messagesArea');
@@ -1506,53 +1194,6 @@ function submitMaterial() {
   }
   
   alert(`✅ "${title}" added successfully!`);
-}
-
-function createNewLibrary() {
-  const libraryName = prompt('Enter library name:');
-  if (libraryName && libraryName.trim()) {
-    const libraryList = document.getElementById('libraryList');
-    const icons = ['fa-microscope', 'fa-brain', 'fa-dna', 'fa-flask', 'fa-atom', 'fa-graduation-cap', 'fa-book-medical', 'fa-laptop-medical'];
-    const randomIcon = icons[Math.floor(Math.random() * icons.length)];
-    
-    const newLibrary = document.createElement('div');
-    newLibrary.className = 'library-item';
-    newLibrary.dataset.library = Date.now();
-    newLibrary.dataset.name = libraryName.trim();
-    newLibrary.dataset.members = '1';
-    newLibrary.innerHTML = `
-      <div class="library-icon"><i class="fas ${randomIcon}"></i></div>
-      <div class="library-info">
-        <div class="library-name">${libraryName.trim()}</div>
-        <div class="library-meta">
-          <span class="item-count">0 items</span>
-          <span>1 member</span>
-        </div>
-      </div>
-    `;
-    
-    libraryList.insertBefore(newLibrary, libraryList.firstChild);
-    
-    // Add click handler
-    newLibrary.addEventListener('click', function() {
-      document.querySelectorAll('.library-item').forEach(i => i.classList.remove('active'));
-      this.classList.add('active');
-      
-      const libraryName = this.dataset.name;
-      const itemCount = this.querySelector('.item-count').textContent;
-      const members = this.dataset.members;
-      
-      document.querySelector('.content-header-name').textContent = libraryName;
-      document.querySelector('.content-header-details').textContent = `${itemCount} • ${members} member${members > 1 ? 's' : ''} • Just created`;
-      
-      if (window.innerWidth <= 768) {
-        document.getElementById('sidebar').classList.remove('open');
-        document.getElementById('sidebarOverlay').classList.remove('show');
-      }
-    });
-    
-    alert(`✅ Library "${libraryName.trim()}" created successfully!`);
-  }
 }
 
 function showMembers() {
