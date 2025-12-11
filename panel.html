@@ -426,8 +426,7 @@ body.light-theme .message.sent .message-bubble {
 }
 
 .chat-input-area {
-  padding: 16px 20px;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+  padding: 16px 20px; /* Remove calc with safe-area-inset-bottom */
   background: var(--card-bg);
   backdrop-filter: blur(22px);
   border-top: 1px solid var(--card-border);
@@ -477,9 +476,10 @@ body.light-theme .message.sent .message-bubble {
 }
 
 /* Floating Action Button */
+/* Floating Action Button */
 .fab {
   position: fixed;
-  bottom: calc(env(safe-area-inset-bottom) + 20px);
+  bottom: 20px; /* Remove the calc with safe-area-inset-bottom */
   right: 20px;
   width: 56px;
   height: 56px;
@@ -495,6 +495,7 @@ body.light-theme .message.sent .message-bubble {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Removed margin-bottom: env(safe-area-inset-bottom); */
 }
 
 .fab:hover {
@@ -750,9 +751,13 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .materials-grid {
-    grid-template-columns: 1fr;
-  }
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  max-width: 100%;
+  padding-bottom: 120px; /* Increased from 100px to account for Safari bar */
+}
   
   .content-actions .action-btn:not(.primary) {
     display: none;
