@@ -205,6 +205,100 @@ body {
   max-width: 100%;
 }
 
+/* Material Groups */
+.material-group {
+  grid-column: 1 / -1;
+  margin-bottom: 12px;
+}
+
+.material-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--card-bg);
+  backdrop-filter: blur(22px);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.material-group-header:hover {
+  border-color: var(--accent);
+  background: rgba(176,0,58,0.05);
+}
+
+.material-group-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.material-group-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.material-group-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.material-group-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.material-group-count {
+  font-size: 12px;
+  color: #999;
+}
+
+.material-group-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.material-group-toggle {
+  font-size: 14px;
+  color: #999;
+  transition: transform 0.25s ease;
+}
+
+.material-group-toggle.collapsed {
+  transform: rotate(-90deg);
+}
+
+.material-group-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.material-group-content.expanded {
+  max-height: 10000px;
+}
+
 .material-card {
   background: var(--item-bg);
   border: 1px solid var(--card-border);
@@ -501,6 +595,10 @@ body.light-theme .message.sent .message-bubble {
   transform: scale(1.1);
 }
 
+.fab.hidden {
+  display: none;
+}
+
 /* Modal */
 .modal {
   display: none;
@@ -753,6 +851,10 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
     grid-template-columns: 1fr;
   }
   
+  .material-group-content {
+    grid-template-columns: 1fr;
+  }
+  
   .content-actions .action-btn:not(.primary) {
     display: none;
   }
@@ -811,418 +913,111 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 </div>
 
 <!-- Materials Tab -->
-
 <div class="materials-container active" id="materialsTab">
   <div class="materials-grid" id="materialsGrid">
-    <div class="material-card">
-      <div class="material-header">
-        <div class="material-type-icon pdf">
-          <i class="fas fa-file-pdf"></i>
+    <!-- Group Example -->
+    <div class="material-group">
+      <div class="material-group-header" onclick="toggleGroup(this)">
+        <div class="material-group-info">
+          <div class="material-group-icon">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div class="material-group-details">
+            <div class="material-group-name">Recent Studies</div>
+            <div class="material-group-count">2 items</div>
+          </div>
         </div>
-        <div class="material-info">
-          <div class="material-title">Cancer Research Study 2024</div>
-          <div class="material-type">PDF Document</div>
-        </div>
-      </div>
-      <div class="material-preview">
-        Comprehensive analysis of novel immunotherapy approaches in treating advanced stage cancers...
-      </div>
-      <div class="material-footer">
-        <div class="material-date">Added Dec 10, 2025</div>
-        <div class="material-actions">
-          <button class="icon-btn" title="Download" onclick="downloadMaterial('Cancer Research Study 2024')"><i class="fas fa-download"></i></button>
-          <button class="icon-btn" title="Share" onclick="shareMaterial('Cancer Research Study 2024')"><i class="fas fa-share"></i></button>
-          <button class="icon-btn" title="More" onclick="showMoreOptions('Cancer Research Study 2024')"><i class="fas fa-ellipsis-v"></i></button>
+        <div class="material-group-actions">
+          <button class="icon-btn" onclick="event.stopPropagation(); editGroup('Recent Studies')" title="Edit group">
+            <i class="fas fa-pen"></i>
+          </button>
+          <i class="fas fa-chevron-down material-group-toggle"></i>
         </div>
       </div>
-    </div>
-
-<div class="material-card">
-  <div class="material-header">
-    <div class="material-type-icon image">
-      <i class="fas fa-image"></i>
-    </div>
-    <div class="material-info">
-      <div class="material-title">Cell Structure Diagrams</div>
-      <div class="material-type">Image Collection</div>
-    </div>
-  </div>
-  <div class="material-preview">
-    High-resolution microscopy images showing cellular structures and organelles...
-  </div>
-  <div class="material-footer">
-    <div class="material-date">Added Dec 9, 2025</div>
-    <div class="material-actions">
-      <button class="icon-btn" title="Download" onclick="downloadMaterial('Cell Structure Diagrams')"><i class="fas fa-download"></i></button>
-      <button class="icon-btn" title="Share" onclick="shareMaterial('Cell Structure Diagrams')"><i class="fas fa-share"></i></button>
-      <button class="icon-btn" title="More" onclick="showMoreOptions('Cell Structure Diagrams')"><i class="fas fa-ellipsis-v"></i></button>
-    </div>
-  </div>
-</div>
-
-<div class="material-card">
-  <div class="material-header">
-    <div class="material-type-icon text">
-      <i class="fas fa-file-lines"></i>
-    </div>
-    <div class="material-info">
-      <div class="material-title">Research Notes - December</div>
-      <div class="material-type">Text Document</div>
-    </div>
-  </div>
-  <div class="material-preview">
-    Daily observations and experimental findings from the ongoing clinical trials...
-  </div>
-  <div class="material-footer">
-    <div class="material-date">Added Dec 8, 2025</div>
-    <div class="material-actions">
-      <button class="icon-btn" title="Download" onclick="downloadMaterial('Research Notes - December')"><i class="fas fa-download"></i></button>
-      <button class="icon-btn" title="Share" onclick="shareMaterial('Research Notes - December')"><i class="fas fa-share"></i></button>
-      <button class="icon-btn" title="More" onclick="showMoreOptions('Research Notes - December')"><i class="fas fa-ellipsis-v"></i></button>
-    </div>
-  </div>
-</div>
-
-<div class="material-card">
-  <div class="material-header">
-    <div class="material-type-icon record">
-      <i class="fas fa-database"></i>
-    </div>
-    <div class="material-info">
-      <div class="material-title">Patient Data Records</div>
-      <div class="material-type">Database Record</div>
-    </div>
-  </div>
-  <div class="material-preview">
-    Anonymized patient data from the Phase III clinical trials with statistical analysis...
-  </div>
-  <div class="material-footer">
-    <div class="material-date">Added Dec 7, 2025</div>
-    <div class="material-actions">
-      <button class="icon-btn" title="Download" onclick="downloadMaterial('Patient Data Records')"><i class="fas fa-download"></i></button>
-      <button class="icon-btn" title="Share" onclick="shareMaterial('Patient Data Records')"><i class="fas fa-share"></i></button>
-      <button class="icon-btn" title="More" onclick="showMoreOptions('Patient Data Records')"><i class="fas fa-ellipsis-v"></i></button>
-    </div>
-  </div>
-</div>
-
-  </div>
-</div>
-
-<!-- Chat Tab -->
-
-<div class="chat-container" id="chatTab">
-  <div class="messages-area" id="messagesArea">
-    <div class="message">
-      <div class="message-avatar">DR</div>
-      <div class="message-content">
-        <div class="message-header">
-          <span class="message-author">Dr. Smith</span>
-          <span>10:23 AM</span>
+      <div class="material-group-content expanded">
+        <div class="material-card">
+          <div class="material-header">
+            <div class="material-type-icon pdf">
+              <i class="fas fa-file-pdf"></i>
+            </div>
+            <div class="material-info">
+              <div class="material-title">Cancer Research Study 2024</div>
+              <div class="material-type">PDF Document</div>
+            </div>
+          </div>
+          <div class="material-preview">
+            Comprehensive analysis of novel immunotherapy approaches in treating advanced stage cancers...
+          </div>
+          <div class="material-footer">
+            <div class="material-date">Added Dec 10, 2025</div>
+            <div class="material-actions">
+              <button class="icon-btn" title="Download" onclick="downloadMaterial('Cancer Research Study 2024')"><i class="fas fa-download"></i></button>
+              <button class="icon-btn" title="Share" onclick="shareMaterial('Cancer Research Study 2024')"><i class="fas fa-share"></i></button>
+              <button class="icon-btn" title="More" onclick="showMoreOptions('Cancer Research Study 2024')"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+          </div>
         </div>
-        <div class="message-bubble">
-          <div class="message-text">I've uploaded the latest cancer research study. Please review and share your thoughts!</div>
+
+        <div class="material-card">
+          <div class="material-header">
+            <div class="material-type-icon text">
+              <i class="fas fa-file-lines"></i>
+            </div>
+            <div class="material-info">
+              <div class="material-title">Research Notes - December</div>
+              <div class="material-type">Text Document</div>
+            </div>
+          </div>
+          <div class="material-preview">
+            Daily observations and experimental findings from the ongoing clinical trials...
+          </div>
+          <div class="material-footer">
+            <div class="material-date">Added Dec 8, 2025</div>
+            <div class="material-actions">
+              <button class="icon-btn" title="Download" onclick="downloadMaterial('Research Notes - December')"><i class="fas fa-download"></i></button>
+              <button class="icon-btn" title="Share" onclick="shareMaterial('Research Notes - December')"><i class="fas fa-share"></i></button>
+              <button class="icon-btn" title="More" onclick="showMoreOptions('Research Notes - December')"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-<div class="message">
-  <div class="message-avatar">JL</div>
-  <div class="message-content">
-    <div class="message-header">
-      <span class="message-author">Dr. Johnson</span>
-      <span>10:45 AM</span>
-    </div>
-    <div class="message-bubble">
-      <div class="message-text">Great work! The methodology section is particularly impressive. Have we considered expanding the sample size?</div>
-    </div>
-  </div>
-</div>
-
-<div class="message sent">
-  <div class="message-avatar">ME</div>
-  <div class="message-content">
-    <div class="message-header">
-      <span class="message-author">You</span>
-      <span>11:02 AM</span>
-    </div>
-    <div class="message-bubble">
-      <div class="message-text">I agree! I'll add some notes about potential sample expansion in the discussion section.</div>
-    </div>
-  </div>
-</div>
-
-  </div>
-
-  <div class="chat-input-area">
-    <textarea class="chat-input" id="chatInput" placeholder="Type a message..." rows="1"></textarea>
-    <button class="send-btn" onclick="sendChatMessage()">
-      <i class="fas fa-paper-plane"></i>
-    </button>
-  </div>
-</div>
-
-  </div>
-</div>
-
-<!-- Floating Action Button -->
-
-<button class="fab" onclick="openAddModal()" title="Add Material">
-  <i class="fas fa-plus"></i>
-</button>
-
-<!-- Add Material Modal -->
-
-<div class="modal" id="addModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">Add Material</h2>
-      <button class="modal-close" onclick="closeAddModal()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Material Type</label>
-        <select class="form-input form-select" id="materialType">
-          <option value="pdf">PDF Document</option>
-          <option value="image">Image Collection</option>
-          <option value="text">Text Document</option>
-          <option value="record">Database Record</option>
-          <option value="video">Video</option>
-          <option value="link">Web Link</option>
-        </select>
+    <!-- Another Group -->
+    <div class="material-group">
+      <div class="material-group-header" onclick="toggleGroup(this)">
+        <div class="material-group-info">
+          <div class="material-group-icon">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div class="material-group-details">
+            <div class="material-group-name">Visual Resources</div>
+            <div class="material-group-count">2 items</div>
+          </div>
+        </div>
+        <div class="material-group-actions">
+          <button class="icon-btn" onclick="event.stopPropagation(); editGroup('Visual Resources')" title="Edit group">
+            <i class="fas fa-pen"></i>
+          </button>
+          <i class="fas fa-chevron-down material-group-toggle"></i>
+        </div>
       </div>
-
-  <div class="form-group">
-    <label class="form-label">Title</label>
-    <input type="text" class="form-input" id="materialTitleInput" placeholder="Enter material title">
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Description</label>
-    <textarea class="form-input form-textarea" id="materialDescription" placeholder="Add a description..."></textarea>
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Upload File (Optional)</label>
-    <div class="file-upload-area" onclick="triggerFileUpload()">
-      <div class="file-upload-icon">
-        <i class="fas fa-cloud-arrow-up"></i>
-      </div>
-      <div class="file-upload-text">
-        Click to upload or drag and drop<br>
-        <small>PDF, Images, Documents, Videos up to 50MB</small>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">URL (Optional)</label>
-    <input type="url" class="form-input" id="materialUrl" placeholder="https://...">
-  </div>
-</div>
-<div class="modal-footer">
-  <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
-  <button class="btn btn-primary" onclick="submitMaterial()">Add Material</button>
-</div>
-
-  </div>
-</div>
-
-<script>
-let currentTab = 'materials';
-
-function toggleTheme(){
-  document.body.classList.toggle('light-theme');
-  localStorage.setItem(
-    "theme",
-    document.body.classList.contains("light-theme") ? "light" : "dark"
-  );
-}
-
-if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light-theme");
-}
-
-// Tab switching
-function switchTab(tab) {
-  currentTab = tab;
-  
-  // Update tab buttons
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-  
-  // Update content
-  document.getElementById('materialsTab').classList.remove('active');
-  document.getElementById('chatTab').classList.remove('active');
-  
-  if (tab === 'materials') {
-    document.getElementById('materialsTab').classList.add('active');
-  } else if (tab === 'chat') {
-    document.getElementById('chatTab').classList.add('active');
-    
-    // Scroll to bottom of chat
-    const messagesArea = document.getElementById('messagesArea');
-    messagesArea.scrollTop = messagesArea.scrollHeight;
-  }
-}
-
-// Chat functionality
-function sendChatMessage() {
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  
-  if (!text) return;
-  
-  const messagesArea = document.getElementById('messagesArea');
-  const now = new Date();
-  const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  
-  const messageDiv = document.createElement('div');
-  messageDiv.className = 'message sent';
-  messageDiv.innerHTML = `
-    <div class="message-avatar">ME</div>
-    <div class="message-content">
-      <div class="message-header">
-        <span class="message-author">You</span>
-        <span>${time}</span>
-      </div>
-      <div class="message-bubble">
-        <div class="message-text">${text}</div>
-      </div>
-    </div>
-  `;
-  
-  messagesArea.appendChild(messageDiv);
-  input.value = '';
-  input.style.height = 'auto';
-  messagesArea.scrollTop = messagesArea.scrollHeight;
-}
-
-// Chat input auto-resize
-document.getElementById('chatInput').addEventListener('input', function() {
-  this.style.height = 'auto';
-  this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-});
-
-document.getElementById('chatInput').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendChatMessage();
-  }
-});
-
-// Modal functions
-function openAddModal() {
-  document.getElementById('addModal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeAddModal() {
-  document.getElementById('addModal').classList.remove('show');
-  document.body.style.overflow = '';
-  
-  // Reset form
-  document.getElementById('materialTitleInput').value = '';
-  document.getElementById('materialDescription').value = '';
-  document.getElementById('materialUrl').value = '';
-  document.getElementById('materialType').value = 'pdf';
-}
-
-function triggerFileUpload() {
-  alert('📂 File browser would open here\n\nSelect files to upload:\n• Documents (PDF, DOC, DOCX)\n• Images (JPG, PNG, GIF)\n• Videos (MP4, MOV)\n• Data files (CSV, XLSX)\n\nMax size: 50MB per file\n\n(Demo mode)');
-}
-
-function submitMaterial() {
-  const title = document.getElementById('materialTitleInput').value.trim();
-  const description = document.getElementById('materialDescription').value.trim();
-  const type = document.getElementById('materialType').value;
-  const url = document.getElementById('materialUrl').value.trim();
-  
-  if (!title) {
-    alert('⚠️ Please enter a material title');
-    return;
-  }
-  
-  const typeMap = {
-    pdf: { icon: 'fa-file-pdf', class: 'pdf', type: 'PDF Document' },
-    image: { icon: 'fa-image', class: 'image', type: 'Image Collection' },
-    text: { icon: 'fa-file-lines', class: 'text', type: 'Text Document' },
-    record: { icon: 'fa-database', class: 'record', type: 'Database Record' },
-    video: { icon: 'fa-video', class: 'image', type: 'Video' },
-    link: { icon: 'fa-link', class: 'text', type: 'Web Link' }
-  };
-  
-  const selected = typeMap[type];
-  const materialsGrid = document.getElementById('materialsGrid');
-  
-  const newCard = document.createElement('div');
-  newCard.className = 'material-card';
-  newCard.innerHTML = `
-    <div class="material-header">
-      <div class="material-type-icon ${selected.class}">
-        <i class="fas ${selected.icon}"></i>
-      </div>
-      <div class="material-info">
-        <div class="material-title">${title}</div>
-        <div class="material-type">${selected.type}</div>
-      </div>
-    </div>
-    <div class="material-preview">
-      ${description || 'New material added to your library...'}
-    </div>
-    <div class="material-footer">
-      <div class="material-date">Added just now</div>
-      <div class="material-actions">
-        <button class="icon-btn" title="Download" onclick="downloadMaterial('${title}')"><i class="fas fa-download"></i></button>
-        <button class="icon-btn" title="Share" onclick="shareMaterial('${title}')"><i class="fas fa-share"></i></button>
-        <button class="icon-btn" title="More" onclick="showMoreOptions('${title}')"><i class="fas fa-ellipsis-v"></i></button>
-      </div>
-    </div>
-  `;
-  
-  materialsGrid.insertBefore(newCard, materialsGrid.firstChild);
-  
-  closeAddModal();
-  
-  // Show success and switch to materials tab if needed
-  if (currentTab !== 'materials') {
-    switchTab('materials');
-  }
-  
-  alert(`✅ "${title}" added successfully!`);
-}
-
-function showMembers() {
-  alert('👥 Library Members\n\n• Dr. Smith (Owner)\n• Dr. Johnson\n• Dr. Williams\n• Dr. Brown\n• You\n\n[+ Invite Members]\n\n(Demo mode)');
-}
-
-function shareLibrary() {
-  alert('📤 Share Library\n\nShare "Medical Research" with:\n\n• Generate invite link\n• Email invitation\n• QR code\n• Set permissions (View/Edit)\n• Manage access\n\n(Demo mode)');
-}
-
-function downloadMaterial(materialName) {
-  alert(`⬇️ Downloading: ${materialName}\n\nFile will be saved to your device.\n\n(Demo mode - no actual download)`);
-}
-
-function shareMaterial(materialName) {
-  alert(`📤 Share: ${materialName}\n\nShare via:\n• Copy link\n• Email\n• Social media\n• Download & share\n\n(Demo mode)`);
-}
-
-function showMoreOptions(materialName) {
-  alert(`Options for: ${materialName}\n\n• Open\n• Edit details\n• Move to another library\n• Duplicate\n• Add to favorites\n• Delete\n• View history\n\n(Demo mode)`);
-}
-
-// Close modal when clicking outside
-document.getElementById('addModal').addEventListener('click', (e) => {
-  if (e.target.id === 'addModal') {
-    closeAddModal();
-  }
-});
-</script>
-
-</body>
-</html>
+      <div class="material-group-content expanded">
+        <div class="material-card">
+          <div class="material-header">
+            <div class="material-type-icon image">
+              <i class="fas fa-image"></i>
+            </div>
+            <div class="material-info">
+              <div class="material-title">Cell Structure Diagrams</div>
+              <div class="material-type">Image Collection</div>
+            </div>
+          </div>
+          <div class="material-preview">
+            High-resolution microscopy images showing cellular structures and organelles...
+          </div>
+          <div class="material-footer">
+            <div class="material-date">Added Dec 9, 2025</div>
+            <div class="material-actions">
+              <button class="icon-btn" title="Download" onclick="downloadMaterial('Cell Structure Diagrams')"><i class="fas fa-download"></i></button>
+              <button class="icon-
