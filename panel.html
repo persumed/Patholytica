@@ -4,301 +4,776 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Patholytica — Academic Libraries</title>
-
-<!-- Font Awesome for icons -->
+<title>Academic Library Manager</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 :root {
-  --bg-color: #0f0f0f;
-  --text-primary: #fff;
-  --text-secondary: #aaa;
-  --card-bg: #1f1f1f;
-  --hover-bg: #2a2a2a;
-  --border-color: #303030;
-  --accent: #3ea6ff;
-  --accent-hover: #2d8ed6;
+  --bg-color: #000;
+  --text-color: #fff;
+  --card-bg: rgba(24,24,24,0.7);
+  --card-border: rgba(255,255,255,0.1);
+  --accent: #fff;
+  --accent-hover: rgba(255,255,255,0.8);
+  --content-bg: #0a0a0a;
+  --item-bg: rgba(30,30,30,0.9);
+  --input-bg: rgba(30,30,30,0.8);
 }
 
 body.light-theme {
-  --bg-color: #ffffff;
-  --text-primary: #0f0f0f;
-  --text-secondary: #606060;
-  --card-bg: #f9f9f9;
-  --hover-bg: #f0f0f0;
-  --border-color: #e5e5e5;
-  --accent: #065fd4;
-  --accent-hover: #0448a3;
+  --bg-color: #fafafa;
+  --text-color: #111;
+  --card-bg: rgba(255,255,255,0.5);
+  --card-border: rgba(0,0,0,0.08);
+  --accent: #111;
+  --accent-hover: rgba(0,0,0,0.7);
+  --content-bg: #f5f5f5;
+  --item-bg: #fff;
+  --input-bg: rgba(255,255,255,0.95);
 }
 
-* { box-sizing: border-box; }
-html, body { margin:0; padding:0; min-height:100%; font-family: "Roboto", Arial, sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
 
 body {
   background: var(--bg-color);
-  color: var(--text-primary);
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.header-wrapper {
-  position: sticky;
-  top: 0;
-  background: var(--bg-color);
-  padding-top: env(safe-area-inset-top);
-  border-bottom: 1px solid var(--border-color);
-  z-index: 40;
-}
-
-.header {
+  color: var(--text-color);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 24px;
-  max-width: 1400px;
-  margin: 0 auto;
+  flex-direction: column;
+  transition: background 0.3s ease;
+  max-width: 100vw;
 }
 
-.logo-img {
-  height: 28px;
-  width: auto;
-  transition: filter 0.2s ease;
-  cursor: pointer;
+.main-container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  max-width: 100vw;
 }
 
-body.light-theme .logo-img {
-  filter: invert(1);
+.content-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--content-bg);
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-.header-actions {
+.content-header {
   display: flex;
   align-items: center;
   gap: 16px;
+  padding: 16px 20px;
+  padding-top: calc(env(safe-area-inset-top) + 16px);
+  background: var(--bg-color);
+  border-bottom: 1px solid var(--card-border);
 }
 
-.icon-btn {
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+  text-decoration: none;
+}
+
+.back-btn:hover {
+  opacity: 0.6;
+}
+
+.library-icon {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
+  border-radius: 8px;
+  background: var(--item-bg);
+  border: 1px solid var(--card-border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  transition: background 0.2s ease;
-}
-
-.icon-btn:hover {
-  background: var(--hover-bg);
-}
-
-.main-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 32px 24px 60px;
-}
-
-.hero-section {
-  margin-bottom: 48px;
-}
-
-.hero-section h1 {
-  font-size: 32px;
-  margin: 0 0 8px 0;
-  font-weight: 500;
-}
-
-.hero-section p {
-  font-size: 15px;
-  color: var(--text-secondary);
-  margin: 0 0 24px 0;
-  line-height: 1.6;
-}
-
-.search-bar {
-  max-width: 600px;
-  position: relative;
-}
-
-.search-input {
-  width: 100%;
-  padding: 10px 16px;
-  border-radius: 24px;
-  border: 1px solid var(--border-color);
-  background: var(--card-bg);
-  color: var(--text-primary);
-  font-size: 14px;
-  transition: border-color 0.2s ease;
-}
-
-.search-input:focus {
-  border-color: var(--accent);
-  outline: none;
-}
-
-.search-input::placeholder {
-  color: var(--text-secondary);
-}
-
-.section-header {
-  margin-bottom: 20px;
-}
-
-.section-title {
-  font-size: 20px;
-  font-weight: 500;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.section-icon {
-  font-size: 20px;
-}
-
-.library-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-  margin-bottom: 48px;
-}
-
-.library-card {
-  background: transparent;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  text-decoration: none;
-  color: var(--text-primary);
-  display: block;
-}
-
-.library-card:hover {
-  transform: scale(1.02);
-}
-
-.library-card:hover .library-thumbnail {
-  transform: scale(1.05);
-}
-
-.library-thumbnail-wrapper {
-  width: 100%;
-  height: 180px;
-  overflow: hidden;
-  border-radius: 12px;
-  background: var(--card-bg);
-  position: relative;
-}
-
-.library-thumbnail {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.library-duration {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.library-content {
-  padding: 12px 0;
-}
-
-.library-header {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-
-.author-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
   flex-shrink: 0;
 }
 
-.library-info {
+.content-header-info {
   flex: 1;
   min-width: 0;
 }
 
-.library-title {
-  font-size: 15px;
+.content-header-name {
+  font-size: 17px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content-header-details {
+  font-size: 13px;
+  color: #888;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--text-color);
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.action-btn:hover {
+  background: var(--item-bg);
+}
+
+.theme-toggle {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--text-color);
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--item-bg);
+}
+
+.tab-navigation {
+  display: flex;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  padding: 0 20px;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 14px;
   font-weight: 500;
-  margin: 0 0 4px 0;
+  cursor: pointer;
+  transition: 0.2s ease;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  color: var(--text-color);
+}
+
+.tab-btn.active {
+  color: var(--text-color);
+  border-bottom-color: var(--accent);
+}
+
+.materials-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  max-width: 100%;
+  display: none;
+}
+
+.materials-container.active {
+  display: block;
+}
+
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  max-width: 100%;
+}
+
+.material-group {
+  grid-column: 1 / -1;
+  margin-bottom: 12px;
+}
+
+.material-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.material-group-header:hover {
+  background: var(--item-bg);
+}
+
+.material-group-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.material-group-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--item-bg);
+  border: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.material-group-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.material-group-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.material-group-count {
+  font-size: 12px;
+  color: #888;
+}
+
+.material-group-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.material-group-toggle {
+  font-size: 12px;
+  color: #888;
+  transition: transform 0.2s ease;
+}
+
+.material-group-toggle.collapsed {
+  transform: rotate(-90deg);
+}
+
+.material-group-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.material-group-content.expanded {
+  max-height: 10000px;
+}
+
+.material-card {
+  background: var(--item-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.material-card:hover {
+  border-color: var(--accent);
+}
+
+.material-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.material-type-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  flex-shrink: 0;
+}
+
+.material-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.material-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.material-type {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.material-preview {
+  font-size: 13px;
+  color: #aaa;
   line-height: 1.4;
+  margin-bottom: 12px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.library-meta {
+.material-footer {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--card-border);
 }
 
-.meta-item {
+.material-date {
+  font-size: 11px;
+  color: #888;
+}
+
+.material-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.icon-btn:hover {
+  opacity: 0.6;
+}
+
+.chat-container {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-container.active {
+  display: flex;
+}
+
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message {
+  display: flex;
+  gap: 10px;
+  max-width: 75%;
+}
+
+.message.sent {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--item-bg);
+  border: 1px solid var(--card-border);
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.message-content {
+  display: flex;
+  flex-direction: column;
   gap: 4px;
 }
 
-.meta-separator {
-  width: 3px;
-  height: 3px;
+.message-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #888;
+}
+
+.message-author {
+  font-weight: 600;
+}
+
+.message-bubble {
+  background: var(--item-bg);
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+}
+
+.message.sent .message-bubble {
+  background: var(--accent);
+  color: var(--bg-color);
+  border-color: var(--accent);
+}
+
+.message-text {
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.chat-input-area {
+  padding: 16px 20px;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 14px;
+  font-family: inherit;
+  resize: none;
+  max-height: 100px;
+  transition: 0.2s ease;
+}
+
+.chat-input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.send-btn {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: var(--text-secondary);
+  border: none;
+  background: var(--accent);
+  color: var(--bg-color);
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-secondary);
+.send-btn:hover {
+  opacity: 0.8;
 }
 
-.empty-state i {
-  font-size: 48px;
+.fab {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 20px);
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg-color);
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: 0.2s ease;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.fab.hidden {
+  display: none;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--bg-color);
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--card-border);
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: 0.2s ease;
+}
+
+.modal-close:hover {
+  background: var(--item-bg);
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.form-group {
   margin-bottom: 16px;
-  opacity: 0.5;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 14px;
+  font-family: inherit;
+  transition: 0.2s ease;
+}
+
+.form-input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.file-upload-area {
+  border: 2px dashed var(--card-border);
+  border-radius: 6px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.file-upload-area:hover {
+  border-color: var(--accent);
+}
+
+.file-upload-icon {
+  font-size: 48px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.file-upload-text {
+  font-size: 13px;
+  color: #888;
+}
+
+.modal-footer {
+  padding: 20px;
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+}
+
+.btn-secondary:hover {
+  background: var(--item-bg);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg-color);
+}
+
+.btn-primary:hover {
+  opacity: 0.8;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.2);
 }
 
 @media (max-width: 768px) {
-  .hero-section h1 { font-size: 26px; }
-  .library-grid {
+  .materials-grid {
     grid-template-columns: 1fr;
   }
-  .header {
-    padding: 12px 16px;
+  
+  .material-group-content {
+    grid-template-columns: 1fr;
   }
-  .main-container {
-    padding: 24px 16px 48px;
+  
+  .content-actions .action-btn:not(.theme-toggle) {
+    display: none;
+  }
+  
+  .message {
+    max-width: 85%;
   }
 }
 </style>
@@ -306,234 +781,203 @@ body.light-theme .logo-img {
 </head>
 <body>
 
-<div class="header-wrapper">
-  <div class="header">
-    <a href="https://patholytica.com">
-      <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
-    </a>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="openSearch()" title="Search">
-        <i class="fas fa-search"></i>
-      </button>
-      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-        <i class="fas fa-circle-half-stroke"></i>
-      </button>
-    </div>
-  </div>
-</div>
-
 <div class="main-container">
-  <!-- Hero Section -->
-  <div class="hero-section">
-    <h1>Academic Libraries</h1>
-    <p>Explore curated collections of research data, case studies, and academic resources.</p>
-
-<div class="search-bar">
-  <input type="text" class="search-input" placeholder="Search" id="searchInput">
-</div>
-
-  </div>
-
-  <!-- Latest Libraries Section -->
-
-  <div class="section-header">
-    <h2 class="section-title">
-      <i class="fas fa-clock section-icon"></i>
-      Latest Libraries
-    </h2>
-  </div>
-
-  <div class="library-grid" id="latestLibraries"></div>
-
-  <!-- Most Popular Section -->
-
-  <div class="section-header">
-    <h2 class="section-title">
-      <i class="fas fa-fire section-icon"></i>
-      Most Popular
-    </h2>
-  </div>
-
-  <div class="library-grid" id="popularLibraries"></div>
-</div>
-
-<script>
-// Theme toggle
-function toggleTheme(){
-  document.body.classList.toggle('light-theme');
-  localStorage.setItem(
-    "theme",
-    document.body.classList.contains("light-theme") ? "light" : "dark"
-  );
-}
-
-if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light-theme");
-}
-
-function openSearch() {
-  document.getElementById('searchInput').focus();
-}
-
-// Sample library data
-const libraries = {
-  latest: [
-    {
-      id: 1,
-      title: "Cardiovascular Pathology Database",
-      author: "Dr. Sarah Mitchell",
-      authorInitials: "SM",
-      date: "2 days ago",
-      datasets: 248,
-      views: 1203,
-      thumbnail: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=600&fit=crop"
-    },
-    {
-      id: 2,
-      title: "Neurological Disorders Repository",
-      author: "Dr. James Chen",
-      authorInitials: "JC",
-      date: "5 days ago",
-      datasets: 312,
-      views: 892,
-      thumbnail: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=600&fit=crop"
-    },
-    {
-      id: 3,
-      title: "Oncology Research Collection",
-      author: "Dr. Emily Rodriguez",
-      authorInitials: "ER",
-      date: "1 week ago",
-      datasets: 437,
-      views: 1567,
-      thumbnail: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=600&fit=crop"
-    },
-    {
-      id: 4,
-      title: "Infectious Disease Archive",
-      author: "Dr. Michael Park",
-      authorInitials: "MP",
-      date: "1 week ago",
-      datasets: 195,
-      views: 743,
-      thumbnail: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&h=600&fit=crop"
-    }
-  ],
-  popular: [
-    {
-      id: 5,
-      title: "Clinical Pathology Atlas",
-      author: "Dr. Lisa Anderson",
-      authorInitials: "LA",
-      date: "3 months ago",
-      datasets: 892,
-      views: 15234,
-      thumbnail: "https://images.unsplash.com/photo-1581093458791-9d42e1b7f1f9?w=800&h=600&fit=crop"
-    },
-    {
-      id: 6,
-      title: "Pediatric Disease Database",
-      author: "Dr. Robert Kim",
-      authorInitials: "RK",
-      date: "2 months ago",
-      datasets: 524,
-      views: 12891,
-      thumbnail: "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800&h=600&fit=crop"
-    },
-    {
-      id: 7,
-      title: "Gastrointestinal Pathology Hub",
-      author: "Dr. Maria Santos",
-      authorInitials: "MS",
-      date: "4 months ago",
-      datasets: 651,
-      views: 11456,
-      thumbnail: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&h=600&fit=crop"
-    },
-    {
-      id: 8,
-      title: "Dermatopathology Library",
-      author: "Dr. David Thompson",
-      authorInitials: "DT",
-      date: "5 months ago",
-      datasets: 389,
-      views: 9823,
-      thumbnail: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&h=600&fit=crop"
-    }
-  ]
-};
-
-function createLibraryCard(library) {
-  return `
-    <a href="library.html?id=${library.id}" class="library-card">
-      <div class="library-thumbnail-wrapper">
-        <img src="${library.thumbnail}" alt="${library.title}" class="library-thumbnail" />
-        <div class="library-duration">${library.datasets} datasets</div>
+  <div class="content-main">
+    <div class="content-header">
+      <a href="https://patholytica.com/home" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <div class="library-icon">
+        <i class="fas fa-microscope"></i>
       </div>
-      
-      <div class="library-content">
-        <div class="library-header">
-          <div class="author-avatar">${library.authorInitials}</div>
-          <div class="library-info">
-            <h3 class="library-title">${library.title}</h3>
-            <div class="library-meta">
-              <span class="meta-item">${library.author}</span>
-              <span class="meta-separator"></span>
-              <span class="meta-item">${library.views.toLocaleString()} views</span>
-              <span class="meta-separator"></span>
-              <span class="meta-item">${library.date}</span>
+      <div class="content-header-info">
+        <div class="content-header-name">Medical Research</div>
+        <div class="content-header-details">24 items • 5 members • Last updated today</div>
+      </div>
+      <div class="content-actions">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+          <i class="fas fa-circle-half-stroke"></i>
+        </button>
+        <button class="action-btn" onclick="showMembers()">
+          <i class="fas fa-users"></i>
+          <span>Members</span>
+        </button>
+        <button class="action-btn" onclick="shareLibrary()">
+          <i class="fas fa-share-nodes"></i>
+          <span>Share</span>
+        </button>
+      </div>
+    </div>
+
+<div class="tab-navigation">
+  <button class="tab-btn active" data-tab="materials" onclick="switchTab('materials')">
+    <i class="fas fa-folder"></i> Materials
+  </button>
+  <button class="tab-btn" data-tab="chat" onclick="switchTab('chat')">
+    <i class="fas fa-comments"></i> Discussion
+  </button>
+</div>
+
+<div class="materials-container active" id="materialsTab">
+  <div class="materials-grid" id="materialsGrid">
+    <div class="material-group">
+      <div class="material-group-header" onclick="toggleGroup(this)">
+        <div class="material-group-info">
+          <div class="material-group-icon">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div class="material-group-details">
+            <div class="material-group-name">Recent Studies</div>
+            <div class="material-group-count">2 items</div>
+          </div>
+        </div>
+        <div class="material-group-actions">
+          <button class="icon-btn" onclick="event.stopPropagation(); editGroup('Recent Studies')" title="Edit group">
+            <i class="fas fa-pen"></i>
+          </button>
+          <i class="fas fa-chevron-down material-group-toggle"></i>
+        </div>
+      </div>
+      <div class="material-group-content expanded">
+        <div class="material-card">
+          <div class="material-header">
+            <div class="material-type-icon">
+              <i class="fas fa-file-pdf"></i>
+            </div>
+            <div class="material-info">
+              <div class="material-title">Cancer Research Study 2024</div>
+              <div class="material-type">PDF Document</div>
+            </div>
+          </div>
+          <div class="material-preview">
+            Comprehensive analysis of novel immunotherapy approaches in treating advanced stage cancers...
+          </div>
+          <div class="material-footer">
+            <div class="material-date">Added Dec 10, 2025</div>
+            <div class="material-actions">
+              <button class="icon-btn" title="Download" onclick="downloadMaterial('Cancer Research Study 2024')"><i class="fas fa-download"></i></button>
+              <button class="icon-btn" title="Share" onclick="shareMaterial('Cancer Research Study 2024')"><i class="fas fa-share"></i></button>
+              <button class="icon-btn" title="More" onclick="showMoreOptions('Cancer Research Study 2024')"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="material-card">
+          <div class="material-header">
+            <div class="material-type-icon">
+              <i class="fas fa-file-lines"></i>
+            </div>
+            <div class="material-info">
+              <div class="material-title">Research Notes - December</div>
+              <div class="material-type">Text Document</div>
+            </div>
+          </div>
+          <div class="material-preview">
+            Daily observations and experimental findings from the ongoing clinical trials...
+          </div>
+          <div class="material-footer">
+            <div class="material-date">Added Dec 8, 2025</div>
+            <div class="material-actions">
+              <button class="icon-btn" title="Download" onclick="downloadMaterial('Research Notes - December')"><i class="fas fa-download"></i></button>
+              <button class="icon-btn" title="Share" onclick="shareMaterial('Research Notes - December')"><i class="fas fa-share"></i></button>
+              <button class="icon-btn" title="More" onclick="showMoreOptions('Research Notes - December')"><i class="fas fa-ellipsis-v"></i></button>
             </div>
           </div>
         </div>
       </div>
-    </a>
-  `;
-}
+    </div>
 
-function renderLibraries() {
-  const latestContainer = document.getElementById('latestLibraries');
-  const popularContainer = document.getElementById('popularLibraries');
-  
-  latestContainer.innerHTML = libraries.latest.map(lib => createLibraryCard(lib)).join('');
-  popularContainer.innerHTML = libraries.popular.map(lib => createLibraryCard(lib)).join('');
-}
-
-// Search functionality
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', (e) => {
-  const searchTerm = e.target.value.toLowerCase();
-  
-  if (searchTerm === '') {
-    renderLibraries();
-    return;
-  }
-  
-  const allLibraries = [...libraries.latest, ...libraries.popular];
-  const filtered = allLibraries.filter(lib => 
-    lib.title.toLowerCase().includes(searchTerm) ||
-    lib.author.toLowerCase().includes(searchTerm)
-  );
-  
-  const latestContainer = document.getElementById('latestLibraries');
-  const popularContainer = document.getElementById('popularLibraries');
-  
-  if (filtered.length === 0) {
-    latestContainer.innerHTML = `
-      <div class="empty-state" style="grid-column: 1/-1;">
-        <i class="fas fa-search"></i>
-        <p>No libraries found matching "${searchTerm}"</p>
+    <div class="material-group">
+      <div class="material-group-header" onclick="toggleGroup(this)">
+        <div class="material-group-info">
+          <div class="material-group-icon">
+            <i class="fas fa-folder"></i>
+          </div>
+          <div class="material-group-details">
+            <div class="material-group-name">Visual Resources</div>
+            <div class="material-group-count">2 items</div>
+          </div>
+        </div>
+        <div class="material-group-actions">
+          <button class="icon-btn" onclick="event.stopPropagation(); editGroup('Visual Resources')" title="Edit group">
+            <i class="fas fa-pen"></i>
+          </button>
+          <i class="fas fa-chevron-down material-group-toggle"></i>
+        </div>
       </div>
-    `;
-    popularContainer.innerHTML = '';
-  } else {
-    latestContainer.innerHTML = filtered.map(lib => createLibraryCard(lib)).join('');
-    popularContainer.innerHTML = '';
-  }
-});
+      <div class="material-group-content expanded">
+        <div class="material-card">
+          <div class="material-header">
+            <div class="material-type-icon">
+              <i class="fas fa-image"></i>
+            </div>
+            <div class="material-info">
+              <div class="material-title">Cell Structure Diagrams</div>
+              <div class="material-type">Image Collection</div>
+            </div>
+          </div>
+          <div class="material-preview">
+            High-resolution microscopy images showing cellular structures and organelles...
+          </div>
+          <div class="material-footer">
+            <div class="material-date">Added Dec 9, 2025</div>
+            <div class="material-actions">
+              <button class="icon-btn" title="Download" onclick="downloadMaterial('Cell Structure Diagrams')"><i class="fas fa-download"></i></button>
+              <button class="icon-btn" title="Share" onclick="shareMaterial('Cell Structure Diagrams')"><i class="fas fa-share"></i></button>
+              <button class="icon-btn" title="More" onclick="showMoreOptions('Cell Structure Diagrams')"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+          </div>
+        </div>
 
-// Initialize
-renderLibraries();
-</script>
+        <div class="material-card">
+          <div class="material-header">
+            <div class="material-type-icon">
+              <i class="fas fa-database"></i>
+            </div>
+            <div class="material-info">
+              <div class="material-title">Patient Data Records</div>
+              <div class="material-type">Database Record</div>
+            </div>
+          </div>
+          <div class="material-preview">
+            Anonymized patient data from the Phase III clinical trials with statistical analysis...
+          </div>
+          <div class="material-footer">
+            <div class="material-date">Added Dec 7, 2025</div>
+            <div class="material-actions">
+              <button class="icon-btn" title="Download" onclick="downloadMaterial('Patient Data Records')"><i class="fas fa-download"></i></button>
+              <button class="icon-btn" title="Share" onclick="shareMaterial('Patient Data Records')"><i class="fas fa-share"></i></button>
+              <button class="icon-btn" title="More" onclick="showMoreOptions('Patient Data Records')"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-</body>
-</html>
+  </div>
+</div>
+
+<div class="chat-container" id="chatTab">
+  <div class="messages-area" id="messagesArea">
+    <div class="message">
+      <div class="message-avatar">DS</div>
+      <div class="message-content">
+        <div class="message-header">
+          <span class="message-author">Dr. Smith</span>
+          <span>10:23 AM</span>
+        </div>
+        <div class="message-bubble">
+          <div class="message-text">I've uploaded the latest cancer research study. Please review and share your thoughts!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="message">
+      <div class="message-avatar">JL</div>
+      <div class="message-content">
+        <div class="message-header">
+          <span class="message-author">Dr. Johnson</span>
+          <span>10:45 AM</span>
+        </div>
+        <div class="message-bubble">
+          <div class="message-text">Great work! The methodology section is particularly impressive. Have we considered expanding the sample size?
