@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Patholytica — Academic Libraries</title>
+
+<!-- Font Awesome for icons -->
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --bg-color: #0d0d0d;
+  --text-color: #fff;
+  --card-bg: rgba(24,24,24,0.7);
+  --card-border: rgba(255,255,255,0.07);
+  --accent: #b0003a;
+  --accent-hover: #88002a;
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+}
+
+body.light-theme {
+  --bg-color: #f5f5f5;
+  --text-color: #111;
+  --card-bg: rgba(255,255,255,0.65);
+  --card-border: rgba(0,0,0,0.1);
+  --accent: #b0003a;
+  --accent-hover: #88002a;
+}
+
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; min-height:100%; font-family: "Inter", Arial, sans-serif; }
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.35s ease;
+}
+
+.header-wrapper {
+  position: sticky;
+  top: 0;
+  background: var(--bg-color);
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--card-border);
+  z-index: 40;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+}
+
+.logo-img {
+  height: 32px;
+  width: auto;
+  transition: filter 0.25s ease;
+  cursor: pointer;
+}
+
+body.light-theme .logo-img {
+  filter: invert(1);
+}
+
+.theme-toggle {
+  padding: 6px 14px;
+  font-size: 12.5px;
+  background: transparent;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.main-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: calc(40px + env(safe-area-inset-top))
+           calc(20px + env(safe-area-inset-left))
+           calc(40px + env(safe-area-inset-bottom))
+           calc(20px + env(safe-area-inset-right));
+}
+
+.hero-section {
+  text-align: center;
+  margin-bottom: 60px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.hero-section h1 {
+  font-size: 48px;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.hero-section p {
+  font-size: 18px;
+  color: #999;
+  max-width: 600px;
+  margin: 0 auto 30px;
+  line-height: 1.6;
+}
+
+.search-bar {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 16px 50px 16px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  backdrop-filter: blur(22px);
+  color: var(--text-color);
+  font-size: 15px;
+  transition: 0.25s ease;
+}
+
+body.light-theme .search-input {
+  background: rgba(255,255,255,0.7);
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 12px rgba(176,0,58,0.25);
+}
+
+.search-icon {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 18px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-icon {
+  color: var(--accent);
+  font-size: 24px;
+}
+
+.view-all-btn {
+  padding: 8px 20px;
+  font-size: 14px;
+  background: transparent;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: 0.25s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.view-all-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.library-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(22px);
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  padding: 28px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  animation: fadeUp 0.6s ease both;
+  text-decoration: none;
+  color: var(--text-color);
+  display: block;
+}
+
+.library-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+  border-color: var(--accent);
+}
+
+.library-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.library-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), #d6004e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.library-stats {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: rgba(176,0,58,0.15);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.library-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.library-description {
+  font-size: 14px;
+  color: #999;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.library-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid var(--card-border);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #888;
+}
+
+.meta-item i {
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.author-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+}
+
+.tag-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.tag {
+  padding: 4px 12px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+  font-size: 12px;
+  color: #aaa;
+  border: 1px solid var(--card-border);
+}
+
+body.light-theme .tag {
+  background: rgba(0,0,0,0.05);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .hero-section h1 { font-size: 36px; }
+  .hero-section p { font-size: 16px; }
+  .library-grid {
+    grid-template-columns: 1fr;
+  }
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="header-wrapper">
+  <div class="header">
+    <a href="https://patholytica.com">
+      <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
+    </a>
+    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+  </div>
+</div>
+
+<div class="main-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1>Academic Libraries</h1>
+    <p>Explore curated collections of research data, case studies, and academic resources created by researchers worldwide.</p>
+
+<div class="search-bar">
+  <input type="text" class="search-input" placeholder="Search libraries by name, topic, or author..." id="searchInput">
+  <i class="fas fa-search search-icon"></i>
+</div>
+
+  </div>
+
+  <!-- Latest Libraries Section -->
+
+  <div class="section-header">
+    <div class="section-title">
+      <i class="fas fa-clock section-icon"></i>
+      Latest Libraries
+    </div>
+    <a href="#" class="view-all-btn">View All</a>
+  </div>
+
+  <div class="library-grid" id="latestLibraries">
+    <!-- Libraries will be dynamically inserted here -->
+  </div>
+
+  <!-- Most Popular Section -->
+
+  <div class="section-header">
+    <div class="section-title">
+      <i class="fas fa-fire section-icon"></i>
+      Most Popular
+    </div>
+    <a href="#" class="view-all-btn">View All</a>
+  </div>
+
+  <div class="library-grid" id="popularLibraries">
+    <!-- Libraries will be dynamically inserted here -->
+  </div>
+</div>
+
+<script>
+// Theme toggle
+function toggleTheme(){
+  document.body.classList.toggle('light-theme');
+  localStorage.setItem(
+    "theme",
+    document.body.classList.contains("light-theme") ? "light" : "dark"
+  );
+}
+
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light-theme");
+}
+
+// Sample library data - in production, this would come from a database
+const libraries = {
+  latest: [
+    {
+      id: 1,
+      title: "Cardiovascular Pathology Database",
+      description: "Comprehensive collection of cardiovascular disease cases with histological images and clinical correlations.",
+      author: "Dr. Sarah Mitchell",
+      authorInitials: "SM",
+      date: "2 days ago",
+      datasets: 248,
+      views: 1203,
+      icon: "fa-heart-pulse",
+      tags: ["Cardiology", "Pathology", "Histology"]
+    },
+    {
+      id: 2,
+      title: "Neurological Disorders Repository",
+      description: "Extensive database of neurological pathologies including MRI scans, clinical notes, and treatment outcomes.",
+      author: "Dr. James Chen",
+      authorInitials: "JC",
+      date: "5 days ago",
+      datasets: 312,
+      views: 892,
+      icon: "fa-brain",
+      tags: ["Neurology", "MRI", "Diagnostics"]
+    },
+    {
+      id: 3,
+      title: "Oncology Research Collection",
+      description: "Curated cancer research data with molecular profiles, imaging studies, and therapeutic response data.",
+      author: "Dr. Emily Rodriguez",
+      authorInitials: "ER",
+      date: "1 week ago",
+      datasets: 437,
+      views: 1567,
+      icon: "fa-ribbon",
+      tags: ["Oncology", "Research", "Genomics"]
+    },
+    {
+      id: 4,
+      title: "Infectious Disease Archive",
+      description: "Global collection of infectious disease cases with epidemiological data and microbiological findings.",
+      author: "Dr. Michael Park",
+      authorInitials: "MP",
+      date: "1 week ago",
+      datasets: 195,
+      views: 743,
+      icon: "fa-virus",
+      tags: ["Infectious Disease", "Epidemiology"]
+    }
+  ],
+  popular: [
+    {
+      id: 5,
+      title: "Clinical Pathology Atlas",
+      description: "The most comprehensive atlas of clinical pathology specimens with detailed diagnostic criteria and differential diagnoses.",
+      author: "Dr. Lisa Anderson",
+      authorInitials: "LA",
+      date: "3 months ago",
+      datasets: 892,
+      views: 15234,
+      icon: "fa-microscope",
+      tags: ["Clinical Path", "Diagnostics", "Education"]
+    },
+    {
+      id: 6,
+      title: "Pediatric Disease Database",
+      description: "Specialized collection focused on pediatric pathologies with age-specific reference ranges and developmental considerations.",
+      author: "Dr. Robert Kim",
+      authorInitials: "RK",
+      date: "2 months ago",
+      datasets: 524,
+      views: 12891,
+      icon: "fa-baby",
+      tags: ["Pediatrics", "Development", "Growth"]
+    },
+    {
+      id: 7,
+      title: "Gastrointestinal Pathology Hub",
+      description: "Extensive repository of GI tract pathologies with endoscopic images, biopsies, and treatment protocols.",
+      author: "Dr. Maria Santos",
+      authorInitials: "MS",
+      date: "4 months ago",
+      datasets: 651,
+      views: 11456,
+      icon: "fa-stomach",
+      tags: ["Gastroenterology", "Endoscopy"]
+    },
+    {
+      id: 8,
+      title: "Dermatopathology Library",
+      description: "Rich collection of skin pathologies with high-resolution images and immunohistochemistry patterns.",
+      author: "Dr. David Thompson",
+      authorInitials: "DT",
+      date: "5 months ago",
+      datasets: 389,
+      views: 9823,
+      icon: "fa-hand-dots",
+      tags: ["Dermatology", "Skin", "Pathology"]
+    }
+  ]
+};
+
+function createLibraryCard(library) {
+  return `
+    <a href="library.html?id=${library.id}" class="library-card" style="animation-delay: ${Math.random() * 0.2}s">
+      <div class="library-header">
+        <div class="library-icon">
+          <i class="fas ${library.icon}"></i>
+        </div>
+        <div class="library-stats">
+          <span class="stat-badge">
+            <i class="fas fa-database"></i>
+            ${library.datasets}
+          </span>
+        </div>
+      </div>
+      
+      <h3 class="library-title">${library.title}</h3>
+      
+      <div class="tag-list">
+        ${library.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+      </div>
+      
+      <p class="library-description">${library.description}</p>
+      
+      <div class="library-meta">
+        <div class="meta-item">
+          <div class="author-avatar">${library.authorInitials}</div>
+          <span>${library.author}</span>
+        </div>
+        <div class="meta-item">
+          <i class="fas fa-eye"></i>
+          <span>${library.views.toLocaleString()} views</span>
+        </div>
+        <div class="meta-item">
+          <i class="fas fa-calendar"></i>
+          <span>${library.date}</span>
+        </div>
+      </div>
+    </a>
+  `;
+}
+
+function renderLibraries() {
+  const latestContainer = document.getElementById('latestLibraries');
+  const popularContainer = document.getElementById('popularLibraries');
+  
+  latestContainer.innerHTML = libraries.latest.map(lib => createLibraryCard(lib)).join('');
+  popularContainer.innerHTML = libraries.popular.map(lib => createLibraryCard(lib)).join('');
+}
+
+// Search functionality
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', (e) => {
+  const searchTerm = e.target.value.toLowerCase();
+  
+  if (searchTerm === '') {
+    renderLibraries();
+    return;
+  }
+  
+  const allLibraries = [...libraries.latest, ...libraries.popular];
+  const filtered = allLibraries.filter(lib => 
+    lib.title.toLowerCase().includes(searchTerm) ||
+    lib.description.toLowerCase().includes(searchTerm) ||
+    lib.author.toLowerCase().includes(searchTerm) ||
+    lib.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+  );
+  
+  const latestContainer = document.getElementById('latestLibraries');
+  const popularContainer = document.getElementById('popularLibraries');
+  
+  if (filtered.length === 0) {
+    latestContainer.innerHTML = `
+      <div class="empty-state" style="grid-column: 1/-1;">
+        <i class="fas fa-search"></i>
+        <p>No libraries found matching "${searchTerm}"</p>
+      </div>
+    `;
+    popularContainer.innerHTML = '';
+  } else {
+    latestContainer.innerHTML = filtered.map(lib => createLibraryCard(lib)).join('');
+    popularContainer.innerHTML = '';
+  }
+});
+
+// Initialize
+renderLibraries();
+</script>
+
+</body>
+</html>
