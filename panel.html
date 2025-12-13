@@ -4,771 +4,301 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Academic Library Manager</title>
+<title>Patholytica — Academic Libraries</title>
+
+<!-- Font Awesome for icons -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 :root {
-  --bg-color: #000;
-  --text-color: #fff;
-  --card-bg: rgba(24,24,24,0.7);
-  --card-border: rgba(255,255,255,0.07);
-  --accent: #b0003a;
-  --accent-hover: #88002a;
-  --success: #10b981;
-  --error: #ef4444;
-  --warning: #f59e0b;
-  --info: #3b82f6;
-  --content-bg: #111;
-  --item-bg: rgba(40,40,40,0.9);
-  --input-bg: rgba(30,30,30,0.8);
+  --bg-color: #0f0f0f;
+  --text-primary: #fff;
+  --text-secondary: #aaa;
+  --card-bg: #1f1f1f;
+  --hover-bg: #2a2a2a;
+  --border-color: #303030;
+  --accent: #3ea6ff;
+  --accent-hover: #2d8ed6;
 }
 
 body.light-theme {
-  --bg-color: #f2f2f7;
-  --text-color: #111;
-  --card-bg: rgba(255,255,255,0.65);
-  --card-border: rgba(0,0,0,0.1);
-  --accent: #b0003a;
-  --accent-hover: #88002a;
-  --content-bg: #e5e5e5;
-  --item-bg: #fff;
-  --input-bg: rgba(255,255,255,0.95);
+  --bg-color: #ffffff;
+  --text-primary: #0f0f0f;
+  --text-secondary: #606060;
+  --card-bg: #f9f9f9;
+  --hover-bg: #f0f0f0;
+  --border-color: #e5e5e5;
+  --accent: #065fd4;
+  --accent-hover: #0448a3;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; font-family: "Inter", Arial, sans-serif; overflow-x: hidden; }
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; min-height:100%; font-family: "Roboto", Arial, sans-serif; }
 
 body {
   background: var(--bg-color);
-  color: var(--text-color);
-  display: flex;
-  flex-direction: column;
-  transition: background 0.35s ease;
-  max-width: 100vw;
+  color: var(--text-primary);
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-.main-container {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  max-width: 100vw;
-}
-
-/* Main Content */
-.content-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: var(--content-bg);
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-.content-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  padding-top: calc(env(safe-area-inset-top) + 16px);
+.header-wrapper {
+  position: sticky;
+  top: 0;
   background: var(--bg-color);
-  border-bottom: 1px solid var(--card-border);
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 40;
 }
 
-.content-header-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.content-header-name {
-  font-size: 18px;
-  font-weight: 600;
+.header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  justify-content: space-between;
+  padding: 12px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.content-header-details {
-  font-size: 13px;
-  color: #999;
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.content-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.action-btn {
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1px solid var(--card-border);
-  background: transparent;
-  color: var(--text-color);
-  font-size: 13px;
+.logo-img {
+  height: 28px;
+  width: auto;
+  transition: filter 0.2s ease;
   cursor: pointer;
-  transition: 0.25s ease;
+}
+
+body.light-theme .logo-img {
+  filter: invert(1);
+}
+
+.header-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-.action-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.action-btn.primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-}
-
-.action-btn.primary:hover {
-  background: var(--accent-hover);
-}
-
-.theme-toggle {
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1px solid var(--card-border);
-  background: transparent;
-  color: var(--text-color);
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* Tab Navigation */
-.tab-navigation {
-  display: flex;
-  border-bottom: 1px solid var(--card-border);
-  background: var(--card-bg);
-  backdrop-filter: blur(22px);
-  padding: 0 20px;
-  overflow-x: auto;
-}
-
-.tab-btn {
-  padding: 12px 20px;
-  background: none;
-  border: none;
-  color: #999;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s ease;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-}
-
-.tab-btn:hover {
-  color: var(--text-color);
-}
-
-.tab-btn.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-
-/* Materials Grid */
-.materials-container {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 20px 20px 0 20px;
-  max-width: 100%;
-  display: none;
-}
-
-.materials-container.active {
-  display: block;
-}
-
-.materials-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
-  max-width: 100%;
-  padding-bottom: 120px;
 }
 
-.material-card {
-  background: var(--item-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  padding: 16px;
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
   cursor: pointer;
-  transition: all 0.25s ease;
-  animation: fadeIn 0.3s ease;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.material-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(176,0,58,0.15);
-  border-color: var(--accent);
-}
-
-.material-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.material-type-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 18px;
+  transition: background 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: var(--hover-bg);
+}
+
+.main-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+.hero-section {
+  margin-bottom: 48px;
+}
+
+.hero-section h1 {
+  font-size: 32px;
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.hero-section p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 0 0 24px 0;
+  line-height: 1.6;
+}
+
+.search-bar {
+  max-width: 600px;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 24px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-title {
   font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-icon {
+  font-size: 20px;
+}
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.library-card {
+  background: transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  text-decoration: none;
+  color: var(--text-primary);
+  display: block;
+}
+
+.library-card:hover {
+  transform: scale(1.02);
+}
+
+.library-card:hover .library-thumbnail {
+  transform: scale(1.05);
+}
+
+.library-thumbnail-wrapper {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--card-bg);
+  position: relative;
+}
+
+.library-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.library-duration {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.library-content {
+  padding: 12px 0;
+}
+
+.library-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.author-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
   flex-shrink: 0;
 }
 
-.material-type-icon.pdf {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-}
-
-.material-type-icon.image {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-}
-
-.material-type-icon.text {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-}
-
-.material-type-icon.record {
-  background: rgba(245, 158, 11, 0.15);
-  color: #f59e0b;
-}
-
-.material-info {
+.library-info {
   flex: 1;
   min-width: 0;
 }
 
-.material-title {
-  font-weight: 600;
+.library-title {
   font-size: 15px;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.material-type {
-  font-size: 12px;
-  color: #999;
-  text-transform: uppercase;
-}
-
-.material-preview {
-  font-size: 13px;
-  color: #aaa;
-  line-height: 1.5;
-  margin-bottom: 12px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.material-footer {
+.library-meta {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-top: 12px;
-  border-top: 1px solid var(--card-border);
-}
-
-.material-date {
-  font-size: 12px;
-  color: #888;
-}
-
-.material-actions {
-  display: flex;
   gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
 }
 
-.icon-btn {
-  background: none;
-  border: none;
-  color: var(--text-color);
-  font-size: 14px;
-  cursor: pointer;
-  padding: 4px;
-  transition: color 0.2s ease;
-}
-
-.icon-btn:hover {
-  color: var(--accent);
-}
-
-.library-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+.meta-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  color: white;
-  flex-shrink: 0;
-}
-
-/* Chat Container */
-.chat-container {
-  flex: 1;
-  display: none;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.chat-container.active {
-  display: flex;
-}
-
-.messages-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  padding-bottom: 120px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.message {
-  display: flex;
-  gap: 10px;
-  max-width: 75%;
-  animation: fadeIn 0.3s ease;
-}
-
-.message.sent {
-  align-self: flex-end;
-  flex-direction: row-reverse;
-}
-
-.message-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  flex-shrink: 0;
-}
-
-.message-content {
-  display: flex;
-  flex-direction: column;
   gap: 4px;
 }
 
-.message-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: #999;
-}
-
-.message-author {
-  font-weight: 600;
-}
-
-.message-bubble {
-  background: var(--item-bg);
-  padding: 10px 14px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.message.sent .message-bubble {
-  background: var(--accent);
-  color: white;
-}
-
-body.light-theme .message.sent .message-bubble {
-  color: white;
-}
-
-.message-text {
-  font-size: 14px;
-  line-height: 1.5;
-  word-wrap: break-word;
-}
-
-.chat-input-area {
-  padding: 16px 20px;
-  background: var(--card-bg);
-  backdrop-filter: blur(22px);
-  border-top: 1px solid var(--card-border);
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.chat-input {
-  flex: 1;
-  padding: 10px 16px;
-  border-radius: 20px;
-  border: 1px solid var(--card-border);
-  background: var(--input-bg);
-  color: var(--text-color);
-  font-size: 14px;
-  font-family: inherit;
-  resize: none;
-  max-height: 100px;
-  transition: 0.25s ease;
-}
-
-.chat-input:focus {
-  border-color: var(--accent);
-  outline: none;
-}
-
-.send-btn {
-  width: 40px;
-  height: 40px;
+.meta-separator {
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
-  border: none;
-  background: var(--accent);
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.25s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  background: var(--text-secondary);
 }
 
-.send-btn:hover {
-  background: var(--accent-hover);
-  transform: scale(1.05);
-}
-
-/* Floating Action Button */
-.fab {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: white;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(176,0,58,0.4);
-  transition: 0.25s ease;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.fab:hover {
-  background: var(--accent-hover);
-  transform: scale(1.1);
-}
-
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  animation: fadeIn 0.2s ease;
-}
-
-.modal.show {
-  display: flex;
-}
-
-.modal-content {
-  background: var(--bg-color);
-  border-radius: 16px;
-  max-width: 500px;
-  width: 100%;
-  max-height: 80vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  animation: slideUp 0.3s ease;
-  border: 1px solid var(--card-border);
-}
-
-.modal-header {
-  padding: 20px;
-  border-bottom: 1px solid var(--card-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.modal-title {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  color: var(--text-color);
-  font-size: 24px;
-  cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: 0.25s ease;
-}
-
-.modal-close:hover {
-  background: rgba(255,255,255,0.1);
-}
-
-body.light-theme .modal-close:hover {
-  background: rgba(0,0,0,0.05);
-}
-
-.modal-body {
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.form-group {
-  margin-bottom: 16px;
-}
-
-.form-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.form-input {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--card-border);
-  background: var(--input-bg);
-  color: var(--text-color);
-  font-size: 14px;
-  font-family: inherit;
-  transition: 0.25s ease;
-}
-
-.form-input:focus {
-  border-color: var(--accent);
-  outline: none;
-}
-
-.form-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.form-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
-}
-
-.file-upload-area {
-  border: 2px dashed var(--card-border);
-  border-radius: 8px;
-  padding: 30px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.file-upload-area:hover {
-  border-color: var(--accent);
-  background: rgba(176,0,58,0.05);
-}
-
-.file-upload-icon {
-  font-size: 48px;
-  color: var(--accent);
-  margin-bottom: 12px;
-}
-
-.file-upload-text {
-  font-size: 14px;
-  color: #999;
-}
-
-.modal-footer {
-  padding: 20px;
-  border-top: 1px solid var(--card-border);
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-}
-
-.btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.btn-secondary {
-  background: transparent;
-  border: 1px solid var(--card-border);
-  color: var(--text-color);
-}
-
-.btn-secondary:hover {
-  background: rgba(255,255,255,0.05);
-}
-
-body.light-theme .btn-secondary:hover {
-  background: rgba(0,0,0,0.05);
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: white;
-}
-
-.btn-primary:hover {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
-}
-
-/* Empty State */
 .empty-state {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
   text-align: center;
-  color: #999;
+  padding: 60px 20px;
+  color: var(--text-secondary);
 }
 
 .empty-state i {
-  font-size: 64px;
-  margin-bottom: 20px;
-  opacity: 0.3;
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
 }
 
-.empty-state h3 {
-  font-size: 20px;
-  margin-bottom: 8px;
-  color: var(--text-color);
-}
-
-.empty-state p {
-  font-size: 14px;
-  margin-bottom: 20px;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.1);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-body.light-theme ::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.1);
-}
-
-body.light-theme ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0,0,0,0.2);
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-  .materials-grid {
+  .hero-section h1 { font-size: 26px; }
+  .library-grid {
     grid-template-columns: 1fr;
   }
-  
-  .content-actions .action-btn:not(.primary) {
-    display: none;
+  .header {
+    padding: 12px 16px;
   }
-  
-  .content-header {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-  
-  .materials-container {
-    padding: 12px 12px 0 12px;
-  }
-  
-  .message {
-    max-width: 85%;
+  .main-container {
+    padding: 24px 16px 48px;
   }
 }
 </style>
@@ -776,264 +306,59 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 </head>
 <body>
 
-<div class="main-container">
-  <!-- Main Content -->
-  <div class="content-main">
-    <div class="content-header">
-      <div class="library-icon" style="width: 40px; height: 40px; font-size: 18px;">
-        <i class="fas fa-microscope"></i>
-      </div>
-      <div class="content-header-info">
-        <div class="content-header-name">Medical Research</div>
-        <div class="content-header-details">24 items • 5 members • Last updated today</div>
-      </div>
-      <div class="content-actions">
-        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-          <i class="fas fa-circle-half-stroke"></i>
-        </button>
-        <button class="action-btn" onclick="showMembers()">
-          <i class="fas fa-users"></i>
-          <span>Members</span>
-        </button>
-        <button class="action-btn primary" onclick="shareLibrary()">
-          <i class="fas fa-share-nodes"></i>
-          <span>Share</span>
-        </button>
-      </div>
-    </div>
-
-<div class="tab-navigation">
-  <button class="tab-btn active" data-tab="materials" onclick="switchTab('materials')">
-    <i class="fas fa-folder"></i> Materials
-  </button>
-  <button class="tab-btn" data-tab="chat" onclick="switchTab('chat')">
-    <i class="fas fa-comments"></i> Discussion
-  </button>
-</div>
-
-<!-- Materials Tab -->
-
-<div class="materials-container active" id="materialsTab">
-  <div class="materials-grid" id="materialsGrid">
-    <div class="material-card">
-      <div class="material-header">
-        <div class="material-type-icon pdf">
-          <i class="fas fa-file-pdf"></i>
-        </div>
-        <div class="material-info">
-          <div class="material-title">Cancer Research Study 2024</div>
-          <div class="material-type">PDF Document</div>
-        </div>
-      </div>
-      <div class="material-preview">
-        Comprehensive analysis of novel immunotherapy approaches in treating advanced stage cancers...
-      </div>
-      <div class="material-footer">
-        <div class="material-date">Added Dec 10, 2025</div>
-        <div class="material-actions">
-          <button class="icon-btn" title="Download" onclick="downloadMaterial('Cancer Research Study 2024')"><i class="fas fa-download"></i></button>
-          <button class="icon-btn" title="Share" onclick="shareMaterial('Cancer Research Study 2024')"><i class="fas fa-share"></i></button>
-          <button class="icon-btn" title="More" onclick="showMoreOptions('Cancer Research Study 2024')"><i class="fas fa-ellipsis-v"></i></button>
-        </div>
-      </div>
-    </div>
-
-<div class="material-card">
-  <div class="material-header">
-    <div class="material-type-icon image">
-      <i class="fas fa-image"></i>
-    </div>
-    <div class="material-info">
-      <div class="material-title">Cell Structure Diagrams</div>
-      <div class="material-type">Image Collection</div>
-    </div>
-  </div>
-  <div class="material-preview">
-    High-resolution microscopy images showing cellular structures and organelles...
-  </div>
-  <div class="material-footer">
-    <div class="material-date">Added Dec 9, 2025</div>
-    <div class="material-actions">
-      <button class="icon-btn" title="Download" onclick="downloadMaterial('Cell Structure Diagrams')"><i class="fas fa-download"></i></button>
-      <button class="icon-btn" title="Share" onclick="shareMaterial('Cell Structure Diagrams')"><i class="fas fa-share"></i></button>
-      <button class="icon-btn" title="More" onclick="showMoreOptions('Cell Structure Diagrams')"><i class="fas fa-ellipsis-v"></i></button>
-    </div>
-  </div>
-</div>
-
-<div class="material-card">
-  <div class="material-header">
-    <div class="material-type-icon text">
-      <i class="fas fa-file-lines"></i>
-    </div>
-    <div class="material-info">
-      <div class="material-title">Research Notes - December</div>
-      <div class="material-type">Text Document</div>
-    </div>
-  </div>
-  <div class="material-preview">
-    Daily observations and experimental findings from the ongoing clinical trials...
-  </div>
-  <div class="material-footer">
-    <div class="material-date">Added Dec 8, 2025</div>
-    <div class="material-actions">
-      <button class="icon-btn" title="Download" onclick="downloadMaterial('Research Notes - December')"><i class="fas fa-download"></i></button>
-      <button class="icon-btn" title="Share" onclick="shareMaterial('Research Notes - December')"><i class="fas fa-share"></i></button>
-      <button class="icon-btn" title="More" onclick="showMoreOptions('Research Notes - December')"><i class="fas fa-ellipsis-v"></i></button>
-    </div>
-  </div>
-</div>
-
-<div class="material-card">
-  <div class="material-header">
-    <div class="material-type-icon record">
-      <i class="fas fa-database"></i>
-    </div>
-    <div class="material-info">
-      <div class="material-title">Patient Data Records</div>
-      <div class="material-type">Database Record</div>
-    </div>
-  </div>
-  <div class="material-preview">
-    Anonymized patient data from the Phase III clinical trials with statistical analysis...
-  </div>
-  <div class="material-footer">
-    <div class="material-date">Added Dec 7, 2025</div>
-    <div class="material-actions">
-      <button class="icon-btn" title="Download" onclick="downloadMaterial('Patient Data Records')"><i class="fas fa-download"></i></button>
-      <button class="icon-btn" title="Share" onclick="shareMaterial('Patient Data Records')"><i class="fas fa-share"></i></button>
-      <button class="icon-btn" title="More" onclick="showMoreOptions('Patient Data Records')"><i class="fas fa-ellipsis-v"></i></button>
-    </div>
-  </div>
-</div>
-
-  </div>
-</div>
-
-<!-- Chat Tab -->
-
-<div class="chat-container" id="chatTab">
-  <div class="messages-area" id="messagesArea">
-    <div class="message">
-      <div class="message-avatar">DR</div>
-      <div class="message-content">
-        <div class="message-header">
-          <span class="message-author">Dr. Smith</span>
-          <span>10:23 AM</span>
-        </div>
-        <div class="message-bubble">
-          <div class="message-text">I've uploaded the latest cancer research study. Please review and share your thoughts!</div>
-        </div>
-      </div>
-    </div>
-
-<div class="message">
-  <div class="message-avatar">JL</div>
-  <div class="message-content">
-    <div class="message-header">
-      <span class="message-author">Dr. Johnson</span>
-      <span>10:45 AM</span>
-    </div>
-    <div class="message-bubble">
-      <div class="message-text">Great work! The methodology section is particularly impressive. Have we considered expanding the sample size?</div>
-    </div>
-  </div>
-</div>
-
-<div class="message sent">
-  <div class="message-avatar">ME</div>
-  <div class="message-content">
-    <div class="message-header">
-      <span class="message-author">You</span>
-      <span>11:02 AM</span>
-    </div>
-    <div class="message-bubble">
-      <div class="message-text">I agree! I'll add some notes about potential sample expansion in the discussion section.</div>
-    </div>
-  </div>
-</div>
-
-  </div>
-
-  <div class="chat-input-area">
-    <textarea class="chat-input" id="chatInput" placeholder="Type a message..." rows="1"></textarea>
-    <button class="send-btn" onclick="sendChatMessage()">
-      <i class="fas fa-paper-plane"></i>
-    </button>
-  </div>
-</div>
-
-  </div>
-</div>
-
-<!-- Floating Action Button -->
-
-<button class="fab" onclick="openAddModal()" title="Add Material">
-  <i class="fas fa-plus"></i>
-</button>
-
-<!-- Add Material Modal -->
-
-<div class="modal" id="addModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">Add Material</h2>
-      <button class="modal-close" onclick="closeAddModal()">
-        <i class="fas fa-times"></i>
+<div class="header-wrapper">
+  <div class="header">
+    <a href="https://patholytica.com">
+      <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
+    </a>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="openSearch()" title="Search">
+        <i class="fas fa-search"></i>
+      </button>
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fas fa-circle-half-stroke"></i>
       </button>
     </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Material Type</label>
-        <select class="form-input form-select" id="materialType">
-          <option value="pdf">PDF Document</option>
-          <option value="image">Image Collection</option>
-          <option value="text">Text Document</option>
-          <option value="record">Database Record</option>
-          <option value="video">Video</option>
-          <option value="link">Web Link</option>
-        </select>
-      </div>
-
-  <div class="form-group">
-    <label class="form-label">Title</label>
-    <input type="text" class="form-input" id="materialTitleInput" placeholder="Enter material title">
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Description</label>
-    <textarea class="form-input form-textarea" id="materialDescription" placeholder="Add a description..."></textarea>
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Upload File (Optional)</label>
-    <div class="file-upload-area" onclick="triggerFileUpload()">
-      <div class="file-upload-icon">
-        <i class="fas fa-cloud-arrow-up"></i>
-      </div>
-      <div class="file-upload-text">
-        Click to upload or drag and drop<br>
-        <small>PDF, Images, Documents, Videos up to 50MB</small>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">URL (Optional)</label>
-    <input type="url" class="form-input" id="materialUrl" placeholder="https://...">
   </div>
 </div>
-<div class="modal-footer">
-  <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
-  <button class="btn btn-primary" onclick="submitMaterial()">Add Material</button>
+
+<div class="main-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1>Academic Libraries</h1>
+    <p>Explore curated collections of research data, case studies, and academic resources.</p>
+
+<div class="search-bar">
+  <input type="text" class="search-input" placeholder="Search" id="searchInput">
 </div>
 
   </div>
+
+  <!-- Latest Libraries Section -->
+
+  <div class="section-header">
+    <h2 class="section-title">
+      <i class="fas fa-clock section-icon"></i>
+      Latest Libraries
+    </h2>
+  </div>
+
+  <div class="library-grid" id="latestLibraries"></div>
+
+  <!-- Most Popular Section -->
+
+  <div class="section-header">
+    <h2 class="section-title">
+      <i class="fas fa-fire section-icon"></i>
+      Most Popular
+    </h2>
+  </div>
+
+  <div class="library-grid" id="popularLibraries"></div>
 </div>
 
 <script>
-let currentTab = 'materials';
-
+// Theme toggle
 function toggleTheme(){
   document.body.classList.toggle('light-theme');
   localStorage.setItem(
@@ -1046,183 +371,168 @@ if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
 }
 
-// Tab switching
-function switchTab(tab) {
-  currentTab = tab;
-  
-  // Update tab buttons
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-  
-  // Update content
-  document.getElementById('materialsTab').classList.remove('active');
-  document.getElementById('chatTab').classList.remove('active');
-  
-  if (tab === 'materials') {
-    document.getElementById('materialsTab').classList.add('active');
-  } else if (tab === 'chat') {
-    document.getElementById('chatTab').classList.add('active');
-    
-    // Scroll to bottom of chat
-    const messagesArea = document.getElementById('messagesArea');
-    messagesArea.scrollTop = messagesArea.scrollHeight;
-  }
+function openSearch() {
+  document.getElementById('searchInput').focus();
 }
 
-// Chat functionality
-function sendChatMessage() {
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  
-  if (!text) return;
-  
-  const messagesArea = document.getElementById('messagesArea');
-  const now = new Date();
-  const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  
-  const messageDiv = document.createElement('div');
-  messageDiv.className = 'message sent';
-  messageDiv.innerHTML = `
-    <div class="message-avatar">ME</div>
-    <div class="message-content">
-      <div class="message-header">
-        <span class="message-author">You</span>
-        <span>${time}</span>
+// Sample library data
+const libraries = {
+  latest: [
+    {
+      id: 1,
+      title: "Cardiovascular Pathology Database",
+      author: "Dr. Sarah Mitchell",
+      authorInitials: "SM",
+      date: "2 days ago",
+      datasets: 248,
+      views: 1203,
+      thumbnail: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=600&fit=crop"
+    },
+    {
+      id: 2,
+      title: "Neurological Disorders Repository",
+      author: "Dr. James Chen",
+      authorInitials: "JC",
+      date: "5 days ago",
+      datasets: 312,
+      views: 892,
+      thumbnail: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=600&fit=crop"
+    },
+    {
+      id: 3,
+      title: "Oncology Research Collection",
+      author: "Dr. Emily Rodriguez",
+      authorInitials: "ER",
+      date: "1 week ago",
+      datasets: 437,
+      views: 1567,
+      thumbnail: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=600&fit=crop"
+    },
+    {
+      id: 4,
+      title: "Infectious Disease Archive",
+      author: "Dr. Michael Park",
+      authorInitials: "MP",
+      date: "1 week ago",
+      datasets: 195,
+      views: 743,
+      thumbnail: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&h=600&fit=crop"
+    }
+  ],
+  popular: [
+    {
+      id: 5,
+      title: "Clinical Pathology Atlas",
+      author: "Dr. Lisa Anderson",
+      authorInitials: "LA",
+      date: "3 months ago",
+      datasets: 892,
+      views: 15234,
+      thumbnail: "https://images.unsplash.com/photo-1581093458791-9d42e1b7f1f9?w=800&h=600&fit=crop"
+    },
+    {
+      id: 6,
+      title: "Pediatric Disease Database",
+      author: "Dr. Robert Kim",
+      authorInitials: "RK",
+      date: "2 months ago",
+      datasets: 524,
+      views: 12891,
+      thumbnail: "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800&h=600&fit=crop"
+    },
+    {
+      id: 7,
+      title: "Gastrointestinal Pathology Hub",
+      author: "Dr. Maria Santos",
+      authorInitials: "MS",
+      date: "4 months ago",
+      datasets: 651,
+      views: 11456,
+      thumbnail: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&h=600&fit=crop"
+    },
+    {
+      id: 8,
+      title: "Dermatopathology Library",
+      author: "Dr. David Thompson",
+      authorInitials: "DT",
+      date: "5 months ago",
+      datasets: 389,
+      views: 9823,
+      thumbnail: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&h=600&fit=crop"
+    }
+  ]
+};
+
+function createLibraryCard(library) {
+  return `
+    <a href="library.html?id=${library.id}" class="library-card">
+      <div class="library-thumbnail-wrapper">
+        <img src="${library.thumbnail}" alt="${library.title}" class="library-thumbnail" />
+        <div class="library-duration">${library.datasets} datasets</div>
       </div>
-      <div class="message-bubble">
-        <div class="message-text">${text}</div>
+      
+      <div class="library-content">
+        <div class="library-header">
+          <div class="author-avatar">${library.authorInitials}</div>
+          <div class="library-info">
+            <h3 class="library-title">${library.title}</h3>
+            <div class="library-meta">
+              <span class="meta-item">${library.author}</span>
+              <span class="meta-separator"></span>
+              <span class="meta-item">${library.views.toLocaleString()} views</span>
+              <span class="meta-separator"></span>
+              <span class="meta-item">${library.date}</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </a>
   `;
+}
+
+function renderLibraries() {
+  const latestContainer = document.getElementById('latestLibraries');
+  const popularContainer = document.getElementById('popularLibraries');
   
-  messagesArea.appendChild(messageDiv);
-  input.value = '';
-  input.style.height = 'auto';
-  messagesArea.scrollTop = messagesArea.scrollHeight;
+  latestContainer.innerHTML = libraries.latest.map(lib => createLibraryCard(lib)).join('');
+  popularContainer.innerHTML = libraries.popular.map(lib => createLibraryCard(lib)).join('');
 }
 
-// Chat input auto-resize
-document.getElementById('chatInput').addEventListener('input', function() {
-  this.style.height = 'auto';
-  this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-});
-
-document.getElementById('chatInput').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendChatMessage();
-  }
-});
-
-// Modal functions
-function openAddModal() {
-  document.getElementById('addModal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeAddModal() {
-  document.getElementById('addModal').classList.remove('show');
-  document.body.style.overflow = '';
+// Search functionality
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', (e) => {
+  const searchTerm = e.target.value.toLowerCase();
   
-  // Reset form
-  document.getElementById('materialTitleInput').value = '';
-  document.getElementById('materialDescription').value = '';
-  document.getElementById('materialUrl').value = '';
-  document.getElementById('materialType').value = 'pdf';
-}
-
-function triggerFileUpload() {
-  alert('📂 File browser would open here\n\nSelect files to upload:\n• Documents (PDF, DOC, DOCX)\n• Images (JPG, PNG, GIF)\n• Videos (MP4, MOV)\n• Data files (CSV, XLSX)\n\nMax size: 50MB per file\n\n(Demo mode)');
-}
-
-function submitMaterial() {
-  const title = document.getElementById('materialTitleInput').value.trim();
-  const description = document.getElementById('materialDescription').value.trim();
-  const type = document.getElementById('materialType').value;
-  const url = document.getElementById('materialUrl').value.trim();
-  
-  if (!title) {
-    alert('⚠️ Please enter a material title');
+  if (searchTerm === '') {
+    renderLibraries();
     return;
   }
   
-  const typeMap = {
-    pdf: { icon: 'fa-file-pdf', class: 'pdf', type: 'PDF Document' },
-    image: { icon: 'fa-image', class: 'image', type: 'Image Collection' },
-    text: { icon: 'fa-file-lines', class: 'text', type: 'Text Document' },
-    record: { icon: 'fa-database', class: 'record', type: 'Database Record' },
-    video: { icon: 'fa-video', class: 'image', type: 'Video' },
-    link: { icon: 'fa-link', class: 'text', type: 'Web Link' }
-  };
+  const allLibraries = [...libraries.latest, ...libraries.popular];
+  const filtered = allLibraries.filter(lib => 
+    lib.title.toLowerCase().includes(searchTerm) ||
+    lib.author.toLowerCase().includes(searchTerm)
+  );
   
-  const selected = typeMap[type];
-  const materialsGrid = document.getElementById('materialsGrid');
+  const latestContainer = document.getElementById('latestLibraries');
+  const popularContainer = document.getElementById('popularLibraries');
   
-  const newCard = document.createElement('div');
-  newCard.className = 'material-card';
-  newCard.innerHTML = `
-    <div class="material-header">
-      <div class="material-type-icon ${selected.class}">
-        <i class="fas ${selected.icon}"></i>
+  if (filtered.length === 0) {
+    latestContainer.innerHTML = `
+      <div class="empty-state" style="grid-column: 1/-1;">
+        <i class="fas fa-search"></i>
+        <p>No libraries found matching "${searchTerm}"</p>
       </div>
-      <div class="material-info">
-        <div class="material-title">${title}</div>
-        <div class="material-type">${selected.type}</div>
-      </div>
-    </div>
-    <div class="material-preview">
-      ${description || 'New material added to your library...'}
-    </div>
-    <div class="material-footer">
-      <div class="material-date">Added just now</div>
-      <div class="material-actions">
-        <button class="icon-btn" title="Download" onclick="downloadMaterial('${title}')"><i class="fas fa-download"></i></button>
-        <button class="icon-btn" title="Share" onclick="shareMaterial('${title}')"><i class="fas fa-share"></i></button>
-        <button class="icon-btn" title="More" onclick="showMoreOptions('${title}')"><i class="fas fa-ellipsis-v"></i></button>
-      </div>
-    </div>
-  `;
-  
-  materialsGrid.insertBefore(newCard, materialsGrid.firstChild);
-  
-  closeAddModal();
-  
-  // Show success and switch to materials tab if needed
-  if (currentTab !== 'materials') {
-    switchTab('materials');
-  }
-  
-  alert(`✅ "${title}" added successfully!`);
-}
-
-function showMembers() {
-  alert('👥 Library Members\n\n• Dr. Smith (Owner)\n• Dr. Johnson\n• Dr. Williams\n• Dr. Brown\n• You\n\n[+ Invite Members]\n\n(Demo mode)');
-}
-
-function shareLibrary() {
-  alert('📤 Share Library\n\nShare "Medical Research" with:\n\n• Generate invite link\n• Email invitation\n• QR code\n• Set permissions (View/Edit)\n• Manage access\n\n(Demo mode)');
-}
-
-function downloadMaterial(materialName) {
-  alert(`⬇️ Downloading: ${materialName}\n\nFile will be saved to your device.\n\n(Demo mode - no actual download)`);
-}
-
-function shareMaterial(materialName) {
-  alert(`📤 Share: ${materialName}\n\nShare via:\n• Copy link\n• Email\n• Social media\n• Download & share\n\n(Demo mode)`);
-}
-
-function showMoreOptions(materialName) {
-  alert(`Options for: ${materialName}\n\n• Open\n• Edit details\n• Move to another library\n• Duplicate\n• Add to favorites\n• Delete\n• View history\n\n(Demo mode)`);
-}
-
-// Close modal when clicking outside
-document.getElementById('addModal').addEventListener('click', (e) => {
-  if (e.target.id === 'addModal') {
-    closeAddModal();
+    `;
+    popularContainer.innerHTML = '';
+  } else {
+    latestContainer.innerHTML = filtered.map(lib => createLibraryCard(lib)).join('');
+    popularContainer.innerHTML = '';
   }
 });
+
+// Initialize
+renderLibraries();
 </script>
 
 </body>
