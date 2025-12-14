@@ -40,12 +40,6 @@ body {
   background: var(--bg-color);
   color: var(--text-primary);
   transition: background 0.2s ease, color 0.2s ease;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-body.loaded {
-  opacity: 1;
 }
 
 .header-wrapper {
@@ -484,7 +478,7 @@ body.light-theme .logo-img {
         <i class="fas fa-circle-half-stroke"></i>
       </button>
       <div class="user-menu">
-        <div class="user-avatar" id="userAvatar" onclick="toggleUserMenu()"></div>
+        <div class="user-avatar" id="userAvatar" onclick="toggleUserMenu()">U</div>
         <div class="dropdown-menu" id="userDropdown">
           <div class="dropdown-item">
             <i class="fas fa-user"></i>
@@ -549,6 +543,15 @@ import {
   signOut
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
+// Hide loading overlay after timeout as fallback
+setTimeout(() => {
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  if (loadingOverlay && loadingOverlay.style.display !== 'none') {
+    loadingOverlay.style.display = 'none';
+    console.log("Loading overlay hidden by timeout");
+  }
+}, 3000);
+
 const firebaseConfig = {
   apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
   authDomain: "patholytica.firebaseapp.com",
@@ -608,8 +611,9 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById('userEmailDisplay').textContent = email;
     
     // Hide loading, show content
-    loadingOverlay.style.display = 'none';
-    document.body.classList.add('loaded');
+    if (loadingOverlay) {
+      loadingOverlay.style.display = 'none';
+    }
     
     // Initialize page content
     renderLibraries();
@@ -622,6 +626,14 @@ onAuthStateChanged(auth, (user) => {
       window.location.href = "index.html";
     }, 1000);
   }
+}, (error) => {
+  // Handle auth error
+  console.error("Auth error:", error);
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  if (loadingOverlay) {
+    loadingOverlay.style.display = 'none';
+  }
+  showNotification("Authentication error: " + error.message, "error");
 });
 
 // Logout handler
@@ -791,42 +803,46 @@ function renderLibraries() {
   const latestContainer = document.getElementById('latestLibraries');
   const popularContainer = document.getElementById('popularLibraries');
   
-  latestContainer.innerHTML = libraries.latest.map(lib => createLibraryCard(lib)).join('');
-  popularContainer.innerHTML = libraries.popular.map(lib => createLibraryCard(lib)).join('');
+  if (latestContainer && popularContainer) {
+    latestContainer.innerHTML = libraries.latest.map(lib => createLibraryCard(lib)).join('');
+    popularContainer.innerHTML = libraries.popular.map(lib => createLibraryCard(lib)).join('');
+  }
 }
 
 // Search functionality
 const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', (e) => {
-  const searchTerm = e.target.value.toLowerCase();
-  
-  if (searchTerm === '') {
-    renderLibraries();
-    return;
-  }
-  
-  const allLibraries = [...libraries.latest, ...libraries.popular];
-  const filtered = allLibraries.filter(lib => 
-    lib.title.toLowerCase().includes(searchTerm) ||
-    lib.author.toLowerCase().includes(searchTerm)
-  );
-  
-  const latestContainer = document.getElementById('latestLibraries');
-  const popularContainer = document.getElementById('popularLibraries');
-  
-  if (filtered.length === 0) {
-    latestContainer.innerHTML = `
-      <div class="empty-state" style="grid-column: 1/-1;">
-        <i class="fas fa-search"></i>
-        <p>No libraries found matching "${searchTerm}"</p>
-      </div>
-    `;
-    popularContainer.innerHTML = '';
-  } else {
-    latestContainer.innerHTML = filtered.map(lib => createLibraryCard(lib)).join('');
-    popularContainer.innerHTML = '';
-  }
-});
+if (searchInput) {
+  searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    
+    if (searchTerm === '') {
+      renderLibraries();
+      return;
+    }
+    
+    const allLibraries = [...libraries.latest, ...libraries.popular];
+    const filtered = allLibraries.filter(lib => 
+      lib.title.toLowerCase().includes(searchTerm) ||
+      lib.author.toLowerCase().includes(searchTerm)
+    );
+    
+    const latestContainer = document.getElementById('latestLibraries');
+    const popularContainer = document.getElementById('popularLibraries');
+    
+    if (filtered.length === 0) {
+      latestContainer.innerHTML = `
+        <div class="empty-state" style="grid-column: 1/-1;">
+          <i class="fas fa-search"></i>
+          <p>No libraries found matching "${searchTerm}"</p>
+        </div>
+      `;
+      popularContainer.innerHTML = '';
+    } else {
+      latestContainer.innerHTML = filtered.map(lib => createLibraryCard(lib)).join('');
+      popularContainer.innerHTML = '';
+    }
+  });
+}
 </script>
 
 </body>
