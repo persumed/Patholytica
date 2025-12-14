@@ -609,23 +609,22 @@ onAuthStateChanged(auth, (user) => {
     
     // Set user email in dropdown
     document.getElementById('userEmailDisplay').textContent = email;
-    
-    // Hide loading, show content
-    if (loadingOverlay) {
-      loadingOverlay.style.display = 'none';
-    }
-    
-    // Initialize page content
-    renderLibraries();
-    
   } else {
-    // No user signed in, redirect to login
-    console.log("No user authenticated, redirecting to login...");
-    showNotification("Please log in to access this page", "info");
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 1000);
+    // No user signed in - show guest mode
+    console.log("No user authenticated - showing guest mode");
+    const userAvatar = document.getElementById('userAvatar');
+    userAvatar.textContent = 'G';
+    document.getElementById('userEmailDisplay').textContent = 'Guest User';
   }
+  
+  // Hide loading and show content regardless of auth status
+  if (loadingOverlay) {
+    loadingOverlay.style.display = 'none';
+  }
+  
+  // Initialize page content
+  renderLibraries();
+  
 }, (error) => {
   // Handle auth error
   console.error("Auth error:", error);
@@ -633,11 +632,20 @@ onAuthStateChanged(auth, (user) => {
   if (loadingOverlay) {
     loadingOverlay.style.display = 'none';
   }
-  showNotification("Authentication error: " + error.message, "error");
+  // Still render libraries even on auth error
+  renderLibraries();
 });
 
 // Logout handler
 window.handleLogout = function() {
+  const currentUser = auth.currentUser;
+  
+  if (!currentUser) {
+    // Not logged in, redirect to login page
+    window.location.href = "index.html";
+    return;
+  }
+  
   signOut(auth)
     .then(() => {
       showNotification("Signed out successfully", "success");
