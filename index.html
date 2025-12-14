@@ -96,6 +96,116 @@ body.light-theme .logo-img {
   background: var(--hover-bg);
 }
 
+/* Search Bar Overlay */
+.search-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.search-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+.search-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 80px auto 0;
+  padding: 0 24px;
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+}
+
+.search-overlay.active .search-container {
+  transform: translateY(0);
+}
+
+.search-bar-header {
+  background: var(--card-bg);
+  border-radius: 24px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.search-bar-header input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 16px;
+  outline: none;
+}
+
+.search-bar-header input::placeholder {
+  color: var(--text-secondary);
+}
+
+.search-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tabs Navigation */
+.tabs-nav {
+  display: flex;
+  gap: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 16px 24px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
 .user-menu {
   position: relative;
 }
@@ -137,6 +247,124 @@ body.light-theme .logo-img {
 .login-icon-btn:hover {
   background: var(--hover-bg);
   transform: scale(1.05);
+}
+
+/* Login Popup */
+.login-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.login-popup-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+.login-popup {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.login-popup-overlay.active .login-popup {
+  transform: scale(1);
+}
+
+.login-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.login-popup-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.login-popup-close {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 24px;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+.login-popup-close:hover {
+  background: var(--hover-bg);
+}
+
+.login-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-option-btn {
+  width: 100%;
+  padding: 14px 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.login-option-btn:hover {
+  background: var(--hover-bg);
+  border-color: var(--accent);
+}
+
+.login-option-btn i {
+  font-size: 20px;
+  width: 24px;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
 }
 
 .dropdown-menu {
@@ -217,33 +445,8 @@ body.light-theme .logo-img {
 .hero-section p {
   font-size: 15px;
   color: var(--text-secondary);
-  margin: 0 0 24px 0;
+  margin: 0;
   line-height: 1.6;
-}
-
-.search-bar {
-  max-width: 600px;
-  position: relative;
-}
-
-.search-input {
-  width: 100%;
-  padding: 10px 16px;
-  border-radius: 24px;
-  border: 1px solid var(--border-color);
-  background: var(--card-bg);
-  color: var(--text-primary);
-  font-size: 14px;
-  transition: border-color 0.2s ease;
-}
-
-.search-input:focus {
-  border-color: var(--accent);
-  outline: none;
-}
-
-.search-input::placeholder {
-  color: var(--text-secondary);
 }
 
 .section-header {
@@ -391,6 +594,63 @@ body.light-theme .logo-img {
   opacity: 0.5;
 }
 
+.message-item {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.message-item:hover {
+  background: var(--hover-bg);
+}
+
+.message-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  flex-shrink: 0;
+}
+
+.message-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+
+.message-name {
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.message-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.message-preview {
+  font-size: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -480,6 +740,9 @@ body.light-theme .logo-img {
   .main-container {
     padding: 24px 16px 48px;
   }
+  .tabs-nav {
+    padding: 0 16px;
+  }
   #notificationArea {
     left: 16px;
     right: 16px;
@@ -500,6 +763,50 @@ body.light-theme .logo-img {
 <!-- Notification Area -->
 
 <div id="notificationArea"></div>
+
+<!-- Search Overlay -->
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-container">
+    <div class="search-bar-header">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search libraries..." id="searchInput" />
+      <button class="search-close-btn" onclick="closeSearch()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Login Popup -->
+
+<div class="login-popup-overlay" id="loginPopup">
+  <div class="login-popup">
+    <div class="login-popup-header">
+      <h2 class="login-popup-title">Sign In</h2>
+      <button class="login-popup-close" onclick="closeLoginPopup()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="login-options">
+      <button class="login-option-btn" onclick="loginWithGoogle()">
+        <i class="fab fa-google"></i>
+        Continue with Google
+      </button>
+      <button class="login-option-btn" onclick="loginWithEmail()">
+        <i class="fas fa-envelope"></i>
+        Continue with Email
+      </button>
+      <div class="login-divider">
+        <span>or</span>
+      </div>
+      <button class="login-option-btn" onclick="loginWithApple()">
+        <i class="fab fa-apple"></i>
+        Continue with Apple
+      </button>
+    </div>
+  </div>
+</div>
 
 <div class="header-wrapper">
   <div class="header">
@@ -539,43 +846,140 @@ body.light-theme .logo-img {
   </div>
   
   <!-- Login button - shown when not logged in -->
-  <button class="login-icon-btn" id="loginButton" style="display: none;" onclick="goToLogin()" title="Login">
+  <button class="login-icon-btn" id="loginButton" style="display: none;" onclick="openLoginPopup()" title="Login">
     <i class="fas fa-arrow-right-to-bracket"></i>
   </button>
 </div>
 
   </div>
+
+  <!-- Tabs Navigation -->
+
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchTab('explore')">
+      <i class="fas fa-compass"></i>
+      Explore
+    </button>
+    <button class="tab-btn" onclick="switchTab('home')">
+      <i class="fas fa-home"></i>
+      Home
+    </button>
+    <button class="tab-btn" onclick="switchTab('messages')">
+      <i class="fas fa-message"></i>
+      Messages
+    </button>
+  </div>
 </div>
 
 <div class="main-container">
-  <!-- Hero Section -->
-  <div class="hero-section">
-    <h1>Academic Libraries</h1>
-    <p>Explore curated collections of research data, case studies, and academic resources.</p>
-    <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Search libraries..." id="searchInput">
+
+  <!-- Explore Tab -->
+
+  <div class="tab-content active" id="exploreTab">
+    <div class="hero-section">
+      <h1>Academic Libraries</h1>
+      <p>Explore curated collections of research data, case studies, and academic resources.</p>
+    </div>
+
+<div class="section-header">
+  <h2 class="section-title">
+    <i class="fas fa-clock section-icon"></i>
+    Latest Libraries
+  </h2>
+</div>
+<div class="library-grid" id="latestLibraries"></div>
+
+<div class="section-header">
+  <h2 class="section-title">
+    <i class="fas fa-fire section-icon"></i>
+    Most Popular
+  </h2>
+</div>
+<div class="library-grid" id="popularLibraries"></div>
+
+  </div>
+
+  <!-- Home Tab -->
+
+  <div class="tab-content" id="homeTab">
+    <div class="hero-section">
+      <h1>My Libraries</h1>
+      <p>Your saved libraries and collections.</p>
+    </div>
+
+<div class="section-header">
+  <h2 class="section-title">
+    <i class="fas fa-bookmark section-icon"></i>
+    Saved Libraries
+  </h2>
+</div>
+<div class="library-grid" id="savedLibraries">
+  <div class="empty-state" style="grid-column: 1/-1;">
+    <i class="fas fa-bookmark"></i>
+    <p>No saved libraries yet. Start exploring and save your favorites!</p>
+  </div>
+</div>
+
+<div class="section-header">
+  <h2 class="section-title">
+    <i class="fas fa-history section-icon"></i>
+    Recently Viewed
+  </h2>
+</div>
+<div class="library-grid" id="recentLibraries">
+  <div class="empty-state" style="grid-column: 1/-1;">
+    <i class="fas fa-history"></i>
+    <p>No viewing history yet.</p>
+  </div>
+</div>
+
+  </div>
+
+  <!-- Messages Tab -->
+
+  <div class="tab-content" id="messagesTab">
+    <div class="hero-section">
+      <h1>Messages</h1>
+      <p>Connect with researchers and collaborators.</p>
+    </div>
+
+<div id="messagesList">
+  <div class="message-item">
+    <div class="message-avatar">SM</div>
+    <div class="message-content">
+      <div class="message-header">
+        <span class="message-name">Dr. Sarah Mitchell</span>
+        <span class="message-time">2h ago</span>
+      </div>
+      <div class="message-preview">Thanks for sharing the cardiovascular dataset. I found some interesting patterns...</div>
     </div>
   </div>
-
-  <!-- Latest Libraries Section -->
-
-  <div class="section-header">
-    <h2 class="section-title">
-      <i class="fas fa-clock section-icon"></i>
-      Latest Libraries
-    </h2>
+  
+  <div class="message-item">
+    <div class="message-avatar">JC</div>
+    <div class="message-content">
+      <div class="message-header">
+        <span class="message-name">Dr. James Chen</span>
+        <span class="message-time">1d ago</span>
+      </div>
+      <div class="message-preview">Would you be interested in collaborating on the neurological study?</div>
+    </div>
   </div>
-  <div class="library-grid" id="latestLibraries"></div>
-
-  <!-- Most Popular Section -->
-
-  <div class="section-header">
-    <h2 class="section-title">
-      <i class="fas fa-fire section-icon"></i>
-      Most Popular
-    </h2>
+  
+  <div class="message-item">
+    <div class="message-avatar">ER</div>
+    <div class="message-content">
+      <div class="message-header">
+        <span class="message-name">Dr. Emily Rodriguez</span>
+        <span class="message-time">3d ago</span>
+      </div>
+      <div class="message-preview">I've updated the oncology repository with new case studies.</div>
+    </div>
   </div>
-  <div class="library-grid" id="popularLibraries"></div>
+</div>
+
+  </div>
+
 </div>
 
 <script type="module">
@@ -586,7 +990,6 @@ import {
   signOut
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
-// Hide loading overlay after timeout as fallback
 setTimeout(() => {
   const loadingOverlay = document.getElementById('loadingOverlay');
   if (loadingOverlay && loadingOverlay.style.display !== 'none') {
@@ -636,6 +1039,80 @@ function showNotification(message, type = 'info') {
 
 window.showNotification = showNotification;
 
+// Tab switching
+window.switchTab = function(tabName) {
+  const tabs = document.querySelectorAll('.tab-content');
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  
+  tabs.forEach(tab => tab.classList.remove('active'));
+  tabBtns.forEach(btn => btn.classList.remove('active'));
+  
+  document.getElementById(tabName + 'Tab').classList.add('active');
+  event.target.closest('.tab-btn').classList.add('active');
+};
+
+// Search overlay functions
+window.openSearch = function() {
+  const overlay = document.getElementById('searchOverlay');
+  overlay.classList.add('active');
+  setTimeout(() => {
+    document.getElementById('searchInput').focus();
+  }, 100);
+};
+
+window.closeSearch = function() {
+  const overlay = document.getElementById('searchOverlay');
+  overlay.classList.remove('active');
+  document.getElementById('searchInput').value = '';
+  renderLibraries();
+};
+
+// Login popup functions
+window.openLoginPopup = function() {
+  const popup = document.getElementById('loginPopup');
+  popup.classList.add('active');
+};
+
+window.closeLoginPopup = function() {
+  const popup = document.getElementById('loginPopup');
+  popup.classList.remove('active');
+};
+
+window.loginWithGoogle = function() {
+  showNotification("Google login would be implemented here", "info");
+  // Redirect to actual login page or implement Firebase Google auth
+  setTimeout(() => {
+    window.location.href = "login.html?method=google";
+  }, 1000);
+};
+
+window.loginWithEmail = function() {
+  showNotification("Email login would be implemented here", "info");
+  setTimeout(() => {
+    window.location.href = "login.html?method=email";
+  }, 1000);
+};
+
+window.loginWithApple = function() {
+  showNotification("Apple login would be implemented here", "info");
+  setTimeout(() => {
+    window.location.href = "login.html?method=apple";
+  }, 1000);
+};
+
+// Close popups when clicking outside
+document.getElementById('searchOverlay').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeSearch();
+  }
+});
+
+document.getElementById('loginPopup').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeLoginPopup();
+  }
+});
+
 // Check authentication status
 onAuthStateChanged(auth, (user) => {
   const loadingOverlay = document.getElementById('loadingOverlay');
@@ -643,68 +1120,50 @@ onAuthStateChanged(auth, (user) => {
   const loginButton = document.getElementById('loginButton');
   
   if (user) {
-    // User is signed in
     console.log("User authenticated:", user.email);
     
-    // Show user menu, hide login button
     userMenuContainer.style.display = 'block';
     loginButton.style.display = 'none';
     
-    // Get user display name or email
     const displayName = user.displayName || user.email.split('@')[0];
     const email = user.email;
     
-    // Set user avatar initials
     const userAvatar = document.getElementById('userAvatar');
     const initials = displayName.substring(0, 2).toUpperCase();
     userAvatar.textContent = initials;
     
-    // Set user info in dropdown
     document.getElementById('userName').textContent = displayName;
     document.getElementById('userEmail').textContent = email;
     
   } else {
-    // No user signed in - show login button
     console.log("No user authenticated - showing login button");
     
-    // Hide user menu, show login button
     userMenuContainer.style.display = 'none';
     loginButton.style.display = 'flex';
   }
   
-  // Hide loading and show content regardless of auth status
   if (loadingOverlay) {
     loadingOverlay.style.display = 'none';
   }
   
-  // Initialize page content
   renderLibraries();
   
 }, (error) => {
-  // Handle auth error
   console.error("Auth error:", error);
   const loadingOverlay = document.getElementById('loadingOverlay');
   if (loadingOverlay) {
     loadingOverlay.style.display = 'none';
   }
-  // Show login button on error
   document.getElementById('loginButton').style.display = 'flex';
   document.getElementById('userMenuContainer').style.display = 'none';
-  // Still render libraries even on auth error
   renderLibraries();
 });
-
-// Go to login page
-window.goToLogin = function() {
-  window.location.href = "login.html";
-};
 
 // Logout handler
 window.handleLogout = function() {
   signOut(auth)
     .then(() => {
       showNotification("Signed out successfully", "success");
-      // Just reload the page to show login button
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -743,10 +1202,6 @@ document.addEventListener('click', (e) => {
     dropdown.classList.remove('show');
   }
 });
-
-window.openSearch = function() {
-  document.getElementById('searchInput').focus();
-};
 
 // Sample library data
 const libraries = {
