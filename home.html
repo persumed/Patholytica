@@ -96,6 +96,72 @@ body.light-theme .logo-img {
   background: var(--hover-bg);
 }
 
+.user-menu {
+  position: relative;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.05);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: none;
+  z-index: 100;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: background 0.2s ease;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background: var(--hover-bg);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 4px 0;
+}
+
 .main-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -289,6 +355,84 @@ body.light-theme .logo-img {
   opacity: 0.5;
 }
 
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+#notificationArea {
+  position: fixed;
+  top: calc(70px + env(safe-area-inset-top));
+  right: 20px;
+  z-index: 100;
+  max-width: 400px;
+}
+
+.notification {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: translateX(450px);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size: 14px;
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.notification.success .notification-dot {
+  background: #10b981;
+}
+
+.notification.error .notification-dot {
+  background: #ef4444;
+}
+
+.notification.info .notification-dot {
+  background: #3b82f6;
+}
+
+.notification-message {
+  flex: 1;
+  line-height: 1.4;
+}
+
 @media (max-width: 768px) {
   .hero-section h1 { font-size: 26px; }
   .library-grid {
@@ -300,11 +444,26 @@ body.light-theme .logo-img {
   .main-container {
     padding: 24px 16px 48px;
   }
+  #notificationArea {
+    left: 16px;
+    right: 16px;
+    max-width: none;
+  }
 }
 </style>
 
 </head>
 <body>
+
+<!-- Loading Overlay -->
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+</div>
+
+<!-- Notification Area -->
+
+<div id="notificationArea"></div>
 
 <div class="header-wrapper">
   <div class="header">
@@ -318,6 +477,29 @@ body.light-theme .logo-img {
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
+      <div class="user-menu">
+        <div class="user-avatar" id="userAvatar" onclick="toggleUserMenu()">U</div>
+        <div class="dropdown-menu" id="userDropdown">
+          <div class="dropdown-item">
+            <i class="fas fa-user"></i>
+            <span id="userEmailDisplay">Loading...</span>
+          </div>
+          <div class="dropdown-divider"></div>
+          <a href="dashboard.html" class="dropdown-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -327,11 +509,9 @@ body.light-theme .logo-img {
   <div class="hero-section">
     <h1>Academic Libraries</h1>
     <p>Explore curated collections of research data, case studies, and academic resources.</p>
-
-<div class="search-bar">
-  <input type="text" class="search-input" placeholder="Search" id="searchInput">
-</div>
-
+    <div class="search-bar">
+      <input type="text" class="search-input" placeholder="Search libraries..." id="searchInput">
+    </div>
   </div>
 
   <!-- Latest Libraries Section -->
@@ -342,7 +522,6 @@ body.light-theme .logo-img {
       Latest Libraries
     </h2>
   </div>
-
   <div class="library-grid" id="latestLibraries"></div>
 
   <!-- Most Popular Section -->
@@ -353,27 +532,165 @@ body.light-theme .logo-img {
       Most Popular
     </h2>
   </div>
-
   <div class="library-grid" id="popularLibraries"></div>
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { 
+  getAuth, 
+  onAuthStateChanged,
+  signOut
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+// Hide loading overlay after timeout as fallback
+setTimeout(() => {
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  if (loadingOverlay && loadingOverlay.style.display !== 'none') {
+    loadingOverlay.style.display = 'none';
+    console.log("Loading overlay hidden by timeout");
+  }
+}, 3000);
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
+  authDomain: "patholytica.firebaseapp.com",
+  projectId: "patholytica",
+  storageBucket: "patholytica.firebasestorage.app",
+  messagingSenderId: "738430635282",
+  appId: "1:738430635282:web:8451ef380447c7611137cb"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// NOTIFICATION SYSTEM
+function showNotification(message, type = 'info') {
+  const notificationArea = document.getElementById('notificationArea');
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  
+  notification.innerHTML = `
+    <div class="notification-dot"></div>
+    <span class="notification-message">${message}</span>
+  `;
+  
+  notificationArea.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.classList.add('show');
+  }, 10);
+  
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 400);
+  }, 5000);
+}
+
+window.showNotification = showNotification;
+
+// Check authentication status
+onAuthStateChanged(auth, (user) => {
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  
+  if (user) {
+    // User is signed in
+    console.log("User authenticated:", user.email);
+    
+    // Set user avatar initials
+    const userAvatar = document.getElementById('userAvatar');
+    const email = user.email || 'User';
+    const initials = email.substring(0, 2).toUpperCase();
+    userAvatar.textContent = initials;
+    
+    // Set user email in dropdown
+    document.getElementById('userEmailDisplay').textContent = email;
+  } else {
+    // No user signed in - show guest mode
+    console.log("No user authenticated - showing guest mode");
+    const userAvatar = document.getElementById('userAvatar');
+    userAvatar.textContent = 'G';
+    document.getElementById('userEmailDisplay').textContent = 'Guest User';
+  }
+  
+  // Hide loading and show content regardless of auth status
+  if (loadingOverlay) {
+    loadingOverlay.style.display = 'none';
+  }
+  
+  // Initialize page content
+  renderLibraries();
+  
+}, (error) => {
+  // Handle auth error
+  console.error("Auth error:", error);
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  if (loadingOverlay) {
+    loadingOverlay.style.display = 'none';
+  }
+  // Still render libraries even on auth error
+  renderLibraries();
+});
+
+// Logout handler
+window.handleLogout = function() {
+  const currentUser = auth.currentUser;
+  
+  if (!currentUser) {
+    // Not logged in, redirect to login page
+    window.location.href = "index.html";
+    return;
+  }
+  
+  signOut(auth)
+    .then(() => {
+      showNotification("Signed out successfully", "success");
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1000);
+    })
+    .catch((error) => {
+      console.error("Logout error:", error);
+      showNotification("Error signing out: " + error.message, "error");
+    });
+};
+
 // Theme toggle
-function toggleTheme(){
+window.toggleTheme = function(){
   document.body.classList.toggle('light-theme');
   localStorage.setItem(
     "theme",
     document.body.classList.contains("light-theme") ? "light" : "dark"
   );
-}
+};
 
 if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
 }
 
-function openSearch() {
+// User menu toggle
+window.toggleUserMenu = function() {
+  const dropdown = document.getElementById('userDropdown');
+  dropdown.classList.toggle('show');
+};
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const userMenu = document.querySelector('.user-menu');
+  const dropdown = document.getElementById('userDropdown');
+  
+  if (!userMenu.contains(e.target) && dropdown.classList.contains('show')) {
+    dropdown.classList.remove('show');
+  }
+});
+
+window.openSearch = function() {
   document.getElementById('searchInput').focus();
-}
+};
 
 // Sample library data
 const libraries = {
@@ -494,45 +811,46 @@ function renderLibraries() {
   const latestContainer = document.getElementById('latestLibraries');
   const popularContainer = document.getElementById('popularLibraries');
   
-  latestContainer.innerHTML = libraries.latest.map(lib => createLibraryCard(lib)).join('');
-  popularContainer.innerHTML = libraries.popular.map(lib => createLibraryCard(lib)).join('');
+  if (latestContainer && popularContainer) {
+    latestContainer.innerHTML = libraries.latest.map(lib => createLibraryCard(lib)).join('');
+    popularContainer.innerHTML = libraries.popular.map(lib => createLibraryCard(lib)).join('');
+  }
 }
 
 // Search functionality
 const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', (e) => {
-  const searchTerm = e.target.value.toLowerCase();
-  
-  if (searchTerm === '') {
-    renderLibraries();
-    return;
-  }
-  
-  const allLibraries = [...libraries.latest, ...libraries.popular];
-  const filtered = allLibraries.filter(lib => 
-    lib.title.toLowerCase().includes(searchTerm) ||
-    lib.author.toLowerCase().includes(searchTerm)
-  );
-  
-  const latestContainer = document.getElementById('latestLibraries');
-  const popularContainer = document.getElementById('popularLibraries');
-  
-  if (filtered.length === 0) {
-    latestContainer.innerHTML = `
-      <div class="empty-state" style="grid-column: 1/-1;">
-        <i class="fas fa-search"></i>
-        <p>No libraries found matching "${searchTerm}"</p>
-      </div>
-    `;
-    popularContainer.innerHTML = '';
-  } else {
-    latestContainer.innerHTML = filtered.map(lib => createLibraryCard(lib)).join('');
-    popularContainer.innerHTML = '';
-  }
-});
-
-// Initialize
-renderLibraries();
+if (searchInput) {
+  searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    
+    if (searchTerm === '') {
+      renderLibraries();
+      return;
+    }
+    
+    const allLibraries = [...libraries.latest, ...libraries.popular];
+    const filtered = allLibraries.filter(lib => 
+      lib.title.toLowerCase().includes(searchTerm) ||
+      lib.author.toLowerCase().includes(searchTerm)
+    );
+    
+    const latestContainer = document.getElementById('latestLibraries');
+    const popularContainer = document.getElementById('popularLibraries');
+    
+    if (filtered.length === 0) {
+      latestContainer.innerHTML = `
+        <div class="empty-state" style="grid-column: 1/-1;">
+          <i class="fas fa-search"></i>
+          <p>No libraries found matching "${searchTerm}"</p>
+        </div>
+      `;
+      popularContainer.innerHTML = '';
+    } else {
+      latestContainer.innerHTML = filtered.map(lib => createLibraryCard(lib)).join('');
+      popularContainer.innerHTML = '';
+    }
+  });
+}
 </script>
 
 </body>
