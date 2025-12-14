@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Patholytica — by MedicineBank</title>
+<title>Patholytica — Academic Libraries</title>
 
 <!-- Font Awesome for icons -->
 
@@ -12,12 +12,14 @@
 
 <style>
 :root {
-  --bg-color: #0d0d0d;
-  --text-color: #fff;
-  --card-bg: rgba(24,24,24,0.7);
-  --card-border: rgba(255,255,255,0.07);
-  --accent: #b0003a;
-  --accent-hover: #88002a;
+  --bg-color: #0f0f0f;
+  --text-primary: #fff;
+  --text-secondary: #aaa;
+  --card-bg: #1f1f1f;
+  --hover-bg: #2a2a2a;
+  --border-color: #303030;
+  --accent: #3ea6ff;
+  --accent-hover: #2d8ed6;
   --success: #10b981;
   --error: #ef4444;
   --warning: #f59e0b;
@@ -25,23 +27,25 @@
 }
 
 body.light-theme {
-  --bg-color: #f5f5f5;
-  --text-color: #111;
-  --card-bg: rgba(255,255,255,0.65);
-  --card-border: rgba(0,0,0,0.1);
-  --accent: #b0003a;
-  --accent-hover: #88002a;
+  --bg-color: #ffffff;
+  --text-primary: #0f0f0f;
+  --text-secondary: #606060;
+  --card-bg: #f9f9f9;
+  --hover-bg: #f0f0f0;
+  --border-color: #e5e5e5;
+  --accent: #065fd4;
+  --accent-hover: #0448a3;
 }
 
 * { box-sizing: border-box; }
-html, body { margin:0; padding:0; height:100%; font-family: "Inter", Arial, sans-serif; }
+html, body { margin:0; padding:0; min-height:100%; font-family: "Roboto", Arial, sans-serif; }
 
 body {
   background: var(--bg-color);
-  color: var(--text-color);
+  color: var(--text-primary);
+  transition: background 0.2s ease, color 0.2s ease;
   display: flex;
   flex-direction: column;
-  transition: background 0.35s ease;
 }
 
 .header-wrapper {
@@ -49,7 +53,7 @@ body {
   top: 0;
   background: var(--bg-color);
   padding-top: env(safe-area-inset-top);
-  border-bottom: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--border-color);
   z-index: 40;
 }
 
@@ -57,13 +61,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 18px;
+  padding: 12px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .logo-img {
-  height: 32px;
+  height: 28px;
   width: auto;
-  transition: filter 0.25s ease;
+  transition: filter 0.2s ease;
   cursor: pointer;
 }
 
@@ -71,19 +77,23 @@ body.light-theme .logo-img {
   filter: invert(1);
 }
 
-.theme-toggle {
-  padding: 6px 14px;
-  font-size: 12.5px;
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   background: transparent;
-  border-radius: 6px;
-  border: 1px solid var(--card-border);
-  color: var(--text-color);
+  border: none;
+  color: var(--text-primary);
   cursor: pointer;
-  transition: 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: background 0.2s ease;
 }
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+
+.icon-btn:hover {
+  background: var(--hover-bg);
 }
 
 .login-container {
@@ -91,40 +101,33 @@ body.light-theme .logo-img {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: calc(40px + env(safe-area-inset-top))
-           calc(20px + env(safe-area-inset-left))
-           calc(40px + env(safe-area-inset-bottom))
-           calc(20px + env(safe-area-inset-right));
+  padding: 40px 20px;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom));
 }
 
 .login-card {
   width: 100%;
   max-width: 430px;
-  padding: 55px 42px;
+  padding: 48px 40px;
   background: var(--card-bg);
-  backdrop-filter: blur(22px);
-  border-radius: 16px;
-  border: 1px solid var(--card-border);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   text-align: center;
   animation: fadeUp 0.5s ease both;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.login-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 35px rgba(0,0,0,0.55);
 }
 
 .login-card h1 {
   font-size: 32px;
-  margin-bottom: 12px;
+  margin: 0 0 8px 0;
+  font-weight: 500;
 }
 
 .login-card p {
   font-size: 15px;
-  margin-bottom: 20px;
-  color: #999;
-  line-height: 1.55;
+  margin: 0 0 32px 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 .login-btn {
@@ -132,25 +135,24 @@ body.light-theme .logo-img {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 16px 42px;
-  font-size: 16px;
-  font-weight: 600;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
   background: var(--accent);
   color: #fff;
-  border-radius: 10px;
+  border-radius: 8px;
   text-decoration: none;
-  transition: 0.25s ease;
-  box-shadow: 0 6px 16px rgba(176,0,58,0.35);
+  transition: 0.2s ease;
   cursor: pointer;
   border: none;
   margin-bottom: 12px;
   width: 100%;
 }
+
 .login-btn:hover:not(:disabled) {
   background: var(--accent-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(176,0,58,0.45);
 }
+
 .login-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -158,11 +160,10 @@ body.light-theme .logo-img {
 
 .google-btn {
   background: #4285F4;
-  box-shadow: 0 6px 16px rgba(66,133,244,0.35);
 }
+
 .google-btn:hover:not(:disabled) {
   background: #357ae8;
-  box-shadow: 0 10px 22px rgba(66,133,244,0.45);
 }
 
 .btn-icon {
@@ -178,6 +179,7 @@ body.light-theme .logo-img {
   border-top-color: white;
   animation: spin 0.8s linear infinite;
 }
+
 .spinner.show {
   display: inline-block;
 }
@@ -189,17 +191,19 @@ body.light-theme .logo-img {
 .divider {
   display: flex;
   align-items: center;
-  margin: 20px 0;
-  color: #666;
+  margin: 16px 0;
+  color: var(--text-secondary);
   font-size: 13px;
 }
+
 .divider::before,
 .divider::after {
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--card-border);
+  background: var(--border-color);
 }
+
 .divider::before { margin-right: 12px; }
 .divider::after { margin-left: 12px; }
 
@@ -211,40 +215,76 @@ body.light-theme .logo-img {
   color: var(--accent);
   margin-top: 6px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
 }
+
 .guest-text:hover {
   text-decoration: underline;
 }
 
 .input-field {
   width: 100%;
-  padding: 14px;
-  margin-bottom: 14px;
+  padding: 10px 16px;
+  margin-bottom: 12px;
   border-radius: 8px;
-  border: 1px solid var(--card-border);
-  background: rgba(0,0,0,0.25);
-  color: var(--text-color);
-  font-size: 15px;
-  transition: 0.25s ease;
-}
-
-body.light-theme .input-field {
-  background: rgba(255,255,255,0.7);
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: 0.2s ease;
 }
 
 .input-field:focus {
   border-color: var(--accent);
   outline: none;
-  box-shadow: 0 0 8px rgba(176,0,58,0.35);
+}
+
+.input-field::placeholder {
+  color: var(--text-secondary);
 }
 
 #loginForm, #signupForm {
   transition: opacity 0.25s ease;
 }
 
-/* Notification styles */
+.form-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.form-link:hover {
+  text-decoration: underline;
+}
+
+.form-text {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.back-link {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.terms-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: left;
+}
+
+.terms-label input {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
 #notificationArea {
   position: fixed;
   top: calc(70px + env(safe-area-inset-top));
@@ -256,7 +296,7 @@ body.light-theme .input-field {
 .notification {
   background: var(--card-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 14px 18px;
   margin-bottom: 12px;
@@ -304,26 +344,37 @@ body.light-theme .input-field {
 footer {
   text-align: center;
   padding: 16px;
-  font-size: 11px;
-  border-top: 1px solid var(--card-border);
-  color: #888;
+  font-size: 12px;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-secondary);
 }
+
 footer a {
-  color: #888;
-  margin: 0 3px;
+  color: var(--text-secondary);
+  margin: 0 6px;
   text-decoration: none;
-  transition: color 0.25s ease;
+  transition: color 0.2s ease;
 }
-footer a:hover { color: var(--accent); }
+
+footer a:hover { 
+  color: var(--accent); 
+}
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 640px) {
-  .login-card { padding: 45px 30px; }
-  .login-card h1 { font-size: 27px; }
+@media (max-width: 768px) {
+  .header {
+    padding: 12px 16px;
+  }
+  .login-card { 
+    padding: 40px 28px; 
+  }
+  .login-card h1 { 
+    font-size: 28px; 
+  }
   #notificationArea {
     left: 16px;
     right: 16px;
@@ -344,7 +395,9 @@ footer a:hover { color: var(--accent); }
     <a href="https://patholytica.com">
       <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     </a>
-    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
+    <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+      <i class="fas fa-circle-half-stroke"></i>
+    </button>
   </div>
 </div>
 
@@ -355,11 +408,10 @@ footer a:hover { color: var(--accent); }
 <p>Your tool to <strong>LOVE</strong> what you learn</p>
 
 <!-- Initial buttons -->
-
 <div id="initialButtons">
   <button id="googleLoginBtn" class="login-btn google-btn">
     <i class="fab fa-google btn-icon"></i>
-    <span>Log with Google</span>
+    <span>Continue with Google</span>
     <div class="spinner" id="googleSpinner"></div>
   </button>
 
@@ -367,40 +419,36 @@ footer a:hover { color: var(--accent); }
 
   <button class="login-btn" id="startLoginBtn">
     <i class="fas fa-envelope btn-icon"></i>
-    <span>Login with Email</span>
+    <span>Continue with Email</span>
   </button>
 
   <span class="guest-text" id="guestBtn">
     <i class="fas fa-user-secret"></i>
-    <span>Guest Mode</span>
+    <span>Continue as Guest</span>
   </span>
 </div>
 
 <!-- Login form -->
-
 <form id="loginForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
   <input type="email" placeholder="Email Address" class="input-field" id="loginEmail" required>
   <input type="password" placeholder="Password" class="input-field" id="loginPassword" required>
 
-  <button type="submit" class="login-btn" id="loginSubmitBtn" style="width:100%; margin-top:12px;">
+  <button type="submit" class="login-btn" id="loginSubmitBtn" style="margin-top:12px;">
     <span>Continue</span>
     <div class="spinner" id="loginSpinner"></div>
   </button>
 
-  <p style="margin-top:20px; font-size:14px; color:#999;">
+  <p class="form-text">
     Don't have an account? 
-    <a href="#" id="showSignupLink" style="color:var(--accent); text-decoration:none; font-weight:600;">
-      Sign up
-    </a>
+    <a href="#" id="showSignupLink" class="form-link">Sign up</a>
   </p>
 
-  <p style="margin-top:10px; font-size:14px;">
-    <a href="#" id="backToInitial" style="color:#888; text-decoration:none;">← Back</a>
+  <p class="back-link">
+    <a href="#" id="backToInitial" class="form-link">← Back</a>
   </p>
 </form>
 
 <!-- Signup form -->
-
 <form id="signupForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
   <input type="text" placeholder="Full Name" class="input-field" id="signupName" required>
   <input type="email" placeholder="Email Address" class="input-field" id="signupEmail" required>
@@ -408,20 +456,19 @@ footer a:hover { color: var(--accent); }
   <input type="password" placeholder="Password (min. 8 characters)" class="input-field" id="signupPassword" minlength="8" required>
   <input type="password" placeholder="Confirm Password" class="input-field" id="signupConfirm" required>
 
-  <label style="display:flex; align-items:center; justify-content:center; margin:16px 0; font-size:13px; color:#999;">
-    <input type="checkbox" id="termsCheckbox" required style="margin-right:8px;">
-    I agree to the <a href="#" style="color:var(--accent); margin:0 3px;">Terms</a> 
-    and <a href="#" style="color:var(--accent); margin:0 3px;">Privacy Policy</a>
+  <label class="terms-label">
+    <input type="checkbox" id="termsCheckbox" required>
+    <span>I agree to the <a href="#" class="form-link">Terms</a> and <a href="#" class="form-link">Privacy Policy</a></span>
   </label>
 
-  <button type="submit" class="login-btn" id="signupSubmitBtn" style="width:100%; margin-top:12px;">
+  <button type="submit" class="login-btn" id="signupSubmitBtn" style="margin-top:12px;">
     <span>Create Account</span>
     <div class="spinner" id="signupSpinner"></div>
   </button>
 
-  <p style="margin-top:20px; font-size:14px; color:#999;">
+  <p class="form-text">
     Already have an account?
-    <a href="#" id="showLoginLink" style="color:var(--accent); font-weight:600;">Login</a>
+    <a href="#" id="showLoginLink" class="form-link">Login</a>
   </p>
 </form>
 
@@ -535,13 +582,12 @@ backToInitial.addEventListener("click", (e) => {
   }, 250);
 });
 
-// Guest mode
+// Guest mode - redirects to libraries page
 guestBtn.addEventListener("click", () => {
-  showNotification("Entering Guest Mode. Limited features available.", "info");
+  showNotification("Entering Guest Mode. Redirecting...", "info");
   setTimeout(() => {
-    // window.location.href = "dashboard.html?guest=true";
-    console.log("Navigate to guest dashboard");
-  }, 1500);
+    window.location.href = "https://patholytica.com/home";
+  }, 1000);
 });
 
 // Switch to signup
@@ -566,7 +612,7 @@ showLoginLink.addEventListener("click", (e) => {
   }, 250);
 });
 
-// LOGIN
+// LOGIN - redirects to libraries page
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value.trim();
@@ -581,8 +627,8 @@ form.addEventListener("submit", (e) => {
     .then(() => {
       showNotification("Login successful! Redirecting...", "success");
       setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 1500);
+        window.location.href = "https://patholytica.com/home";
+      }, 1000);
     })
     .catch(err => {
       console.error("Login error:", err);
@@ -617,7 +663,7 @@ form.addEventListener("submit", (e) => {
     });
 });
 
-// SIGNUP
+// SIGNUP - redirects to libraries page
 signupForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const name = document.getElementById('signupName').value.trim();
@@ -651,8 +697,8 @@ signupForm.addEventListener("submit", (e) => {
     .then(() => {
       showNotification("Account created successfully! Redirecting...", "success");
       setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 1500);
+        window.location.href = "https://patholytica.com/home";
+      }, 1000);
     })
     .catch(err => {
       console.error("Signup error:", err);
@@ -680,7 +726,7 @@ signupForm.addEventListener("submit", (e) => {
     });
 });
 
-// GOOGLE SIGN-IN with iOS/Mobile detection
+// GOOGLE SIGN-IN with iOS/Mobile detection - redirects to libraries page
 const provider = new GoogleAuthProvider();
 const googleBtn = document.getElementById("googleLoginBtn");
 const googleSpinner = document.getElementById("googleSpinner");
@@ -699,8 +745,8 @@ const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
       console.log("Google User signed in via redirect:", result.user.email);
       showNotification("Welcome to Patholytica!", "success");
       setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 1500);
+        window.location.href = "https://patholytica.com/home";
+      }, 1000);
     }
   } catch (error) {
     console.error("Redirect sign-in error:", error);
@@ -740,8 +786,8 @@ googleBtn.addEventListener("click", async () => {
       console.log("Google User signed in:", result.user.email);
       showNotification("Welcome to Patholytica!", "success");
       setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 1500);
+        window.location.href = "https://patholytica.com/home";
+      }, 1000);
     }
   } catch (error) {
     console.error("Google sign-in error:", error);
