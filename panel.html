@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Patholytica — Academic Libraries</title>
+<title>Patholytica — by MedicineBank</title>
 
 <!-- Font Awesome for icons -->
 
@@ -12,34 +12,36 @@
 
 <style>
 :root {
-  --bg-color: #0f0f0f;
-  --text-primary: #fff;
-  --text-secondary: #aaa;
-  --card-bg: #1f1f1f;
-  --hover-bg: #2a2a2a;
-  --border-color: #303030;
-  --accent: #3ea6ff;
-  --accent-hover: #2d8ed6;
+  --bg-color: #0d0d0d;
+  --text-color: #fff;
+  --card-bg: rgba(24,24,24,0.7);
+  --card-border: rgba(255,255,255,0.07);
+  --accent: #b0003a;
+  --accent-hover: #88002a;
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
 }
 
 body.light-theme {
-  --bg-color: #ffffff;
-  --text-primary: #0f0f0f;
-  --text-secondary: #606060;
-  --card-bg: #f9f9f9;
-  --hover-bg: #f0f0f0;
-  --border-color: #e5e5e5;
-  --accent: #065fd4;
-  --accent-hover: #0448a3;
+  --bg-color: #f5f5f5;
+  --text-color: #111;
+  --card-bg: rgba(255,255,255,0.65);
+  --card-border: rgba(0,0,0,0.1);
+  --accent: #b0003a;
+  --accent-hover: #88002a;
 }
 
 * { box-sizing: border-box; }
-html, body { margin:0; padding:0; min-height:100%; font-family: "Roboto", Arial, sans-serif; }
+html, body { margin:0; padding:0; height:100%; font-family: "Inter", Arial, sans-serif; }
 
 body {
   background: var(--bg-color);
-  color: var(--text-primary);
-  transition: background 0.2s ease, color 0.2s ease;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  transition: background 0.35s ease;
 }
 
 .header-wrapper {
@@ -47,7 +49,7 @@ body {
   top: 0;
   background: var(--bg-color);
   padding-top: env(safe-area-inset-top);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--card-border);
   z-index: 40;
 }
 
@@ -55,15 +57,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 24px;
-  max-width: 1400px;
-  margin: 0 auto;
+  padding: 16px 18px;
 }
 
 .logo-img {
-  height: 28px;
+  height: 32px;
   width: auto;
-  transition: filter 0.2s ease;
+  transition: filter 0.25s ease;
   cursor: pointer;
 }
 
@@ -71,316 +71,180 @@ body.light-theme .logo-img {
   filter: invert(1);
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.icon-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.theme-toggle {
+  padding: 6px 14px;
+  font-size: 12.5px;
   background: transparent;
-  border: none;
-  color: var(--text-primary);
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  transition: background 0.2s ease;
+  transition: 0.25s ease;
 }
-
-.icon-btn:hover {
-  background: var(--hover-bg);
-}
-
-.user-menu {
-  position: relative;
-}
-
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.user-avatar:hover {
-  transform: scale(1.05);
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  min-width: 200px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  display: none;
-  z-index: 100;
-}
-
-.dropdown-menu.show {
-  display: block;
-}
-
-.dropdown-item {
-  padding: 12px 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text-primary);
-  text-decoration: none;
-  transition: background 0.2s ease;
-  border: none;
-  background: transparent;
-  width: 100%;
-  text-align: left;
-  font-size: 14px;
-}
-
-.dropdown-item:hover {
-  background: var(--hover-bg);
-}
-
-.dropdown-divider {
-  height: 1px;
-  background: var(--border-color);
-  margin: 4px 0;
-}
-
-.main-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 32px 24px 60px;
-}
-
-.hero-section {
-  margin-bottom: 48px;
-}
-
-.hero-section h1 {
-  font-size: 32px;
-  margin: 0 0 8px 0;
-  font-weight: 500;
-}
-
-.hero-section p {
-  font-size: 15px;
-  color: var(--text-secondary);
-  margin: 0 0 24px 0;
-  line-height: 1.6;
-}
-
-.search-bar {
-  max-width: 600px;
-  position: relative;
-}
-
-.search-input {
-  width: 100%;
-  padding: 10px 16px;
-  border-radius: 24px;
-  border: 1px solid var(--border-color);
-  background: var(--card-bg);
-  color: var(--text-primary);
-  font-size: 14px;
-  transition: border-color 0.2s ease;
-}
-
-.search-input:focus {
+.theme-toggle:hover {
   border-color: var(--accent);
-  outline: none;
+  color: var(--accent);
 }
 
-.search-input::placeholder {
-  color: var(--text-secondary);
-}
-
-.section-header {
-  margin-bottom: 20px;
-}
-
-.section-title {
-  font-size: 20px;
-  font-weight: 500;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.section-icon {
-  font-size: 20px;
-}
-
-.library-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-  margin-bottom: 48px;
-}
-
-.library-card {
-  background: transparent;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  text-decoration: none;
-  color: var(--text-primary);
-  display: block;
-}
-
-.library-card:hover {
-  transform: scale(1.02);
-}
-
-.library-card:hover .library-thumbnail {
-  transform: scale(1.05);
-}
-
-.library-thumbnail-wrapper {
-  width: 100%;
-  height: 180px;
-  overflow: hidden;
-  border-radius: 12px;
-  background: var(--card-bg);
-  position: relative;
-}
-
-.library-thumbnail {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.library-duration {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.library-content {
-  padding: 12px 0;
-}
-
-.library-header {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-
-.author-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-  flex-shrink: 0;
-}
-
-.library-info {
+.login-container {
   flex: 1;
-  min-width: 0;
-}
-
-.library-title {
-  font-size: 15px;
-  font-weight: 500;
-  margin: 0 0 4px 0;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.library-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  flex-wrap: wrap;
-}
-
-.meta-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.meta-separator {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--text-secondary);
-}
-
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-secondary);
-}
-
-.empty-state i {
-  font-size: 48px;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
-
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--bg-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  padding: calc(40px + env(safe-area-inset-top))
+           calc(20px + env(safe-area-inset-left))
+           calc(40px + env(safe-area-inset-bottom))
+           calc(20px + env(safe-area-inset-right));
 }
 
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid var(--border-color);
-  border-top-color: var(--accent);
+.login-card {
+  width: 100%;
+  max-width: 430px;
+  padding: 55px 42px;
+  background: var(--card-bg);
+  backdrop-filter: blur(22px);
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+  text-align: center;
+  animation: fadeUp 0.5s ease both;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.login-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.55);
+}
+
+.login-card h1 {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.login-card p {
+  font-size: 15px;
+  margin-bottom: 20px;
+  color: #999;
+  line-height: 1.55;
+}
+
+.login-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 42px;
+  font-size: 16px;
+  font-weight: 600;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: 0.25s ease;
+  box-shadow: 0 6px 16px rgba(176,0,58,0.35);
+  cursor: pointer;
+  border: none;
+  margin-bottom: 12px;
+  width: 100%;
+}
+.login-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(176,0,58,0.45);
+}
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.google-btn {
+  background: #4285F4;
+  box-shadow: 0 6px 16px rgba(66,133,244,0.35);
+}
+.google-btn:hover:not(:disabled) {
+  background: #357ae8;
+  box-shadow: 0 10px 22px rgba(66,133,244,0.45);
+}
+
+.btn-icon {
+  font-size: 18px;
+}
+
+.spinner {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
+  border-top-color: white;
   animation: spin 0.8s linear infinite;
+}
+.spinner.show {
+  display: inline-block;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  color: #666;
+  font-size: 13px;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--card-border);
+}
+.divider::before { margin-right: 12px; }
+.divider::after { margin-left: 12px; }
+
+.guest-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--accent);
+  margin-top: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+}
+.guest-text:hover {
+  text-decoration: underline;
+}
+
+.input-field {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: rgba(0,0,0,0.25);
+  color: var(--text-color);
+  font-size: 15px;
+  transition: 0.25s ease;
+}
+
+body.light-theme .input-field {
+  background: rgba(255,255,255,0.7);
+}
+
+.input-field:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 8px rgba(176,0,58,0.35);
+}
+
+#loginForm, #signupForm {
+  transition: opacity 0.25s ease;
+}
+
+/* Notification styles */
 #notificationArea {
   position: fixed;
   top: calc(70px + env(safe-area-inset-top));
@@ -392,7 +256,7 @@ body.light-theme .logo-img {
 .notification {
   background: var(--card-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--card-border);
   border-radius: 10px;
   padding: 14px 18px;
   margin-bottom: 12px;
@@ -417,15 +281,19 @@ body.light-theme .logo-img {
 }
 
 .notification.success .notification-dot {
-  background: #10b981;
+  background: var(--success);
 }
 
 .notification.error .notification-dot {
-  background: #ef4444;
+  background: var(--error);
+}
+
+.notification.warning .notification-dot {
+  background: var(--warning);
 }
 
 .notification.info .notification-dot {
-  background: #3b82f6;
+  background: var(--info);
 }
 
 .notification-message {
@@ -433,17 +301,29 @@ body.light-theme .logo-img {
   line-height: 1.4;
 }
 
-@media (max-width: 768px) {
-  .hero-section h1 { font-size: 26px; }
-  .library-grid {
-    grid-template-columns: 1fr;
-  }
-  .header {
-    padding: 12px 16px;
-  }
-  .main-container {
-    padding: 24px 16px 48px;
-  }
+footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 11px;
+  border-top: 1px solid var(--card-border);
+  color: #888;
+}
+footer a {
+  color: #888;
+  margin: 0 3px;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+footer a:hover { color: var(--accent); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .login-card { padding: 45px 30px; }
+  .login-card h1 { font-size: 27px; }
   #notificationArea {
     left: 16px;
     right: 16px;
@@ -455,12 +335,6 @@ body.light-theme .logo-img {
 </head>
 <body>
 
-<!-- Loading Overlay -->
-
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-spinner"></div>
-</div>
-
 <!-- Notification Area -->
 
 <div id="notificationArea"></div>
@@ -470,87 +344,109 @@ body.light-theme .logo-img {
     <a href="https://patholytica.com">
       <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     </a>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="openSearch()" title="Search">
-        <i class="fas fa-search"></i>
-      </button>
-      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-        <i class="fas fa-circle-half-stroke"></i>
-      </button>
-      <div class="user-menu">
-        <div class="user-avatar" id="userAvatar" onclick="toggleUserMenu()">U</div>
-        <div class="dropdown-menu" id="userDropdown">
-          <div class="dropdown-item">
-            <i class="fas fa-user"></i>
-            <span id="userEmailDisplay">Loading...</span>
-          </div>
-          <div class="dropdown-divider"></div>
-          <a href="dashboard.html" class="dropdown-item">
-            <i class="fas fa-home"></i>
-            <span>Dashboard</span>
-          </a>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <button class="dropdown-item" onclick="handleLogout()">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Sign Out</span>
-          </button>
-        </div>
-      </div>
-    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">Theme</button>
   </div>
 </div>
 
-<div class="main-container">
-  <!-- Hero Section -->
-  <div class="hero-section">
-    <h1>Academic Libraries</h1>
-    <p>Explore curated collections of research data, case studies, and academic resources.</p>
-    <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Search libraries..." id="searchInput">
-    </div>
-  </div>
+<div class="login-container">
+  <div class="login-card">
 
-  <!-- Latest Libraries Section -->
+<h1>Welcome to Patholytica</h1>
+<p>Your tool to <strong>LOVE</strong> what you learn</p>
 
-  <div class="section-header">
-    <h2 class="section-title">
-      <i class="fas fa-clock section-icon"></i>
-      Latest Libraries
-    </h2>
-  </div>
-  <div class="library-grid" id="latestLibraries"></div>
+<!-- Initial buttons -->
 
-  <!-- Most Popular Section -->
+<div id="initialButtons">
+  <button id="googleLoginBtn" class="login-btn google-btn">
+    <i class="fab fa-google btn-icon"></i>
+    <span>Log with Google</span>
+    <div class="spinner" id="googleSpinner"></div>
+  </button>
 
-  <div class="section-header">
-    <h2 class="section-title">
-      <i class="fas fa-fire section-icon"></i>
-      Most Popular
-    </h2>
-  </div>
-  <div class="library-grid" id="popularLibraries"></div>
+  <div class="divider">OR</div>
+
+  <button class="login-btn" id="startLoginBtn">
+    <i class="fas fa-envelope btn-icon"></i>
+    <span>Login with Email</span>
+  </button>
+
+  <span class="guest-text" id="guestBtn">
+    <i class="fas fa-user-secret"></i>
+    <span>Guest Mode</span>
+  </span>
 </div>
+
+<!-- Login form -->
+
+<form id="loginForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
+  <input type="email" placeholder="Email Address" class="input-field" id="loginEmail" required>
+  <input type="password" placeholder="Password" class="input-field" id="loginPassword" required>
+
+  <button type="submit" class="login-btn" id="loginSubmitBtn" style="width:100%; margin-top:12px;">
+    <span>Continue</span>
+    <div class="spinner" id="loginSpinner"></div>
+  </button>
+
+  <p style="margin-top:20px; font-size:14px; color:#999;">
+    Don't have an account? 
+    <a href="#" id="showSignupLink" style="color:var(--accent); text-decoration:none; font-weight:600;">
+      Sign up
+    </a>
+  </p>
+
+  <p style="margin-top:10px; font-size:14px;">
+    <a href="#" id="backToInitial" style="color:#888; text-decoration:none;">← Back</a>
+  </p>
+</form>
+
+<!-- Signup form -->
+
+<form id="signupForm" style="display:none; margin-top:20px; animation: fadeUp 0.5s ease both;">
+  <input type="text" placeholder="Full Name" class="input-field" id="signupName" required>
+  <input type="email" placeholder="Email Address" class="input-field" id="signupEmail" required>
+  <input type="text" placeholder="Username" class="input-field" id="signupUsername" required>
+  <input type="password" placeholder="Password (min. 8 characters)" class="input-field" id="signupPassword" minlength="8" required>
+  <input type="password" placeholder="Confirm Password" class="input-field" id="signupConfirm" required>
+
+  <label style="display:flex; align-items:center; justify-content:center; margin:16px 0; font-size:13px; color:#999;">
+    <input type="checkbox" id="termsCheckbox" required style="margin-right:8px;">
+    I agree to the <a href="#" style="color:var(--accent); margin:0 3px;">Terms</a> 
+    and <a href="#" style="color:var(--accent); margin:0 3px;">Privacy Policy</a>
+  </label>
+
+  <button type="submit" class="login-btn" id="signupSubmitBtn" style="width:100%; margin-top:12px;">
+    <span>Create Account</span>
+    <div class="spinner" id="signupSpinner"></div>
+  </button>
+
+  <p style="margin-top:20px; font-size:14px; color:#999;">
+    Already have an account?
+    <a href="#" id="showLoginLink" style="color:var(--accent); font-weight:600;">Login</a>
+  </p>
+</form>
+
+  </div>
+</div>
+
+<footer>
+  © 2025 Patholytica by MedicineBank. All rights reserved.
+  <br>
+  <a href="#">Privacy Policy</a> | 
+  <a href="#">Terms</a> | 
+  <a href="#">Contact</a>
+</footer>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { 
   getAuth, 
-  onAuthStateChanged,
-  signOut
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-
-// Hide loading overlay after timeout as fallback
-setTimeout(() => {
-  const loadingOverlay = document.getElementById('loadingOverlay');
-  if (loadingOverlay && loadingOverlay.style.display !== 'none') {
-    loadingOverlay.style.display = 'none';
-    console.log("Loading overlay hidden by timeout");
-  }
-}, 3000);
 
 const firebaseConfig = {
   apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
@@ -563,6 +459,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+let isProcessingRedirect = false;
 
 // NOTIFICATION SYSTEM
 function showNotification(message, type = 'info') {
@@ -591,266 +489,294 @@ function showNotification(message, type = 'info') {
   }, 5000);
 }
 
-window.showNotification = showNotification;
-
-// Check authentication status
-onAuthStateChanged(auth, (user) => {
-  const loadingOverlay = document.getElementById('loadingOverlay');
-  
-  if (user) {
-    // User is signed in
-    console.log("User authenticated:", user.email);
-    
-    // Set user avatar initials
-    const userAvatar = document.getElementById('userAvatar');
-    const email = user.email || 'User';
-    const initials = email.substring(0, 2).toUpperCase();
-    userAvatar.textContent = initials;
-    
-    // Set user email in dropdown
-    document.getElementById('userEmailDisplay').textContent = email;
-  } else {
-    // No user signed in - show guest mode
-    console.log("No user authenticated - showing guest mode");
-    const userAvatar = document.getElementById('userAvatar');
-    userAvatar.textContent = 'G';
-    document.getElementById('userEmailDisplay').textContent = 'Guest User';
-  }
-  
-  // Hide loading and show content regardless of auth status
-  if (loadingOverlay) {
-    loadingOverlay.style.display = 'none';
-  }
-  
-  // Initialize page content
-  renderLibraries();
-  
-}, (error) => {
-  // Handle auth error
-  console.error("Auth error:", error);
-  const loadingOverlay = document.getElementById('loadingOverlay');
-  if (loadingOverlay) {
-    loadingOverlay.style.display = 'none';
-  }
-  // Still render libraries even on auth error
-  renderLibraries();
-});
-
-// Logout handler
-window.handleLogout = function() {
-  const currentUser = auth.currentUser;
-  
-  if (!currentUser) {
-    // Not logged in, redirect to login page
-    window.location.href = "index.html";
-    return;
-  }
-  
-  signOut(auth)
-    .then(() => {
-      showNotification("Signed out successfully", "success");
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 1000);
-    })
-    .catch((error) => {
-      console.error("Logout error:", error);
-      showNotification("Error signing out: " + error.message, "error");
-    });
-};
-
-// Theme toggle
-window.toggleTheme = function(){
+// THEME
+function toggleTheme(){
   document.body.classList.toggle('light-theme');
   localStorage.setItem(
     "theme",
     document.body.classList.contains("light-theme") ? "light" : "dark"
   );
-};
+}
 
 if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
 }
 
-// User menu toggle
-window.toggleUserMenu = function() {
-  const dropdown = document.getElementById('userDropdown');
-  dropdown.classList.toggle('show');
-};
+window.toggleTheme = toggleTheme;
 
-// Close dropdown when clicking outside
-document.addEventListener('click', (e) => {
-  const userMenu = document.querySelector('.user-menu');
-  const dropdown = document.getElementById('userDropdown');
+// UI elements
+const initialButtons = document.getElementById("initialButtons");
+const startBtn = document.getElementById("startLoginBtn");
+const form = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
+const showSignupLink = document.getElementById("showSignupLink");
+const showLoginLink = document.getElementById("showLoginLink");
+const guestBtn = document.getElementById("guestBtn");
+const backToInitial = document.getElementById("backToInitial");
+
+// Show login form
+startBtn.addEventListener("click", () => {
+  initialButtons.style.opacity = "0";
+  setTimeout(() => {
+    initialButtons.style.display = "none";
+    form.style.display = "block";
+    form.style.opacity = "1";
+  }, 250);
+});
+
+// Back to initial
+backToInitial.addEventListener("click", (e) => {
+  e.preventDefault();
+  form.style.opacity = "0";
+  setTimeout(() => {
+    form.style.display = "none";
+    initialButtons.style.display = "block";
+    initialButtons.style.opacity = "1";
+  }, 250);
+});
+
+// Guest mode
+guestBtn.addEventListener("click", () => {
+  showNotification("Entering Guest Mode. Limited features available.", "info");
+  setTimeout(() => {
+    // window.location.href = "dashboard.html?guest=true";
+    console.log("Navigate to guest dashboard");
+  }, 1500);
+});
+
+// Switch to signup
+showSignupLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  form.style.opacity = "0";
+  setTimeout(() => {
+    form.style.display = "none";
+    signupForm.style.display = "block";
+    signupForm.style.opacity = "1";
+  }, 250);
+});
+
+// Back to login
+showLoginLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  signupForm.style.opacity = "0";
+  setTimeout(() => {
+    signupForm.style.display = "none";
+    form.style.display = "block";
+    form.style.opacity = "1";
+  }, 250);
+});
+
+// LOGIN
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const loginSpinner = document.getElementById('loginSpinner');
+  const submitBtn = document.getElementById('loginSubmitBtn');
+
+  loginSpinner.classList.add('show');
+  submitBtn.disabled = true;
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      showNotification("Login successful! Redirecting...", "success");
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1500);
+    })
+    .catch(err => {
+      console.error("Login error:", err);
+      let errorMessage = "Login failed. ";
+      
+      switch (err.code) {
+        case 'auth/invalid-email':
+          errorMessage += "Invalid email address.";
+          break;
+        case 'auth/user-disabled':
+          errorMessage += "This account has been disabled.";
+          break;
+        case 'auth/user-not-found':
+          errorMessage += "No account found with this email.";
+          break;
+        case 'auth/wrong-password':
+        case 'auth/invalid-credential':
+          errorMessage += "Incorrect email or password.";
+          break;
+        case 'auth/too-many-requests':
+          errorMessage += "Too many attempts. Try again later.";
+          break;
+        default:
+          errorMessage += err.message;
+      }
+      
+      showNotification(errorMessage, "error");
+    })
+    .finally(() => {
+      loginSpinner.classList.remove('show');
+      submitBtn.disabled = false;
+    });
+});
+
+// SIGNUP
+signupForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const username = document.getElementById('signupUsername').value.trim();
+  const password = document.getElementById('signupPassword').value;
+  const confirmPassword = document.getElementById('signupConfirm').value;
+  const termsChecked = document.getElementById('termsCheckbox').checked;
+  const signupSpinner = document.getElementById('signupSpinner');
+  const submitBtn = document.getElementById('signupSubmitBtn');
+
+  if (!termsChecked) {
+    showNotification("Please agree to the Terms and Privacy Policy", "warning");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showNotification("Passwords do not match.", "error");
+    return;
+  }
+
+  if (password.length < 8) {
+    showNotification("Password must be at least 8 characters.", "error");
+    return;
+  }
+
+  signupSpinner.classList.add('show');
+  submitBtn.disabled = true;
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      showNotification("Account created successfully! Redirecting...", "success");
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1500);
+    })
+    .catch(err => {
+      console.error("Signup error:", err);
+      let errorMessage = "Signup failed. ";
+      
+      switch (err.code) {
+        case 'auth/email-already-in-use':
+          errorMessage += "Email is already registered.";
+          break;
+        case 'auth/invalid-email':
+          errorMessage += "Invalid email address.";
+          break;
+        case 'auth/weak-password':
+          errorMessage += "Password is too weak.";
+          break;
+        default:
+          errorMessage += err.message;
+      }
+      
+      showNotification(errorMessage, "error");
+    })
+    .finally(() => {
+      signupSpinner.classList.remove('show');
+      submitBtn.disabled = false;
+    });
+});
+
+// GOOGLE SIGN-IN with iOS/Mobile detection
+const provider = new GoogleAuthProvider();
+const googleBtn = document.getElementById("googleLoginBtn");
+const googleSpinner = document.getElementById("googleSpinner");
+
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+// Check for redirect result on page load (for iOS)
+(async function checkRedirectResult() {
+  if (isProcessingRedirect) return;
+  isProcessingRedirect = true;
   
-  if (!userMenu.contains(e.target) && dropdown.classList.contains('show')) {
-    dropdown.classList.remove('show');
+  try {
+    const result = await getRedirectResult(auth);
+    if (result && result.user) {
+      console.log("Google User signed in via redirect:", result.user.email);
+      showNotification("Welcome to Patholytica!", "success");
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1500);
+    }
+  } catch (error) {
+    console.error("Redirect sign-in error:", error);
+    if (error.code && error.code !== 'auth/cancelled-popup-request') {
+      let errorMessage = 'Sign-in failed. ';
+      switch (error.code) {
+        case 'auth/account-exists-with-different-credential':
+          errorMessage += 'Account exists with different sign-in method.';
+          break;
+        case 'auth/popup-blocked':
+          errorMessage += 'Popup was blocked by browser.';
+          break;
+        default:
+          errorMessage += error.message;
+      }
+      showNotification(errorMessage, "error");
+    }
+  } finally {
+    isProcessingRedirect = false;
+  }
+})();
+
+googleBtn.addEventListener("click", async () => {
+  if (googleBtn.disabled) return;
+  
+  googleBtn.disabled = true;
+  googleSpinner.classList.add('show');
+  
+  try {
+    // Use redirect for iOS (more reliable than popup)
+    if (isIOS) {
+      await signInWithRedirect(auth, provider);
+      // Page will reload, no need to hide spinner
+    } else {
+      // Use popup for desktop and Android
+      const result = await signInWithPopup(auth, provider);
+      console.log("Google User signed in:", result.user.email);
+      showNotification("Welcome to Patholytica!", "success");
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1500);
+    }
+  } catch (error) {
+    console.error("Google sign-in error:", error);
+    
+    let errorMessage = null;
+    if (error.code === 'auth/popup-closed-by-user') {
+      errorMessage = 'Sign-in cancelled. Please try again.';
+    } else if (error.code === 'auth/popup-blocked') {
+      errorMessage = 'Popup blocked. Please allow popups for this site.';
+    } else if (error.code === 'auth/cancelled-popup-request') {
+      // Silent fail - multiple clicks
+      errorMessage = null;
+    } else if (error.code === 'auth/account-exists-with-different-credential') {
+      errorMessage = 'Account exists with different sign-in method.';
+    } else {
+      errorMessage = 'Google sign-in failed: ' + error.message;
+    }
+    
+    if (errorMessage) {
+      showNotification(errorMessage, "error");
+    }
+  } finally {
+    if (!isIOS) {
+      googleBtn.disabled = false;
+      googleSpinner.classList.remove('show');
+    }
   }
 });
 
-window.openSearch = function() {
-  document.getElementById('searchInput').focus();
-};
-
-// Sample library data
-const libraries = {
-  latest: [
-    {
-      id: 1,
-      title: "Cardiovascular Pathology Database",
-      author: "Dr. Sarah Mitchell",
-      authorInitials: "SM",
-      date: "2 days ago",
-      datasets: 248,
-      views: 1203,
-      thumbnail: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=600&fit=crop"
-    },
-    {
-      id: 2,
-      title: "Neurological Disorders Repository",
-      author: "Dr. James Chen",
-      authorInitials: "JC",
-      date: "5 days ago",
-      datasets: 312,
-      views: 892,
-      thumbnail: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=600&fit=crop"
-    },
-    {
-      id: 3,
-      title: "Oncology Research Collection",
-      author: "Dr. Emily Rodriguez",
-      authorInitials: "ER",
-      date: "1 week ago",
-      datasets: 437,
-      views: 1567,
-      thumbnail: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=600&fit=crop"
-    },
-    {
-      id: 4,
-      title: "Infectious Disease Archive",
-      author: "Dr. Michael Park",
-      authorInitials: "MP",
-      date: "1 week ago",
-      datasets: 195,
-      views: 743,
-      thumbnail: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&h=600&fit=crop"
-    }
-  ],
-  popular: [
-    {
-      id: 5,
-      title: "Clinical Pathology Atlas",
-      author: "Dr. Lisa Anderson",
-      authorInitials: "LA",
-      date: "3 months ago",
-      datasets: 892,
-      views: 15234,
-      thumbnail: "https://images.unsplash.com/photo-1581093458791-9d42e1b7f1f9?w=800&h=600&fit=crop"
-    },
-    {
-      id: 6,
-      title: "Pediatric Disease Database",
-      author: "Dr. Robert Kim",
-      authorInitials: "RK",
-      date: "2 months ago",
-      datasets: 524,
-      views: 12891,
-      thumbnail: "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800&h=600&fit=crop"
-    },
-    {
-      id: 7,
-      title: "Gastrointestinal Pathology Hub",
-      author: "Dr. Maria Santos",
-      authorInitials: "MS",
-      date: "4 months ago",
-      datasets: 651,
-      views: 11456,
-      thumbnail: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&h=600&fit=crop"
-    },
-    {
-      id: 8,
-      title: "Dermatopathology Library",
-      author: "Dr. David Thompson",
-      authorInitials: "DT",
-      date: "5 months ago",
-      datasets: 389,
-      views: 9823,
-      thumbnail: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&h=600&fit=crop"
-    }
-  ]
-};
-
-function createLibraryCard(library) {
-  return `
-    <a href="library.html?id=${library.id}" class="library-card">
-      <div class="library-thumbnail-wrapper">
-        <img src="${library.thumbnail}" alt="${library.title}" class="library-thumbnail" />
-        <div class="library-duration">${library.datasets} datasets</div>
-      </div>
-      
-      <div class="library-content">
-        <div class="library-header">
-          <div class="author-avatar">${library.authorInitials}</div>
-          <div class="library-info">
-            <h3 class="library-title">${library.title}</h3>
-            <div class="library-meta">
-              <span class="meta-item">${library.author}</span>
-              <span class="meta-separator"></span>
-              <span class="meta-item">${library.views.toLocaleString()} views</span>
-              <span class="meta-separator"></span>
-              <span class="meta-item">${library.date}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </a>
-  `;
-}
-
-function renderLibraries() {
-  const latestContainer = document.getElementById('latestLibraries');
-  const popularContainer = document.getElementById('popularLibraries');
-  
-  if (latestContainer && popularContainer) {
-    latestContainer.innerHTML = libraries.latest.map(lib => createLibraryCard(lib)).join('');
-    popularContainer.innerHTML = libraries.popular.map(lib => createLibraryCard(lib)).join('');
-  }
-}
-
-// Search functionality
-const searchInput = document.getElementById('searchInput');
-if (searchInput) {
-  searchInput.addEventListener('input', (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    
-    if (searchTerm === '') {
-      renderLibraries();
-      return;
-    }
-    
-    const allLibraries = [...libraries.latest, ...libraries.popular];
-    const filtered = allLibraries.filter(lib => 
-      lib.title.toLowerCase().includes(searchTerm) ||
-      lib.author.toLowerCase().includes(searchTerm)
-    );
-    
-    const latestContainer = document.getElementById('latestLibraries');
-    const popularContainer = document.getElementById('popularLibraries');
-    
-    if (filtered.length === 0) {
-      latestContainer.innerHTML = `
-        <div class="empty-state" style="grid-column: 1/-1;">
-          <i class="fas fa-search"></i>
-          <p>No libraries found matching "${searchTerm}"</p>
-        </div>
-      `;
-      popularContainer.innerHTML = '';
-    } else {
-      latestContainer.innerHTML = filtered.map(lib => createLibraryCard(lib)).join('');
-      popularContainer.innerHTML = '';
-    }
-  });
-}
+// Welcome message on load
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    showNotification("Welcome to Patholytica! Start your journey.", "info");
+  }, 800);
+});
 </script>
 
 </body>
