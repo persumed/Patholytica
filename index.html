@@ -868,7 +868,7 @@ body.light-theme .logo-img {
             <div class="user-name" id="userName">Loading...</div>
             <div class="user-email" id="userEmail">Loading...</div>
           </div>
-          <a href="dashboard.html" class="dropdown-item">
+          <a href="index.html" class="dropdown-item">
             <i class="fas fa-home"></i>
             <span>Dashboard</span>
           </a>
@@ -1126,7 +1126,7 @@ document.getElementById('loginPopup').addEventListener('click', function(e) {
     if (result && result.user) {
       console.log("Google User signed in via redirect:", result.user.email);
       showNotification("Welcome to Patholytica!", "success");
-      setTimeout(() => window.location.href = "dashboard.html", 1500);
+      setTimeout(() => window.location.href = "index.html", 1500);
     }
   } catch (error) {
     console.error("Redirect sign-in error:", error);
@@ -1164,7 +1164,7 @@ googleBtn.addEventListener("click", async () => {
       console.log("Google User signed in:", result.user.email);
       showNotification("Welcome to Patholytica!", "success");
       closeLoginPopup();
-      setTimeout(() => window.location.href = "dashboard.html", 1500);
+      setTimeout(() => window.location.href = "index.html", 1500);
     }
   } catch (error) {
     console.error("Google sign-in error:", error);
@@ -1201,7 +1201,7 @@ document.getElementById('emailLoginForm').addEventListener('submit', (e) => {
     .then(() => {
       showNotification("Login successful! Redirecting...", "success");
       closeLoginPopup();
-      setTimeout(() => window.location.href = "dashboard.html", 1500);
+      setTimeout(() => window.location.href = "index.html", 1500);
     })
     .catch(err => {
       console.error("Login error:", err);
@@ -1262,7 +1262,7 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
     .then(() => {
       showNotification("Account created successfully! Redirecting...", "success");
       closeLoginPopup();
-      setTimeout(() => window.location.href = "dashboard.html", 1500);
+      setTimeout(() => window.location.href = "index.html", 1500);
     })
     .catch(err => {
       console.error("Signup error:", err);
