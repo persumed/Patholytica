@@ -367,9 +367,9 @@ body.light-theme .logo-img {
 .comment-panel {
   position: fixed;
   right: -400px;
-  top: 70px;
+  top: calc(53px + env(safe-area-inset-top));  /* Changed */
   width: 380px;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 53px - env(safe-area-inset-top));  /* Changed */
   background: var(--card-bg);
   border-left: 1px solid var(--border-color);
   transition: right 0.3s ease;
