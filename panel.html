@@ -4,28 +4,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Patholytica — Playlists</title>
+<title>Patholytica — Library</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
   --bg-color: #0f0f0f;
   --text-primary: #fff;
   --text-secondary: #aaa;
-  --card-bg: #1f1f1f;
   --hover-bg: #2a2a2a;
   --border-color: #303030;
   --accent: #3ea6ff;
-  --accent-hover: #2d8ed6;
 }
 body.light-theme {
   --bg-color: #ffffff;
   --text-primary: #0f0f0f;
   --text-secondary: #606060;
-  --card-bg: #f9f9f9;
   --hover-bg: #f0f0f0;
   --border-color: #e5e5e5;
   --accent: #065fd4;
-  --accent-hover: #0448a3;
 }
 * { box-sizing: border-box; }
 html, body { 
@@ -87,89 +83,16 @@ body.light-theme .logo-img {
   justify-content: center;
   font-size: 18px;
   transition: background 0.2s ease;
-  position: relative;
 }
 .icon-btn:hover {
   background: var(--hover-bg);
 }
-.playlist-container {
+.list-container {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
   padding: 80px 24px 80px;
   padding-top: calc(70px + env(safe-area-inset-top));
-}
-.page-header {
-  margin-bottom: 24px;
-}
-.page-title {
-  font-size: 28px;
-  font-weight: 600;
-  margin: 0 0 8px 0;
-}
-.page-subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin: 0;
-}
-.playlist-section {
-  margin-bottom: 40px;
-}
-.playlist-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 2px solid var(--border-color);
-  margin-bottom: 4px;
-}
-.playlist-title-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.playlist-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  background: var(--accent);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  flex-shrink: 0;
-}
-.playlist-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-}
-.playlist-count {
-  font-size: 13px;
-  color: var(--text-secondary);
-  background: var(--card-bg);
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-weight: 500;
-}
-.playlist-menu-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  transition: all 0.2s ease;
-}
-.playlist-menu-btn:hover {
-  background: var(--hover-bg);
-  color: var(--text-primary);
 }
 .article-list {
   list-style: none;
@@ -177,46 +100,35 @@ body.light-theme .logo-img {
   padding: 0;
 }
 .article-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 8px;
+  padding: 24px 0;
   border-bottom: 1px solid var(--border-color);
-  transition: background 0.2s ease;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 .article-item:hover {
   background: var(--hover-bg);
-}
-.article-number {
-  font-size: 13px;
-  color: var(--text-secondary);
-  min-width: 24px;
-  text-align: right;
-  font-weight: 500;
-}
-.article-content {
-  flex: 1;
-  min-width: 0;
+  margin: 0 -12px;
+  padding: 24px 12px;
 }
 .article-title {
-  font-size: 15px;
-  font-weight: 400;
-  margin: 0 0 4px 0;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 42px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
   color: var(--text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-wrap: break-word;
 }
 .article-item:hover .article-title {
   color: var(--accent);
 }
 .article-meta {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 .meta-dot {
   width: 3px;
@@ -224,73 +136,15 @@ body.light-theme .logo-img {
   background: var(--text-secondary);
   border-radius: 50%;
 }
-.article-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.article-item:hover .article-actions {
-  opacity: 1;
-}
-.article-action-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
-.article-action-btn:hover {
-  background: var(--card-bg);
-  color: var(--text-primary);
-}
-.create-playlist-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  color: var(--text-primary);
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  margin-bottom: 32px;
-}
-.create-playlist-btn:hover {
-  background: var(--hover-bg);
-  border-color: var(--accent);
-}
-.create-playlist-btn i {
-  font-size: 16px;
-  color: var(--accent);
-}
 @media (max-width: 768px) {
-  .playlist-container {
+  .list-container {
     padding: 90px 16px 80px;
   }
-  .page-title {
-    font-size: 24px;
-  }
-  .article-number {
-    min-width: 20px;
-    font-size: 12px;
-  }
   .article-title {
-    font-size: 14px;
+    font-size: 32px;
   }
-  .article-actions {
-    opacity: 1;
+  .article-meta {
+    font-size: 13px;
   }
 }
 </style>
@@ -314,433 +168,179 @@ body.light-theme .logo-img {
   </div>
 </div>
 
-<div class="playlist-container">
-  <div class="page-header">
-    <h1 class="page-title">Your Playlists</h1>
-    <p class="page-subtitle">Organize and manage your medical literature collections</p>
-  </div>
-
-  <button class="create-playlist-btn" onclick="createNewPlaylist()">
-    <i class="fas fa-plus"></i>
-    <span>Create New Playlist</span>
-  </button>
-
-  <!-- Playlist 1: Reading List -->
-
-  <div class="playlist-section">
-    <div class="playlist-header">
-      <div class="playlist-title-section">
-        <div class="playlist-icon">
-          <i class="fas fa-book"></i>
-        </div>
-        <h2 class="playlist-title">Reading List</h2>
-        <span class="playlist-count">12 articles</span>
+<div class="list-container">
+  <ul class="article-list">
+    <li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+      <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
+      <div class="article-meta">
+        <span>Dr. Sarah Mitchell</span>
+        <div class="meta-dot"></div>
+        <span>Mar 15, 2024</span>
+        <div class="meta-dot"></div>
+        <span>12 min read</span>
       </div>
-      <button class="playlist-menu-btn" onclick="showPlaylistMenu(event, 'Reading List')">
-        <i class="fas fa-ellipsis-vertical"></i>
-      </button>
-    </div>
-    <ul class="article-list">
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">1</div>
-        <div class="article-content">
-          <h3 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h3>
-          <div class="article-meta">
-            <span>Dr. Sarah Mitchell</span>
-            <div class="meta-dot"></div>
-            <span>Mar 15, 2024</span>
-            <div class="meta-dot"></div>
-            <span>12 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">2</div>
-        <div class="article-content">
-          <h3 class="article-title">Advances in Neurological Imaging Techniques</h3>
-          <div class="article-meta">
-            <span>Dr. James Chen</span>
-            <div class="meta-dot"></div>
-            <span>Mar 12, 2024</span>
-            <div class="meta-dot"></div>
-            <span>8 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">3</div>
-        <div class="article-content">
-          <h3 class="article-title">Molecular Mechanisms of Cancer Progression</h3>
-          <div class="article-meta">
-            <span>Dr. Emily Rodriguez</span>
-            <div class="meta-dot"></div>
-            <span>Mar 10, 2024</span>
-            <div class="meta-dot"></div>
-            <span>15 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">4</div>
-        <div class="article-content">
-          <h3 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h3>
-          <div class="article-meta">
-            <span>Dr. Robert Kim</span>
-            <div class="meta-dot"></div>
-            <span>Mar 8, 2024</span>
-            <div class="meta-dot"></div>
-            <span>10 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">5</div>
-        <div class="article-content">
-          <h3 class="article-title">Genetic Markers in Personalized Medicine Approaches</h3>
-          <div class="article-meta">
-            <span>Dr. Lisa Zhang</span>
-            <div class="meta-dot"></div>
-            <span>Mar 5, 2024</span>
-            <div class="meta-dot"></div>
-            <span>14 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-    </ul>
+    </li>
+
+```
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
+  <div class="article-meta">
+    <span>Dr. James Chen</span>
+    <div class="meta-dot"></div>
+    <span>Mar 12, 2024</span>
+    <div class="meta-dot"></div>
+    <span>8 min read</span>
   </div>
+</li>
 
-  <!-- Playlist 2: Cardiology Research -->
-
-  <div class="playlist-section">
-    <div class="playlist-header">
-      <div class="playlist-title-section">
-        <div class="playlist-icon" style="background: #ff4444;">
-          <i class="fas fa-heart-pulse"></i>
-        </div>
-        <h2 class="playlist-title">Cardiology Research</h2>
-        <span class="playlist-count">8 articles</span>
-      </div>
-      <button class="playlist-menu-btn" onclick="showPlaylistMenu(event, 'Cardiology Research')">
-        <i class="fas fa-ellipsis-vertical"></i>
-      </button>
-    </div>
-    <ul class="article-list">
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">1</div>
-        <div class="article-content">
-          <h3 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h3>
-          <div class="article-meta">
-            <span>Dr. Sarah Mitchell</span>
-            <div class="meta-dot"></div>
-            <span>Mar 15, 2024</span>
-            <div class="meta-dot"></div>
-            <span>12 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">2</div>
-        <div class="article-content">
-          <h3 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h3>
-          <div class="article-meta">
-            <span>Dr. Robert Kim</span>
-            <div class="meta-dot"></div>
-            <span>Mar 8, 2024</span>
-            <div class="meta-dot"></div>
-            <span>10 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">3</div>
-        <div class="article-content">
-          <h3 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h3>
-          <div class="article-meta">
-            <span>Dr. Lisa Zhang</span>
-            <div class="meta-dot"></div>
-            <span>Mar 5, 2024</span>
-            <div class="meta-dot"></div>
-            <span>14 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">4</div>
-        <div class="article-content">
-          <h3 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h3>
-          <div class="article-meta">
-            <span>Dr. Michael Johnson</span>
-            <div class="meta-dot"></div>
-            <span>Mar 3, 2024</span>
-            <div class="meta-dot"></div>
-            <span>11 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-    </ul>
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
+  <div class="article-meta">
+    <span>Dr. Emily Rodriguez</span>
+    <div class="meta-dot"></div>
+    <span>Mar 10, 2024</span>
+    <div class="meta-dot"></div>
+    <span>15 min read</span>
   </div>
+</li>
 
-  <!-- Playlist 3: Medical Reviews -->
-
-  <div class="playlist-section">
-    <div class="playlist-header">
-      <div class="playlist-title-section">
-        <div class="playlist-icon" style="background: #ff9500;">
-          <i class="fas fa-clipboard-list"></i>
-        </div>
-        <h2 class="playlist-title">Medical Reviews</h2>
-        <span class="playlist-count">15 articles</span>
-      </div>
-      <button class="playlist-menu-btn" onclick="showPlaylistMenu(event, 'Medical Reviews')">
-        <i class="fas fa-ellipsis-vertical"></i>
-      </button>
-    </div>
-    <ul class="article-list">
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">1</div>
-        <div class="article-content">
-          <h3 class="article-title">Systematic Review of Diabetes Management Strategies</h3>
-          <div class="article-meta">
-            <span>Dr. Michael Johnson</span>
-            <div class="meta-dot"></div>
-            <span>Mar 14, 2024</span>
-            <div class="meta-dot"></div>
-            <span>18 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">2</div>
-        <div class="article-content">
-          <h3 class="article-title">Meta-Analysis of Anticoagulation Therapies</h3>
-          <div class="article-meta">
-            <span>Dr. Anna Williams</span>
-            <div class="meta-dot"></div>
-            <span>Mar 11, 2024</span>
-            <div class="meta-dot"></div>
-            <span>16 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">3</div>
-        <div class="article-content">
-          <h3 class="article-title">Clinical Outcomes in Surgical Interventions</h3>
-          <div class="article-meta">
-            <span>Dr. David Park</span>
-            <div class="meta-dot"></div>
-            <span>Mar 9, 2024</span>
-            <div class="meta-dot"></div>
-            <span>20 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">4</div>
-        <div class="article-content">
-          <h3 class="article-title">Evidence-Based Approaches to Pain Management</h3>
-          <div class="article-meta">
-            <span>Dr. Rachel Green</span>
-            <div class="meta-dot"></div>
-            <span>Mar 7, 2024</span>
-            <div class="meta-dot"></div>
-            <span>13 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-    </ul>
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
+  <div class="article-meta">
+    <span>Dr. Robert Kim</span>
+    <div class="meta-dot"></div>
+    <span>Mar 8, 2024</span>
+    <div class="meta-dot"></div>
+    <span>10 min read</span>
   </div>
+</li>
 
-  <!-- Playlist 4: Favorites -->
-
-  <div class="playlist-section">
-    <div class="playlist-header">
-      <div class="playlist-title-section">
-        <div class="playlist-icon" style="background: #ffd700;">
-          <i class="fas fa-star"></i>
-        </div>
-        <h2 class="playlist-title">Favorites</h2>
-        <span class="playlist-count">6 articles</span>
-      </div>
-      <button class="playlist-menu-btn" onclick="showPlaylistMenu(event, 'Favorites')">
-        <i class="fas fa-ellipsis-vertical"></i>
-      </button>
-    </div>
-    <ul class="article-list">
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">1</div>
-        <div class="article-content">
-          <h3 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h3>
-          <div class="article-meta">
-            <span>Dr. Sarah Mitchell</span>
-            <div class="meta-dot"></div>
-            <span>Mar 15, 2024</span>
-            <div class="meta-dot"></div>
-            <span>12 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">2</div>
-        <div class="article-content">
-          <h3 class="article-title">Breakthrough in Gene Therapy Applications</h3>
-          <div class="article-meta">
-            <span>Dr. Thomas Anderson</span>
-            <div class="meta-dot"></div>
-            <span>Mar 7, 2024</span>
-            <div class="meta-dot"></div>
-            <span>11 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-      <li class="article-item" onclick="openArticle('patholytica.com/library')">
-        <div class="article-number">3</div>
-        <div class="article-content">
-          <h3 class="article-title">Immunotherapy Advances in Oncology</h3>
-          <div class="article-meta">
-            <span>Dr. Rachel Green</span>
-            <div class="meta-dot"></div>
-            <span>Mar 4, 2024</span>
-            <div class="meta-dot"></div>
-            <span>13 min read</span>
-          </div>
-        </div>
-        <div class="article-actions">
-          <button class="article-action-btn" onclick="shareArticle(event)" title="Share">
-            <i class="fas fa-share"></i>
-          </button>
-          <button class="article-action-btn" onclick="removeFromPlaylist(event)" title="Remove">
-            <i class="fas fa-xmark"></i>
-          </button>
-        </div>
-      </li>
-    </ul>
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
+  <div class="article-meta">
+    <span>Dr. Lisa Zhang</span>
+    <div class="meta-dot"></div>
+    <span>Mar 5, 2024</span>
+    <div class="meta-dot"></div>
+    <span>14 min read</span>
   </div>
+</li>
 
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
+  <div class="article-meta">
+    <span>Dr. Robert Kim</span>
+    <div class="meta-dot"></div>
+    <span>Mar 8, 2024</span>
+    <div class="meta-dot"></div>
+    <span>10 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
+  <div class="article-meta">
+    <span>Dr. Lisa Zhang</span>
+    <div class="meta-dot"></div>
+    <span>Mar 5, 2024</span>
+    <div class="meta-dot"></div>
+    <span>14 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
+  <div class="article-meta">
+    <span>Dr. Michael Johnson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 3, 2024</span>
+    <div class="meta-dot"></div>
+    <span>11 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
+  <div class="article-meta">
+    <span>Dr. Michael Johnson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 14, 2024</span>
+    <div class="meta-dot"></div>
+    <span>18 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
+  <div class="article-meta">
+    <span>Dr. Anna Williams</span>
+    <div class="meta-dot"></div>
+    <span>Mar 11, 2024</span>
+    <div class="meta-dot"></div>
+    <span>16 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
+  <div class="article-meta">
+    <span>Dr. David Park</span>
+    <div class="meta-dot"></div>
+    <span>Mar 9, 2024</span>
+    <div class="meta-dot"></div>
+    <span>20 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
+  <div class="article-meta">
+    <span>Dr. Rachel Green</span>
+    <div class="meta-dot"></div>
+    <span>Mar 7, 2024</span>
+    <div class="meta-dot"></div>
+    <span>13 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
+  <div class="article-meta">
+    <span>Dr. Thomas Anderson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 7, 2024</span>
+    <div class="meta-dot"></div>
+    <span>11 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
+  <div class="article-meta">
+    <span>Dr. Rachel Green</span>
+    <div class="meta-dot"></div>
+    <span>Mar 4, 2024</span>
+    <div class="meta-dot"></div>
+    <span>13 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/libraries')">
+  <h2 class="article-title">The Role of Microbiome in Human Health</h2>
+  <div class="article-meta">
+    <span>Dr. Jennifer Lee</span>
+    <div class="meta-dot"></div>
+    <span>Mar 1, 2024</span>
+    <div class="meta-dot"></div>
+    <span>9 min read</span>
+  </div>
+</li>
+```
+
+  </ul>
 </div>
 
 <script>
-
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
   localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
@@ -751,79 +351,16 @@ if (localStorage.getItem("theme") === "light") {
 }
 
 function openArticle(url) {
-  if (event.target.closest('.article-action-btn') || event.target.closest('.playlist-menu-btn')) {
-    return;
-  }
   window.location.href = 'https://' + url;
 }
 
-function showPlaylistMenu(event, playlistName) {
-  event.stopPropagation();
-  const options = ['Edit playlist', 'Share', 'Delete', 'Add articles'];
-  const choice = prompt(`${playlistName} Menu:\n\n${options.map((opt, i) => `${i + 1}. ${opt}`).join('\n')}\n\nEnter 1-${options.length}:`);
-  
-  if (choice) {
-    const index = parseInt(choice) - 1;
-    if (index >= 0 && index < options.length) {
-      alert(`"${options[index]}" selected for "${playlistName}"`);
-    }
-  }
-}
-
-function shareArticle(event) {
-  event.stopPropagation();
-  alert('Share article functionality');
-}
-
-function removeFromPlaylist(event) {
-  event.stopPropagation();
-  const articleItem = event.target.closest('.article-item');
-  const articleTitle = articleItem.querySelector('.article-title').textContent;
-  
-  if (confirm(`Remove "${articleTitle}" from this playlist?`)) {
-    articleItem.style.opacity = '0';
-    articleItem.style.transform = 'translateX(-20px)';
-    setTimeout(() => {
-      articleItem.remove();
-      updatePlaylistCount(articleItem.closest('.playlist-section'));
-    }, 300);
-  }
-}
-
-function updatePlaylistCount(playlistSection) {
-  const countBadge = playlistSection.querySelector('.playlist-count');
-  const remainingArticles = playlistSection.querySelectorAll('.article-item').length;
-  countBadge.textContent = `${remainingArticles} article${remainingArticles !== 1 ? 's' : ''}`;
-  
-  // Renumber articles
-  const articles = playlistSection.querySelectorAll('.article-item');
-  articles.forEach((article, index) => {
-    article.querySelector('.article-number').textContent = index + 1;
-  });
-}
-
 function searchArticles() {
-  const searchQuery = prompt('Search your playlists:');
+  const searchQuery = prompt('Search articles:');
   if (searchQuery && searchQuery.trim()) {
-    alert(`Searching for: "${searchQuery}"\n\nSearch functionality would filter articles across all playlists.`);
+    alert(`Searching for: "${searchQuery}"\n\nSearch functionality would filter the article list.`);
   }
 }
-
-function createNewPlaylist() {
-  const playlistName = prompt('Enter a name for your new playlist:');
-  if (playlistName && playlistName.trim()) {
-    alert(`Creating new playlist: "${playlistName}"\n\nThis would create a new empty playlist section.`);
-  }
-}
-
-// Add smooth transition styles
-const style = document.createElement('style');
-style.textContent = `
-  .article-item {
-    transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease;
-  }
-`;
-document.head.appendChild(style);
 </script>
+
 </body>
 </html>
