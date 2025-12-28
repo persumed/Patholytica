@@ -82,471 +82,403 @@ body.light-theme .logo-img {
 .icon-btn:hover {
   background: var(--hover-bg);
 }
-
 .icon-btn.active {
-color: var(–accent);
+  color: var(--accent);
 }
-
 .comment-badge {
-position: absolute;
-top: 4px;
-right: 4px;
-background: var(–accent);
-color: white;
-border-radius: 10px;
-padding: 2px 6px;
-font-size: 10px;
-font-weight: 600;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--accent);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 600;
 }
-
-/* Reading Container */
 .reading-container {
-max-width: 700px;
-margin: 0 auto;
-padding: 60px 24px 120px;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 60px 24px 120px;
 }
-
-/* Article Styles */
 .article-title {
-font-family: ‘Times New Roman’, Times, serif;
-font-size: 42px;
-font-weight: bold;
-margin: 0 0 16px 0;
-line-height: 1.2;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 42px;
+  font-weight: bold;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
 }
-
 .article-meta {
-font-size: 14px;
-color: var(–text-secondary);
-margin-bottom: 48px;
-padding-bottom: 24px;
-border-bottom: 1px solid var(–border-color);
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 48px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
 }
-
-/* Content Lines */
 .content-line {
-font-family: ‘Times New Roman’, Times, serif;
-font-size: 21px;
-line-height: 1.8;
-margin: 0 0 24px 0;
-position: relative;
-transition: background 0.2s ease;
-cursor: text;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 21px;
+  line-height: 1.8;
+  margin: 0 0 24px 0;
+  position: relative;
+  transition: background 0.2s ease;
+  cursor: text;
 }
-
 .content-line.editing {
-padding: 12px;
-background: var(–hover-bg);
-border-radius: 4px;
+  padding: 12px;
+  background: var(--hover-bg);
+  border-radius: 4px;
 }
-
 .content-line.has-comments::before {
-content: ‘’;
-position: absolute;
-left: -16px;
-top: 8px;
-width: 4px;
-height: 4px;
-background: var(–accent);
-border-radius: 50%;
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
 }
-
 .content-editable {
-outline: none;
-min-height: 1.8em;
+  outline: none;
+  min-height: 1.8em;
 }
-
 .content-editable:focus {
-background: var(–hover-bg);
-padding: 4px 8px;
-margin: -4px -8px;
-border-radius: 4px;
+  background: var(--hover-bg);
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: 4px;
 }
-
 .comment-trigger {
-position: absolute;
-right: -40px;
-top: 0;
-width: 32px;
-height: 32px;
-border-radius: 50%;
-background: transparent;
-border: 1px solid transparent;
-color: var(–text-secondary);
-cursor: pointer;
-display: none;
-align-items: center;
-justify-content: center;
-font-size: 14px;
-transition: all 0.2s ease;
+  position: absolute;
+  right: -40px;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
-
 .content-line:hover .comment-trigger {
-display: flex;
+  display: flex;
 }
-
 .comment-trigger:hover,
 .comment-trigger.active {
-background: var(–hover-bg);
-border-color: var(–accent);
-color: var(–accent);
+  background: var(--hover-bg);
+  border-color: var(--accent);
+  color: var(--accent);
 }
-
-/* Media Embed */
 .media-embed {
-margin: 32px 0;
-padding: 24px 0;
-border-top: 1px solid var(–border-color);
-border-bottom: 1px solid var(–border-color);
+  margin: 32px 0;
+  padding: 24px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
-
 .media-embed img {
-width: 100%;
-height: auto;
-border-radius: 4px;
-display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
 }
-
 .image-carousel {
-position: relative;
-overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
-
 .carousel-track {
-display: flex;
-gap: 12px;
-overflow-x: auto;
-scroll-snap-type: x mandatory;
-scroll-behavior: smooth;
-padding: 4px 0;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 4px 0;
 }
-
 .carousel-track::-webkit-scrollbar {
-height: 6px;
+  height: 6px;
 }
-
 .carousel-track::-webkit-scrollbar-thumb {
-background: var(–border-color);
-border-radius: 3px;
+  background: var(--border-color);
+  border-radius: 3px;
 }
-
 .carousel-track img {
-scroll-snap-align: start;
-min-width: 80%;
-max-width: 80%;
+  scroll-snap-align: start;
+  min-width: 80%;
+  max-width: 80%;
 }
-
-/* Custom Audio Player */
 .custom-audio-player {
-background: var(–card-bg);
-border-radius: 12px;
-padding: 20px;
-display: flex;
-align-items: center;
-gap: 16px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
-
 .play-btn {
-width: 48px;
-height: 48px;
-border-radius: 50%;
-background: var(–accent);
-border: none;
-color: white;
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 18px;
-transition: all 0.2s ease;
-flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
-
 .play-btn:hover {
-background: var(–accent-hover);
-transform: scale(1.05);
+  background: var(--accent-hover);
+  transform: scale(1.05);
 }
-
 .audio-info {
-flex: 1;
-min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
-
 .audio-title {
-font-size: 14px;
-font-weight: 500;
-margin-bottom: 8px;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
 .waveform-container {
-position: relative;
-height: 40px;
-background: var(–hover-bg);
-border-radius: 4px;
-margin-bottom: 8px;
-cursor: pointer;
-overflow: hidden;
+  position: relative;
+  height: 40px;
+  background: var(--hover-bg);
+  border-radius: 4px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  overflow: hidden;
 }
-
 .waveform-progress {
-position: absolute;
-top: 0;
-left: 0;
-height: 100%;
-background: var(–accent);
-opacity: 0.3;
-transition: width 0.1s linear;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--accent);
+  opacity: 0.3;
+  transition: width 0.1s linear;
 }
-
 .waveform-bars {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-display: flex;
-align-items: center;
-justify-content: space-around;
-padding: 0 4px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 4px;
 }
-
 .waveform-bar {
-width: 2px;
-background: var(–text-secondary);
-border-radius: 2px;
-opacity: 0.6;
+  width: 2px;
+  background: var(--text-secondary);
+  border-radius: 2px;
+  opacity: 0.6;
 }
-
 .audio-time {
-display: flex;
-justify-content: space-between;
-font-size: 12px;
-color: var(–text-secondary);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
 }
-
 .media-caption {
-font-size: 14px;
-color: var(–text-secondary);
-margin-top: 8px;
-font-style: italic;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-style: italic;
 }
-
-/* Comment Section */
 .comment-panel {
-position: fixed;
-right: -400px;
-top: 70px;
-width: 380px;
-height: calc(100vh - 70px);
-background: var(–card-bg);
-border-left: 1px solid var(–border-color);
-transition: right 0.3s ease;
-z-index: 30;
-display: flex;
-flex-direction: column;
+  position: fixed;
+  right: -400px;
+  top: 70px;
+  width: 380px;
+  height: calc(100vh - 70px);
+  background: var(--card-bg);
+  border-left: 1px solid var(--border-color);
+  transition: right 0.3s ease;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
 }
-
 .comment-panel.active {
-right: 0;
+  right: 0;
 }
-
 .comment-header {
-padding: 20px;
-border-bottom: 1px solid var(–border-color);
-display: flex;
-justify-content: space-between;
-align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-
 .comment-header h3 {
-margin: 0;
-font-size: 16px;
-font-weight: 500;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
 }
-
 .close-comments {
-background: transparent;
-border: none;
-color: var(–text-primary);
-cursor: pointer;
-font-size: 20px;
-padding: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 4px;
 }
-
 .comment-list {
-flex: 1;
-overflow-y: auto;
-padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
 }
-
 .comment-item {
-margin-bottom: 20px;
-padding-bottom: 20px;
-border-bottom: 1px solid var(–border-color);
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
 }
-
 .comment-item:last-child {
-border-bottom: none;
+  border-bottom: none;
 }
-
 .comment-line-ref {
-font-size: 11px;
-color: var(–text-secondary);
-background: var(–hover-bg);
-padding: 4px 8px;
-border-radius: 4px;
-display: inline-block;
-margin-bottom: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: var(--hover-bg);
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 8px;
 }
-
 .comment-author {
-font-weight: 500;
-font-size: 14px;
-margin-bottom: 4px;
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 4px;
 }
-
 .comment-time {
-font-size: 12px;
-color: var(–text-secondary);
-margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
 }
-
 .comment-text {
-font-size: 14px;
-line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.5;
 }
-
 .comment-input-area {
-padding: 20px;
-border-top: 1px solid var(–border-color);
-background: var(–bg-color);
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-color);
 }
-
 .comment-context {
-font-size: 12px;
-color: var(–text-secondary);
-margin-bottom: 12px;
-padding: 8px;
-background: var(–hover-bg);
-border-radius: 4px;
-font-style: italic;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  padding: 8px;
+  background: var(--hover-bg);
+  border-radius: 4px;
+  font-style: italic;
 }
-
 .comment-input {
-width: 100%;
-padding: 12px;
-border: 1px solid var(–border-color);
-border-radius: 8px;
-background: var(–card-bg);
-color: var(–text-primary);
-font-size: 14px;
-resize: vertical;
-min-height: 80px;
-font-family: inherit;
-margin-bottom: 12px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+  margin-bottom: 12px;
 }
-
 .comment-input:focus {
-outline: none;
-border-color: var(–accent);
+  outline: none;
+  border-color: var(--accent);
 }
-
 .comment-submit {
-width: 100%;
-padding: 10px;
-background: var(–accent);
-color: white;
-border: none;
-border-radius: 8px;
-cursor: pointer;
-font-size: 14px;
-font-weight: 500;
-transition: background 0.2s ease;
+  width: 100%;
+  padding: 10px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s ease;
 }
-
 .comment-submit:hover {
-background: var(–accent-hover);
+  background: var(--accent-hover);
 }
-
-/* Upload Toolbar */
 .upload-toolbar {
-position: fixed;
-bottom: 24px;
-left: 50%;
-transform: translateX(-50%);
-background: var(–card-bg);
-border: 1px solid var(–border-color);
-border-radius: 24px;
-padding: 8px 16px;
-display: flex;
-gap: 8px;
-box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-z-index: 20;
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 8px 16px;
+  display: flex;
+  gap: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  z-index: 20;
 }
-
 .upload-btn {
-width: 40px;
-height: 40px;
-border-radius: 50%;
-background: transparent;
-border: none;
-color: var(–text-secondary);
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 18px;
-transition: all 0.2s ease;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.2s ease;
 }
-
 .upload-btn:hover {
-background: var(–hover-bg);
-color: var(–text-primary);
+  background: var(--hover-bg);
+  color: var(--text-primary);
 }
-
 .upload-btn input {
-display: none;
+  display: none;
 }
-
 .divider {
-width: 1px;
-height: 24px;
-background: var(–border-color);
-margin: 8px 0;
+  width: 1px;
+  height: 24px;
+  background: var(--border-color);
+  margin: 8px 0;
 }
-
 @media (max-width: 768px) {
-.reading-container {
-padding: 40px 16px 100px;
-}
-
-.article-title {
-font-size: 32px;
-}
-
-.content-line {
-font-size: 19px;
-}
-
-.comment-trigger {
-right: -36px;
-}
-
-.comment-panel {
-width: 100%;
-right: -100%;
-}
-
-.carousel-track img {
-min-width: 90%;
-max-width: 90%;
-}
+  .reading-container {
+    padding: 40px 16px 100px;
+  }
+  .article-title {
+    font-size: 32px;
+  }
+  .content-line {
+    font-size: 19px;
+  }
+  .comment-trigger {
+    right: -36px;
+  }
+  .comment-panel {
+    width: 100%;
+    right: -100%;
+  }
+  .carousel-track img {
+    min-width: 90%;
+    max-width: 90%;
+  }
 }
 </style>
-
 </head>
 <body>
 
@@ -639,7 +571,7 @@ max-width: 90%;
   </div>
 
   <div class="media-embed">
-    <div class="custom-audio-player" data-audio-src="">
+    <div class="custom-audio-player">
       <button class="play-btn" onclick="toggleAudio(this)">
         <i class="fas fa-play"></i>
       </button>
@@ -706,9 +638,7 @@ max-width: 90%;
       <i class="fas fa-times"></i>
     </button>
   </div>
-  <div class="comment-list" id="commentList">
-    <!-- Comments will be inserted here -->
-  </div>
+  <div class="comment-list" id="commentList"></div>
   <div class="comment-input-area" id="commentInputArea" style="display: none;">
     <div class="comment-context" id="commentContext"></div>
     <textarea class="comment-input" id="commentInput" placeholder="Add a comment..."></textarea>
@@ -737,27 +667,9 @@ max-width: 90%;
 
 <script>
 const comments = {
-  2: [
-    {
-      author: "Dr. James Chen",
-      time: "2 hours ago",
-      text: "Excellent point about imaging technology. The development of cardiac MRI has been particularly transformative."
-    }
-  ],
-  4: [
-    {
-      author: "Dr. Emily Rodriguez",
-      time: "5 hours ago",
-      text: "This multi-factorial approach is crucial for understanding disease progression. Have you considered the role of genetic predisposition?"
-    }
-  ],
-  6: [
-    {
-      author: "Dr. Robert Kim",
-      time: "1 day ago",
-      text: "The inflammatory biomarkers you mention are indeed valuable. We've been using them extensively in our clinical practice."
-    }
-  ]
+  2: [{author: "Dr. James Chen", time: "2 hours ago", text: "Excellent point about imaging technology. The development of cardiac MRI has been particularly transformative."}],
+  4: [{author: "Dr. Emily Rodriguez", time: "5 hours ago", text: "This multi-factorial approach is crucial for understanding disease progression. Have you considered the role of genetic predisposition?"}],
+  6: [{author: "Dr. Robert Kim", time: "1 day ago", text: "The inflammatory biomarkers you mention are indeed valuable. We've been using them extensively in our clinical practice."}]
 };
 
 let currentLineNumber = null;
@@ -777,17 +689,13 @@ function toggleEditMode() {
   isEditMode = !isEditMode;
   const editBtn = document.getElementById('editModeBtn');
   const editables = document.querySelectorAll('.content-editable');
-  
   editBtn.classList.toggle('active');
-  editables.forEach(el => {
-    el.contentEditable = isEditMode;
-  });
+  editables.forEach(el => el.contentEditable = isEditMode);
 }
 
 function toggleComments() {
   const panel = document.getElementById('commentPanel');
   const btn = document.getElementById('commentsBtn');
-  
   if (panel.classList.contains('active')) {
     closeComments();
   } else {
@@ -809,31 +717,23 @@ function openLineComments(lineNumber) {
   currentLineNumber = lineNumber;
   const panel = document.getElementById('commentPanel');
   const btn = document.getElementById('commentsBtn');
-  
   panel.classList.add('active');
   btn.classList.add('active');
-  
   const lineText = document.querySelector(`[data-line="${lineNumber}"] .content-editable`).textContent;
   const preview = lineText.length > 60 ? lineText.substring(0, 60) + '...' : lineText;
-  
   document.getElementById('commentTitle').textContent = `Line ${lineNumber}`;
   document.getElementById('commentContext').textContent = `"${preview}"`;
   document.getElementById('commentInputArea').style.display = 'block';
-  
   loadLineComments(lineNumber);
 }
 
 function loadAllComments() {
   const commentList = document.getElementById('commentList');
   document.getElementById('commentTitle').textContent = 'All Comments';
-  
   let allComments = [];
   for (let line in comments) {
-    comments[line].forEach(comment => {
-      allComments.push({...comment, line: line});
-    });
+    comments[line].forEach(comment => allComments.push({...comment, line: line}));
   }
-  
   if (allComments.length === 0) {
     commentList.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">No comments yet.</p>';
   } else {
@@ -851,7 +751,6 @@ function loadAllComments() {
 function loadLineComments(lineNumber) {
   const commentList = document.getElementById('commentList');
   const lineComments = comments[lineNumber] || [];
-  
   if (lineComments.length === 0) {
     commentList.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">No comments on this line yet.</p>';
   } else {
@@ -868,25 +767,14 @@ function loadLineComments(lineNumber) {
 function submitComment() {
   const input = document.getElementById('commentInput');
   const text = input.value.trim();
-  
   if (!text || currentLineNumber === null) return;
-  
-  if (!comments[currentLineNumber]) {
-    comments[currentLineNumber] = [];
-  }
-  
-  comments[currentLineNumber].push({
-    author: "You",
-    time: "Just now",
-    text: text
-  });
-  
+  if (!comments[currentLineNumber]) comments[currentLineNumber] = [];
+  comments[currentLineNumber].push({author: "You", time: "Just now", text: text});
   const line = document.querySelector(`[data-line="${currentLineNumber}"]`);
   line.classList.add('has-comments');
   const trigger = line.querySelector('.comment-trigger');
   trigger.classList.add('active');
   trigger.innerHTML = '<i class="fas fa-comment"></i>';
-  
   updateCommentBadge();
   input.value = '';
   loadLineComments(currentLineNumber);
@@ -894,13 +782,162 @@ function submitComment() {
 
 function updateCommentBadge() {
   let total = 0;
-  for (let line in comments) {
-    total += comments[line].length;
-  }
+  for (let line in comments) total += comments[line].length;
   document.getElementById('commentBadge').textContent = total;
 }
 
 function addNewParagraph() {
   lineCounter++;
   const newLine = document.createElement('div');
-  newLine.className = 'content-line
+  newLine.className = 'content-line';
+  newLine.setAttribute('data-line', lineCounter);
+  newLine.innerHTML = `
+    <div class="content-editable" contenteditable="${isEditMode}">Click to add text...</div>
+    <button class="comment-trigger" onclick="openLineComments(${lineCounter})"><i class="fas fa-plus"></i></button>
+  `;
+  document.getElementById('readingContainer').appendChild(newLine);
+  const editable = newLine.querySelector('.content-editable');
+  editable.focus();
+  if (editable.textContent === 'Click to add text...') editable.textContent = '';
+}
+
+function toggleAudio(btn) {
+  const player = btn.closest('.custom-audio-player');
+  const audio = player.querySelector('audio');
+  const icon = btn.querySelector('i');
+  const progress = player.querySelector('.waveform-progress');
+  const currentTimeEl = player.querySelector('.current-time');
+  
+  if (!audio.src) return;
+  
+  if (audio.paused) {
+    audio.play();
+    icon.className = 'fas fa-pause';
+    audio.ontimeupdate = () => {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progress.style.width = percent + '%';
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    };
+    audio.onended = () => {
+      icon.className = 'fas fa-play';
+      progress.style.width = '0%';
+    };
+  } else {
+    audio.pause();
+    icon.className = 'fas fa-play';
+  }
+}
+
+function seekAudio(event, container) {
+  const player = container.closest('.custom-audio-player');
+  const audio = player.querySelector('audio');
+  if (!audio.src) return;
+  const rect = container.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const percent = x / rect.width;
+  audio.currentTime = percent * audio.duration;
+}
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const mediaEmbed = document.createElement('div');
+    mediaEmbed.className = 'media-embed';
+    mediaEmbed.innerHTML = `
+      <img src="${e.target.result}" alt="Uploaded image">
+      <div class="media-caption">Uploaded: ${file.name}</div>
+    `;
+    document.getElementById('readingContainer').appendChild(mediaEmbed);
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function handleAudioUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const mediaEmbed = document.createElement('div');
+    mediaEmbed.className = 'media-embed';
+    mediaEmbed.innerHTML = `
+      <div class="custom-audio-player">
+        <button class="play-btn" onclick="toggleAudio(this)">
+          <i class="fas fa-play"></i>
+        </button>
+        <div class="audio-info">
+          <div class="audio-title">${file.name}</div>
+          <div class="waveform-container" onclick="seekAudio(event, this)">
+            <div class="waveform-progress"></div>
+            <div class="waveform-bars">${generateWaveformBars()}</div>
+          </div>
+          <div class="audio-time">
+            <span class="current-time">0:00</span>
+            <span class="duration">--:--</span>
+          </div>
+        </div>
+        <audio style="display: none;" src="${e.target.result}" onloadedmetadata="updateAudioDuration(this)"></audio>
+      </div>
+      <div class="media-caption">Audio: ${file.name}</div>
+    `;
+    document.getElementById('readingContainer').appendChild(mediaEmbed);
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function generateWaveformBars() {
+  let bars = '';
+  for (let i = 0; i < 20; i++) {
+    const height = Math.random() * 60 + 20;
+    bars += `<div class="waveform-bar" style="height: ${height}%"></div>`;
+  }
+  return bars;
+}
+
+function updateAudioDuration(audio) {
+  const player = audio.closest('.custom-audio-player');
+  const durationEl = player.querySelector('.duration');
+  durationEl.textContent = formatTime(audio.duration);
+}
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const mediaEmbed = document.createElement('div');
+  mediaEmbed.className = 'media-embed';
+  mediaEmbed.innerHTML = `
+    <div style="padding: 16px; background: var(--card-bg); border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+      <i class="fas fa-file" style="font-size: 24px; color: var(--accent);"></i>
+      <div>
+        <div style="font-weight: 500; margin-bottom: 4px;">${file.name}</div>
+        <div style="font-size: 12px; color: var(--text-secondary);">${(file.size / 1024).toFixed(2)} KB</div>
+      </div>
+    </div>
+  `;
+  document.getElementById('readingContainer').appendChild(mediaEmbed);
+  event.target.value = '';
+}
+
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('commentPanel');
+  const commentsBtn = document.getElementById('commentsBtn');
+  const triggers = document.querySelectorAll('.comment-trigger');
+  if (panel.classList.contains('active') && !panel.contains(e.target) && !commentsBtn.contains(e.target) && !Array.from(triggers).some(t => t.contains(e.target))) {
+    closeComments();
+  }
+});
+
+updateCommentBadge();
+</script>
+
+</body>
+</html>
