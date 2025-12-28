@@ -42,8 +42,10 @@ body {
   transition: background 0.2s ease, color 0.2s ease;
 }
 .header-wrapper {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   background: var(--bg-color);
   padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid var(--border-color);
@@ -108,22 +110,63 @@ body.light-theme .logo-img {
   max-width: 100%;
   width: 100%;
   margin: 0 auto;
-  padding: 60px 24px 120px;
+  padding: 80px 24px 120px;
+  padding-top: calc(70px + env(safe-area-inset-top));
 }
 .article-title {
   font-family: 'Times New Roman', Times, serif;
   font-size: 42px;
   font-weight: bold;
-  margin: 0 0 16px 0;
+  margin: 0 0 8px 0;
   line-height: 1.2;
   word-wrap: break-word;
 }
 .article-meta {
   font-size: 14px;
   color: var(--text-secondary);
-  margin-bottom: 48px;
-  padding-bottom: 24px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
   border-bottom: 1px solid var(--border-color);
+}
+.article-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.action-btn:hover {
+  background: var(--hover-bg);
+  border-color: var(--text-secondary);
+}
+.action-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+.action-btn i {
+  font-size: 16px;
+}
+.action-count {
+  font-size: 13px;
+  margin-left: 4px;
 }
 .content-line {
   font-family: 'Times New Roman', Times, serif;
@@ -132,9 +175,11 @@ body.light-theme .logo-img {
   margin: 0 0 24px 0;
   position: relative;
   transition: background 0.2s ease;
-  cursor: text;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
 .content-line.has-comments::before {
   content: '';
@@ -151,6 +196,8 @@ body.light-theme .logo-img {
   min-height: 1.8em;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  flex: 1;
+  cursor: text;
 }
 .content-editable:focus {
   background: var(--hover-bg);
@@ -159,31 +206,33 @@ body.light-theme .logo-img {
   border-radius: 4px;
 }
 .comment-trigger {
-  position: fixed;
-  right: 8px;
   width: 32px;
   height: 32px;
+  min-width: 32px;
   border-radius: 50%;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   cursor: pointer;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  z-index: 10;
+  flex-shrink: 0;
+  margin-top: 4px;
+  opacity: 0;
 }
 .content-line:hover .comment-trigger {
-  display: flex;
+  opacity: 1;
 }
 .comment-trigger:hover,
 .comment-trigger.active {
   background: var(--hover-bg);
   border-color: var(--accent);
   color: var(--accent);
+  opacity: 1;
 }
 .media-embed {
   margin: 32px 0;
@@ -478,7 +527,7 @@ body.light-theme .logo-img {
 }
 @media (max-width: 768px) {
   .reading-container {
-    padding: 40px 16px 100px;
+    padding: 90px 16px 100px;
   }
   .article-title {
     font-size: 32px;
@@ -493,6 +542,13 @@ body.light-theme .logo-img {
   .carousel-track img {
     min-width: 90%;
     max-width: 90%;
+  }
+  .article-actions {
+    gap: 8px;
+  }
+  .action-btn {
+    font-size: 13px;
+    padding: 6px 12px;
   }
 }
 @media (min-width: 769px) {
@@ -526,6 +582,30 @@ body.light-theme .logo-img {
   <h1 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h1>
   <div class="article-meta">
     Dr. Sarah Mitchell • Published March 15, 2024 • 12 min read
+  </div>
+
+  <div class="article-actions">
+    <button class="action-btn" id="likeBtn" onclick="toggleLike()">
+      <i class="fas fa-thumbs-up"></i>
+      <span>Like</span>
+      <span class="action-count" id="likeCount">247</span>
+    </button>
+    <button class="action-btn" id="subscribeBtn" onclick="toggleSubscribe()">
+      <i class="fas fa-bell"></i>
+      <span id="subscribeText">Subscribe</span>
+    </button>
+    <button class="action-btn" onclick="shareArticle()">
+      <i class="fas fa-share"></i>
+      <span>Share</span>
+    </button>
+    <button class="action-btn" id="saveBtn" onclick="toggleSave()">
+      <i class="fas fa-bookmark"></i>
+      <span>Save</span>
+    </button>
+    <button class="action-btn" onclick="addToPlaylist()">
+      <i class="fas fa-list"></i>
+      <span>Add to Playlist</span>
+    </button>
   </div>
 
   <div class="content-line" data-line="1">
@@ -693,6 +773,9 @@ const comments = {
 
 let currentLineNumber = null;
 let lineCounter = 7;
+let isLiked = false;
+let isSubscribed = false;
+let isSaved = false;
 
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
@@ -725,10 +808,8 @@ function closeComments() {
 
 function openLineComments(lineNumber, event) {
   if (event) {
-    const btn = event.target.closest('.comment-trigger');
-    const line = btn.closest('.content-line');
-    const rect = line.getBoundingClientRect();
-    btn.style.top = (rect.top + window.scrollY) + 'px';
+    event.stopPropagation();
+    event.preventDefault();
   }
   
   currentLineNumber = lineNumber;
@@ -803,6 +884,77 @@ function updateCommentBadge() {
   document.getElementById('commentBadge').textContent = total;
 }
 
+// Article action functions
+function toggleLike() {
+  isLiked = !isLiked;
+  const btn = document.getElementById('likeBtn');
+  const count = document.getElementById('likeCount');
+  const currentCount = parseInt(count.textContent);
+  
+  if (isLiked) {
+    btn.classList.add('active');
+    count.textContent = currentCount + 1;
+  } else {
+    btn.classList.remove('active');
+    count.textContent = currentCount - 1;
+  }
+}
+
+function toggleSubscribe() {
+  isSubscribed = !isSubscribed;
+  const btn = document.getElementById('subscribeBtn');
+  const text = document.getElementById('subscribeText');
+  
+  if (isSubscribed) {
+    btn.classList.add('active');
+    text.textContent = 'Subscribed';
+  } else {
+    btn.classList.remove('active');
+    text.textContent = 'Subscribe';
+  }
+}
+
+function shareArticle() {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Understanding Cardiovascular Pathology',
+      text: 'Check out this article by Dr. Sarah Mitchell',
+      url: window.location.href
+    }).catch(err => console.log('Share cancelled'));
+  } else {
+    // Fallback: copy to clipboard
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      alert('Link copied to clipboard!');
+    });
+  }
+}
+
+function toggleSave() {
+  isSaved = !isSaved;
+  const btn = document.getElementById('saveBtn');
+  
+  if (isSaved) {
+    btn.classList.add('active');
+    alert('Article saved for later!');
+  } else {
+    btn.classList.remove('active');
+    alert('Article removed from saved items.');
+  }
+}
+
+function addToPlaylist() {
+  const playlists = ['Reading List', 'Cardiology Research', 'Medical Reviews', 'Favorites'];
+  const playlistNames = playlists.map((name, i) => `${i + 1}. ${name}`).join('\n');
+  const choice = prompt(`Choose a playlist:\n\n${playlistNames}\n\nEnter 1-${playlists.length} or type a new playlist name:`);
+  
+  if (choice) {
+    const index = parseInt(choice) - 1;
+    const playlistName = (index >= 0 && index < playlists.length) ? playlists[index] : choice;
+    alert(`Article added to "${playlistName}"!`);
+  }
+}
+
+// Content editing functions
 function addNewParagraph() {
   lineCounter++;
   const newLine = document.createElement('div');
