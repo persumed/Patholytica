@@ -4,1493 +4,677 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Academic Library Manager</title>
-
+<title>Patholyrica — Reader</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <style>
 :root {
-  --bg-color: #000;
-  --text-color: #fff;
-  --card-bg: rgba(24,24,24,0.7);
-  --card-border: rgba(255,255,255,0.07);
-  --accent: #b0003a;
-  --accent-hover: #88002a;
-  --success: #10b981;
-  --error: #ef4444;
-  --warning: #f59e0b;
-  --info: #3b82f6;
-  --content-bg: #111;
-  --item-bg: rgba(40,40,40,0.9);
-  --input-bg: rgba(30,30,30,0.8);
+  --bg-color: #0f0f0f;
+  --text-primary: #fff;
+  --text-secondary: #aaa;
+  --card-bg: #1f1f1f;
+  --hover-bg: #2a2a2a;
+  --border-color: #303030;
+  --accent: #3ea6ff;
+  --accent-hover: #2d8ed6;
 }
-
 body.light-theme {
-  --bg-color: #f2f2f7;
-  --text-color: #111;
-  --card-bg: rgba(255,255,255,0.65);
-  --card-border: rgba(0,0,0,0.1);
-  --accent: #b0003a;
-  --accent-hover: #88002a;
-  --content-bg: #e5e5e5;
-  --item-bg: #fff;
-  --input-bg: rgba(255,255,255,0.95);
+  --bg-color: #ffffff;
+  --text-primary: #0f0f0f;
+  --text-secondary: #606060;
+  --card-bg: #f9f9f9;
+  --hover-bg: #f0f0f0;
+  --border-color: #e5e5e5;
+  --accent: #065fd4;
+  --accent-hover: #0448a3;
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; font-family: "Inter", Arial, sans-serif; overflow-x: hidden; }
-
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; min-height:100%; font-family: "Roboto", Arial, sans-serif; }
 body {
   background: var(--bg-color);
-  color: var(--text-color);
-  display: flex;
-  flex-direction: column;
-  transition: background 0.35s ease;
-  max-width: 100vw;
+  color: var(--text-primary);
+  transition: background 0.2s ease, color 0.2s ease;
 }
-
-.main-container {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  max-width: 100vw;
-}
-
-/* Main Content */
-.content-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: var(--content-bg);
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-.content-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  padding-top: calc(env(safe-area-inset-top) + 16px);
+.header-wrapper {
+  position: sticky;
+  top: 0;
   background: var(--bg-color);
-  border-bottom: 1px solid var(--card-border);
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 40;
 }
-
-.content-header-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.content-header-name {
-  font-size: 18px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.content-header-details {
-  font-size: 13px;
-  color: #999;
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.content-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.action-btn {
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1px solid var(--card-border);
-  background: transparent;
-  color: var(--text-color);
-  font-size: 13px;
-  cursor: pointer;
-  transition: 0.25s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-.action-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.action-btn.primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-}
-
-.action-btn.primary:hover {
-  background: var(--accent-hover);
-}
-
-.theme-toggle {
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1px solid var(--card-border);
-  background: transparent;
-  color: var(--text-color);
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* Tab Navigation */
-.tab-navigation {
-  display: flex;
-  border-bottom: 1px solid var(--card-border);
-  background: var(--card-bg);
-  backdrop-filter: blur(22px);
-  padding: 0 20px;
-  overflow-x: auto;
-}
-
-.tab-btn {
-  padding: 12px 20px;
-  background: none;
-  border: none;
-  color: #999;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s ease;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-}
-
-.tab-btn:hover {
-  color: var(--text-color);
-}
-
-.tab-btn.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-
-/* Materials Grid */
-.materials-container {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 20px;
-  max-width: 100%;
-  display: none;
-}
-
-.materials-container.active {
-  display: block;
-}
-
-.materials-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  max-width: 100%;
-}
-
-/* Material Groups */
-.material-group {
-  grid-column: 1 / -1;
-  margin-bottom: 12px;
-}
-
-.material-group-header {
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  background: var(--card-bg);
-  backdrop-filter: blur(22px);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  margin-bottom: 16px;
+  padding: 12px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.logo-img {
+  height: 28px;
+  width: auto;
+  transition: filter 0.2s ease;
   cursor: pointer;
-  transition: all 0.25s ease;
 }
-
-.material-group-header:hover {
-  border-color: var(--accent);
-  background: rgba(176,0,58,0.05);
+body.light-theme .logo-img {
+  filter: invert(1);
 }
-
-.material-group-info {
+.header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex: 1;
-  min-width: 0;
-}
-
-.material-group-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: white;
-  flex-shrink: 0;
-}
-
-.material-group-details {
-  flex: 1;
-  min-width: 0;
-}
-
-.material-group-name {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.material-group-count {
-  font-size: 12px;
-  color: #999;
-}
-
-.material-group-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.material-group-toggle {
-  font-size: 14px;
-  color: #999;
-  transition: transform 0.25s ease;
-}
-
-.material-group-toggle.collapsed {
-  transform: rotate(-90deg);
-}
-
-.material-group-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
 }
-
-.material-group-content.expanded {
-  max-height: 10000px;
-}
-
-.material-card {
-  background: var(--item-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  animation: fadeIn 0.3s ease;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.material-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(176,0,58,0.15);
-  border-color: var(--accent);
-}
-
-.material-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.material-type-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.material-type-icon.pdf {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-}
-
-.material-type-icon.image {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-}
-
-.material-type-icon.text {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-}
-
-.material-type-icon.record {
-  background: rgba(245, 158, 11, 0.15);
-  color: #f59e0b;
-}
-
-.material-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.material-title {
-  font-weight: 600;
-  font-size: 15px;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.material-type {
-  font-size: 12px;
-  color: #999;
-  text-transform: uppercase;
-}
-
-.material-preview {
-  font-size: 13px;
-  color: #aaa;
-  line-height: 1.5;
-  margin-bottom: 12px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.material-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 12px;
-  border-top: 1px solid var(--card-border);
-}
-
-.material-date {
-  font-size: 12px;
-  color: #888;
-}
-
-.material-actions {
-  display: flex;
-  gap: 8px;
-}
-
 .icon-btn {
-  background: none;
-  border: none;
-  color: var(--text-color);
-  font-size: 14px;
-  cursor: pointer;
-  padding: 4px;
-  transition: color 0.2s ease;
-}
-
-.icon-btn:hover {
-  color: var(--accent);
-}
-
-.library-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  color: white;
-  flex-shrink: 0;
-}
-
-/* Chat Container */
-.chat-container {
-  flex: 1;
-  display: none;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.chat-container.active {
-  display: flex;
-}
-
-.messages-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.message {
-  display: flex;
-  gap: 10px;
-  max-width: 75%;
-  animation: fadeIn 0.3s ease;
-}
-
-.message.sent {
-  align-self: flex-end;
-  flex-direction: row-reverse;
-}
-
-.message-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  flex-shrink: 0;
-}
-
-.message-content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.message-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: #999;
-}
-
-.message-author {
-  font-weight: 600;
-}
-
-.message-bubble {
-  background: var(--item-bg);
-  padding: 10px 14px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.message.sent .message-bubble {
-  background: var(--accent);
-  color: white;
-}
-
-body.light-theme .message.sent .message-bubble {
-  color: white;
-}
-
-.message-text {
-  font-size: 14px;
-  line-height: 1.5;
-  word-wrap: break-word;
-}
-
-.chat-input-area {
-  padding: 16px 20px;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
-  background: var(--card-bg);
-  backdrop-filter: blur(22px);
-  border-top: 1px solid var(--card-border);
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.chat-input {
-  flex: 1;
-  padding: 10px 16px;
-  border-radius: 20px;
-  border: 1px solid var(--card-border);
-  background: var(--input-bg);
-  color: var(--text-color);
-  font-size: 14px;
-  font-family: inherit;
-  resize: none;
-  max-height: 100px;
-  transition: 0.25s ease;
-}
-
-.chat-input:focus {
-  border-color: var(--accent);
-  outline: none;
-}
-
-.send-btn {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  background: transparent;
   border: none;
-  background: var(--accent);
-  color: white;
-  font-size: 16px;
+  color: var(--text-primary);
   cursor: pointer;
-  transition: 0.25s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-}
-
-.send-btn:hover {
-  background: var(--accent-hover);
-  transform: scale(1.05);
-}
-
-/* Floating Action Button */
-.fab {
-  position: fixed;
-  bottom: calc(env(safe-area-inset-bottom) + 20px);
-  right: 20px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: white;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(176,0,58,0.4);
-  transition: 0.25s ease;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.fab:hover {
-  background: var(--accent-hover);
-  transform: scale(1.1);
-}
-
-.fab.hidden {
-  display: none;
-}
-
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  animation: fadeIn 0.2s ease;
-}
-
-.modal.show {
-  display: flex;
-}
-
-.modal-content {
-  background: var(--bg-color);
-  border-radius: 16px;
-  max-width: 500px;
-  width: 100%;
-  max-height: 80vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  animation: slideUp 0.3s ease;
-  border: 1px solid var(--card-border);
-}
-
-.modal-header {
-  padding: 20px;
-  border-bottom: 1px solid var(--card-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.modal-title {
   font-size: 18px;
-  font-weight: 700;
+  transition: background 0.2s ease;
+}
+.icon-btn:hover {
+  background: var(--hover-bg);
 }
 
-.modal-close {
-  background: none;
-  border: none;
-  color: var(--text-color);
-  font-size: 24px;
-  cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: 0.25s ease;
+/* Reading Container */
+.reading-container {
+max-width: 700px;
+margin: 0 auto;
+padding: 60px 24px 120px;
 }
 
-.modal-close:hover {
-  background: rgba(255,255,255,0.1);
+/* Article Styles */
+.article-title {
+font-family: ‘Times New Roman’, Times, serif;
+font-size: 42px;
+font-weight: bold;
+margin: 0 0 16px 0;
+line-height: 1.2;
 }
 
-body.light-theme .modal-close:hover {
-  background: rgba(0,0,0,0.05);
+.article-meta {
+font-size: 14px;
+color: var(–text-secondary);
+margin-bottom: 48px;
+padding-bottom: 24px;
+border-bottom: 1px solid var(–border-color);
 }
 
-.modal-body {
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
+/* Content Lines */
+.content-line {
+font-family: ‘Times New Roman’, Times, serif;
+font-size: 21px;
+line-height: 1.8;
+margin: 0 0 24px 0;
+position: relative;
+padding-left: 48px;
+transition: background 0.2s ease;
 }
 
-.form-group {
-  margin-bottom: 16px;
+.content-line:hover {
+background: var(–hover-bg);
+margin-left: -12px;
+margin-right: -12px;
+padding-left: 60px;
+padding-right: 12px;
+border-radius: 4px;
 }
 
-.form-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 8px;
+.line-number {
+position: absolute;
+left: 0;
+top: 0;
+width: 36px;
+text-align: right;
+font-size: 14px;
+color: var(–text-secondary);
+opacity: 0;
+transition: opacity 0.2s ease;
+cursor: pointer;
+user-select: none;
 }
 
-.form-input {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--card-border);
-  background: var(--input-bg);
-  color: var(--text-color);
-  font-size: 14px;
-  font-family: inherit;
-  transition: 0.25s ease;
+.content-line:hover .line-number {
+opacity: 1;
 }
 
-.form-input:focus {
-  border-color: var(--accent);
-  outline: none;
+.comment-indicator {
+position: absolute;
+left: 16px;
+top: 4px;
+width: 6px;
+height: 6px;
+background: var(–accent);
+border-radius: 50%;
 }
 
-.form-textarea {
-  min-height: 100px;
-  resize: vertical;
+/* Media Embed */
+.media-embed {
+margin: 32px 0;
+padding: 24px 0;
+border-top: 1px solid var(–border-color);
+border-bottom: 1px solid var(–border-color);
 }
 
-.form-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
+.media-embed img {
+width: 100%;
+height: auto;
+border-radius: 4px;
+display: block;
 }
 
-.file-upload-area {
-  border: 2px dashed var(--card-border);
-  border-radius: 8px;
-  padding: 30px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.25s ease;
+.image-carousel {
+position: relative;
+overflow: hidden;
 }
 
-.file-upload-area:hover {
-  border-color: var(--accent);
-  background: rgba(176,0,58,0.05);
+.carousel-track {
+display: flex;
+gap: 12px;
+overflow-x: auto;
+scroll-snap-type: x mandatory;
+scroll-behavior: smooth;
+padding: 4px 0;
 }
 
-.file-upload-icon {
-  font-size: 48px;
-  color: var(--accent);
-  margin-bottom: 12px;
+.carousel-track::-webkit-scrollbar {
+height: 6px;
 }
 
-.file-upload-text {
-  font-size: 14px;
-  color: #999;
+.carousel-track::-webkit-scrollbar-thumb {
+background: var(–border-color);
+border-radius: 3px;
 }
 
-.modal-footer {
-  padding: 20px;
-  border-top: 1px solid var(--card-border);
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
+.carousel-track img {
+scroll-snap-align: start;
+min-width: 80%;
+max-width: 80%;
 }
 
-.btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s ease;
+.audio-player {
+background: var(–card-bg);
+border-radius: 8px;
+padding: 16px;
+display: flex;
+align-items: center;
+gap: 12px;
 }
 
-.btn-secondary {
-  background: transparent;
-  border: 1px solid var(--card-border);
-  color: var(--text-color);
+.audio-player audio {
+width: 100%;
 }
 
-.btn-secondary:hover {
-  background: rgba(255,255,255,0.05);
+.media-caption {
+font-size: 14px;
+color: var(–text-secondary);
+margin-top: 8px;
+font-style: italic;
 }
 
-body.light-theme .btn-secondary:hover {
-  background: rgba(0,0,0,0.05);
+/* Comment Section */
+.comment-panel {
+position: fixed;
+right: -400px;
+top: 70px;
+width: 380px;
+height: calc(100vh - 70px);
+background: var(–card-bg);
+border-left: 1px solid var(–border-color);
+transition: right 0.3s ease;
+z-index: 30;
+display: flex;
+flex-direction: column;
 }
 
-.btn-primary {
-  background: var(--accent);
-  color: white;
+.comment-panel.active {
+right: 0;
 }
 
-.btn-primary:hover {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
+.comment-header {
+padding: 20px;
+border-bottom: 1px solid var(–border-color);
+display: flex;
+justify-content: space-between;
+align-items: center;
 }
 
-/* Empty State */
-.empty-state {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  text-align: center;
-  color: #999;
+.comment-header h3 {
+margin: 0;
+font-size: 16px;
+font-weight: 500;
 }
 
-.empty-state i {
-  font-size: 64px;
-  margin-bottom: 20px;
-  opacity: 0.3;
+.close-comments {
+background: transparent;
+border: none;
+color: var(–text-primary);
+cursor: pointer;
+font-size: 20px;
+padding: 4px;
 }
 
-.empty-state h3 {
-  font-size: 20px;
-  margin-bottom: 8px;
-  color: var(--text-color);
+.comment-list {
+flex: 1;
+overflow-y: auto;
+padding: 20px;
 }
 
-.empty-state p {
-  font-size: 14px;
-  margin-bottom: 20px;
+.comment-item {
+margin-bottom: 20px;
+padding-bottom: 20px;
+border-bottom: 1px solid var(–border-color);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.comment-item:last-child {
+border-bottom: none;
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+.comment-author {
+font-weight: 500;
+font-size: 14px;
+margin-bottom: 4px;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+.comment-time {
+font-size: 12px;
+color: var(–text-secondary);
+margin-bottom: 8px;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
+.comment-text {
+font-size: 14px;
+line-height: 1.5;
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.1);
-  border-radius: 3px;
+.comment-input-area {
+padding: 20px;
+border-top: 1px solid var(–border-color);
+background: var(–bg-color);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.2);
+.comment-input {
+width: 100%;
+padding: 12px;
+border: 1px solid var(–border-color);
+border-radius: 8px;
+background: var(–card-bg);
+color: var(–text-primary);
+font-size: 14px;
+resize: vertical;
+min-height: 80px;
+font-family: inherit;
+margin-bottom: 12px;
 }
 
-body.light-theme ::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.1);
+.comment-input:focus {
+outline: none;
+border-color: var(–accent);
 }
 
-body.light-theme ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0,0,0,0.2);
+.comment-submit {
+width: 100%;
+padding: 10px;
+background: var(–accent);
+color: white;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+font-size: 14px;
+font-weight: 500;
+transition: background 0.2s ease;
 }
 
-/* Responsive */
+.comment-submit:hover {
+background: var(–accent-hover);
+}
+
+/* Upload Toolbar */
+.upload-toolbar {
+position: fixed;
+bottom: 24px;
+left: 50%;
+transform: translateX(-50%);
+background: var(–card-bg);
+border: 1px solid var(–border-color);
+border-radius: 24px;
+padding: 8px 16px;
+display: flex;
+gap: 8px;
+box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+z-index: 20;
+}
+
+.upload-btn {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: transparent;
+border: none;
+color: var(–text-secondary);
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 18px;
+transition: all 0.2s ease;
+}
+
+.upload-btn:hover {
+background: var(–hover-bg);
+color: var(–text-primary);
+}
+
+.upload-btn input {
+display: none;
+}
+
 @media (max-width: 768px) {
-  .materials-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .material-group-content {
-    grid-template-columns: 1fr;
-  }
-  
-  .content-actions .action-btn:not(.primary) {
-    display: none;
-  }
-  
-  .content-header {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-  
-  .materials-container {
-    padding: 12px;
-  }
-  
-  .message {
-    max-width: 85%;
-  }
+.reading-container {
+padding: 40px 16px 100px;
+}
+
+.article-title {
+font-size: 32px;
+}
+
+.content-line {
+font-size: 19px;
+padding-left: 0;
+}
+
+.content-line:hover {
+margin-left: 0;
+padding-left: 12px;
+}
+
+.line-number {
+display: none;
+}
+
+.comment-panel {
+width: 100%;
+right: -100%;
+}
+
+.carousel-track img {
+min-width: 90%;
+max-width: 90%;
+}
 }
 </style>
 
 </head>
 <body>
 
-<div class="main-container">
-  <!-- Main Content -->
-  <div class="content-main">
-    <div class="content-header">
-      <div class="library-icon" style="width: 40px; height: 40px; font-size: 18px;">
-        <i class="fas fa-microscope"></i>
-      </div>
-      <div class="content-header-info">
-        <div class="content-header-name">Medical Research</div>
-        <div class="content-header-details">24 items • 5 members • Last updated today</div>
-      </div>
-      <div class="content-actions">
-        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-          <i class="fas fa-circle-half-stroke"></i>
-        </button>
-        <button class="action-btn" onclick="showMembers()">
-          <i class="fas fa-users"></i>
-          <span>Members</span>
-        </button>
-        <button class="action-btn primary" onclick="shareLibrary()">
-          <i class="fas fa-share-nodes"></i>
-          <span>Share</span>
-        </button>
-      </div>
-    </div>
-
-<div class="tab-navigation">
-  <button class="tab-btn active" data-tab="materials" onclick="switchTab('materials')">
-    <i class="fas fa-folder"></i> Materials
-  </button>
-  <button class="tab-btn" data-tab="chat" onclick="switchTab('chat')">
-    <i class="fas fa-comments"></i> Discussion
-  </button>
-</div>
-
-<!-- Materials Tab -->
-<div class="materials-container active" id="materialsTab">
-  <div class="materials-grid" id="materialsGrid">
-    <!-- Group Example -->
-    <div class="material-group">
-      <div class="material-group-header" onclick="toggleGroup(this)">
-        <div class="material-group-info">
-          <div class="material-group-icon">
-            <i class="fas fa-folder"></i>
-          </div>
-          <div class="material-group-details">
-            <div class="material-group-name">Recent Studies</div>
-            <div class="material-group-count">2 items</div>
-          </div>
-        </div>
-        <div class="material-group-actions">
-          <button class="icon-btn" onclick="event.stopPropagation(); editGroup('Recent Studies')" title="Edit group">
-            <i class="fas fa-pen"></i>
-          </button>
-          <i class="fas fa-chevron-down material-group-toggle"></i>
-        </div>
-      </div>
-      <div class="material-group-content expanded">
-        <div class="material-card">
-          <div class="material-header">
-            <div class="material-type-icon pdf">
-              <i class="fas fa-file-pdf"></i>
-            </div>
-            <div class="material-info">
-              <div class="material-title">Cancer Research Study 2024</div>
-              <div class="material-type">PDF Document</div>
-            </div>
-          </div>
-          <div class="material-preview">
-            Comprehensive analysis of novel immunotherapy approaches in treating advanced stage cancers...
-          </div>
-          <div class="material-footer">
-            <div class="material-date">Added Dec 10, 2025</div>
-            <div class="material-actions">
-              <button class="icon-btn" title="Download" onclick="downloadMaterial('Cancer Research Study 2024')"><i class="fas fa-download"></i></button>
-              <button class="icon-btn" title="Share" onclick="shareMaterial('Cancer Research Study 2024')"><i class="fas fa-share"></i></button>
-              <button class="icon-btn" title="More" onclick="showMoreOptions('Cancer Research Study 2024')"><i class="fas fa-ellipsis-v"></i></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="material-card">
-          <div class="material-header">
-            <div class="material-type-icon text">
-              <i class="fas fa-file-lines"></i>
-            </div>
-            <div class="material-info">
-              <div class="material-title">Research Notes - December</div>
-              <div class="material-type">Text Document</div>
-            </div>
-          </div>
-          <div class="material-preview">
-            Daily observations and experimental findings from the ongoing clinical trials...
-          </div>
-          <div class="material-footer">
-            <div class="material-date">Added Dec 8, 2025</div>
-            <div class="material-actions">
-              <button class="icon-btn" title="Download" onclick="downloadMaterial('Research Notes - December')"><i class="fas fa-download"></i></button>
-              <button class="icon-btn" title="Share" onclick="shareMaterial('Research Notes - December')"><i class="fas fa-share"></i></button>
-              <button class="icon-btn" title="More" onclick="showMoreOptions('Research Notes - December')"><i class="fas fa-ellipsis-v"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Another Group -->
-    <div class="material-group">
-      <div class="material-group-header" onclick="toggleGroup(this)">
-        <div class="material-group-info">
-          <div class="material-group-icon">
-            <i class="fas fa-folder"></i>
-          </div>
-          <div class="material-group-details">
-            <div class="material-group-name">Visual Resources</div>
-            <div class="material-group-count">2 items</div>
-          </div>
-        </div>
-        <div class="material-group-actions">
-          <button class="icon-btn" onclick="event.stopPropagation(); editGroup('Visual Resources')" title="Edit group">
-            <i class="fas fa-pen"></i>
-          </button>
-          <i class="fas fa-chevron-down material-group-toggle"></i>
-        </div>
-      </div>
-      <div class="material-group-content expanded">
-        <div class="material-card">
-          <div class="material-header">
-            <div class="material-type-icon image">
-              <i class="fas fa-image"></i>
-            </div>
-            <div class="material-info">
-              <div class="material-title">Cell Structure Diagrams</div>
-              <div class="material-type">Image Collection</div>
-            </div>
-          </div>
-          <div class="material-preview">
-            High-resolution microscopy images showing cellular structures and organelles...
-          </div>
-          <div class="material-footer">
-            <div class="material-date">Added Dec 9, 2025</div>
-            <div class="material-actions">
-              <button class="icon-btn" title="Download" onclick="downloadMaterial('Cell Structure Diagrams')"><i class="fas fa-download"></i></button>
-              <button class="icon-btn" title="Share" onclick="shareMaterial('Cell Structure Diagrams')"><i class="fas fa-share"></i></button>
-              <button class="icon-btn" title="More" onclick="showMoreOptions('Cell Structure Diagrams')"><i class="fas fa-ellipsis-v"></i></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="material-card">
-          <div class="material-header">
-            <div class="material-type-icon record">
-              <i class="fas fa-database"></i>
-            </div>
-            <div class="material-info">
-              <div class="material-title">Patient Data Records</div>
-              <div class="material-type">Database Record</div>
-            </div>
-          </div>
-          <div class="material-preview">
-            Anonymized patient data from the Phase III clinical trials with statistical analysis...
-          </div>
-          <div class="material-footer">
-            <div class="material-date">Added Dec 7, 2025</div>
-            <div class="material-actions">
-              <button class="icon-btn" title="Download" onclick="downloadMaterial('Patient Data Records')"><i class="fas fa-download"></i></button>
-              <button class="icon-btn" title="Share" onclick="shareMaterial('Patient Data Records')"><i class="fas fa-share"></i></button>
-              <button class="icon-btn" title="More" onclick="showMoreOptions('Patient Data Records')"><i class="fas fa-ellipsis-v"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- Chat Tab -->
-<div class="chat-container" id="chatTab">
-  <div class="messages-area" id="messagesArea">
-    <div class="message">
-      <div class="message-avatar">DR</div>
-      <div class="message-content">
-        <div class="message-header">
-          <span class="message-author">Dr. Smith</span>
-          <span>10:23 AM</span>
-        </div>
-        <div class="message-bubble">
-          <div class="message-text">I've uploaded the latest cancer research study. Please review and share your thoughts!</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="message">
-      <div class="message-avatar">JL</div>
-      <div class="message-content">
-        <div class="message-header">
-          <span class="message-author">Dr. Johnson</span>
-          <span>10:45 AM</span>
-        </div>
-        <div class="message-bubble">
-          <div class="message-text">Great work! The methodology section is particularly impressive. Have we considered expanding the sample size?</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="message sent">
-      <div class="message-avatar">ME</div>
-      <div class="message-content">
-        <div class="message-header">
-          <span class="message-author">You</span>
-          <span>11:02 AM</span>
-        </div>
-        <div class="message-bubble">
-          <div class="message-text">I agree! I'll add some notes about potential sample expansion in the discussion section.</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="chat-input-area">
-    <textarea class="chat-input" id="chatInput" placeholder="Type a message..." rows="1"></textarea>
-    <button class="send-btn" onclick="sendChatMessage()">
-      <i class="fas fa-paper-plane"></i>
-    </button>
-  </div>
-</div>
-
-  </div>
-</div>
-
-<!-- Floating Action Button -->
-
-<button class="fab" onclick="openAddModal()" title="Add Material">
-  <i class="fas fa-plus"></i>
-</button>
-
-<!-- Add Material Modal -->
-
-<div class="modal" id="addModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">Add Material</h2>
-      <button class="modal-close" onclick="closeAddModal()">
-        <i class="fas fa-times"></i>
+<div class="header-wrapper">
+  <div class="header">
+    <img src="https://via.placeholder.com/120x40/667eea/ffffff?text=Patholytica" class="logo-img" alt="Patholytica Logo">
+    <div class="header-actions">
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fas fa-circle-half-stroke"></i>
+      </button>
+      <button class="icon-btn" title="User">
+        <i class="fas fa-user"></i>
       </button>
     </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Material Type</label>
-        <select class="form-input form-select" id="materialType">
-          <option value="pdf">PDF Document</option>
-          <option value="image">Image Collection</option>
-          <option value="text">Text Document</option>
-          <option value="record">Database Record</option>
-          <option value="video">Video</option>
-          <option value="link">Web Link</option>
-        </select>
-      </div>
+  </div>
+</div>
 
-  <div class="form-group">
-    <label class="form-label">Title</label>
-    <input type="text" class="form-input" id="materialTitleInput" placeholder="Enter material title">
+<div class="reading-container" id="readingContainer">
+  <h1 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h1>
+  <div class="article-meta">
+    Dr. Sarah Mitchell • Published March 15, 2024 • 12 min read
   </div>
 
-  <div class="form-group">
-    <label class="form-label">Description</label>
-    <textarea class="form-input form-textarea" id="materialDescription" placeholder="Add a description..."></textarea>
+  <div class="content-line" data-line="1">
+    <span class="line-number" onclick="openComments(1)">1</span>
+    The cardiovascular system represents one of the most critical organ systems in human physiology, and understanding its pathological processes is essential for modern medical practice.
   </div>
 
-  <div class="form-group">
-    <label class="form-label">Upload File (Optional)</label>
-    <div class="file-upload-area" onclick="triggerFileUpload()">
-      <div class="file-upload-icon">
-        <i class="fas fa-cloud-arrow-up"></i>
-      </div>
-      <div class="file-upload-text">
-        Click to upload or drag and drop<br>
-        <small>PDF, Images, Documents, Videos up to 50MB</small>
+  <div class="content-line" data-line="2">
+    <span class="line-number" onclick="openComments(2)">2</span>
+    <span class="comment-indicator"></span>
+    In recent decades, advances in imaging technology and molecular biology have revolutionized our understanding of cardiac diseases, enabling earlier detection and more targeted therapeutic interventions.
+  </div>
+
+  <div class="media-embed">
+    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=600&fit=crop" alt="Heart anatomy">
+    <div class="media-caption">Figure 1: Cross-sectional view of cardiac tissue showing myocardial structure</div>
+  </div>
+
+  <div class="content-line" data-line="3">
+    <span class="line-number" onclick="openComments(3)">3</span>
+    Atherosclerosis, characterized by the accumulation of lipids and fibrous material in arterial walls, remains the leading cause of cardiovascular morbidity and mortality worldwide.
+  </div>
+
+  <div class="content-line" data-line="4">
+    <span class="line-number" onclick="openComments(4)">4</span>
+    The pathogenesis involves a complex interplay of endothelial dysfunction, inflammatory responses, and lipid metabolism abnormalities that progress over many years.
+  </div>
+
+  <div class="media-embed">
+    <div class="image-carousel">
+      <div class="carousel-track">
+        <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=600&fit=crop" alt="Microscopy 1">
+        <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=600&fit=crop" alt="Microscopy 2">
+        <img src="https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&h=600&fit=crop" alt="Microscopy 3">
       </div>
     </div>
+    <div class="media-caption">Figure 2: Progressive stages of atherosclerotic plaque development</div>
   </div>
 
-  <div class="form-group">
-    <label class="form-label">Group (Optional)</label>
-    <select class="form-input form-select" id="materialGroup">
-      <option value="">No Group</option>
-      <option value="recent-studies">Recent Studies</option>
-      <option value="visual-resources">Visual Resources</option>
-      <option value="new-group">+ Create New Group</option>
-    </select>
+  <div class="content-line" data-line="5">
+    <span class="line-number" onclick="openComments(5)">5</span>
+    Hypertensive heart disease represents another major category of cardiovascular pathology, with chronic elevation of blood pressure leading to left ventricular hypertrophy and eventual heart failure.
   </div>
 
-  <div class="form-group" id="newGroupField" style="display: none;">
-    <label class="form-label">New Group Name</label>
-    <input type="text" class="form-input" id="newGroupName" placeholder="Enter group name">
+  <div class="media-embed">
+    <div class="audio-player">
+      <audio controls>
+        <source src="" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+    <div class="media-caption">Audio note: Dr. Mitchell discusses key findings from recent clinical trials</div>
   </div>
 
-  <div class="form-group">
-    <label class="form-label">URL (Optional)</label>
-    <input type="url" class="form-input" id="materialUrl" placeholder="https://...">
+  <div class="content-line" data-line="6">
+    <span class="line-number" onclick="openComments(6)">6</span>
+    The role of inflammation in cardiovascular disease has gained increasing recognition, with biomarkers such as C-reactive protein and interleukin-6 serving as important prognostic indicators.
+  </div>
+
+  <div class="content-line" data-line="7">
+    <span class="line-number" onclick="openComments(7)">7</span>
+    Future directions in cardiovascular pathology research include personalized medicine approaches, advanced imaging modalities, and novel therapeutic targets aimed at preventing disease progression.
   </div>
 </div>
-<div class="modal-footer">
-  <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
-  <button class="btn btn-primary" onclick="submitMaterial()">Add Material</button>
+
+<div class="comment-panel" id="commentPanel">
+  <div class="comment-header">
+    <h3>Comments on Line <span id="currentLine">1</span></h3>
+    <button class="close-comments" onclick="closeComments()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="comment-list" id="commentList">
+    <!-- Comments will be inserted here -->
+  </div>
+  <div class="comment-input-area">
+    <textarea class="comment-input" id="commentInput" placeholder="Add a comment..."></textarea>
+    <button class="comment-submit" onclick="submitComment()">Post Comment</button>
+  </div>
 </div>
 
-  </div>
+<div class="upload-toolbar">
+  <label class="upload-btn" title="Upload image">
+    <i class="fas fa-image"></i>
+    <input type="file" accept="image/*" onchange="handleImageUpload(event)">
+  </label>
+  <label class="upload-btn" title="Upload audio">
+    <i class="fas fa-microphone"></i>
+    <input type="file" accept="audio/*" onchange="handleAudioUpload(event)">
+  </label>
+  <label class="upload-btn" title="Upload file">
+    <i class="fas fa-paperclip"></i>
+    <input type="file" onchange="handleFileUpload(event)">
+  </label>
 </div>
 
 <script>
-let currentTab = 'materials';
+const comments = {
+  2: [
+    {
+      author: "Dr. James Chen",
+      time: "2 hours ago",
+      text: "Excellent point about imaging technology. The development of cardiac MRI has been particularly transformative."
+    }
+  ]
+};
 
-function toggleTheme(){
+let currentLineNumber = null;
+
+function toggleTheme() {
   document.body.classList.toggle('light-theme');
-  localStorage.setItem(
-    "theme",
-    document.body.classList.contains("light-theme") ? "light" : "dark"
-  );
+  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
 }
 
 if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
 }
 
-// Tab switching
-function switchTab(tab) {
-  currentTab = tab;
+function openComments(lineNumber) {
+  currentLineNumber = lineNumber;
+  document.getElementById('currentLine').textContent = lineNumber;
+  document.getElementById('commentPanel').classList.add('active');
+  loadComments(lineNumber);
+}
+
+function closeComments() {
+  document.getElementById('commentPanel').classList.remove('active');
+}
+
+function loadComments(lineNumber) {
+  const commentList = document.getElementById('commentList');
+  const lineComments = comments[lineNumber] || [];
   
-  // Update tab buttons
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
-  
-  // Update content
-  document.getElementById('materialsTab').classList.remove('active');
-  document.getElementById('chatTab').classList.remove('active');
-  
-  // Show/hide FAB based on tab
-  const fab = document.querySelector('.fab');
-  
-  if (tab === 'materials') {
-    document.getElementById('materialsTab').classList.add('active');
-    fab.classList.remove('hidden');
-  } else if (tab === 'chat') {
-    document.getElementById('chatTab').classList.add('active');
-    fab.classList.add('hidden');
-    
-    // Scroll to bottom of chat
-    const messagesArea = document.getElementById('messagesArea');
-    messagesArea.scrollTop = messagesArea.scrollHeight;
+  if (lineComments.length === 0) {
+    commentList.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px;">No comments yet. Be the first to comment!</p>';
+  } else {
+    commentList.innerHTML = lineComments.map(comment => `
+      <div class="comment-item">
+        <div class="comment-author">${comment.author}</div>
+        <div class="comment-time">${comment.time}</div>
+        <div class="comment-text">${comment.text}</div>
+      </div>
+    `).join('');
   }
 }
 
-// Chat functionality
-function sendChatMessage() {
-  const input = document.getElementById('chatInput');
+function submitComment() {
+  const input = document.getElementById('commentInput');
   const text = input.value.trim();
   
-  if (!text) return;
+  if (!text || currentLineNumber === null) return;
   
-  const messagesArea = document.getElementById('messagesArea');
-  const now = new Date();
-  const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  if (!comments[currentLineNumber]) {
+    comments[currentLineNumber] = [];
+  }
   
-  const messageDiv = document.createElement('div');
-  messageDiv.className = 'message sent';
-  messageDiv.innerHTML = `
-    <div class="message-avatar">ME</div>
-    <div class="message-content">
-      <div class="message-header">
-        <span class="message-author">You</span>
-        <span>${time}</span>
-      </div>
-      <div class="message-bubble">
-        <div class="message-text">${text}</div>
-      </div>
-    </div>
-  `;
+  comments[currentLineNumber].push({
+    author: "You",
+    time: "Just now",
+    text: text
+  });
   
-  messagesArea.appendChild(messageDiv);
+  // Add comment indicator
+  const line = document.querySelector(`[data-line="${currentLineNumber}"]`);
+  if (line && !line.querySelector('.comment-indicator')) {
+    const indicator = document.createElement('span');
+    indicator.className = 'comment-indicator';
+    line.appendChild(indicator);
+  }
+  
   input.value = '';
-  input.style.height = 'auto';
-  messagesArea.scrollTop = messagesArea.scrollHeight;
+  loadComments(currentLineNumber);
 }
 
-// Chat input auto-resize
-document.getElementById('chatInput').addEventListener('input', function() {
-  this.style.height = 'auto';
-  this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-});
-
-document.getElementById('chatInput').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendChatMessage();
-  }
-});
-
-// Modal functions
-function openAddModal() {
-  document.getElementById('addModal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeAddModal() {
-  document.getElementById('addModal').classList.remove('show');
-  document.body.style.overflow = '';
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
   
-  // Reset form
-  document.getElementById('materialTitleInput').value = '';
-  document.getElementById('materialDescription').value = '';
-  document.getElementById('materialUrl').value = '';
-  document.getElementById('materialType').value = 'pdf';
-  document.getElementById('materialGroup').value = '';
-  document.getElementById('newGroupField').style.display = 'none';
-  document.getElementById('newGroupName').value = '';
-}
-
-function triggerFileUpload() {
-  alert('📂 File browser would open here\n\nSelect files to upload:\n• Documents (PDF, DOC, DOCX)\n• Images (JPG, PNG, GIF)\n• Videos (MP4, MOV)\n• Data files (CSV, XLSX)\n\nMax size: 50MB per file\n\n(Demo mode)');
-}
-
-function submitMaterial() {
-  const title = document.getElementById('materialTitleInput').value.trim();
-  const description = document.getElementById('materialDescription').value.trim();
-  const type = document.getElementById('materialType').value;
-  const url = document.getElementById('materialUrl').value.trim();
-  const groupSelect = document.getElementById('materialGroup').value;
-  
-  if (!title) {
-    alert('⚠️ Please enter a material title');
-    return;
-  }
-  
-  const typeMap = {
-    pdf: { icon: 'fa-file-pdf', class: 'pdf', type: 'PDF Document' },
-    image: { icon: 'fa-image', class: 'image', type: 'Image Collection' },
-    text: { icon: 'fa-file-lines', class: 'text', type: 'Text Document' },
-    record: { icon: 'fa-database', class: 'record', type: 'Database Record' },
-    video: { icon: 'fa-video', class: 'image', type: 'Video' },
-    link: { icon: 'fa-link', class: 'text', type: 'Web Link' }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const mediaEmbed = document.createElement('div');
+    mediaEmbed.className = 'media-embed';
+    mediaEmbed.innerHTML = `
+      <img src="${e.target.result}" alt="Uploaded image">
+      <div class="media-caption">Uploaded: ${file.name}</div>
+    `;
+    document.getElementById('readingContainer').appendChild(mediaEmbed);
   };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function handleAudioUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
   
-  const selected = typeMap[type];
-  const materialsGrid = document.getElementById('materialsGrid');
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const mediaEmbed = document.createElement('div');
+    mediaEmbed.className = 'media-embed';
+    mediaEmbed.innerHTML = `
+      <div class="audio-player">
+        <audio controls>
+          <source src="${e.target.result}" type="${file.type}">
+        </audio>
+      </div>
+      <div class="media-caption">Audio: ${file.name}</div>
+    `;
+    document.getElementById('readingContainer').appendChild(mediaEmbed);
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
   
-  const newCard = `
-    <div class="material-card">
-      <div class="material-header">
-        <div class="material-type-icon ${selected.class}">
-          <i class="fas ${selected.icon}"></i>
-        </div>
-        <div class="material-info">
-          <div class="material-title">${title}</div>
-          <div class="material-type">${selected.type}</div>
-        </div>
-      </div>
-      <div class="material-preview">
-        ${description || 'New material added to your library...'}
-      </div>
-      <div class="material-footer">
-        <div class="material-date">Added just now</div>
-        <div class="material-actions">
-          <button class="icon-btn" title="Download" onclick="downloadMaterial('${title}')"><i class="fas fa-download"></i></button>
-          <button class="icon-btn" title="Share" onclick="shareMaterial('${title}')"><i class="fas fa-share"></i></button>
-          <button class="icon-btn" title="More" onclick="showMoreOptions('${title}')"><i class="fas fa-ellipsis-v"></i></button>
-        </div>
+  const mediaEmbed = document.createElement('div');
+  mediaEmbed.className = 'media-embed';
+  mediaEmbed.innerHTML = `
+    <div style="padding: 16px; background: var(--card-bg); border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+      <i class="fas fa-file" style="font-size: 24px; color: var(--accent);"></i>
+      <div>
+        <div style="font-weight: 500; margin-bottom: 4px;">${file.name}</div>
+        <div style="font-size: 12px; color: var(--text-secondary);">${(file.size / 1024).toFixed(2)} KB</div>
       </div>
     </div>
   `;
+  document.getElementById('readingContainer').appendChild(mediaEmbed);
+  event.target.value = '';
+}
+
+// Close comment panel when clicking outside
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('commentPanel');
+  const lineNumbers = document.querySelectorAll('.line-number');
   
-  // If a group is selected, add to that group
-  if (groupSelect && groupSelect !== 'new-group') {
-    const groups = materialsGrid.querySelectorAll('.material-group');
-    let targetGroup = null;
-    
-    groups.forEach(group => {
-      const groupName = group.querySelector('.material-group-name').textContent;
-      if ((groupSelect === 'recent-studies' && groupName === 'Recent Studies') ||
-          (groupSelect === 'visual-resources' && groupName === 'Visual Resources')) {
-        targetGroup = group;
-      }
-    });
-    
-    if (targetGroup) {
-      const groupContent = targetGroup.querySelector('.material-group-content');
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = newCard;
-      groupContent.appendChild(tempDiv.firstElementChild);
-      
-      // Update count
-      const countEl = targetGroup.querySelector('.material-group-count');
-      const currentCount = parseInt(countEl.textContent);
-      countEl.textContent = `${currentCount + 1} items`;
-    }
-  } else if (groupSelect === 'new-group') {
-    const newGroupName = document.getElementById('newGroupName').value.trim();
-    if (!newGroupName) {
-      alert('⚠️ Please enter a group name');
-      return;
-    }
-    
-    // Create new group
-    const newGroupHtml = `
-      <div class="material-group">
-        <div class="material-group-header" onclick="toggleGroup(this)">
-          <div class="material-group-info">
-            <div class="material-group-icon">
-              <i class="fas fa-folder"></i>
-            </div>
-            <div class="material-group-details">
-              <div class="material-group-name">${newGroupName}</div>
-              <div class="material-group-count">1 item</div>
-            </div>
-          </div>
-          <div class="material-group-actions">
-            <button class="icon-btn" onclick="event.stopPropagation(); editGroup('${newGroupName}')" title="Edit group">
-              <i class="fas fa-pen"></i>
-            </button>
-            <i class="fas fa-chevron-down material-group-toggle"></i>
-          </div>
-        </div>
-        <div class="material-group-content expanded">
-          ${newCard}
-        </div>
-      </div>
-    `;
-    
-    materialsGrid.insertAdjacentHTML('beforeend', newGroupHtml);
-  } else {
-    // Add to first group by default
-    const firstGroup = materialsGrid.querySelector('.material-group');
-    if (firstGroup) {
-      const groupContent = firstGroup.querySelector('.material-group-content');
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = newCard;
-      groupContent.appendChild(tempDiv.firstElementChild);
-      
-      // Update count
-      const countEl = firstGroup.querySelector('.material-group-count');
-      const currentCount = parseInt(countEl.textContent);
-      countEl.textContent = `${currentCount + 1} items`;
-    }
-  }
-  
-  closeAddModal();
-  
-  // Show success and switch to materials tab if needed
-  if (currentTab !== 'materials') {
-    switchTab('materials');
-  }
-  
-  alert(`✅ "${title}" added successfully!`);
-}
-
-function showMembers() {
-  alert('👥 Library Members\n\n• Dr. Smith (Owner)\n• Dr. Johnson\n• Dr. Williams\n• Dr. Brown\n• You\n\n[+ Invite Members]\n\n(Demo mode)');
-}
-
-function shareLibrary() {
-  alert('📤 Share Library\n\nShare "Medical Research" with:\n\n• Generate invite link\n• Email invitation\n• QR code\n• Set permissions (View/Edit)\n• Manage access\n\n(Demo mode)');
-}
-
-function downloadMaterial(materialName) {
-  alert(`⬇️ Downloading: ${materialName}\n\nFile will be saved to your device.\n\n(Demo mode - no actual download)`);
-}
-
-function shareMaterial(materialName) {
-  alert(`📤 Share: ${materialName}\n\nShare via:\n• Copy link\n• Email\n• Social media\n• Download & share\n\n(Demo mode)`);
-}
-
-function showMoreOptions(materialName) {
-  alert(`Options for: ${materialName}\n\n• Open\n• Edit details\n• Move to another library\n• Duplicate\n• Add to favorites\n• Delete\n• View history\n\n(Demo mode)`);
-}
-
-// Close modal when clicking outside
-document.getElementById('addModal').addEventListener('click', (e) => {
-  if (e.target.id === 'addModal') {
-    closeAddModal();
+  if (panel.classList.contains('active') && 
+      !panel.contains(e.target) && 
+      !Array.from(lineNumbers).some(ln => ln.contains(e.target))) {
+    closeComments();
   }
 });
-
-// Handle group selection in modal
-document.getElementById('materialGroup').addEventListener('change', function() {
-  const newGroupField = document.getElementById('newGroupField');
-  if (this.value === 'new-group') {
-    newGroupField.style.display = 'block';
-  } else {
-    newGroupField.style.display = 'none';
-  }
-});
-
-// Toggle group collapse/expand
-function toggleGroup(headerElement) {
-  const content = headerElement.nextElementSibling;
-  const toggle = headerElement.querySelector('.material-group-toggle');
-  
-  if (content.classList.contains('expanded')) {
-    content.classList.remove('expanded');
-    toggle.classList.add('collapsed');
-  } else {
-    content.classList.add('expanded');
-    toggle.classList.remove('collapsed');
-  }
-}
-
-// Edit group
-function editGroup(groupName) {
-  alert(`✏️ Edit Group: ${groupName}\n\nOptions:\n• Rename group\n• Change icon\n• Add/remove materials\n• Delete group\n• Change order\n\n(Demo mode)`);
-}
 </script>
 
 </body>
