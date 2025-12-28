@@ -825,4 +825,280 @@ function openLineComments(lineNumber, event) {
   loadLineComments(lineNumber);
 }
 
-function loadAllComments()
+function loadAllComments() {
+  const commentList = document.getElementById('commentList');
+  document.getElementById('commentTitle').textContent = 'All Comments';
+  let allComments = [];
+  for (let line in comments) {
+    comments[line].forEach(comment => allComments.push({...comment, line: line}));
+  }
+  if (allComments.length === 0) {
+    commentList.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">No comments yet.</p>';
+  } else {
+    commentList.innerHTML = allComments.map(comment => `
+      <div class="comment-item">
+        <div class="comment-line-ref">Line ${comment.line}</div>
+        <div class="comment-author">${comment.author}</div>
+        <div class="comment-time">${comment.time}</div>
+        <div class="comment-text">${comment.text}</div>
+      </div>
+    `).join('');
+  }
+}
+
+function loadLineComments(lineNumber) {
+  const commentList = document.getElementById('commentList');
+  const lineComments = comments[lineNumber] || [];
+  if (lineComments.length === 0) {
+    commentList.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">No comments on this line yet.</p>';
+  } else {
+    commentList.innerHTML = lineComments.map(comment => `
+      <div class="comment-item">
+        <div class="comment-author">${comment.author}</div>
+        <div class="comment-time">${comment.time}</div>
+        <div class="comment-text">${comment.text}</div>
+      </div>
+    `).join('');
+  }
+}
+
+function submitComment() {
+  const input = document.getElementById('commentInput');
+  const text = input.value.trim();
+  if (!text || currentLineNumber === null) return;
+  if (!comments[currentLineNumber]) comments[currentLineNumber] = [];
+  comments[currentLineNumber].push({author: "You", time: "Just now", text: text});
+  const line = document.querySelector(`[data-line="${currentLineNumber}"]`);
+  line.classList.add('has-comments');
+  const trigger = line.querySelector('.comment-trigger');
+  trigger.classList.add('active');
+  trigger.innerHTML = '<i class="fas fa-comment"></i>';
+  updateCommentBadge();
+  input.value = '';
+  loadLineComments(currentLineNumber);
+}
+
+function updateCommentBadge() {
+  let total = 0;
+  for (let line in comments) total += comments[line].length;
+  document.getElementById('commentBadge').textContent = total;
+}
+
+// Article action functions
+function toggleLike() {
+  isLiked = !isLiked;
+  const btn = document.getElementById('likeBtn');
+  const count = document.getElementById('likeCount');
+  const currentCount = parseInt(count.textContent);
+  
+  if (isLiked) {
+    btn.classList.add('active');
+    count.textContent = currentCount + 1;
+  } else {
+    btn.classList.remove('active');
+    count.textContent = currentCount - 1;
+  }
+}
+
+function toggleSubscribe() {
+  isSubscribed = !isSubscribed;
+  const btn = document.getElementById('subscribeBtn');
+  const text = document.getElementById('subscribeText');
+  
+  if (isSubscribed) {
+    btn.classList.add('active');
+    text.textContent = 'Subscribed';
+  } else {
+    btn.classList.remove('active');
+    text.textContent = 'Subscribe';
+  }
+}
+
+function shareArticle() {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Understanding Cardiovascular Pathology',
+      text: 'Check out this article by Dr. Sarah Mitchell',
+      url: window.location.href
+    }).catch(err => console.log('Share cancelled'));
+  } else {
+    // Fallback: copy to clipboard
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      alert('Link copied to clipboard!');
+    });
+  }
+}
+
+function toggleSave() {
+  isSaved = !isSaved;
+  const btn = document.getElementById('saveBtn');
+  
+  if (isSaved) {
+    btn.classList.add('active');
+    alert('Article saved for later!');
+  } else {
+    btn.classList.remove('active');
+    alert('Article removed from saved items.');
+  }
+}
+
+function addToPlaylist() {
+  const playlists = ['Reading List', 'Cardiology Research', 'Medical Reviews', 'Favorites'];
+  const playlistNames = playlists.map((name, i) => `${i + 1}. ${name}`).join('\n');
+  const choice = prompt(`Choose a playlist:\n\n${playlistNames}\n\nEnter 1-${playlists.length} or type a new playlist name:`);
+  
+  if (choice) {
+    const index = parseInt(choice) - 1;
+    const playlistName = (index >= 0 && index < playlists.length) ? playlists[index] : choice;
+    alert(`Article added to "${playlistName}"!`);
+  }
+}
+
+// Content editing functions
+function addNewParagraph() {
+  lineCounter++;
+  const newLine = document.createElement('div');
+  newLine.className = 'content-line';
+  newLine.setAttribute('data-line', lineCounter);
+  newLine.innerHTML = `
+    <div class="content-editable" contenteditable="true">
+      Start typing your new paragraph here...
+    </div>
+    <button class="comment-trigger" onclick="openLineComments(${lineCounter}, event)">
+      <i class="fas fa-plus"></i>
+    </button>
+  `;
+  document.getElementById('readingContainer').appendChild(newLine);
+  const editable = newLine.querySelector('.content-editable');
+  editable.focus();
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.selectNodeContents(editable);
+  range.collapse(false);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    lineCounter++;
+    const mediaEmbed = document.createElement('div');
+    mediaEmbed.className = 'media-embed';
+    mediaEmbed.innerHTML = `
+      <img src="${e.target.result}" alt="Uploaded image">
+      <div class="media-caption">Click to edit caption...</div>
+    `;
+    document.getElementById('readingContainer').appendChild(mediaEmbed);
+    const caption = mediaEmbed.querySelector('.media-caption');
+    caption.contentEditable = true;
+    caption.addEventListener('focus', function() {
+      if (this.textContent === 'Click to edit caption...') {
+        this.textContent = '';
+      }
+    });
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function handleAudioUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    lineCounter++;
+    const mediaEmbed = document.createElement('div');
+    mediaEmbed.className = 'media-embed';
+    mediaEmbed.innerHTML = `
+      <div class="custom-audio-player">
+        <button class="play-btn" onclick="toggleAudio(this)">
+          <i class="fas fa-play"></i>
+        </button>
+        <div class="audio-info">
+          <div class="audio-title">${file.name}</div>
+          <div class="waveform-container" onclick="seekAudio(event, this)">
+            <div class="waveform-progress"></div>
+            <div class="waveform-bars">
+              ${Array(20).fill(0).map(() => `<div class="waveform-bar" style="height: ${Math.random() * 60 + 20}%"></div>`).join('')}
+            </div>
+          </div>
+          <div class="audio-time">
+            <span class="current-time">0:00</span>
+            <span class="duration">0:00</span>
+          </div>
+        </div>
+        <audio src="${e.target.result}" style="display: none;"></audio>
+      </div>
+      <div class="media-caption">Click to edit caption...</div>
+    `;
+    document.getElementById('readingContainer').appendChild(mediaEmbed);
+    const audio = mediaEmbed.querySelector('audio');
+    audio.addEventListener('loadedmetadata', function() {
+      const duration = Math.floor(audio.duration);
+      const mins = Math.floor(duration / 60);
+      const secs = duration % 60;
+      mediaEmbed.querySelector('.duration').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    });
+    const caption = mediaEmbed.querySelector('.media-caption');
+    caption.contentEditable = true;
+    caption.addEventListener('focus', function() {
+      if (this.textContent === 'Click to edit caption...') {
+        this.textContent = '';
+      }
+    });
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  alert(`File "${file.name}" uploaded successfully!\n\nFile uploads would be processed by your backend system.`);
+  event.target.value = '';
+}
+
+function toggleAudio(btn) {
+  const player = btn.closest('.custom-audio-player');
+  const audio = player.querySelector('audio');
+  const icon = btn.querySelector('i');
+  
+  if (audio.paused) {
+    audio.play();
+    icon.className = 'fas fa-pause';
+    
+    audio.ontimeupdate = function() {
+      const progress = (audio.currentTime / audio.duration) * 100;
+      player.querySelector('.waveform-progress').style.width = progress + '%';
+      const currentMins = Math.floor(audio.currentTime / 60);
+      const currentSecs = Math.floor(audio.currentTime % 60);
+      player.querySelector('.current-time').textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
+    };
+    
+    audio.onended = function() {
+      icon.className = 'fas fa-play';
+      player.querySelector('.waveform-progress').style.width = '0%';
+      player.querySelector('.current-time').textContent = '0:00';
+    };
+  } else {
+    audio.pause();
+    icon.className = 'fas fa-play';
+  }
+}
+
+function seekAudio(event, container) {
+  const player = container.closest('.custom-audio-player');
+  const audio = player.querySelector('audio');
+  const rect = container.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const percentage = x / rect.width;
+  audio.currentTime = percentage * audio.duration;
+}
+
+updateCommentBadge();
+</script>
+</body>
+</html>
