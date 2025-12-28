@@ -740,6 +740,7 @@ body.light-theme .logo-img {
 </div>
 
 <script>
+
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
   localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
@@ -775,4 +776,54 @@ function shareArticle(event) {
 }
 
 function removeFromPlaylist(event) {
-  event.stop
+  event.stopPropagation();
+  const articleItem = event.target.closest('.article-item');
+  const articleTitle = articleItem.querySelector('.article-title').textContent;
+  
+  if (confirm(`Remove "${articleTitle}" from this playlist?`)) {
+    articleItem.style.opacity = '0';
+    articleItem.style.transform = 'translateX(-20px)';
+    setTimeout(() => {
+      articleItem.remove();
+      updatePlaylistCount(articleItem.closest('.playlist-section'));
+    }, 300);
+  }
+}
+
+function updatePlaylistCount(playlistSection) {
+  const countBadge = playlistSection.querySelector('.playlist-count');
+  const remainingArticles = playlistSection.querySelectorAll('.article-item').length;
+  countBadge.textContent = `${remainingArticles} article${remainingArticles !== 1 ? 's' : ''}`;
+  
+  // Renumber articles
+  const articles = playlistSection.querySelectorAll('.article-item');
+  articles.forEach((article, index) => {
+    article.querySelector('.article-number').textContent = index + 1;
+  });
+}
+
+function searchArticles() {
+  const searchQuery = prompt('Search your playlists:');
+  if (searchQuery && searchQuery.trim()) {
+    alert(`Searching for: "${searchQuery}"\n\nSearch functionality would filter articles across all playlists.`);
+  }
+}
+
+function createNewPlaylist() {
+  const playlistName = prompt('Enter a name for your new playlist:');
+  if (playlistName && playlistName.trim()) {
+    alert(`Creating new playlist: "${playlistName}"\n\nThis would create a new empty playlist section.`);
+  }
+}
+
+// Add smooth transition styles
+const style = document.createElement('style');
+style.textContent = `
+  .article-item {
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease;
+  }
+`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
