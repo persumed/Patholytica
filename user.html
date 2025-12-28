@@ -564,6 +564,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Make app and config available globally
+window.firebaseApp = app;
+window.firebaseConfig = firebaseConfig;
+
 // Set current date
 const today = new Date();
 const dateStr = today.toLocaleDateString('en-US', { 
@@ -590,10 +594,6 @@ window.firebaseAuth = auth;
 </script>
 
 <script>
-// Supabase configuration
-const SUPABASE_URL = 'https://your-project.supabase.co';
-const SUPABASE_KEY = 'your-anon-key';
-
 let draggedElement = null;
 
 // Theme toggle
@@ -737,6 +737,7 @@ waveformContainer.addEventListener('click', function(event) {
   const percentage = x / rect.width;
   audio.currentTime = percentage * audio.duration;
 });
+```
 
 };
 reader.readAsDataURL(file);
@@ -819,22 +820,8 @@ setTimeout(() => notification.remove(), 300);
 }, 3000);
 }
 
-// Publish article
-document.getElementById(‘publishBtn’).addEventListener(‘click’, async function() {
-const publishBtn = this;
-publishBtn.disabled = true;
-
-const title = document.getElementById(‘articleTitle’).value.trim();
-const author = document.getElementById(‘authorName’).textContent;
-const date = document.getElementById(‘currentDate’).textContent;
-
-if (!title) {
-showNotification(‘Please add a title to your article’, ‘error’);
-publishBtn.disabled = false;
-return;
-}
-
-// Gather content in order
+// Gather content helper function
+function gatherContent() {
 const contentBlocks = [];
 const blocks = document.querySelectorAll(’.content-block’);
 
@@ -874,6 +861,26 @@ if (audio) {
 
 });
 
+return contentBlocks;
+}
+
+// Publish article
+document.getElementById(‘publishBtn’).addEventListener(‘click’, async function() {
+const publishBtn = this;
+publishBtn.disabled = true;
+
+const title = document.getElementById(‘articleTitle’).value.trim();
+const author = document.getElementById(‘authorName’).textContent;
+const date = document.getElementById(‘currentDate’).textContent;
+
+if (!title) {
+showNotification(‘Please add a title to your article’, ‘error’);
+publishBtn.disabled = false;
+return;
+}
+
+const contentBlocks = gatherContent();
+
 if (contentBlocks.length === 0) {
 showNotification(‘Please add some content to your article’, ‘error’);
 publishBtn.disabled = false;
@@ -881,37 +888,42 @@ return;
 }
 
 const articleData = {
-  title: title,
-  author: author,
-  date: date,
-  dateCreated: new Date().toISOString(),
-  content: contentBlocks,
-  authorId: window.currentUser?.uid || 'anonymous',
-  authorEmail: window.currentUser?.email || '',
-  status: 'published'
-};
+title: title,
+    author: author,
+    date: date,
+    dateCreated: new Date().toISOString(),
+    content: contentBlocks,
+    authorId: window.currentUser?.uid || 'anonymous',
+    authorEmail: window.currentUser?.email || '',
+    status: 'published'
+  };
 
-try {
-  // Import Firestore
-  const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-  const db = getFirestore(window.firebaseApp || initializeApp(firebaseConfig));
-  
-  // Add article to Firestore
-  const docRef = await addDoc(collection(db, 'articles'), articleData);
-  
-  showNotification('Article published successfully!', 'success');
-  
-  // Optional: Redirect to the article view page after a delay
-  setTimeout(() => {
-    // window.location.href = `article.html?id=${docRef.id}`;
-    console.log('Article ID:', docRef.id);
-  }, 1500);
-  
-} catch (error) {
-  console.error('Error publishing article:', error);
-  showNotification('Failed to publish article. Please try again.', 'error');
-  publishBtn.disabled = false;
-}
+  try {
+    // Import Firestore
+    const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    const db = getFirestore(window.firebaseApp);
+    
+    // Add article to Firestore
+    const docRef = await addDoc(collection(db, 'articles'), articleData);
+    
+    showNotification('Article published successfully!', 'success');
+    clearDraft(); // Clear the draft after successful publish
+    
+    // Optional: Redirect or reset
+    setTimeout(() => {
+      console.log('Article ID:', docRef.id);
+      publishBtn.disabled = false; // Re-enable button
+      // Optionally reload to start fresh
+      if (confirm('Article published successfully! Would you like to create another article?')) {
+        location.reload();
+      }
+    }, 1500);
+    
+  } catch (error) {
+    console.error('Error publishing article:', error);
+    showNotification('Failed to publish article. Please try again.', 'error');
+    publishBtn.disabled = false; // Re-enable on error
+  }
 });
 
 // User button click
@@ -946,46 +958,9 @@ function autoSave() {
   }, 2000);
 }
 
-function gatherContent() {
-  const contentBlocks = [];
-  const blocks = document.querySelectorAll('.content-block');
-  
-  blocks.forEach(block => {
-    const textarea = block.querySelector('.content-editable');
-    if (textarea) {
-      const text = textarea.value.trim();
-      if (text) {
-        contentBlocks.push({
-          type: 'text',
-          content: text
-        });
-      }
-    }
-    
-    const img = block.querySelector('.media-embed img');
-    if (img) {
-      const caption = block.querySelector('.media-caption-input')?.value || '';
-      contentBlocks.push({
-        type: 'image',
-        content: img.src,
-        caption: caption
-      });
-    }
-    
-    const audio = block.querySelector('.media-embed audio');
-    if (audio) {
-      const audioTitle = block.querySelector('.audio-title')?.textContent || '';
-      const caption = block.querySelector('.media-caption-input')?.value || '';
-      contentBlocks.push({
-        type: 'audio',
-        content: audio.src,
-        title: audioTitle,
-        caption: caption
-      });
-    }
-  });
-  
-  return contentBlocks;
+// Clear draft after successful publish
+function clearDraft() {
+  localStorage.removeItem('articleDraft');
 }
 
 // Trigger auto-save on input
@@ -1005,6 +980,7 @@ window.addEventListener('load', function() {
     if (shouldLoad) {
       const draft = JSON.parse(savedDraft);
       document.getElementById('articleTitle').value = draft.title;
+      autoResize(document.getElementById('articleTitle'));
       
       // Clear existing content blocks except the first one
       const existingBlocks = document.querySelectorAll('.content-block');
@@ -1045,14 +1021,11 @@ window.addEventListener('load', function() {
       });
       
       showNotification('Draft loaded successfully', 'success');
+    } else {
+      clearDraft();
     }
   }
 });
-
-// Clear draft after successful publish
-function clearDraft() {
-  localStorage.removeItem('articleDraft');
-}
 
 // Keyboard shortcuts
 document.addEventListener('keydown', function(e) {
