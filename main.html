@@ -42,8 +42,10 @@ body {
   transition: background 0.2s ease, color 0.2s ease;
 }
 .header-wrapper {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   background: var(--bg-color);
   padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid var(--border-color);
@@ -108,22 +110,63 @@ body.light-theme .logo-img {
   max-width: 100%;
   width: 100%;
   margin: 0 auto;
-  padding: 60px 24px 120px;
+  padding: 80px 24px 120px;
+  padding-top: calc(70px + env(safe-area-inset-top));
 }
 .article-title {
   font-family: 'Times New Roman', Times, serif;
   font-size: 42px;
   font-weight: bold;
-  margin: 0 0 16px 0;
+  margin: 0 0 8px 0;
   line-height: 1.2;
   word-wrap: break-word;
 }
 .article-meta {
   font-size: 14px;
   color: var(--text-secondary);
-  margin-bottom: 48px;
-  padding-bottom: 24px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
   border-bottom: 1px solid var(--border-color);
+}
+.article-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.action-btn:hover {
+  background: var(--hover-bg);
+  border-color: var(--text-secondary);
+}
+.action-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+.action-btn i {
+  font-size: 16px;
+}
+.action-count {
+  font-size: 13px;
+  margin-left: 4px;
 }
 .content-line {
   font-family: 'Times New Roman', Times, serif;
@@ -132,9 +175,11 @@ body.light-theme .logo-img {
   margin: 0 0 24px 0;
   position: relative;
   transition: background 0.2s ease;
-  cursor: text;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
 .content-line.has-comments::before {
   content: '';
@@ -151,6 +196,8 @@ body.light-theme .logo-img {
   min-height: 1.8em;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  flex: 1;
+  cursor: text;
 }
 .content-editable:focus {
   background: var(--hover-bg);
@@ -159,31 +206,33 @@ body.light-theme .logo-img {
   border-radius: 4px;
 }
 .comment-trigger {
-  position: fixed;
-  right: 8px;
   width: 32px;
   height: 32px;
+  min-width: 32px;
   border-radius: 50%;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   cursor: pointer;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  z-index: 10;
+  flex-shrink: 0;
+  margin-top: 4px;
+  opacity: 0;
 }
 .content-line:hover .comment-trigger {
-  display: flex;
+  opacity: 1;
 }
 .comment-trigger:hover,
 .comment-trigger.active {
   background: var(--hover-bg);
   border-color: var(--accent);
   color: var(--accent);
+  opacity: 1;
 }
 .media-embed {
   margin: 32px 0;
@@ -478,7 +527,7 @@ body.light-theme .logo-img {
 }
 @media (max-width: 768px) {
   .reading-container {
-    padding: 40px 16px 100px;
+    padding: 90px 16px 100px;
   }
   .article-title {
     font-size: 32px;
@@ -493,6 +542,13 @@ body.light-theme .logo-img {
   .carousel-track img {
     min-width: 90%;
     max-width: 90%;
+  }
+  .article-actions {
+    gap: 8px;
+  }
+  .action-btn {
+    font-size: 13px;
+    padding: 6px 12px;
   }
 }
 @media (min-width: 769px) {
@@ -526,6 +582,30 @@ body.light-theme .logo-img {
   <h1 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h1>
   <div class="article-meta">
     Dr. Sarah Mitchell • Published March 15, 2024 • 12 min read
+  </div>
+
+  <div class="article-actions">
+    <button class="action-btn" id="likeBtn" onclick="toggleLike()">
+      <i class="fas fa-thumbs-up"></i>
+      <span>Like</span>
+      <span class="action-count" id="likeCount">247</span>
+    </button>
+    <button class="action-btn" id="subscribeBtn" onclick="toggleSubscribe()">
+      <i class="fas fa-bell"></i>
+      <span id="subscribeText">Subscribe</span>
+    </button>
+    <button class="action-btn" onclick="shareArticle()">
+      <i class="fas fa-share"></i>
+      <span>Share</span>
+    </button>
+    <button class="action-btn" id="saveBtn" onclick="toggleSave()">
+      <i class="fas fa-bookmark"></i>
+      <span>Save</span>
+    </button>
+    <button class="action-btn" onclick="addToPlaylist()">
+      <i class="fas fa-list"></i>
+      <span>Add to Playlist</span>
+    </button>
   </div>
 
   <div class="content-line" data-line="1">
@@ -693,6 +773,9 @@ const comments = {
 
 let currentLineNumber = null;
 let lineCounter = 7;
+let isLiked = false;
+let isSubscribed = false;
+let isSaved = false;
 
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
@@ -725,10 +808,8 @@ function closeComments() {
 
 function openLineComments(lineNumber, event) {
   if (event) {
-    const btn = event.target.closest('.comment-trigger');
-    const line = btn.closest('.content-line');
-    const rect = line.getBoundingClientRect();
-    btn.style.top = (rect.top + window.scrollY) + 'px';
+    event.stopPropagation();
+    event.preventDefault();
   }
   
   currentLineNumber = lineNumber;
@@ -744,209 +825,4 @@ function openLineComments(lineNumber, event) {
   loadLineComments(lineNumber);
 }
 
-function loadAllComments() {
-  const commentList = document.getElementById('commentList');
-  document.getElementById('commentTitle').textContent = 'All Comments';
-  let allComments = [];
-  for (let line in comments) {
-    comments[line].forEach(comment => allComments.push({...comment, line: line}));
-  }
-  if (allComments.length === 0) {
-    commentList.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">No comments yet.</p>';
-  } else {
-    commentList.innerHTML = allComments.map(comment => `
-      <div class="comment-item">
-        <div class="comment-line-ref">Line ${comment.line}</div>
-        <div class="comment-author">${comment.author}</div>
-        <div class="comment-time">${comment.time}</div>
-        <div class="comment-text">${comment.text}</div>
-      </div>
-    `).join('');
-  }
-}
-
-function loadLineComments(lineNumber) {
-  const commentList = document.getElementById('commentList');
-  const lineComments = comments[lineNumber] || [];
-  if (lineComments.length === 0) {
-    commentList.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">No comments on this line yet.</p>';
-  } else {
-    commentList.innerHTML = lineComments.map(comment => `
-      <div class="comment-item">
-        <div class="comment-author">${comment.author}</div>
-        <div class="comment-time">${comment.time}</div>
-        <div class="comment-text">${comment.text}</div>
-      </div>
-    `).join('');
-  }
-}
-
-function submitComment() {
-  const input = document.getElementById('commentInput');
-  const text = input.value.trim();
-  if (!text || currentLineNumber === null) return;
-  if (!comments[currentLineNumber]) comments[currentLineNumber] = [];
-  comments[currentLineNumber].push({author: "You", time: "Just now", text: text});
-  const line = document.querySelector(`[data-line="${currentLineNumber}"]`);
-  line.classList.add('has-comments');
-  const trigger = line.querySelector('.comment-trigger');
-  trigger.classList.add('active');
-  trigger.innerHTML = '<i class="fas fa-comment"></i>';
-  updateCommentBadge();
-  input.value = '';
-  loadLineComments(currentLineNumber);
-}
-
-function updateCommentBadge() {
-  let total = 0;
-  for (let line in comments) total += comments[line].length;
-  document.getElementById('commentBadge').textContent = total;
-}
-
-function addNewParagraph() {
-  lineCounter++;
-  const newLine = document.createElement('div');
-  newLine.className = 'content-line';
-  newLine.setAttribute('data-line', lineCounter);
-  newLine.innerHTML = `
-    <div class="content-editable" contenteditable="true">
-      Start typing your new paragraph here...
-    </div>
-    <button class="comment-trigger" onclick="openLineComments(${lineCounter}, event)">
-      <i class="fas fa-plus"></i>
-    </button>
-  `;
-  document.getElementById('readingContainer').appendChild(newLine);
-  const editable = newLine.querySelector('.content-editable');
-  editable.focus();
-  const range = document.createRange();
-  const sel = window.getSelection();
-  range.selectNodeContents(editable);
-  range.collapse(false);
-  sel.removeAllRanges();
-  sel.addRange(range);
-}
-
-function handleImageUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    lineCounter++;
-    const mediaEmbed = document.createElement('div');
-    mediaEmbed.className = 'media-embed';
-    mediaEmbed.innerHTML = `
-      <img src="${e.target.result}" alt="Uploaded image">
-      <div class="media-caption">Click to edit caption...</div>
-    `;
-    document.getElementById('readingContainer').appendChild(mediaEmbed);
-    const caption = mediaEmbed.querySelector('.media-caption');
-    caption.contentEditable = true;
-    caption.addEventListener('focus', function() {
-      if (this.textContent === 'Click to edit caption...') {
-        this.textContent = '';
-      }
-    });
-  };
-  reader.readAsDataURL(file);
-  event.target.value = '';
-}
-
-function handleAudioUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    lineCounter++;
-    const mediaEmbed = document.createElement('div');
-    mediaEmbed.className = 'media-embed';
-    mediaEmbed.innerHTML = `
-      <div class="custom-audio-player">
-        <button class="play-btn" onclick="toggleAudio(this)">
-          <i class="fas fa-play"></i>
-        </button>
-        <div class="audio-info">
-          <div class="audio-title">${file.name}</div>
-          <div class="waveform-container" onclick="seekAudio(event, this)">
-            <div class="waveform-progress"></div>
-            <div class="waveform-bars">
-              ${Array(20).fill(0).map(() => `<div class="waveform-bar" style="height: ${Math.random() * 60 + 20}%"></div>`).join('')}
-            </div>
-          </div>
-          <div class="audio-time">
-            <span class="current-time">0:00</span>
-            <span class="duration">0:00</span>
-          </div>
-        </div>
-        <audio src="${e.target.result}" style="display: none;"></audio>
-      </div>
-      <div class="media-caption">Click to edit caption...</div>
-    `;
-    document.getElementById('readingContainer').appendChild(mediaEmbed);
-    const audio = mediaEmbed.querySelector('audio');
-    audio.addEventListener('loadedmetadata', function() {
-      const duration = Math.floor(audio.duration);
-      const mins = Math.floor(duration / 60);
-      const secs = duration % 60;
-      mediaEmbed.querySelector('.duration').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-    });
-    const caption = mediaEmbed.querySelector('.media-caption');
-    caption.contentEditable = true;
-    caption.addEventListener('focus', function() {
-      if (this.textContent === 'Click to edit caption...') {
-        this.textContent = '';
-      }
-    });
-  };
-  reader.readAsDataURL(file);
-  event.target.value = '';
-}
-
-function handleFileUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  alert(`File "${file.name}" uploaded successfully!\n\nFile uploads would be processed by your backend system.`);
-  event.target.value = '';
-}
-
-function toggleAudio(btn) {
-  const player = btn.closest('.custom-audio-player');
-  const audio = player.querySelector('audio');
-  const icon = btn.querySelector('i');
-  
-  if (audio.paused) {
-    audio.play();
-    icon.className = 'fas fa-pause';
-    
-    audio.ontimeupdate = function() {
-      const progress = (audio.currentTime / audio.duration) * 100;
-      player.querySelector('.waveform-progress').style.width = progress + '%';
-      const currentMins = Math.floor(audio.currentTime / 60);
-      const currentSecs = Math.floor(audio.currentTime % 60);
-      player.querySelector('.current-time').textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
-    };
-    
-    audio.onended = function() {
-      icon.className = 'fas fa-play';
-      player.querySelector('.waveform-progress').style.width = '0%';
-      player.querySelector('.current-time').textContent = '0:00';
-    };
-  } else {
-    audio.pause();
-    icon.className = 'fas fa-play';
-  }
-}
-
-function seekAudio(event, container) {
-  const player = container.closest('.custom-audio-player');
-  const audio = player.querySelector('audio');
-  const rect = container.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const percentage = x / rect.width;
-  audio.currentTime = percentage * audio.duration;
-}
-
-updateCommentBadge();
-</script>
-</body>
-</html>
+function loadAllComments()
