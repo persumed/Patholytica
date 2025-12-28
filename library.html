@@ -28,7 +28,14 @@ body.light-theme {
   --accent-hover: #0448a3;
 }
 * { box-sizing: border-box; }
-html, body { margin:0; padding:0; min-height:100%; font-family: "Roboto", Arial, sans-serif; }
+html, body { 
+  margin: 0; 
+  padding: 0; 
+  min-height: 100%; 
+  font-family: "Roboto", Arial, sans-serif;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
 body {
   background: var(--bg-color);
   color: var(--text-primary);
@@ -41,13 +48,14 @@ body {
   padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid var(--border-color);
   z-index: 40;
+  width: 100%;
 }
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 24px;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
 }
 .logo-img {
@@ -97,7 +105,8 @@ body.light-theme .logo-img {
   font-weight: 600;
 }
 .reading-container {
-  max-width: 700px;
+  max-width: 100%;
+  width: 100%;
   margin: 0 auto;
   padding: 60px 24px 120px;
 }
@@ -107,6 +116,7 @@ body.light-theme .logo-img {
   font-weight: bold;
   margin: 0 0 16px 0;
   line-height: 1.2;
+  word-wrap: break-word;
 }
 .article-meta {
   font-size: 14px;
@@ -123,16 +133,13 @@ body.light-theme .logo-img {
   position: relative;
   transition: background 0.2s ease;
   cursor: text;
-}
-.content-line.editing {
-  padding: 12px;
-  background: var(--hover-bg);
-  border-radius: 4px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 .content-line.has-comments::before {
   content: '';
   position: absolute;
-  left: -16px;
+  left: -12px;
   top: 8px;
   width: 4px;
   height: 4px;
@@ -142,6 +149,8 @@ body.light-theme .logo-img {
 .content-editable {
   outline: none;
   min-height: 1.8em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 .content-editable:focus {
   background: var(--hover-bg);
@@ -150,14 +159,13 @@ body.light-theme .logo-img {
   border-radius: 4px;
 }
 .comment-trigger {
-  position: absolute;
-  right: -40px;
-  top: 0;
+  position: fixed;
+  right: 8px;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: transparent;
-  border: 1px solid transparent;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   color: var(--text-secondary);
   cursor: pointer;
   display: none;
@@ -165,6 +173,8 @@ body.light-theme .logo-img {
   justify-content: center;
   font-size: 14px;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  z-index: 10;
 }
 .content-line:hover .comment-trigger {
   display: flex;
@@ -180,9 +190,12 @@ body.light-theme .logo-img {
   padding: 24px 0;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
+  max-width: 100%;
+  overflow: hidden;
 }
 .media-embed img {
   width: 100%;
+  max-width: 100%;
   height: auto;
   border-radius: 4px;
   display: block;
@@ -190,6 +203,7 @@ body.light-theme .logo-img {
 .image-carousel {
   position: relative;
   overflow: hidden;
+  max-width: 100%;
 }
 .carousel-track {
   display: flex;
@@ -218,6 +232,7 @@ body.light-theme .logo-img {
   display: flex;
   align-items: center;
   gap: 16px;
+  max-width: 100%;
 }
 .play-btn {
   width: 48px;
@@ -241,6 +256,7 @@ body.light-theme .logo-img {
 .audio-info {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 .audio-title {
   font-size: 14px;
@@ -296,6 +312,8 @@ body.light-theme .logo-img {
   color: var(--text-secondary);
   margin-top: 8px;
   font-style: italic;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 .comment-panel {
   position: fixed;
@@ -368,6 +386,7 @@ body.light-theme .logo-img {
 .comment-text {
   font-size: 14px;
   line-height: 1.5;
+  word-wrap: break-word;
 }
 .comment-input-area {
   padding: 20px;
@@ -382,6 +401,7 @@ body.light-theme .logo-img {
   background: var(--hover-bg);
   border-radius: 4px;
   font-style: italic;
+  word-wrap: break-word;
 }
 .comment-input {
   width: 100%;
@@ -466,9 +486,6 @@ body.light-theme .logo-img {
   .content-line {
     font-size: 19px;
   }
-  .comment-trigger {
-    right: -36px;
-  }
   .comment-panel {
     width: 100%;
     right: -100%;
@@ -476,6 +493,11 @@ body.light-theme .logo-img {
   .carousel-track img {
     min-width: 90%;
     max-width: 90%;
+  }
+}
+@media (min-width: 769px) {
+  .reading-container {
+    max-width: 900px;
   }
 }
 </style>
@@ -486,9 +508,6 @@ body.light-theme .logo-img {
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
-      <button class="icon-btn" id="editModeBtn" onclick="toggleEditMode()" title="Edit mode">
-        <i class="fas fa-pen"></i>
-      </button>
       <button class="icon-btn" id="commentsBtn" onclick="toggleComments()" title="Comments">
         <i class="fas fa-comment"></i>
         <span class="comment-badge" id="commentBadge">3</span>
@@ -510,19 +529,19 @@ body.light-theme .logo-img {
   </div>
 
   <div class="content-line" data-line="1">
-    <div class="content-editable" contenteditable="false">
+    <div class="content-editable" contenteditable="true">
       The cardiovascular system represents one of the most critical organ systems in human physiology, and understanding its pathological processes is essential for modern medical practice.
     </div>
-    <button class="comment-trigger" onclick="openLineComments(1)">
+    <button class="comment-trigger" onclick="openLineComments(1, event)">
       <i class="fas fa-plus"></i>
     </button>
   </div>
 
   <div class="content-line has-comments" data-line="2">
-    <div class="content-editable" contenteditable="false">
+    <div class="content-editable" contenteditable="true">
       In recent decades, advances in imaging technology and molecular biology have revolutionized our understanding of cardiac diseases, enabling earlier detection and more targeted therapeutic interventions.
     </div>
-    <button class="comment-trigger active" onclick="openLineComments(2)">
+    <button class="comment-trigger active" onclick="openLineComments(2, event)">
       <i class="fas fa-comment"></i>
     </button>
   </div>
@@ -533,19 +552,19 @@ body.light-theme .logo-img {
   </div>
 
   <div class="content-line" data-line="3">
-    <div class="content-editable" contenteditable="false">
+    <div class="content-editable" contenteditable="true">
       Atherosclerosis, characterized by the accumulation of lipids and fibrous material in arterial walls, remains the leading cause of cardiovascular morbidity and mortality worldwide.
     </div>
-    <button class="comment-trigger" onclick="openLineComments(3)">
+    <button class="comment-trigger" onclick="openLineComments(3, event)">
       <i class="fas fa-plus"></i>
     </button>
   </div>
 
   <div class="content-line has-comments" data-line="4">
-    <div class="content-editable" contenteditable="false">
+    <div class="content-editable" contenteditable="true">
       The pathogenesis involves a complex interplay of endothelial dysfunction, inflammatory responses, and lipid metabolism abnormalities that progress over many years.
     </div>
-    <button class="comment-trigger active" onclick="openLineComments(4)">
+    <button class="comment-trigger active" onclick="openLineComments(4, event)">
       <i class="fas fa-comment"></i>
     </button>
   </div>
@@ -562,10 +581,10 @@ body.light-theme .logo-img {
   </div>
 
   <div class="content-line" data-line="5">
-    <div class="content-editable" contenteditable="false">
+    <div class="content-editable" contenteditable="true">
       Hypertensive heart disease represents another major category of cardiovascular pathology, with chronic elevation of blood pressure leading to left ventricular hypertrophy and eventual heart failure.
     </div>
-    <button class="comment-trigger" onclick="openLineComments(5)">
+    <button class="comment-trigger" onclick="openLineComments(5, event)">
       <i class="fas fa-plus"></i>
     </button>
   </div>
@@ -613,19 +632,19 @@ body.light-theme .logo-img {
   </div>
 
   <div class="content-line has-comments" data-line="6">
-    <div class="content-editable" contenteditable="false">
+    <div class="content-editable" contenteditable="true">
       The role of inflammation in cardiovascular disease has gained increasing recognition, with biomarkers such as C-reactive protein and interleukin-6 serving as important prognostic indicators.
     </div>
-    <button class="comment-trigger active" onclick="openLineComments(6)">
+    <button class="comment-trigger active" onclick="openLineComments(6, event)">
       <i class="fas fa-comment"></i>
     </button>
   </div>
 
   <div class="content-line" data-line="7">
-    <div class="content-editable" contenteditable="false">
+    <div class="content-editable" contenteditable="true">
       Future directions in cardiovascular pathology research include personalized medicine approaches, advanced imaging modalities, and novel therapeutic targets aimed at preventing disease progression.
     </div>
-    <button class="comment-trigger" onclick="openLineComments(7)">
+    <button class="comment-trigger" onclick="openLineComments(7, event)">
       <i class="fas fa-plus"></i>
     </button>
   </div>
@@ -673,7 +692,6 @@ const comments = {
 };
 
 let currentLineNumber = null;
-let isEditMode = false;
 let lineCounter = 7;
 
 function toggleTheme() {
@@ -683,14 +701,6 @@ function toggleTheme() {
 
 if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
-}
-
-function toggleEditMode() {
-  isEditMode = !isEditMode;
-  const editBtn = document.getElementById('editModeBtn');
-  const editables = document.querySelectorAll('.content-editable');
-  editBtn.classList.toggle('active');
-  editables.forEach(el => el.contentEditable = isEditMode);
 }
 
 function toggleComments() {
@@ -713,7 +723,14 @@ function closeComments() {
   currentLineNumber = null;
 }
 
-function openLineComments(lineNumber) {
+function openLineComments(lineNumber, event) {
+  if (event) {
+    const btn = event.target.closest('.comment-trigger');
+    const line = btn.closest('.content-line');
+    const rect = line.getBoundingClientRect();
+    btn.style.top = (rect.top + window.scrollY) + 'px';
+  }
+  
   currentLineNumber = lineNumber;
   const panel = document.getElementById('commentPanel');
   const btn = document.getElementById('commentsBtn');
@@ -792,56 +809,22 @@ function addNewParagraph() {
   newLine.className = 'content-line';
   newLine.setAttribute('data-line', lineCounter);
   newLine.innerHTML = `
-    <div class="content-editable" contenteditable="${isEditMode}">Click to add text...</div>
-    <button class="comment-trigger" onclick="openLineComments(${lineCounter})"><i class="fas fa-plus"></i></button>
+    <div class="content-editable" contenteditable="true">
+      Start typing your new paragraph here...
+    </div>
+    <button class="comment-trigger" onclick="openLineComments(${lineCounter}, event)">
+      <i class="fas fa-plus"></i>
+    </button>
   `;
   document.getElementById('readingContainer').appendChild(newLine);
   const editable = newLine.querySelector('.content-editable');
   editable.focus();
-  if (editable.textContent === 'Click to add text...') editable.textContent = '';
-}
-
-function toggleAudio(btn) {
-  const player = btn.closest('.custom-audio-player');
-  const audio = player.querySelector('audio');
-  const icon = btn.querySelector('i');
-  const progress = player.querySelector('.waveform-progress');
-  const currentTimeEl = player.querySelector('.current-time');
-  
-  if (!audio.src) return;
-  
-  if (audio.paused) {
-    audio.play();
-    icon.className = 'fas fa-pause';
-    audio.ontimeupdate = () => {
-      const percent = (audio.currentTime / audio.duration) * 100;
-      progress.style.width = percent + '%';
-      currentTimeEl.textContent = formatTime(audio.currentTime);
-    };
-    audio.onended = () => {
-      icon.className = 'fas fa-play';
-      progress.style.width = '0%';
-    };
-  } else {
-    audio.pause();
-    icon.className = 'fas fa-play';
-  }
-}
-
-function seekAudio(event, container) {
-  const player = container.closest('.custom-audio-player');
-  const audio = player.querySelector('audio');
-  if (!audio.src) return;
-  const rect = container.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const percent = x / rect.width;
-  audio.currentTime = percent * audio.duration;
-}
-
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.selectNodeContents(editable);
+  range.collapse(false);
+  sel.removeAllRanges();
+  sel.addRange(range);
 }
 
 function handleImageUpload(event) {
@@ -849,13 +832,21 @@ function handleImageUpload(event) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = function(e) {
+    lineCounter++;
     const mediaEmbed = document.createElement('div');
     mediaEmbed.className = 'media-embed';
     mediaEmbed.innerHTML = `
       <img src="${e.target.result}" alt="Uploaded image">
-      <div class="media-caption">Uploaded: ${file.name}</div>
+      <div class="media-caption">Click to edit caption...</div>
     `;
     document.getElementById('readingContainer').appendChild(mediaEmbed);
+    const caption = mediaEmbed.querySelector('.media-caption');
+    caption.contentEditable = true;
+    caption.addEventListener('focus', function() {
+      if (this.textContent === 'Click to edit caption...') {
+        this.textContent = '';
+      }
+    });
   };
   reader.readAsDataURL(file);
   event.target.value = '';
@@ -866,6 +857,7 @@ function handleAudioUpload(event) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = function(e) {
+    lineCounter++;
     const mediaEmbed = document.createElement('div');
     mediaEmbed.className = 'media-embed';
     mediaEmbed.innerHTML = `
@@ -877,67 +869,84 @@ function handleAudioUpload(event) {
           <div class="audio-title">${file.name}</div>
           <div class="waveform-container" onclick="seekAudio(event, this)">
             <div class="waveform-progress"></div>
-            <div class="waveform-bars">${generateWaveformBars()}</div>
+            <div class="waveform-bars">
+              ${Array(20).fill(0).map(() => `<div class="waveform-bar" style="height: ${Math.random() * 60 + 20}%"></div>`).join('')}
+            </div>
           </div>
           <div class="audio-time">
             <span class="current-time">0:00</span>
-            <span class="duration">--:--</span>
+            <span class="duration">0:00</span>
           </div>
         </div>
-        <audio style="display: none;" src="${e.target.result}" onloadedmetadata="updateAudioDuration(this)"></audio>
+        <audio src="${e.target.result}" style="display: none;"></audio>
       </div>
-      <div class="media-caption">Audio: ${file.name}</div>
+      <div class="media-caption">Click to edit caption...</div>
     `;
     document.getElementById('readingContainer').appendChild(mediaEmbed);
+    const audio = mediaEmbed.querySelector('audio');
+    audio.addEventListener('loadedmetadata', function() {
+      const duration = Math.floor(audio.duration);
+      const mins = Math.floor(duration / 60);
+      const secs = duration % 60;
+      mediaEmbed.querySelector('.duration').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    });
+    const caption = mediaEmbed.querySelector('.media-caption');
+    caption.contentEditable = true;
+    caption.addEventListener('focus', function() {
+      if (this.textContent === 'Click to edit caption...') {
+        this.textContent = '';
+      }
+    });
   };
   reader.readAsDataURL(file);
   event.target.value = '';
 }
 
-function generateWaveformBars() {
-  let bars = '';
-  for (let i = 0; i < 20; i++) {
-    const height = Math.random() * 60 + 20;
-    bars += `<div class="waveform-bar" style="height: ${height}%"></div>`;
-  }
-  return bars;
-}
-
-function updateAudioDuration(audio) {
-  const player = audio.closest('.custom-audio-player');
-  const durationEl = player.querySelector('.duration');
-  durationEl.textContent = formatTime(audio.duration);
-}
-
 function handleFileUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
-  const mediaEmbed = document.createElement('div');
-  mediaEmbed.className = 'media-embed';
-  mediaEmbed.innerHTML = `
-    <div style="padding: 16px; background: var(--card-bg); border-radius: 8px; display: flex; align-items: center; gap: 12px;">
-      <i class="fas fa-file" style="font-size: 24px; color: var(--accent);"></i>
-      <div>
-        <div style="font-weight: 500; margin-bottom: 4px;">${file.name}</div>
-        <div style="font-size: 12px; color: var(--text-secondary);">${(file.size / 1024).toFixed(2)} KB</div>
-      </div>
-    </div>
-  `;
-  document.getElementById('readingContainer').appendChild(mediaEmbed);
+  alert(`File "${file.name}" uploaded successfully!\n\nFile uploads would be processed by your backend system.`);
   event.target.value = '';
 }
 
-document.addEventListener('click', (e) => {
-  const panel = document.getElementById('commentPanel');
-  const commentsBtn = document.getElementById('commentsBtn');
-  const triggers = document.querySelectorAll('.comment-trigger');
-  if (panel.classList.contains('active') && !panel.contains(e.target) && !commentsBtn.contains(e.target) && !Array.from(triggers).some(t => t.contains(e.target))) {
-    closeComments();
+function toggleAudio(btn) {
+  const player = btn.closest('.custom-audio-player');
+  const audio = player.querySelector('audio');
+  const icon = btn.querySelector('i');
+  
+  if (audio.paused) {
+    audio.play();
+    icon.className = 'fas fa-pause';
+    
+    audio.ontimeupdate = function() {
+      const progress = (audio.currentTime / audio.duration) * 100;
+      player.querySelector('.waveform-progress').style.width = progress + '%';
+      const currentMins = Math.floor(audio.currentTime / 60);
+      const currentSecs = Math.floor(audio.currentTime % 60);
+      player.querySelector('.current-time').textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
+    };
+    
+    audio.onended = function() {
+      icon.className = 'fas fa-play';
+      player.querySelector('.waveform-progress').style.width = '0%';
+      player.querySelector('.current-time').textContent = '0:00';
+    };
+  } else {
+    audio.pause();
+    icon.className = 'fas fa-play';
   }
-});
+}
+
+function seekAudio(event, container) {
+  const player = container.closest('.custom-audio-player');
+  const audio = player.querySelector('audio');
+  const rect = container.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const percentage = x / rect.width;
+  audio.currentTime = percentage * audio.duration;
+}
 
 updateCommentBadge();
 </script>
-
 </body>
 </html>
