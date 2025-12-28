@@ -4,30 +4,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Feed — Patholytica</title>
-
+<title>Patholytica — Reader</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
-  --bg-color: #0d0d0d;
-  --text-color: #fff;
-  --border-color: rgba(255,255,255,0.1);
-  --accent: #b0003a;
-  --accent-hover: #88002a;
+  --bg-color: #0f0f0f;
+  --text-primary: #fff;
+  --text-secondary: #aaa;
+  --card-bg: #1f1f1f;
+  --hover-bg: #2a2a2a;
+  --border-color: #303030;
+  --accent: #3ea6ff;
+  --accent-hover: #2d8ed6;
 }
-
 body.light-theme {
-  --bg-color: #f5f5f5;
-  --text-color: #111;
-  --border-color: rgba(0,0,0,0.15);
-  --accent: #b0003a;
-  --accent-hover: #88002a;
+  --bg-color: #ffffff;
+  --text-primary: #0f0f0f;
+  --text-secondary: #606060;
+  --card-bg: #f9f9f9;
+  --hover-bg: #f0f0f0;
+  --border-color: #e5e5e5;
+  --accent: #065fd4;
+  --accent-hover: #0448a3;
 }
-
-* { box-sizing: border-box; margin:0; padding:0; }
-html, body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background: var(--bg-color); color: var(--text-color); transition: background 0.3s, color 0.3s; }
-body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 80px; }
-
-/* HEADER */
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; min-height:100%; font-family: "Roboto", Arial, sans-serif; }
+body {
+  background: var(--bg-color);
+  color: var(--text-primary);
+  transition: background 0.2s ease, color 0.2s ease;
+}
 .header-wrapper {
   position: sticky;
   top: 0;
@@ -35,726 +41,866 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
   padding-top: env(safe-area-inset-top);
   border-bottom: 1px solid var(--border-color);
   z-index: 40;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
 }
-
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
-  max-width: 1200px;
+  padding: 12px 24px;
+  max-width: 1400px;
   margin: 0 auto;
 }
-
-.logo-link { display: inline-block; line-height: 0; }
-.logo-img { height:36px; width:auto; cursor:pointer; transition:filter 0.25s ease, transform 0.2s; }
-.logo-img:hover { transform: scale(1.05); }
-body.light-theme .logo-img { filter: invert(1); }
-
-/* BURGER MENU */
-.burger-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  z-index: 60;
-  transition: 0.3s;
-}
-
-.burger-line {
-  width: 24px;
-  height: 2px;
-  background: var(--text-color);
-  border-radius: 2px;
-  transition: 0.3s;
-}
-
-.burger-btn.active .burger-line:nth-child(1) {
-  transform: rotate(45deg) translate(7px, 7px);
-}
-
-.burger-btn.active .burger-line:nth-child(2) {
-  opacity: 0;
-}
-
-.burger-btn.active .burger-line:nth-child(3) {
-  transform: rotate(-45deg) translate(7px, -7px);
-}
-
-/* MENU DROPDOWN */
-.menu-dropdown {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 280px;
-  height: 100vh;
-  background: var(--bg-color);
-  border-left: 1px solid var(--border-color);
-  z-index: 50;
-  transition: right 0.3s ease;
-  padding-top: calc(env(safe-area-inset-top) + 70px);
-  box-shadow: -4px 0 20px rgba(0,0,0,0.3);
-}
-
-.menu-dropdown.active {
-  right: 0;
-}
-
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 45;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-}
-
-.menu-overlay.active {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.menu-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 24px;
-  color: var(--text-color);
-  text-decoration: none;
-  font-size: 15px;
-  font-weight: 500;
-  transition: 0.2s;
-  border-bottom: 1px solid var(--border-color);
+.logo-img {
+  height: 28px;
+  width: auto;
+  transition: filter 0.2s ease;
   cursor: pointer;
 }
-
-.menu-item:hover {
-  background: rgba(176,0,58,0.1);
-  color: var(--accent);
+body.light-theme .logo-img {
+  filter: invert(1);
 }
-
-.menu-icon {
-  font-size: 20px;
-  width: 24px;
-  text-align: center;
-}
-
-/* FEED */
-.feed-container { flex:1; max-width: 700px; margin: 0 auto; padding: 16px 20px; width: 100%; }
-
-/* POSTS */
-.post { 
-  border-bottom: 1px solid var(--border-color); 
-  padding: 16px 0;
-  transition: background 0.2s;
-}
-
-.post:hover {
-  background: rgba(255,255,255,0.02);
-}
-
-body.light-theme .post:hover {
-  background: rgba(0,0,0,0.02);
-}
-
-.post-header { display:flex; align-items:center; gap:12px; margin-left:6px; margin-right:6px; }
-.post-avatar { width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid var(--border-color); }
-.post-author-info { flex:1; }
-.post-author-name { font-weight:600; font-size:15px; }
-.post-author-username { font-size:13px; color:#888; margin-left: 6px; }
-.post-time { font-size:13px; color:#888; }
-
-.post-content { margin-top:10px; }
-.post-text { font-size:15px; line-height:1.5; }
-.post-image { width:100%; border-radius:12px; margin-top:10px; border: 1px solid var(--border-color); }
-
-/* ACTIONS */
-.post-actions { display:flex; gap:12px; margin-top:12px; margin-left:6px; }
-.action-btn {
-  display:flex; align-items:center; gap:6px;
-  background:none; border:none; color:var(--text-color);
-  font-size:14px; cursor:pointer; padding:6px 12px; border-radius:8px; transition:0.2s;
-  font-weight: 500;
-}
-.action-btn:hover { background: rgba(176,0,58,0.1); color: var(--accent); }
-.action-btn.liked { color: var(--accent); font-weight: 600; }
-
-/* COMMENTS */
-.comments-section { padding:10px 6px; }
-.comments-section.hidden { display: none; }
-.comment { padding:8px 0; display:flex; gap:10px; align-items:flex-start; }
-.comment-avatar { width:32px; height:32px; border-radius:50%; object-fit:cover; flex-shrink:0; border: 1px solid var(--border-color); }
-.comment-content { flex:1; }
-.comment-author { font-weight:600; font-size:14px; }
-.comment-text { font-size:14px; line-height:1.4; margin-top:3px; }
-
-.comment-input-wrapper { display:flex; gap:8px; margin-top:8px; align-items:center; }
-.comment-input {
-  flex:1; padding:8px 14px; border-radius:20px; border:1px solid var(--border-color); font-size:14px; background:var(--bg-color); color:var(--text-color);
-  transition: border-color 0.2s;
-}
-.comment-input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-.comment-submit { 
-  padding:8px 16px; font-size:14px; border-radius:20px; background:var(--accent); color:#fff; border:none; cursor:pointer; font-weight: 600;
-  transition: background 0.2s;
-}
-.comment-submit:hover {
-  background: var(--accent-hover);
-}
-
-/* FOOTER */
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  padding: 20px;
-  background: rgba(13, 13, 13, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border-color);
-  transition: transform 0.3s ease;
-  z-index: 30;
-  padding-bottom: calc(20px + env(safe-area-inset-bottom));
-}
-
-body.light-theme footer {
-  background: rgba(245, 245, 245, 0.95);
-}
-
-footer.hidden {
-  transform: translateY(100%);
-}
-
-.footer-btn {
+.header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 28px;
-  border-radius: 25px;
-  border: none;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
+  gap: 16px;
 }
-
-.footer-btn.home {
-  background: transparent;
-  color: var(--text-color);
-  border: 2px solid var(--border-color);
-}
-
-.footer-btn.home:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-2px);
-}
-
-.footer-btn.create {
-  background: var(--accent);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(176,0,58,0.3);
-}
-
-.footer-btn.create:hover {
-  background: var(--accent-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(176,0,58,0.4);
-}
-
-.footer-icon {
-  font-size: 18px;
-}
-
-/* MODAL */
-.modal { 
-  position:fixed; 
-  inset:0; 
-  background:rgba(0,0,0,0.75); 
-  backdrop-filter: blur(4px);
-  z-index:200; 
-  display:none; 
-  align-items:center; 
-  justify-content:center; 
-  padding:20px;
-  animation: fadeIn 0.3s;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.modal.active { display:flex; }
-.modal-content { 
-  background: var(--bg-color); 
-  border-radius:20px; 
-  border:1px solid var(--border-color); 
-  padding:32px; 
-  max-width:550px; 
-  width:100%;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  animation: slideUp 0.3s;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.modal-header { 
-  display:flex; 
-  justify-content:space-between; 
-  align-items: center;
-  margin-bottom:24px; 
-}
-
-.modal-header h2 {
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.modal-close { 
-  background:none; 
-  border:none; 
-  color:var(--text-color); 
-  font-size:28px; 
-  cursor:pointer;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.icon-btn {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  transition: 0.2s;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: background 0.2s ease;
+  position: relative;
+}
+.icon-btn:hover {
+  background: var(--hover-bg);
 }
 
-.modal-close:hover {
-  background: rgba(255,255,255,0.1);
+.icon-btn.active {
+color: var(–accent);
 }
 
-.modal-textarea { 
-  width:100%; 
-  min-height:120px; 
-  padding:16px; 
-  border-radius:12px; 
-  border:1px solid var(--border-color); 
-  background:var(--bg-color); 
-  color:var(--text-color); 
-  margin-bottom:16px;
-  font-size: 15px;
-  font-family: inherit;
-  resize: vertical;
-  transition: border-color 0.2s;
+.comment-badge {
+position: absolute;
+top: 4px;
+right: 4px;
+background: var(–accent);
+color: white;
+border-radius: 10px;
+padding: 2px 6px;
+font-size: 10px;
+font-weight: 600;
 }
 
-.modal-textarea:focus {
-  outline: none;
-  border-color: var(--accent);
+/* Reading Container */
+.reading-container {
+max-width: 700px;
+margin: 0 auto;
+padding: 60px 24px 120px;
 }
 
-.modal-actions { display:flex; gap:12px; justify-content:flex-end; }
-.modal-btn { 
-  padding:12px 28px; 
-  border-radius:12px; 
-  border:none; 
-  font-size:15px; 
-  font-weight:600; 
-  cursor:pointer;
-  transition: all 0.2s;
-}
-.modal-btn.cancel { 
-  background:transparent; 
-  border:2px solid var(--border-color); 
-  color:var(--text-color); 
-}
-.modal-btn.cancel:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.modal-btn.submit { 
-  background:var(--accent); 
-  color:#fff;
-}
-.modal-btn.submit:hover {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
+/* Article Styles */
+.article-title {
+font-family: ‘Times New Roman’, Times, serif;
+font-size: 42px;
+font-weight: bold;
+margin: 0 0 16px 0;
+line-height: 1.2;
 }
 
-@media (max-width: 600px) {
-  .footer-btn {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
-  
-  .menu-dropdown {
-    width: 100%;
-  }
+.article-meta {
+font-size: 14px;
+color: var(–text-secondary);
+margin-bottom: 48px;
+padding-bottom: 24px;
+border-bottom: 1px solid var(–border-color);
+}
+
+/* Content Lines */
+.content-line {
+font-family: ‘Times New Roman’, Times, serif;
+font-size: 21px;
+line-height: 1.8;
+margin: 0 0 24px 0;
+position: relative;
+transition: background 0.2s ease;
+cursor: text;
+}
+
+.content-line.editing {
+padding: 12px;
+background: var(–hover-bg);
+border-radius: 4px;
+}
+
+.content-line.has-comments::before {
+content: ‘’;
+position: absolute;
+left: -16px;
+top: 8px;
+width: 4px;
+height: 4px;
+background: var(–accent);
+border-radius: 50%;
+}
+
+.content-editable {
+outline: none;
+min-height: 1.8em;
+}
+
+.content-editable:focus {
+background: var(–hover-bg);
+padding: 4px 8px;
+margin: -4px -8px;
+border-radius: 4px;
+}
+
+.comment-trigger {
+position: absolute;
+right: -40px;
+top: 0;
+width: 32px;
+height: 32px;
+border-radius: 50%;
+background: transparent;
+border: 1px solid transparent;
+color: var(–text-secondary);
+cursor: pointer;
+display: none;
+align-items: center;
+justify-content: center;
+font-size: 14px;
+transition: all 0.2s ease;
+}
+
+.content-line:hover .comment-trigger {
+display: flex;
+}
+
+.comment-trigger:hover,
+.comment-trigger.active {
+background: var(–hover-bg);
+border-color: var(–accent);
+color: var(–accent);
+}
+
+/* Media Embed */
+.media-embed {
+margin: 32px 0;
+padding: 24px 0;
+border-top: 1px solid var(–border-color);
+border-bottom: 1px solid var(–border-color);
+}
+
+.media-embed img {
+width: 100%;
+height: auto;
+border-radius: 4px;
+display: block;
+}
+
+.image-carousel {
+position: relative;
+overflow: hidden;
+}
+
+.carousel-track {
+display: flex;
+gap: 12px;
+overflow-x: auto;
+scroll-snap-type: x mandatory;
+scroll-behavior: smooth;
+padding: 4px 0;
+}
+
+.carousel-track::-webkit-scrollbar {
+height: 6px;
+}
+
+.carousel-track::-webkit-scrollbar-thumb {
+background: var(–border-color);
+border-radius: 3px;
+}
+
+.carousel-track img {
+scroll-snap-align: start;
+min-width: 80%;
+max-width: 80%;
+}
+
+/* Custom Audio Player */
+.custom-audio-player {
+background: var(–card-bg);
+border-radius: 12px;
+padding: 20px;
+display: flex;
+align-items: center;
+gap: 16px;
+}
+
+.play-btn {
+width: 48px;
+height: 48px;
+border-radius: 50%;
+background: var(–accent);
+border: none;
+color: white;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 18px;
+transition: all 0.2s ease;
+flex-shrink: 0;
+}
+
+.play-btn:hover {
+background: var(–accent-hover);
+transform: scale(1.05);
+}
+
+.audio-info {
+flex: 1;
+min-width: 0;
+}
+
+.audio-title {
+font-size: 14px;
+font-weight: 500;
+margin-bottom: 8px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+.waveform-container {
+position: relative;
+height: 40px;
+background: var(–hover-bg);
+border-radius: 4px;
+margin-bottom: 8px;
+cursor: pointer;
+overflow: hidden;
+}
+
+.waveform-progress {
+position: absolute;
+top: 0;
+left: 0;
+height: 100%;
+background: var(–accent);
+opacity: 0.3;
+transition: width 0.1s linear;
+}
+
+.waveform-bars {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: space-around;
+padding: 0 4px;
+}
+
+.waveform-bar {
+width: 2px;
+background: var(–text-secondary);
+border-radius: 2px;
+opacity: 0.6;
+}
+
+.audio-time {
+display: flex;
+justify-content: space-between;
+font-size: 12px;
+color: var(–text-secondary);
+}
+
+.media-caption {
+font-size: 14px;
+color: var(–text-secondary);
+margin-top: 8px;
+font-style: italic;
+}
+
+/* Comment Section */
+.comment-panel {
+position: fixed;
+right: -400px;
+top: 70px;
+width: 380px;
+height: calc(100vh - 70px);
+background: var(–card-bg);
+border-left: 1px solid var(–border-color);
+transition: right 0.3s ease;
+z-index: 30;
+display: flex;
+flex-direction: column;
+}
+
+.comment-panel.active {
+right: 0;
+}
+
+.comment-header {
+padding: 20px;
+border-bottom: 1px solid var(–border-color);
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.comment-header h3 {
+margin: 0;
+font-size: 16px;
+font-weight: 500;
+}
+
+.close-comments {
+background: transparent;
+border: none;
+color: var(–text-primary);
+cursor: pointer;
+font-size: 20px;
+padding: 4px;
+}
+
+.comment-list {
+flex: 1;
+overflow-y: auto;
+padding: 20px;
+}
+
+.comment-item {
+margin-bottom: 20px;
+padding-bottom: 20px;
+border-bottom: 1px solid var(–border-color);
+}
+
+.comment-item:last-child {
+border-bottom: none;
+}
+
+.comment-line-ref {
+font-size: 11px;
+color: var(–text-secondary);
+background: var(–hover-bg);
+padding: 4px 8px;
+border-radius: 4px;
+display: inline-block;
+margin-bottom: 8px;
+}
+
+.comment-author {
+font-weight: 500;
+font-size: 14px;
+margin-bottom: 4px;
+}
+
+.comment-time {
+font-size: 12px;
+color: var(–text-secondary);
+margin-bottom: 8px;
+}
+
+.comment-text {
+font-size: 14px;
+line-height: 1.5;
+}
+
+.comment-input-area {
+padding: 20px;
+border-top: 1px solid var(–border-color);
+background: var(–bg-color);
+}
+
+.comment-context {
+font-size: 12px;
+color: var(–text-secondary);
+margin-bottom: 12px;
+padding: 8px;
+background: var(–hover-bg);
+border-radius: 4px;
+font-style: italic;
+}
+
+.comment-input {
+width: 100%;
+padding: 12px;
+border: 1px solid var(–border-color);
+border-radius: 8px;
+background: var(–card-bg);
+color: var(–text-primary);
+font-size: 14px;
+resize: vertical;
+min-height: 80px;
+font-family: inherit;
+margin-bottom: 12px;
+}
+
+.comment-input:focus {
+outline: none;
+border-color: var(–accent);
+}
+
+.comment-submit {
+width: 100%;
+padding: 10px;
+background: var(–accent);
+color: white;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+font-size: 14px;
+font-weight: 500;
+transition: background 0.2s ease;
+}
+
+.comment-submit:hover {
+background: var(–accent-hover);
+}
+
+/* Upload Toolbar */
+.upload-toolbar {
+position: fixed;
+bottom: 24px;
+left: 50%;
+transform: translateX(-50%);
+background: var(–card-bg);
+border: 1px solid var(–border-color);
+border-radius: 24px;
+padding: 8px 16px;
+display: flex;
+gap: 8px;
+box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+z-index: 20;
+}
+
+.upload-btn {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: transparent;
+border: none;
+color: var(–text-secondary);
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 18px;
+transition: all 0.2s ease;
+}
+
+.upload-btn:hover {
+background: var(–hover-bg);
+color: var(–text-primary);
+}
+
+.upload-btn input {
+display: none;
+}
+
+.divider {
+width: 1px;
+height: 24px;
+background: var(–border-color);
+margin: 8px 0;
+}
+
+@media (max-width: 768px) {
+.reading-container {
+padding: 40px 16px 100px;
+}
+
+.article-title {
+font-size: 32px;
+}
+
+.content-line {
+font-size: 19px;
+}
+
+.comment-trigger {
+right: -36px;
+}
+
+.comment-panel {
+width: 100%;
+right: -100%;
+}
+
+.carousel-track img {
+min-width: 90%;
+max-width: 90%;
+}
 }
 </style>
 
 </head>
 <body>
 
-<!-- HEADER -->
-
 <div class="header-wrapper">
   <div class="header">
-    <a href="https://patholytica.com/main" class="logo-link">
-      <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
-    </a>
-    <button class="burger-btn" id="burgerBtn">
-      <span class="burger-line"></span>
-      <span class="burger-line"></span>
-      <span class="burger-line"></span>
+    <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
+    <div class="header-actions">
+      <button class="icon-btn" id="editModeBtn" onclick="toggleEditMode()" title="Edit mode">
+        <i class="fas fa-pen"></i>
+      </button>
+      <button class="icon-btn" id="commentsBtn" onclick="toggleComments()" title="Comments">
+        <i class="fas fa-comment"></i>
+        <span class="comment-badge" id="commentBadge">3</span>
+      </button>
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fas fa-circle-half-stroke"></i>
+      </button>
+      <button class="icon-btn" title="User">
+        <i class="fas fa-user"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="reading-container" id="readingContainer">
+  <h1 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h1>
+  <div class="article-meta">
+    Dr. Sarah Mitchell • Published March 15, 2024 • 12 min read
+  </div>
+
+  <div class="content-line" data-line="1">
+    <div class="content-editable" contenteditable="false">
+      The cardiovascular system represents one of the most critical organ systems in human physiology, and understanding its pathological processes is essential for modern medical practice.
+    </div>
+    <button class="comment-trigger" onclick="openLineComments(1)">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+
+  <div class="content-line has-comments" data-line="2">
+    <div class="content-editable" contenteditable="false">
+      In recent decades, advances in imaging technology and molecular biology have revolutionized our understanding of cardiac diseases, enabling earlier detection and more targeted therapeutic interventions.
+    </div>
+    <button class="comment-trigger active" onclick="openLineComments(2)">
+      <i class="fas fa-comment"></i>
+    </button>
+  </div>
+
+  <div class="media-embed">
+    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=600&fit=crop" alt="Heart anatomy">
+    <div class="media-caption">Figure 1: Cross-sectional view of cardiac tissue showing myocardial structure</div>
+  </div>
+
+  <div class="content-line" data-line="3">
+    <div class="content-editable" contenteditable="false">
+      Atherosclerosis, characterized by the accumulation of lipids and fibrous material in arterial walls, remains the leading cause of cardiovascular morbidity and mortality worldwide.
+    </div>
+    <button class="comment-trigger" onclick="openLineComments(3)">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+
+  <div class="content-line has-comments" data-line="4">
+    <div class="content-editable" contenteditable="false">
+      The pathogenesis involves a complex interplay of endothelial dysfunction, inflammatory responses, and lipid metabolism abnormalities that progress over many years.
+    </div>
+    <button class="comment-trigger active" onclick="openLineComments(4)">
+      <i class="fas fa-comment"></i>
+    </button>
+  </div>
+
+  <div class="media-embed">
+    <div class="image-carousel">
+      <div class="carousel-track">
+        <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=600&fit=crop" alt="Microscopy 1">
+        <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=600&fit=crop" alt="Microscopy 2">
+        <img src="https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&h=600&fit=crop" alt="Microscopy 3">
+      </div>
+    </div>
+    <div class="media-caption">Figure 2: Progressive stages of atherosclerotic plaque development</div>
+  </div>
+
+  <div class="content-line" data-line="5">
+    <div class="content-editable" contenteditable="false">
+      Hypertensive heart disease represents another major category of cardiovascular pathology, with chronic elevation of blood pressure leading to left ventricular hypertrophy and eventual heart failure.
+    </div>
+    <button class="comment-trigger" onclick="openLineComments(5)">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+
+  <div class="media-embed">
+    <div class="custom-audio-player" data-audio-src="">
+      <button class="play-btn" onclick="toggleAudio(this)">
+        <i class="fas fa-play"></i>
+      </button>
+      <div class="audio-info">
+        <div class="audio-title">Clinical findings discussion</div>
+        <div class="waveform-container" onclick="seekAudio(event, this)">
+          <div class="waveform-progress"></div>
+          <div class="waveform-bars">
+            <div class="waveform-bar" style="height: 20%"></div>
+            <div class="waveform-bar" style="height: 45%"></div>
+            <div class="waveform-bar" style="height: 65%"></div>
+            <div class="waveform-bar" style="height: 35%"></div>
+            <div class="waveform-bar" style="height: 80%"></div>
+            <div class="waveform-bar" style="height: 55%"></div>
+            <div class="waveform-bar" style="height: 40%"></div>
+            <div class="waveform-bar" style="height: 70%"></div>
+            <div class="waveform-bar" style="height: 50%"></div>
+            <div class="waveform-bar" style="height: 30%"></div>
+            <div class="waveform-bar" style="height: 60%"></div>
+            <div class="waveform-bar" style="height: 45%"></div>
+            <div class="waveform-bar" style="height: 75%"></div>
+            <div class="waveform-bar" style="height: 40%"></div>
+            <div class="waveform-bar" style="height: 55%"></div>
+            <div class="waveform-bar" style="height: 35%"></div>
+            <div class="waveform-bar" style="height: 65%"></div>
+            <div class="waveform-bar" style="height: 50%"></div>
+            <div class="waveform-bar" style="height: 40%"></div>
+            <div class="waveform-bar" style="height: 25%"></div>
+          </div>
+        </div>
+        <div class="audio-time">
+          <span class="current-time">0:00</span>
+          <span class="duration">2:34</span>
+        </div>
+      </div>
+      <audio style="display: none;"></audio>
+    </div>
+    <div class="media-caption">Audio note: Dr. Mitchell discusses key findings from recent clinical trials</div>
+  </div>
+
+  <div class="content-line has-comments" data-line="6">
+    <div class="content-editable" contenteditable="false">
+      The role of inflammation in cardiovascular disease has gained increasing recognition, with biomarkers such as C-reactive protein and interleukin-6 serving as important prognostic indicators.
+    </div>
+    <button class="comment-trigger active" onclick="openLineComments(6)">
+      <i class="fas fa-comment"></i>
+    </button>
+  </div>
+
+  <div class="content-line" data-line="7">
+    <div class="content-editable" contenteditable="false">
+      Future directions in cardiovascular pathology research include personalized medicine approaches, advanced imaging modalities, and novel therapeutic targets aimed at preventing disease progression.
+    </div>
+    <button class="comment-trigger" onclick="openLineComments(7)">
+      <i class="fas fa-plus"></i>
     </button>
   </div>
 </div>
 
-<!-- MENU OVERLAY -->
-
-<div class="menu-overlay" id="menuOverlay"></div>
-
-<!-- MENU DROPDOWN -->
-
-<div class="menu-dropdown" id="menuDropdown">
-  <a href="#" class="menu-item" id="profileBtn">
-    <span class="menu-icon">👤</span>
-    <span>Profile</span>
-  </a>
-  <a href="#" class="menu-item" id="settingsBtn">
-    <span class="menu-icon">⚙️</span>
-    <span>Settings</span>
-  </a>
-  <div class="menu-item" id="themeBtn">
-    <span class="menu-icon">🌓</span>
-    <span id="themeText">Light Theme</span>
+<div class="comment-panel" id="commentPanel">
+  <div class="comment-header">
+    <h3 id="commentTitle">All Comments</h3>
+    <button class="close-comments" onclick="closeComments()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="comment-list" id="commentList">
+    <!-- Comments will be inserted here -->
+  </div>
+  <div class="comment-input-area" id="commentInputArea" style="display: none;">
+    <div class="comment-context" id="commentContext"></div>
+    <textarea class="comment-input" id="commentInput" placeholder="Add a comment..."></textarea>
+    <button class="comment-submit" onclick="submitComment()">Post Comment</button>
   </div>
 </div>
 
-<!-- FEED -->
-
-<div class="feed-container" id="feedContent">Loading feed...</div>
-
-<!-- FOOTER -->
-
-<footer id="footer">
-  <a href="https://patholytica.com/main" class="footer-btn home">
-    <span class="footer-icon">🏠</span>
-    <span>Home</span>
-  </a>
-  <button class="footer-btn create" id="createBtn">
-    <span class="footer-icon">✏️</span>
-    <span>Create</span>
+<div class="upload-toolbar">
+  <button class="upload-btn" onclick="addNewParagraph()" title="Add text">
+    <i class="fas fa-plus"></i>
   </button>
-</footer>
-
-<!-- POST MODAL -->
-
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>Create Post</h2>
-      <button class="modal-close" id="closeBtn">&times;</button>
-    </div>
-    <textarea id="postText" class="modal-textarea" placeholder="What's on your mind?"></textarea>
-    <div class="modal-actions">
-      <button class="modal-btn cancel" id="cancelBtn">Cancel</button>
-      <button class="modal-btn submit" id="submitBtn">Post</button>
-    </div>
-  </div>
+  <div class="divider"></div>
+  <label class="upload-btn" title="Upload image">
+    <i class="fas fa-image"></i>
+    <input type="file" accept="image/*" onchange="handleImageUpload(event)">
+  </label>
+  <label class="upload-btn" title="Upload audio">
+    <i class="fas fa-microphone"></i>
+    <input type="file" accept="audio/*" onchange="handleAudioUpload(event)">
+  </label>
+  <label class="upload-btn" title="Upload file">
+    <i class="fas fa-paperclip"></i>
+    <input type="file" onchange="handleFileUpload(event)">
+  </label>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
-  authDomain: "patholytica.firebaseapp.com",
-  projectId: "patholytica",
-  storageBucket: "patholytica.firebasestorage.app",
-  messagingSenderId: "738430635282",
-  appId: "1:738430635282:web:8451ef380447c7611137cb"
+<script>
+const comments = {
+  2: [
+    {
+      author: "Dr. James Chen",
+      time: "2 hours ago",
+      text: "Excellent point about imaging technology. The development of cardiac MRI has been particularly transformative."
+    }
+  ],
+  4: [
+    {
+      author: "Dr. Emily Rodriguez",
+      time: "5 hours ago",
+      text: "This multi-factorial approach is crucial for understanding disease progression. Have you considered the role of genetic predisposition?"
+    }
+  ],
+  6: [
+    {
+      author: "Dr. Robert Kim",
+      time: "1 day ago",
+      text: "The inflammatory biomarkers you mention are indeed valuable. We've been using them extensively in our clinical practice."
+    }
+  ]
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+let currentLineNumber = null;
+let isEditMode = false;
+let lineCounter = 7;
 
-const supabase = createClient(
-  "https://vmgenqvsmqiphcajaclx.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtZ2VucXZzbXFpcGhjYWphY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3MTUzNzUsImV4cCI6MjA3OTI5MTM3NX0.a2FCNa6BzYqXJWPUkByxK1EiNzt1cZhc3cp2SVj-Ke4"
-);
-
-let currentUser = null;
-let userLikes = new Set();
-
-/* BURGER MENU */
-const burgerBtn = document.getElementById("burgerBtn");
-const menuDropdown = document.getElementById("menuDropdown");
-const menuOverlay = document.getElementById("menuOverlay");
-
-function toggleMenu() {
-  burgerBtn.classList.toggle("active");
-  menuDropdown.classList.toggle("active");
-  menuOverlay.classList.toggle("active");
+function toggleTheme() {
+  document.body.classList.toggle('light-theme');
+  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
 }
 
-burgerBtn.onclick = toggleMenu;
-menuOverlay.onclick = toggleMenu;
-
-/* THEME */
-const themeBtn = document.getElementById("themeBtn");
-const themeText = document.getElementById("themeText");
-
-function updateThemeText() {
-  themeText.textContent = document.body.classList.contains("light-theme") ? "Dark Theme" : "Light Theme";
-}
-
-if (localStorage.getItem("theme")==="light") {
+if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
-  updateThemeText();
 }
 
-themeBtn.onclick = () => {
-  const isLight = document.body.classList.toggle("light-theme");
-  localStorage.setItem("theme", isLight ? "light" : "dark");
-  updateThemeText();
-};
+function toggleEditMode() {
+  isEditMode = !isEditMode;
+  const editBtn = document.getElementById('editModeBtn');
+  const editables = document.querySelectorAll('.content-editable');
+  
+  editBtn.classList.toggle('active');
+  editables.forEach(el => {
+    el.contentEditable = isEditMode;
+  });
+}
 
-/* MENU ITEMS */
-document.getElementById("profileBtn").onclick = (e) => {
-  e.preventDefault();
-  toggleMenu();
-  alert("Profile page - Coming soon!");
-};
-
-document.getElementById("settingsBtn").onclick = (e) => {
-  e.preventDefault();
-  toggleMenu();
-  alert("Settings page - Coming soon!");
-};
-
-/* FOOTER SCROLL BEHAVIOR */
-let lastScroll = 0;
-const footer = document.getElementById("footer");
-window.addEventListener("scroll", () => {
-  const currentScroll = window.pageYOffset;
-  if (currentScroll <= 0) {
-    footer.classList.remove("hidden");
-    return;
-  }
-  if (currentScroll > lastScroll && currentScroll > 100) {
-    footer.classList.add("hidden");
+function toggleComments() {
+  const panel = document.getElementById('commentPanel');
+  const btn = document.getElementById('commentsBtn');
+  
+  if (panel.classList.contains('active')) {
+    closeComments();
   } else {
-    footer.classList.remove("hidden");
+    currentLineNumber = null;
+    loadAllComments();
+    panel.classList.add('active');
+    btn.classList.add('active');
+    document.getElementById('commentInputArea').style.display = 'none';
   }
-  lastScroll = currentScroll;
-});
+}
 
-/* CREATE POST */
-const modal = document.getElementById("modal");
-const closeBtn = document.getElementById("closeBtn");
-const cancelBtn = document.getElementById("cancelBtn");
-const createBtn = document.getElementById("createBtn");
-const submitBtn = document.getElementById("submitBtn");
-const postText = document.getElementById("postText");
+function closeComments() {
+  document.getElementById('commentPanel').classList.remove('active');
+  document.getElementById('commentsBtn').classList.remove('active');
+  currentLineNumber = null;
+}
 
-createBtn.onclick = () => {
-  if(!currentUser) {
-    alert("Please sign in to create a post");
-    return;
-  }
-  modal.classList.add("active");
-};
+function openLineComments(lineNumber) {
+  currentLineNumber = lineNumber;
+  const panel = document.getElementById('commentPanel');
+  const btn = document.getElementById('commentsBtn');
+  
+  panel.classList.add('active');
+  btn.classList.add('active');
+  
+  const lineText = document.querySelector(`[data-line="${lineNumber}"] .content-editable`).textContent;
+  const preview = lineText.length > 60 ? lineText.substring(0, 60) + '...' : lineText;
+  
+  document.getElementById('commentTitle').textContent = `Line ${lineNumber}`;
+  document.getElementById('commentContext').textContent = `"${preview}"`;
+  document.getElementById('commentInputArea').style.display = 'block';
+  
+  loadLineComments(lineNumber);
+}
 
-closeBtn.onclick = cancelBtn.onclick = () => {
-  modal.classList.remove("active");
-  postText.value = "";
-};
-
-submitBtn.onclick = async () => {
-  if(!postText.value.trim()) {
-    alert("Please enter some content");
-    return;
+function loadAllComments() {
+  const commentList = document.getElementById('commentList');
+  document.getElementById('commentTitle').textContent = 'All Comments';
+  
+  let allComments = [];
+  for (let line in comments) {
+    comments[line].forEach(comment => {
+      allComments.push({...comment, line: line});
+    });
   }
   
-  try {
-    const { error } = await supabase.from("posts").insert({
-      firebase_uid: currentUser.uid,
-      content: postText.value,
-      created_at: new Date().toISOString()
-    });
-    
-    if(error) throw error;
-    
-    modal.classList.remove("active");
-    postText.value = "";
-    await loadFeed();
-    alert("Post created successfully!");
-  } catch(err) {
-    console.error("Error creating post:", err);
-    alert("Failed to create post. Please try again.");
-  }
-};
-
-/* ESCAPE HTML */
-const esc = str => { const el=document.createElement("div"); el.textContent=str; return el.innerHTML; };
-
-/* TIME AGO */
-const timeAgo = date => {
-  const sec = Math.floor((Date.now() - new Date(date))/1000);
-  if(sec<60) return "now"; if(sec<3600) return Math.floor(sec/60)+"m";
-  if(sec<86400) return Math.floor(sec/3600)+"h";
-  if(sec<604800) return Math.floor(sec/86400)+"d";
-  return new Date(date).toLocaleDateString();
-};
-
-/* LOAD FEED */
-async function loadFeed() {
-  const feed = document.getElementById("feedContent");
-  try {
-    const { data, error } = await supabase
-      .from("posts")
-      .select("*, users(name, username, profile_pic)")
-      .order("created_at",{ascending:false})
-      .limit(30);
-    
-    if(error) {
-      console.error("Supabase error:", error);
-      feed.innerHTML = `<div style="padding:20px;text-align:center;">Error loading feed: ${error.message}</div>`;
-      return;
-    }
-    
-    if(!data?.length){ 
-      feed.innerHTML = "<div style='padding:20px;text-align:center;'>No posts yet. Be the first to post!</div>"; 
-      return; 
-    }
-    
-    feed.innerHTML = data.map(renderPost).join("");
-  } catch(err) {
-    console.error("Error:", err);
-    feed.innerHTML = `<div style="padding:20px;text-align:center;">Error loading feed. Please check your connection.</div>`;
-  }
-}
-
-function renderPost(p){
-  const u = p.users||{};
-  const liked = userLikes.has(p.id);
-  return `
-  <div class="post" data-id="${p.id}">
-    <div class="post-header">
-      <img class="post-avatar" src="${u.profile_pic||"https://ui-avatars.com/api/?name="+encodeURIComponent(u.name||"User")}">
-      <div class="post-author-info">
-        <span class="post-author-name">${esc(u.name||"User")}</span>
-        <span class="post-author-username">@${esc(u.username||"user")}</span>
+  if (allComments.length === 0) {
+    commentList.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">No comments yet.</p>';
+  } else {
+    commentList.innerHTML = allComments.map(comment => `
+      <div class="comment-item">
+        <div class="comment-line-ref">Line ${comment.line}</div>
+        <div class="comment-author">${comment.author}</div>
+        <div class="comment-time">${comment.time}</div>
+        <div class="comment-text">${comment.text}</div>
       </div>
-      <span class="post-time">${timeAgo(p.created_at)}</span>
-    </div>
-    ${(p.content||p.image_url)?`<div class="post-content">
-      ${p.content?`<div class="post-text">${esc(p.content)}</div>`:""}
-      ${p.image_url?`<img class="post-image" src="${p.image_url}">`:""}
-    </div>`:""}
-    <div class="post-actions">
-      <button class="action-btn ${liked?"liked":""}" onclick="likePost('${p.id}')">♥ Like</button>
-      <button class="action-btn" onclick="toggleComments('${p.id}')">💬 Comment</button>
-    </div>
-    <div class="comments-section hidden" id="c-${p.id}"><div id="cl-${p.id}"></div>
-      <div class="comment-input-wrapper">
-        <input class="comment-input" id="ci-${p.id}" placeholder="Add comment...">
-        <button class="comment-submit" onclick="addComment('${p.id}')">Post</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-/* LIKE FUNCTION */
-window.likePost = async (id) => {
-  if(!currentUser) {
-    alert("Please sign in to like posts");
-    return;
-  }
-  userLikes.has(id) ? userLikes.delete(id) : userLikes.add(id);
-  await loadFeed();
-};
-
-/* COMMENT FUNCTIONS */
-window.toggleComments = id => {
-  const sec = document.getElementById(`c-${id}`);
-  sec.classList.toggle("hidden");
-  if(!sec.classList.contains("hidden")) loadComments(id);
-};
-
-async function loadComments(id){
-  try {
-    const { data } = await supabase
-      .from("comments")
-      .select("*, users(name, profile_pic)")
-      .eq("post_id",id)
-      .order("created_at",{ascending:true});
-    
-    const container = document.getElementById(`cl-${id}`);
-    if(data && data.length > 0) {
-      container.innerHTML = data.map(c=>`
-        <div class="comment">
-          <img class="comment-avatar" src="${c.users?.profile_pic||"https://ui-avatars.com/api/?name="+encodeURIComponent(c.users?.name||"User")}">
-          <div class="comment-content">
-            <span class="comment-author">${esc(c.users?.name||"User")}</span>
-            <div class="comment-text">${esc(c.content)}</div>
-          </div>
-        </div>`).join("");
-    } else {
-      container.innerHTML = "";
-    }
-  } catch(err) {
-    console.error("Error loading comments:", err);
+    `).join('');
   }
 }
 
-window.addComment = async id=>{
-  if(!currentUser) {
-    alert("Please sign in to comment");
-    return;
-  }
-  const input=document.getElementById(`ci-${id}`);
-  if(!input.value.trim()) return;
+function loadLineComments(lineNumber) {
+  const commentList = document.getElementById('commentList');
+  const lineComments = comments[lineNumber] || [];
   
-  try {
-    await supabase.from("comments").insert({
-      post_id:id,
-      firebase_uid:currentUser.uid,
-      content:input.value
-    });
-    input.value=""; 
-    loadComments(id);
-  } catch(err) {
-    console.error("Error adding comment:", err);
-    alert("Failed to add comment");
+  if (lineComments.length === 0) {
+    commentList.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">No comments on this line yet.</p>';
+  } else {
+    commentList.innerHTML = lineComments.map(comment => `
+      <div class="comment-item">
+        <div class="comment-author">${comment.author}</div>
+        <div class="comment-time">${comment.time}</div>
+        <div class="comment-text">${comment.text}</div>
+      </div>
+    `).join('');
   }
-};
+}
 
-/* AUTH STATE */
-onAuthStateChanged(auth, async user => {
-  currentUser = user;
-  await loadFeed();
-});
-</script>
+function submitComment() {
+  const input = document.getElementById('commentInput');
+  const text = input.value.trim();
+  
+  if (!text || currentLineNumber === null) return;
+  
+  if (!comments[currentLineNumber]) {
+    comments[currentLineNumber] = [];
+  }
+  
+  comments[currentLineNumber].push({
+    author: "You",
+    time: "Just now",
+    text: text
+  });
+  
+  const line = document.querySelector(`[data-line="${currentLineNumber}"]`);
+  line.classList.add('has-comments');
+  const trigger = line.querySelector('.comment-trigger');
+  trigger.classList.add('active');
+  trigger.innerHTML = '<i class="fas fa-comment"></i>';
+  
+  updateCommentBadge();
+  input.value = '';
+  loadLineComments(currentLineNumber);
+}
 
-</body>
-</html>
+function updateCommentBadge() {
+  let total = 0;
+  for (let line in comments) {
+    total += comments[line].length;
+  }
+  document.getElementById('commentBadge').textContent = total;
+}
+
+function addNewParagraph() {
+  lineCounter++;
+  const newLine = document.createElement('div');
+  newLine.className = 'content-line
