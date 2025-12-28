@@ -378,6 +378,25 @@ body.light-theme .logo-img {
   border-color: #f44336;
   color: #f44336;
 }
+.debug-panel {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  border-radius: 8px;
+  max-width: 400px;
+  font-size: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 100;
+}
+.debug-panel pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
 @media (max-width: 768px) {
   .reading-container {
     padding: 90px 16px 100px;
@@ -509,10 +528,6 @@ body.light-theme .logo-img {
     <i class="fas fa-image"></i>
     <input type="file" accept="image/*" onchange="handleImageUpload(event)">
   </label>
-  <label class="upload-btn" title="Upload audio">
-    <i class="fas fa-microphone"></i>
-    <input type="file" accept="audio/*" onchange="handleAudioUpload(event)">
-  </label>
 </div>
 
 <div class="notification" id="notification">
@@ -520,15 +535,38 @@ body.light-theme .logo-img {
   <span id="notificationText">Article published successfully!</span>
 </div>
 
-<script>
-// Initialize Supabase
-const SUPABASE_URL = 'https://sb_publishable_40MYHO0GKm-poIY1lSChIw_huEEPk1_.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_40MYHO0GKm-poIY1lSChIw_huEEPk1_';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<div class="debug-panel" id="debugPanel" style="display: none;">
+  <strong>Debug Info:</strong>
+  <pre id="debugText"></pre>
+</div>
 
+<script>
+// You need to replace these with your actual Supabase credentials
+// Get them from: https://supabase.com/dashboard/project/YOUR_PROJECT/settings/api
+const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // e.g., 'https://xxxxx.supabase.co'
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Your anon/public key
+
+let supabase = null;
 let lineCounter = 3;
 let isPublished = false;
 let currentArticleId = null;
+
+// Initialize Supabase
+function initSupabase() {
+  if (SUPABASE_URL === 'YOUR_SUPABASE_URL' || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
+    showDebug('⚠️ Please update SUPABASE_URL and SUPABASE_ANON_KEY in the code with your actual credentials');
+    return false;
+  }
+  
+  try {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    showDebug('✓ Supabase initialized');
+    return true;
+  } catch (error) {
+    showDebug('✗ Supabase initialization failed: ' + error.message);
+    return false;
+  }
+}
 
 // Set today's date as default
 document.getElementById('publishDate').valueAsDate = new Date();
@@ -540,6 +578,14 @@ function toggleTheme() {
 
 if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
+}
+
+function showDebug(message) {
+  const debugPanel = document.getElementById('debugPanel');
+  const debugText = document.getElementById('debugText');
+  debugPanel.style.display = 'block';
+  const timestamp = new Date().toLocaleTimeString();
+  debugText.textContent = `[${timestamp}] ${message}\n\n` + debugText.textContent;
 }
 
 function showNotification(message, type = 'success') {
@@ -564,6 +610,14 @@ function showNotification(message, type = 'success') {
 }
 
 async function publishArticle() {
+  showDebug('Publishing article...');
+  
+  // Initialize Supabase if not already done
+  if (!supabase && !initSupabase()) {
+    showNotification('Please configure Supabase credentials', 'error');
+    return;
+  }
+  
   const btn = document.getElementById('publishBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Publishing...</span>';
@@ -575,11 +629,14 @@ async function publishArticle() {
     const publishDate = document.getElementById('publishDate').value;
     const readTime = parseInt(document.getElementById('readTime').value) || 0;
     
+    showDebug(`Title: ${title}\nAuthor: ${author}\nDate: ${publishDate}\nRead time: ${readTime}`);
+    
     if (!title) {
       throw new Error('Article title is required');
     }
     
     // Insert article
+    showDebug('Inserting article into database...');
     const { data: article, error: articleError } = await supabase
       .from('articles')
       .insert({
@@ -591,8 +648,12 @@ async function publishArticle() {
       .select()
       .single();
     
-    if (articleError) throw articleError;
+    if (articleError) {
+      showDebug('Article insert error: ' + JSON.stringify(articleError));
+      throw articleError;
+    }
     
+    showDebug('Article inserted with ID: ' + article.id);
     currentArticleId = article.id;
     
     // Insert paragraphs
@@ -609,12 +670,20 @@ async function publishArticle() {
       }
     });
     
+    showDebug(`Inserting ${paragraphs.length} paragraphs...`);
+    
     if (paragraphs.length > 0) {
-      const { error: paragraphsError } = await supabase
+      const { data: paragraphData, error: paragraphsError } = await supabase
         .from('paragraphs')
-        .insert(paragraphs);
+        .insert(paragraphs)
+        .select();
       
-      if (paragraphsError) throw paragraphsError;
+      if (paragraphsError) {
+        showDebug('Paragraphs insert error: ' + JSON.stringify(paragraphsError));
+        throw paragraphsError;
+      }
+      
+      showDebug(`${paragraphData.length} paragraphs inserted`);
     }
     
     // Insert media
@@ -635,12 +704,20 @@ async function publishArticle() {
       }
     });
     
+    showDebug(`Inserting ${mediaItems.length} media items...`);
+    
     if (mediaItems.length > 0) {
-      const { error: mediaError } = await supabase
+      const { data: mediaData, error: mediaError } = await supabase
         .from('media')
-        .insert(mediaItems);
+        .insert(mediaItems)
+        .select();
       
-      if (mediaError) throw mediaError;
+      if (mediaError) {
+        showDebug('Media insert error: ' + JSON.stringify(mediaError));
+        throw mediaError;
+      }
+      
+      showDebug(`${mediaData.length} media items inserted`);
     }
     
     // Update UI
@@ -652,6 +729,7 @@ async function publishArticle() {
     btn.innerHTML = '<i class="fas fa-check"></i><span>Published</span>';
     
     showNotification('Article published successfully!', 'success');
+    showDebug('✓ Article published successfully!');
     
     setTimeout(() => {
       btn.innerHTML = '<i class="fas fa-sync"></i><span>Update Article</span>';
@@ -660,6 +738,7 @@ async function publishArticle() {
     
   } catch (error) {
     console.error('Error publishing article:', error);
+    showDebug('✗ ERROR: ' + error.message);
     showNotification(error.message || 'Failed to publish article', 'error');
     btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Publish Article</span>';
     btn.disabled = false;
@@ -706,8 +785,12 @@ function moveLineUp(btn) {
 function moveLineDown(btn) {
   const line = btn.closest('.content-line');
   const next = line.nextElementSibling;
-  if (next && next.classList.contains('content-line')) {
-    line.parentNode.insertBefore(next, line);
+  if (next && (next.classList.contains('content-line') || next.classList.contains('media-embed'))) {
+    if (next.nextElementSibling) {
+      line.parentNode.insertBefore(line, next.nextElementSibling);
+    } else {
+      line.parentNode.appendChild(line);
+    }
   }
 }
 
@@ -734,19 +817,16 @@ function handleImageUpload(event) {
   event.target.value = '';
 }
 
-function handleAudioUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  
-  showNotification('Audio upload feature coming soon!', 'error');
-  event.target.value = '';
-}
-
 function deleteMedia(btn) {
   if (confirm('Delete this media item?')) {
     btn.closest('.media-embed').remove();
   }
 }
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', () => {
+  initSupabase();
+});
 </script>
 
 </body>
