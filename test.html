@@ -1,332 +1,70 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Patholytica — Library</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Users Viewer</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root {
-  --bg-color: #0f0f0f;
-  --text-primary: #fff;
-  --text-secondary: #aaa;
-  --hover-bg: #2a2a2a;
-  --border-color: #303030;
-  --accent: #3ea6ff;
-}
-body.light-theme {
-  --bg-color: #ffffff;
-  --text-primary: #0f0f0f;
-  --text-secondary: #606060;
-  --hover-bg: #f0f0f0;
-  --border-color: #e5e5e5;
-  --accent: #065fd4;
-}
-* { box-sizing: border-box; }
-html, body { 
-  margin: 0; 
-  padding: 0; 
-  min-height: 100%; 
-  font-family: "Roboto", Arial, sans-serif;
-  overflow-x: hidden;
-  max-width: 100vw;
-}
-body {
-  background: var(--bg-color);
-  color: var(--text-primary);
-  transition: background 0.2s ease, color 0.2s ease;
-}
-.header-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: var(--bg-color);
-  padding-top: env(safe-area-inset-top);
-  border-bottom: 1px solid var(--border-color);
-  z-index: 40;
-  width: 100%;
-}
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 24px;
-  max-width: 100%;
-  margin: 0 auto;
-}
-.logo-img {
-  height: 28px;
-  width: auto;
-  transition: filter 0.2s ease;
-  cursor: pointer;
-}
-body.light-theme .logo-img {
-  filter: invert(1);
-}
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.icon-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  transition: background 0.2s ease;
-}
-.icon-btn:hover {
-  background: var(--hover-bg);
-}
-.list-container {
-  max-width: 900px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 80px 24px 80px;
-  padding-top: calc(70px + env(safe-area-inset-top));
-}
-.article-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.article-item {
-  padding: 24px 0;
-  border-bottom: 1px solid var(--border-color);
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-.article-item:hover {
-  background: var(--hover-bg);
-  margin: 0 -12px;
-  padding: 24px 12px;
-}
-.article-title {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 42px;
-  font-weight: bold;
-  margin: 0 0 8px 0;
-  line-height: 1.2;
-  color: var(--text-primary);
-  word-wrap: break-word;
-}
-.article-item:hover .article-title {
-  color: var(--accent);
-}
-.article-meta {
-  font-size: 14px;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.meta-dot {
-  width: 3px;
-  height: 3px;
-  background: var(--text-secondary);
-  border-radius: 50%;
-}
-.loading-spinner {
-  text-align: center;
-  padding: 40px;
-  color: var(--text-secondary);
-}
-.error-message {
-  text-align: center;
-  padding: 40px;
-  color: #ff4444;
-}
-.no-articles {
-  text-align: center;
-  padding: 40px;
-  color: var(--text-secondary);
-}
-@media (max-width: 768px) {
-  .list-container {
-    padding: 90px 16px 80px;
-  }
-  .article-title {
-    font-size: 32px;
-  }
-  .article-meta {
-    font-size: 13px;
-  }
-}
+body { font-family: Arial; padding: 20px; background: #111; color: #fff; }
+table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+th, td { border: 1px solid #555; padding: 8px; text-align: left; }
+th { background: #333; }
+tr:nth-child(even) { background: #222; }
 </style>
 </head>
 <body>
 
-<div class="header-wrapper">
-  <div class="header">
-    <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
-    <div class="header-actions">
-      <button class="icon-btn" onclick="searchArticles()" title="Search">
-        <i class="fas fa-search"></i>
-      </button>
-      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-        <i class="fas fa-circle-half-stroke"></i>
-      </button>
-      <button class="icon-btn" title="User">
-        <i class="fas fa-user"></i>
-      </button>
-    </div>
-  </div>
-</div>
-
-<div class="list-container">
-  <ul class="article-list" id="articleList">
-    <li class="loading-spinner">
-      <i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i>
-      <p>Loading articles...</p>
-    </li>
-  </ul>
-</div>
+<h1>Users Table</h1>
+<table id="usersTable">
+  <thead>
+    <tr>
+      <th>UserID</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Bronze</th>
+      <th>Gold</th>
+      <th>Platinum</th>
+      <th>CreatedAt</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
 <script>
 const SUPABASE_URL = 'https://aforyattbmwcafvtgnry.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmb3J5YXR0Ym13Y2FmdnRnbnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwMDMxMDMsImV4cCI6MjA4MjU3OTEwM30.1kq2-0rxukjO-OevldWSFod-6FfcZmOP7NEa517WEW0';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let allArticles = [];
-
-async function loadArticles() {
-  const articleList = document.getElementById('articleList');
+async function loadUsers() {
+  const { data, error } = await supabase.from('users').select('*').order('userid', { ascending: true });
+  const tbody = document.querySelector('#usersTable tbody');
   
-  try {
-    // Use lowercase table name - PostgreSQL default
-    const { data, error } = await supabase
-      .from('articles')
-      .select('*')
-      .order('createdat', { ascending: false });
-
-    console.log('Supabase response:', { data, error });
-
-    if (error) {
-      console.error('Supabase error:', error);
-      throw error;
-    }
-
-    allArticles = data;
-
-    if (!data || data.length === 0) {
-      articleList.innerHTML = '<li class="no-articles">No articles found. Start by adding some to your database!</li>';
-      return;
-    }
-
-    renderArticles(data);
-  } catch (error) {
-    console.error('Error loading articles:', error);
-    articleList.innerHTML = `<li class="error-message">
-      <i class="fas fa-exclamation-triangle" style="font-size: 32px; margin-bottom: 16px;"></i>
-      <p>Error loading articles: ${error.message}</p>
-      <p style="font-size: 12px; margin-top: 8px;">Check console for details. Common issues:</p>
-      <ul style="text-align: left; display: inline-block; margin-top: 8px;">
-        <li>RLS (Row Level Security) is enabled - add a policy to allow SELECT</li>
-        <li>Table doesn't exist or has no data</li>
-        <li>Network/CORS issues</li>
-      </ul>
-    </li>`;
-  }
-}
-
-function renderArticles(articles) {
-  const articleList = document.getElementById('articleList');
-  
-  if (!articles || articles.length === 0) {
-    articleList.innerHTML = '<li class="no-articles">No articles match your search.</li>';
+  if (error) {
+    tbody.innerHTML = `<tr><td colspan="7" style="color:red">Error: ${error.message}</td></tr>`;
     return;
   }
 
-  articleList.innerHTML = articles.map(article => {
-    const authorName = 'Author'; // Will fetch separately once basic query works
-    const date = formatDate(article.createdat);
-    const readTime = calculateReadTime(article.title);
-    
-    return `
-      <li class="article-item" onclick="openArticle(${article.articleid})">
-        <h2 class="article-title">${escapeHtml(article.title)}</h2>
-        <div class="article-meta">
-          <span>${escapeHtml(authorName)}</span>
-          <div class="meta-dot"></div>
-          <span>${date}</span>
-          <div class="meta-dot"></div>
-          <span>${readTime} min read</span>
-          <div class="meta-dot"></div>
-          <span><i class="fas fa-heart"></i> ${article.likescount || 0}</span>
-          <div class="meta-dot"></div>
-          <span><i class="fas fa-eye"></i> ${article.viewscount || 0}</span>
-        </div>
-      </li>
-    `;
-  }).join('');
-}
-
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  const options = { month: 'short', day: 'numeric', year: 'numeric' };
-  return date.toLocaleDateString('en-US', options);
-}
-
-function calculateReadTime(title) {
-  const wordsPerMinute = 200;
-  const words = title.split(' ').length;
-  const readTime = Math.max(1, Math.ceil(words / wordsPerMinute * 10));
-  return readTime;
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-function openArticle(articleId) {
-  window.location.href = `article.html?id=${articleId}`;
-}
-
-function searchArticles() {
-  const searchQuery = prompt('Search articles:');
-  if (searchQuery && searchQuery.trim()) {
-    const filtered = allArticles.filter(article => 
-      article.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    renderArticles(filtered);
-  } else if (searchQuery === '') {
-    renderArticles(allArticles);
+  if (!data || data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7">No users found.</td></tr>`;
+    return;
   }
+
+  tbody.innerHTML = data.map(user => `
+    <tr>
+      <td>${user.userid}</td>
+      <td>${user.username}</td>
+      <td>${user.email}</td>
+      <td>${user.bronze}</td>
+      <td>${user.gold}</td>
+      <td>${user.platinum}</td>
+      <td>${new Date(user.createdat).toLocaleString()}</td>
+    </tr>
+  `).join('');
 }
 
-function toggleTheme() {
-  document.body.classList.toggle('light-theme');
-  const theme = document.body.classList.contains("light-theme") ? "light" : "dark";
-  try {
-    localStorage.setItem("theme", theme);
-  } catch (e) {
-    console.log('LocalStorage not available');
-  }
-}
-
-try {
-  if (localStorage.getItem("theme") === "light") {
-    document.body.classList.add("light-theme");
-  }
-} catch (e) {
-  console.log('LocalStorage not available');
-}
-
-loadArticles();
+loadUsers();
 </script>
 
 </body>
