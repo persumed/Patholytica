@@ -119,9 +119,14 @@ body.light-theme .logo-img {
 }
 .profile-stats {
   display: flex;
-  gap: 24px;
+  flex-direction: column;
+  gap: 12px;
   font-size: 14px;
   color: var(--text-secondary);
+}
+.stats-row {
+  display: flex;
+  gap: 24px;
   flex-wrap: wrap;
 }
 .stat-item {
@@ -170,6 +175,11 @@ body.light-theme .logo-img {
   right: 0;
   height: 2px;
   background: var(--accent);
+}
+.tab-count {
+  margin-left: 6px;
+  color: var(--text-secondary);
+  font-size: 14px;
 }
 .tab-content {
   display: none;
@@ -262,6 +272,33 @@ body.light-theme .logo-img {
   font-size: 13px;
   color: var(--text-secondary);
 }
+.profile-footer {
+  margin-top: 60px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border-color);
+}
+.bio-section {
+  margin-bottom: 24px;
+}
+.bio-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.bio-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+.email-section {
+  margin-bottom: 24px;
+}
+.email-text {
+  font-size: 14px;
+  color: var(--accent);
+}
 @media (max-width: 768px) {
   .profile-container {
     padding: 90px 16px 80px;
@@ -305,34 +342,43 @@ body.light-theme .logo-img {
     <div class="profile-info">
       <h1 class="profile-name">Dr. Sarah Mitchell</h1>
       <div class="profile-stats">
-        <div class="stat-item">
-          <i class="fas fa-file-alt"></i>
-          <span class="stat-value">47</span>
-          <span>Articles</span>
+        <div class="stats-row">
+          <div class="stat-item">
+            <i class="fas fa-medal badge-icon bronze"></i>
+            <span class="stat-value">124</span>
+            <span>Bronze</span>
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-medal badge-icon gold"></i>
+            <span class="stat-value">38</span>
+            <span>Gold</span>
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-medal badge-icon platinum"></i>
+            <span class="stat-value">12</span>
+            <span>Platinum</span>
+          </div>
         </div>
-        <div class="stat-item">
-          <i class="fas fa-medal badge-icon bronze"></i>
-          <span class="stat-value">124</span>
-          <span>Bronze</span>
-        </div>
-        <div class="stat-item">
-          <i class="fas fa-medal badge-icon gold"></i>
-          <span class="stat-value">38</span>
-          <span>Gold</span>
-        </div>
-        <div class="stat-item">
-          <i class="fas fa-medal badge-icon platinum"></i>
-          <span class="stat-value">12</span>
-          <span>Platinum</span>
+        <div class="stats-row">
+          <div class="stat-item">
+            <i class="fas fa-users"></i>
+            <span class="stat-value">12.4K</span>
+            <span>Followers</span>
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-user-plus"></i>
+            <span class="stat-value">1,823</span>
+            <span>Following</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('articles')">Published Articles</button>
-    <button class="tab-btn" onclick="switchTab('libraries')">Libraries</button>
-    <button class="tab-btn" onclick="switchTab('comments')">Comments</button>
+    <button class="tab-btn active" onclick="switchTab('articles')">Published Articles<span class="tab-count">(47)</span></button>
+    <button class="tab-btn" onclick="switchTab('libraries')">Libraries<span class="tab-count">(5)</span></button>
+    <button class="tab-btn" onclick="switchTab('comments')">Comments<span class="tab-count">(128)</span></button>
   </div>
 
   <div class="tab-content active" id="articles-tab">
@@ -348,6 +394,7 @@ body.light-theme .logo-img {
         </div>
       </li>
 
+```
   <li class="article-item" onclick="openArticle()">
     <h2 class="article-title">Advanced Diagnostic Techniques in Cardiac Imaging</h2>
     <div class="article-meta">
@@ -425,6 +472,7 @@ body.light-theme .logo-img {
     </div>
   </li>
 </ul>
+```
 
   </div>
 
@@ -435,6 +483,7 @@ body.light-theme .logo-img {
         <div class="library-meta">24 articles • Updated Mar 15, 2024</div>
       </li>
 
+```
   <li class="library-item" onclick="openLibrary()">
     <h3 class="library-title">Medical Student Resources</h3>
     <div class="library-meta">18 articles • Updated Mar 10, 2024</div>
@@ -455,6 +504,7 @@ body.light-theme .logo-img {
     <div class="library-meta">22 articles • Updated Feb 20, 2024</div>
   </li>
 </ul>
+```
 
   </div>
 
@@ -466,6 +516,7 @@ body.light-theme .logo-img {
         <div class="comment-meta">Mar 15, 2024</div>
       </div>
 
+```
   <div class="comment-item">
     <div class="comment-article">On "Molecular Mechanisms of Cancer Progression"</div>
     <div class="comment-text">This multi-factorial approach is crucial. Have you considered exploring the role of genetic predisposition in greater detail?</div>
@@ -496,7 +547,23 @@ body.light-theme .logo-img {
     <div class="comment-meta">Mar 2, 2024</div>
   </div>
 </div>
+```
 
+  </div>
+
+  <div class="profile-footer">
+    <div class="bio-section">
+      <div class="bio-label">Bio</div>
+      <div class="bio-text">
+        Cardiovascular pathologist and researcher specializing in advanced diagnostic techniques. 
+        Associate Professor at Johns Hopkins Medicine with over 15 years of experience in cardiac imaging 
+        and molecular pathology. Passionate about medical education and advancing the field of cardiovascular research.
+      </div>
+    </div>
+    <div class="email-section">
+      <div class="bio-label">Contact</div>
+      <div class="email-text">sarah.mitchell@jhmi.edu</div>
+    </div>
   </div>
 </div>
 
