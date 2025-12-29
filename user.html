@@ -1,84 +1,898 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Users Viewer</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Patholytica — Profile</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-body { font-family: Arial; padding: 20px; background: #111; color: #fff; }
-table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-th, td { border: 1px solid #555; padding: 8px; text-align: left; }
-th { background: #333; }
-tr:nth-child(even) { background: #222; }
-.error { color: red; margin-top: 20px; }
+:root {
+  --bg-color: #0f0f0f;
+  --text-primary: #fff;
+  --text-secondary: #aaa;
+  --card-bg: #1f1f1f;
+  --hover-bg: #2a2a2a;
+  --border-color: #303030;
+  --accent: #3ea6ff;
+  --accent-hover: #2d8ed6;
+}
+body.light-theme {
+  --bg-color: #ffffff;
+  --text-primary: #0f0f0f;
+  --text-secondary: #606060;
+  --card-bg: #f9f9f9;
+  --hover-bg: #f0f0f0;
+  --border-color: #e5e5e5;
+  --accent: #065fd4;
+  --accent-hover: #0448a3;
+}
+* { box-sizing: border-box; }
+html, body { 
+  margin: 0; 
+  padding: 0; 
+  min-height: 100%; 
+  font-family: "Roboto", Arial, sans-serif;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+body {
+  background: var(--bg-color);
+  color: var(--text-primary);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.header-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-color);
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 40;
+  width: 100%;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.logo-img {
+  height: 28px;
+  width: auto;
+  transition: filter 0.2s ease;
+  cursor: pointer;
+}
+body.light-theme .logo-img {
+  filter: invert(1);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: background 0.2s ease;
+  position: relative;
+}
+.icon-btn:hover {
+  background: var(--hover-bg);
+}
+.icon-btn.active {
+  color: var(--accent);
+}
+
+.profile-container {
+max-width: 1200px;
+width: 100%;
+margin: 0 auto;
+padding: 80px 24px 40px;
+padding-top: calc(70px + env(safe-area-inset-top));
+}
+
+.profile-header {
+display: flex;
+gap: 32px;
+margin-bottom: 40px;
+padding-bottom: 32px;
+border-bottom: 1px solid var(–border-color);
+}
+
+.profile-avatar {
+width: 120px;
+height: 120px;
+min-width: 120px;
+border-radius: 50%;
+background: linear-gradient(135deg, var(–accent), var(–accent-hover));
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 48px;
+color: white;
+font-weight: 600;
+position: relative;
+}
+
+.avatar-edit-btn {
+position: absolute;
+bottom: 0;
+right: 0;
+width: 36px;
+height: 36px;
+border-radius: 50%;
+background: var(–card-bg);
+border: 2px solid var(–bg-color);
+color: var(–text-primary);
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 14px;
+transition: all 0.2s ease;
+}
+
+.avatar-edit-btn:hover {
+background: var(–hover-bg);
+transform: scale(1.1);
+}
+
+.profile-info {
+flex: 1;
+min-width: 0;
+}
+
+.profile-name {
+font-size: 32px;
+font-weight: 600;
+margin: 0 0 8px 0;
+}
+
+.profile-username {
+font-size: 16px;
+color: var(–text-secondary);
+margin: 0 0 16px 0;
+}
+
+.profile-bio {
+font-size: 15px;
+line-height: 1.6;
+color: var(–text-primary);
+margin: 0 0 20px 0;
+}
+
+.profile-stats {
+display: flex;
+gap: 32px;
+margin-bottom: 20px;
+}
+
+.stat-item {
+display: flex;
+flex-direction: column;
+}
+
+.stat-value {
+font-size: 20px;
+font-weight: 600;
+color: var(–text-primary);
+}
+
+.stat-label {
+font-size: 13px;
+color: var(–text-secondary);
+margin-top: 2px;
+}
+
+.profile-actions {
+display: flex;
+gap: 12px;
+flex-wrap: wrap;
+}
+
+.action-btn {
+display: flex;
+align-items: center;
+gap: 8px;
+padding: 10px 20px;
+border-radius: 20px;
+background: var(–card-bg);
+border: 1px solid var(–border-color);
+color: var(–text-primary);
+cursor: pointer;
+font-size: 14px;
+font-weight: 500;
+transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+background: var(–hover-bg);
+border-color: var(–text-secondary);
+}
+
+.action-btn.primary {
+background: var(–accent);
+border-color: var(–accent);
+color: white;
+}
+
+.action-btn.primary:hover {
+background: var(–accent-hover);
+}
+
+.tabs-container {
+display: flex;
+gap: 32px;
+margin-bottom: 32px;
+border-bottom: 1px solid var(–border-color);
+overflow-x: auto;
+}
+
+.tab-btn {
+padding: 12px 0;
+background: transparent;
+border: none;
+color: var(–text-secondary);
+cursor: pointer;
+font-size: 15px;
+font-weight: 500;
+position: relative;
+white-space: nowrap;
+transition: color 0.2s ease;
+}
+
+.tab-btn:hover {
+color: var(–text-primary);
+}
+
+.tab-btn.active {
+color: var(–text-primary);
+}
+
+.tab-btn.active::after {
+content: ‘’;
+position: absolute;
+bottom: -1px;
+left: 0;
+right: 0;
+height: 2px;
+background: var(–accent);
+}
+
+.tab-content {
+display: none;
+}
+
+.tab-content.active {
+display: block;
+}
+
+.articles-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+gap: 24px;
+margin-bottom: 40px;
+}
+
+.article-card {
+background: var(–card-bg);
+border-radius: 12px;
+overflow: hidden;
+border: 1px solid var(–border-color);
+transition: all 0.2s ease;
+cursor: pointer;
+}
+
+.article-card:hover {
+border-color: var(–text-secondary);
+transform: translateY(-2px);
+}
+
+.article-thumbnail {
+width: 100%;
+height: 180px;
+background: linear-gradient(135deg, var(–hover-bg), var(–card-bg));
+display: flex;
+align-items: center;
+justify-content: center;
+color: var(–text-secondary);
+font-size: 48px;
+}
+
+.article-thumbnail img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.article-content {
+padding: 16px;
+}
+
+.article-title {
+font-size: 16px;
+font-weight: 600;
+margin: 0 0 8px 0;
+line-height: 1.4;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+
+.article-meta {
+font-size: 13px;
+color: var(–text-secondary);
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 12px;
+}
+
+.article-description {
+font-size: 14px;
+color: var(–text-secondary);
+line-height: 1.5;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+
+.article-stats {
+display: flex;
+gap: 16px;
+margin-top: 12px;
+padding-top: 12px;
+border-top: 1px solid var(–border-color);
+font-size: 13px;
+color: var(–text-secondary);
+}
+
+.article-stats i {
+margin-right: 4px;
+}
+
+.settings-section {
+margin-bottom: 32px;
+background: var(–card-bg);
+border-radius: 12px;
+padding: 24px;
+border: 1px solid var(–border-color);
+}
+
+.settings-section h3 {
+margin: 0 0 20px 0;
+font-size: 18px;
+font-weight: 600;
+}
+
+.setting-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 16px 0;
+border-bottom: 1px solid var(–border-color);
+}
+
+.setting-item:last-child {
+border-bottom: none;
+}
+
+.setting-info {
+flex: 1;
+}
+
+.setting-label {
+font-size: 15px;
+font-weight: 500;
+margin-bottom: 4px;
+}
+
+.setting-description {
+font-size: 13px;
+color: var(–text-secondary);
+}
+
+.toggle-switch {
+position: relative;
+width: 48px;
+height: 24px;
+}
+
+.toggle-switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+
+.toggle-slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: var(–hover-bg);
+transition: 0.3s;
+border-radius: 24px;
+}
+
+.toggle-slider:before {
+position: absolute;
+content: “”;
+height: 18px;
+width: 18px;
+left: 3px;
+bottom: 3px;
+background-color: white;
+transition: 0.3s;
+border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+background-color: var(–accent);
+}
+
+input:checked + .toggle-slider:before {
+transform: translateX(24px);
+}
+
+.form-group {
+margin-bottom: 20px;
+}
+
+.form-label {
+display: block;
+font-size: 14px;
+font-weight: 500;
+margin-bottom: 8px;
+}
+
+.form-input {
+width: 100%;
+padding: 12px 16px;
+border: 1px solid var(–border-color);
+border-radius: 8px;
+background: var(–bg-color);
+color: var(–text-primary);
+font-size: 14px;
+font-family: inherit;
+transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+outline: none;
+border-color: var(–accent);
+}
+
+.form-textarea {
+min-height: 100px;
+resize: vertical;
+}
+
+.empty-state {
+text-align: center;
+padding: 60px 20px;
+color: var(–text-secondary);
+}
+
+.empty-state i {
+font-size: 48px;
+margin-bottom: 16px;
+opacity: 0.5;
+}
+
+.empty-state h3 {
+margin: 0 0 8px 0;
+font-size: 18px;
+color: var(–text-primary);
+}
+
+.empty-state p {
+margin: 0;
+font-size: 14px;
+}
+
+@media (max-width: 768px) {
+.profile-container {
+padding: 70px 16px 40px;
+}
+
+.profile-header {
+flex-direction: column;
+align-items: center;
+text-align: center;
+}
+
+.profile-avatar {
+width: 100px;
+height: 100px;
+font-size: 40px;
+}
+
+.profile-name {
+font-size: 24px;
+}
+
+.profile-stats {
+justify-content: center;
+}
+
+.profile-actions {
+justify-content: center;
+}
+
+.articles-grid {
+grid-template-columns: 1fr;
+}
+
+.tabs-container {
+gap: 24px;
+}
+}
 </style>
+
 </head>
 <body>
 
-<h1>Users Tableo</h1>
-<div id="errorContainer" class="error"></div>
-<table id="usersTable">
-  <thead>
-    <tr>
-      <th>UserID</th>
-      <th>Username</th>
-      <th>Email</th>
-      <th>Bronze</th>
-      <th>Gold</th>
-      <th>Platinum</th>
-      <th>CreatedAt</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td colspan="7">Loading...</td></tr>
-  </tbody>
-</table>
+<div class="header-wrapper">
+  <div class="header">
+    <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
+    <div class="header-actions">
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fas fa-circle-half-stroke"></i>
+      </button>
+      <button class="icon-btn active" title="User">
+        <i class="fas fa-user"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-avatar">
+      SM
+      <button class="avatar-edit-btn" onclick="editAvatar()">
+        <i class="fas fa-camera"></i>
+      </button>
+    </div>
+
+<div class="profile-info">
+  <h1 class="profile-name">Dr. Sarah Mitchell</h1>
+  <div class="profile-username">@sarahmitchell_md</div>
+  <p class="profile-bio">
+    Cardiovascular pathologist and researcher. Associate Professor at Johns Hopkins Medicine. 
+    Passionate about advancing diagnostic techniques and medical education.
+  </p>
+  
+  <div class="profile-stats">
+    <div class="stat-item">
+      <div class="stat-value">47</div>
+      <div class="stat-label">Articles</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">12.4K</div>
+      <div class="stat-label">Followers</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">1,823</div>
+      <div class="stat-label">Following</div>
+    </div>
+  </div>
+  
+  <div class="profile-actions">
+    <button class="action-btn primary" onclick="switchTab('edit')">
+      <i class="fas fa-edit"></i>
+      Edit Profile
+    </button>
+    <button class="action-btn" onclick="shareProfile()">
+      <i class="fas fa-share"></i>
+      Share
+    </button>
+    <button class="action-btn" onclick="switchTab('settings')">
+      <i class="fas fa-cog"></i>
+      Settings
+    </button>
+  </div>
+</div>
+
+  </div>
+
+  <div class="tabs-container">
+    <button class="tab-btn active" data-tab="articles" onclick="switchTab('articles')">Articles</button>
+    <button class="tab-btn" data-tab="saved" onclick="switchTab('saved')">Saved</button>
+    <button class="tab-btn" data-tab="playlists" onclick="switchTab('playlists')">Playlists</button>
+    <button class="tab-btn" data-tab="edit" onclick="switchTab('edit')">Edit Profile</button>
+    <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')">Settings</button>
+  </div>
+
+  <div class="tab-content active" id="articles-tab">
+    <div class="articles-grid">
+      <div class="article-card" onclick="openArticle()">
+        <div class="article-thumbnail">
+          <i class="fas fa-heart-pulse"></i>
+        </div>
+        <div class="article-content">
+          <h3 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h3>
+          <div class="article-meta">
+            <span><i class="fas fa-calendar"></i> Mar 15, 2024</span>
+            <span><i class="fas fa-clock"></i> 12 min read</span>
+          </div>
+          <p class="article-description">
+            The cardiovascular system represents one of the most critical organ systems in human physiology...
+          </p>
+          <div class="article-stats">
+            <span><i class="fas fa-eye"></i> 3.2K</span>
+            <span><i class="fas fa-thumbs-up"></i> 247</span>
+            <span><i class="fas fa-comment"></i> 18</span>
+          </div>
+        </div>
+      </div>
+
+  <div class="article-card">
+    <div class="article-thumbnail">
+      <i class="fas fa-microscope"></i>
+    </div>
+    <div class="article-content">
+      <h3 class="article-title">Advanced Diagnostic Techniques in Cardiac Imaging</h3>
+      <div class="article-meta">
+        <span><i class="fas fa-calendar"></i> Mar 8, 2024</span>
+        <span><i class="fas fa-clock"></i> 15 min read</span>
+      </div>
+      <p class="article-description">
+        Modern cardiac imaging has evolved dramatically with the introduction of advanced technologies...
+      </p>
+      <div class="article-stats">
+        <span><i class="fas fa-eye"></i> 2.8K</span>
+        <span><i class="fas fa-thumbs-up"></i> 193</span>
+        <span><i class="fas fa-comment"></i> 12</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-card">
+    <div class="article-thumbnail">
+      <i class="fas fa-dna"></i>
+    </div>
+    <div class="article-content">
+      <h3 class="article-title">Molecular Pathology in Heart Disease Research</h3>
+      <div class="article-meta">
+        <span><i class="fas fa-calendar"></i> Feb 28, 2024</span>
+        <span><i class="fas fa-clock"></i> 18 min read</span>
+      </div>
+      <p class="article-description">
+        Recent advances in molecular biology have opened new avenues for understanding cardiac pathology...
+      </p>
+      <div class="article-stats">
+        <span><i class="fas fa-eye"></i> 4.1K</span>
+        <span><i class="fas fa-thumbs-up"></i> 312</span>
+        <span><i class="fas fa-comment"></i> 24</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+  <div class="tab-content" id="saved-tab">
+    <div class="empty-state">
+      <i class="fas fa-bookmark"></i>
+      <h3>No saved articles yet</h3>
+      <p>Articles you save will appear here</p>
+    </div>
+  </div>
+
+  <div class="tab-content" id="playlists-tab">
+    <div class="articles-grid">
+      <div class="article-card">
+        <div class="article-thumbnail">
+          <i class="fas fa-list"></i>
+        </div>
+        <div class="article-content">
+          <h3 class="article-title">Cardiology Research Collection</h3>
+          <div class="article-meta">
+            <span>Updated Mar 15, 2024</span>
+          </div>
+          <p class="article-description">
+            A curated collection of my latest research and findings in cardiovascular pathology
+          </p>
+          <div class="article-stats">
+            <span><i class="fas fa-file-alt"></i> 12 articles</span>
+          </div>
+        </div>
+      </div>
+
+  <div class="article-card">
+    <div class="article-thumbnail">
+      <i class="fas fa-graduation-cap"></i>
+    </div>
+    <div class="article-content">
+      <h3 class="article-title">Medical Student Resources</h3>
+      <div class="article-meta">
+        <span>Updated Mar 10, 2024</span>
+      </div>
+      <p class="article-description">
+        Essential reading materials and guides for medical students studying pathology
+      </p>
+      <div class="article-stats">
+        <span><i class="fas fa-file-alt"></i> 8 articles</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+  <div class="tab-content" id="edit-tab">
+    <div class="settings-section">
+      <h3>Profile Information</h3>
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" value="Dr. Sarah Mitchell">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input type="text" class="form-input" value="sarahmitchell_md">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Bio</label>
+        <textarea class="form-input form-textarea">Cardiovascular pathologist and researcher. Associate Professor at Johns Hopkins Medicine. Passionate about advancing diagnostic techniques and medical education.</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <input type="text" class="form-input" value="Baltimore, MD">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Website</label>
+        <input type="url" class="form-input" value="https://sarahmitchellmd.com">
+      </div>
+      <button class="action-btn primary">
+        <i class="fas fa-save"></i>
+        Save Changes
+      </button>
+    </div>
+  </div>
+
+  <div class="tab-content" id="settings-tab">
+    <div class="settings-section">
+      <h3>Notifications</h3>
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-label">Email notifications</div>
+          <div class="setting-description">Receive email updates about new comments and interactions</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-label">Push notifications</div>
+          <div class="setting-description">Get notified about important updates on your device</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-label">Comment notifications</div>
+          <div class="setting-description">Get notified when someone comments on your articles</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+<div class="settings-section">
+  <h3>Privacy</h3>
+  <div class="setting-item">
+    <div class="setting-info">
+      <div class="setting-label">Profile visibility</div>
+      <div class="setting-description">Make your profile visible to everyone</div>
+    </div>
+    <label class="toggle-switch">
+      <input type="checkbox" checked>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+  <div class="setting-item">
+    <div class="setting-info">
+      <div class="setting-label">Show reading history</div>
+      <div class="setting-description">Let others see what articles you've been reading</div>
+    </div>
+    <label class="toggle-switch">
+      <input type="checkbox">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="settings-section">
+  <h3>Account</h3>
+  <button class="action-btn" style="margin-right: 12px;">
+    <i class="fas fa-key"></i>
+    Change Password
+  </button>
+  <button class="action-btn" style="color: #ff4444; border-color: #ff4444;">
+    <i class="fas fa-sign-out-alt"></i>
+    Sign Out
+  </button>
+</div>
+
+  </div>
+</div>
 
 <script>
-const SUPABASE_URL = 'https://aforyattbmwcafvtgnry.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_p16iKxaLD9u2tdWAYhitpg_-X4rvsts';
+function toggleTheme() {
+  document.body.classList.toggle('light-theme');
+  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
+}
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light-theme");
+}
 
-async function loadUsers() {
-  const tbody = document.querySelector('#usersTable tbody');
-  const errorDiv = document.getElementById('errorContainer');
-  errorDiv.textContent = '';
-
-  try {
-    const { data, error } = await supabase
-      .from('users') // lowercase table name
-      .select('*')
-      .order('userid', { ascending: true });
-
-    if (error) throw error;
-
-    if (!data || data.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7">No users found.</td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = data.map(user => `
-      <tr>
-        <td>${user.userid}</td>
-        <td>${user.username}</td>
-        <td>${user.email}</td>
-        <td>${user.bronze ?? 0}</td>
-        <td>${user.gold ?? 0}</td>
-        <td>${user.platinum ?? 0}</td>
-        <td>${user.createdat ? new Date(user.createdat).toLocaleString() : ''}</td>
-      </tr>
-    `).join('');
-
-  } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="7">Failed to load users.</td></tr>`;
-    errorDiv.textContent = `Error fetching users: ${err.message}`;
-    console.error(err);
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  
+  const tabBtn = document.querySelector(`[data-tab="${tabName}"]`);
+  if (tabBtn) {
+    tabBtn.classList.add('active');
+  }
+  
+  const tabContent = document.getElementById(`${tabName}-tab`);
+  if (tabContent) {
+    tabContent.classList.add('active');
   }
 }
 
-loadUsers();
+function editAvatar() {
+  alert('Avatar upload functionality would open a file picker here');
+}
+
+function shareProfile() {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Dr. Sarah Mitchell - Patholytica',
+      text: 'Check out my profile on Patholytica',
+      url: window.location.href
+    }).catch(err => console.log('Share cancelled'));
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      alert('Profile link copied to clipboard!');
+    });
+  }
+}
+
+function openArticle() {
+  alert('This would navigate to the full article');
+}
 </script>
 
 </body>
