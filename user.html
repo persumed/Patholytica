@@ -3,20 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Supabase Data Viewer</title>
+<title>Users Viewer</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 body { font-family: Arial; padding: 20px; background: #111; color: #fff; }
-h2 { margin-top: 40px; }
-ul { list-style: none; padding: 0; }
-li { margin-bottom: 5px; }
+table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+th, td { border: 1px solid #555; padding: 8px; text-align: left; }
+th { background: #333; }
+tr:nth-child(even) { background: #222; }
 </style>
 </head>
 <body>
 
-<h1>Database Contents</h1>
-
-<div id="content"></div>
+<h1>Users Table</h1>
+<table id="usersTable">
+  <thead>
+    <tr>
+      <th>UserID</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Bronze</th>
+      <th>Gold</th>
+      <th>Platinum</th>
+      <th>CreatedAt</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
 <script>
 const SUPABASE_URL = 'https://aforyattbmwcafvtgnry.supabase.co';
@@ -24,36 +37,34 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const tables = ['Users', 'Articles', 'ContentBlocks', 'Libraries', 'LibraryArticles', 'Comments', 'Likes'];
-
-async function loadTables() {
-  const container = document.getElementById('content');
+async function loadUsers() {
+  const { data, error } = await supabase.from('Users').select('*').order('UserID', { ascending: true });
+  const tbody = document.querySelector('#usersTable tbody');
   
-  for (const table of tables) {
-    const { data, error } = await supabase.from(table).select('*').limit(10);
-    
-    const section = document.createElement('div');
-    section.innerHTML = `<h2>${table}</h2>`;
-    
-    if (error) {
-      section.innerHTML += `<p style="color:red">Error: ${error.message}</p>`;
-    } else if (!data || data.length === 0) {
-      section.innerHTML += `<p>No data found.</p>`;
-    } else {
-      const ul = document.createElement('ul');
-      data.forEach(row => {
-        const li = document.createElement('li');
-        li.textContent = JSON.stringify(row);
-        ul.appendChild(li);
-      });
-      section.appendChild(ul);
-    }
-
-    container.appendChild(section);
+  if (error) {
+    tbody.innerHTML = `<tr><td colspan="7" style="color:red">Error: ${error.message}</td></tr>`;
+    return;
   }
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7">No users found.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = data.map(user => `
+    <tr>
+      <td>${user.UserID}</td>
+      <td>${user.Username}</td>
+      <td>${user.Email}</td>
+      <td>${user.Bronze}</td>
+      <td>${user.Gold}</td>
+      <td>${user.Platinum}</td>
+      <td>${new Date(user.CreatedAt).toLocaleString()}</td>
+    </tr>
+  `).join('');
 }
 
-loadTables();
+loadUsers();
 </script>
 
 </body>
