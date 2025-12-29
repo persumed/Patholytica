@@ -4,32 +4,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Create Article — Patholytica</title>
+<title>Patholytica — Library</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --bg-color: #0f0f0f;
   --text-primary: #fff;
   --text-secondary: #aaa;
-  --card-bg: #1f1f1f;
   --hover-bg: #2a2a2a;
   --border-color: #303030;
   --accent: #3ea6ff;
-  --accent-hover: #2d8ed6;
-  --success: #2ba640;
-  --error: #e74c3c;
 }
 body.light-theme {
   --bg-color: #ffffff;
   --text-primary: #0f0f0f;
   --text-secondary: #606060;
-  --card-bg: #f9f9f9;
   --hover-bg: #f0f0f0;
   --border-color: #e5e5e5;
   --accent: #065fd4;
-  --accent-hover: #0448a3;
-  --success: #2ba640;
-  --error: #e74c3c;
 }
 * { box-sizing: border-box; }
 html, body { 
@@ -95,385 +88,79 @@ body.light-theme .logo-img {
 .icon-btn:hover {
   background: var(--hover-bg);
 }
-.publish-btn {
-  padding: 8px 24px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.2s ease;
-}
-.publish-btn:hover {
-  background: var(--accent-hover);
-}
-.publish-btn:disabled {
-  background: var(--border-color);
-  cursor: not-allowed;
-}
-.editor-container {
+.list-container {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
-  padding: 80px 24px 120px;
+  padding: 80px 24px 80px;
   padding-top: calc(70px + env(safe-area-inset-top));
 }
-.article-title-input {
+.article-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.article-item {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.article-item:hover {
+  background: var(--hover-bg);
+  margin: 0 -12px;
+  padding: 24px 12px;
+}
+.article-title {
   font-family: 'Times New Roman', Times, serif;
   font-size: 42px;
   font-weight: bold;
-  margin: 0 0 24px 0;
+  margin: 0 0 8px 0;
   line-height: 1.2;
-  background: transparent;
-  border: none;
   color: var(--text-primary);
-  width: 100%;
-  outline: none;
-  resize: none;
-  overflow: hidden;
+  word-wrap: break-word;
 }
-.article-title-input::placeholder {
-  color: var(--text-secondary);
-}
-.article-meta-display {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 32px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border-color);
-}
-.content-block {
-  margin: 24px 0;
-  position: relative;
-}
-.content-block:hover .drag-handle {
-  opacity: 1;
-}
-.drag-handle {
-  position: absolute;
-  left: -40px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  cursor: move;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.drag-handle:hover {
-  background: var(--hover-bg);
+.article-item:hover .article-title {
   color: var(--accent);
 }
-.content-block.dragging {
-  opacity: 0.5;
-}
-.content-line {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 21px;
-  line-height: 1.8;
-  position: relative;
-  transition: background 0.2s ease;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+.article-meta {
+  font-size: 14px;
+  color: var(--text-secondary);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
-.content-editable {
-  outline: none;
-  min-height: 1.8em;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  flex: 1;
-  cursor: text;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 21px;
-  line-height: 1.8;
-  resize: none;
-  overflow: hidden;
-  padding: 4px 0;
-}
-.content-editable::placeholder {
-  color: var(--text-secondary);
-}
-.content-editable:focus {
-  background: var(--hover-bg);
-  padding: 4px 8px;
-  margin: -4px -8px;
-  border-radius: 4px;
-}
-.line-actions {
-  display: flex;
-  gap: 4px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.content-line:hover .line-actions {
-  opacity: 1;
-}
-.line-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  transition: all 0.2s ease;
-}
-.line-btn:hover {
-  background: var(--hover-bg);
-  color: var(--accent);
-}
-.media-embed {
-  padding: 24px 0;
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-  max-width: 100%;
-  overflow: hidden;
-  position: relative;
-}
-.media-embed img {
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-  display: block;
-}
-.custom-audio-player {
-  background: var(--card-bg);
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  max-width: 100%;
-}
-.play-btn {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: none;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  transition: all 0.2s ease;
-}
-.play-btn:hover {
-  background: var(--accent-hover);
-  transform: scale(1.05);
-}
-.audio-info {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-}
-.audio-title {
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.waveform-container {
-  position: relative;
-  height: 40px;
-  background: var(--hover-bg);
-  border-radius: 4px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  overflow: hidden;
-}
-.waveform-progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: var(--accent);
-  opacity: 0.3;
-  transition: width 0.1s linear;
-}
-.waveform-bars {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 0 4px;
-}
-.waveform-bar {
-  width: 2px;
+.meta-dot {
+  width: 3px;
+  height: 3px;
   background: var(--text-secondary);
-  border-radius: 2px;
-  opacity: 0.6;
-}
-.audio-time {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-.media-caption-input {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-top: 8px;
-  font-style: italic;
-  background: transparent;
-  border: none;
-  outline: none;
-  width: 100%;
-  padding: 4px;
-}
-.media-caption-input::placeholder {
-  color: var(--text-secondary);
-}
-.media-delete-btn {
-  position: absolute;
-  top: 32px;
-  right: 8px;
-  width: 32px;
-  height: 32px;
   border-radius: 50%;
-  background: rgba(0,0,0,0.7);
-  color: white;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  z-index: 10;
 }
-.media-embed:hover .media-delete-btn {
-  opacity: 1;
-}
-.media-delete-btn:hover {
-  background: var(--error);
-}
-.upload-toolbar {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 24px;
-  padding: 8px 16px;
-  display: flex;
-  gap: 8px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-  z-index: 20;
-}
-.upload-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
+.loading-spinner {
+  text-align: center;
+  padding: 40px;
   color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  transition: all 0.2s ease;
 }
-.upload-btn:hover {
-  background: var(--hover-bg);
-  color: var(--text-primary);
+.error-message {
+  text-align: center;
+  padding: 40px;
+  color: #ff4444;
 }
-.upload-btn input {
-  display: none;
-}
-.divider {
-  width: 1px;
-  height: 24px;
-  background: var(--border-color);
-  margin: 8px 0;
-}
-.notification {
-  position: fixed;
-  top: 80px;
-  right: 24px;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 16px 24px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  animation: slideIn 0.3s ease;
-}
-@keyframes slideIn {
-  from {
-    transform: translateX(400px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-.notification.success {
-  border-left: 4px solid var(--success);
-}
-.notification.error {
-  border-left: 4px solid var(--error);
-}
-.notification-icon {
-  font-size: 20px;
-}
-.notification.success .notification-icon {
-  color: var(--success);
-}
-.notification.error .notification-icon {
-  color: var(--error);
+.no-articles {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
 }
 @media (max-width: 768px) {
-  .editor-container {
-    padding: 90px 16px 100px;
+  .list-container {
+    padding: 90px 16px 80px;
   }
-  .article-title-input {
+  .article-title {
     font-size: 32px;
   }
-  .content-editable {
-    font-size: 19px;
-  }
-  .notification {
-    right: 16px;
-    left: 16px;
-  }
-  .drag-handle {
-    left: -32px;
+  .article-meta {
+    font-size: 13px;
   }
 }
 </style>
@@ -484,564 +171,164 @@ body.light-theme .logo-img {
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
-      <button class="icon-btn" id="themeBtn" title="Toggle theme">
+      <button class="icon-btn" onclick="searchArticles()" title="Search">
+        <i class="fas fa-search"></i>
+      </button>
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
-      <button class="publish-btn" id="publishBtn">
-        <i class="fas fa-upload"></i> Publish
-      </button>
-      <button class="icon-btn" id="userBtn" title="User">
+      <button class="icon-btn" title="User">
         <i class="fas fa-user"></i>
       </button>
     </div>
   </div>
 </div>
 
-<div class="editor-container" id="editorContainer">
-  <textarea 
-    class="article-title-input" 
-    id="articleTitle" 
-    placeholder="Article Title"
-    rows="1"
-  ></textarea>
-
-  <div class="article-meta-display" id="articleMeta">
-    <span id="authorName">Author Name</span> • <span id="currentDate">Date</span>
-  </div>
-
-  <div class="content-block" draggable="true">
-    <div class="drag-handle"><i class="fas fa-grip-vertical"></i></div>
-    <div class="content-line">
-      <textarea 
-        class="content-editable" 
-        placeholder="Start writing your article..."
-        rows="1"
-      ></textarea>
-      <div class="line-actions">
-        <button class="line-btn" title="Delete line">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
-    </div>
-  </div>
+<div class="list-container">
+  <ul class="article-list" id="articleList">
+    <li class="loading-spinner">
+      <i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i>
+      <p>Loading articles...</p>
+    </li>
+  </ul>
 </div>
-
-<div class="upload-toolbar">
-  <button class="upload-btn" id="addTextBtn" title="Add paragraph">
-    <i class="fas fa-plus"></i>
-  </button>
-  <div class="divider"></div>
-  <label class="upload-btn" title="Upload image">
-    <i class="fas fa-image"></i>
-    <input type="file" accept="image/*" id="imageInput">
-  </label>
-  <label class="upload-btn" title="Upload audio">
-    <i class="fas fa-microphone"></i>
-    <input type="file" accept="audio/*" id="audioInput">
-  </label>
-  <label class="upload-btn" title="Upload file">
-    <i class="fas fa-paperclip"></i>
-    <input type="file" id="fileInput">
-  </label>
-</div>
-
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { 
-  getAuth, 
-  onAuthStateChanged
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
-  authDomain: "patholytica.firebaseapp.com",
-  projectId: "patholytica",
-  storageBucket: "patholytica.firebasestorage.app",
-  messagingSenderId: "738430635282",
-  appId: "1:738430635282:web:8451ef380447c7611137cb"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-// Make app and config available globally
-window.firebaseApp = app;
-window.firebaseConfig = firebaseConfig;
-
-// Set current date
-const today = new Date();
-const dateStr = today.toLocaleDateString('en-US', { 
-  year: 'numeric', 
-  month: 'long', 
-  day: 'numeric' 
-});
-document.getElementById('currentDate').textContent = dateStr;
-
-// Listen for auth state
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    const displayName = user.displayName || user.email?.split('@')[0] || 'Author';
-    document.getElementById('authorName').textContent = displayName;
-    window.currentUser = user;
-  } else {
-    document.getElementById('authorName').textContent = 'Guest Author';
-    window.currentUser = null;
-  }
-});
-
-// Make auth available globally
-window.firebaseAuth = auth;
-</script>
 
 <script>
-let draggedElement = null;
+const SUPABASE_URL = 'https://aforyattbmwcafvtgnry.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmb3J5YXR0Ym13Y2FmdnRnbnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwMDMxMDMsImV4cCI6MjA4MjU3OTEwM30.1kq2-0rxukjO-OevldWSFod-6FfcZmOP7NEa517WEW0';
 
-// Theme toggle
-document.getElementById('themeBtn').addEventListener('click', function() {
-  document.body.classList.toggle('light-theme');
-  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
-});
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light-theme");
-}
+let allArticles = [];
 
-// Auto resize textarea
-function autoResize(textarea) {
-  textarea.style.height = 'auto';
-  textarea.style.height = textarea.scrollHeight + 'px';
-}
-
-// Add event listeners to all textareas
-document.addEventListener('input', function(e) {
-  if (e.target.tagName === 'TEXTAREA') {
-    autoResize(e.target);
-  }
-});
-
-// Add new paragraph
-document.getElementById('addTextBtn').addEventListener('click', function() {
-  const newBlock = document.createElement('div');
-  newBlock.className = 'content-block';
-  newBlock.draggable = true;
-  newBlock.innerHTML = `
-    <div class="drag-handle"><i class="fas fa-grip-vertical"></i></div>
-    <div class="content-line">
-      <textarea 
-        class="content-editable" 
-        placeholder="Continue writing..."
-        rows="1"
-      ></textarea>
-
-  <div class="line-actions">
-    <button class="line-btn" title="Delete line">
-      <i class="fas fa-trash"></i>
-    </button>
-  </div>
-</div>
-
-`;
-document.getElementById(‘editorContainer’).appendChild(newBlock);
-setupDragAndDrop(newBlock);
-const textarea = newBlock.querySelector(‘textarea’);
-textarea.focus();
-});
-
-// Delete block
-document.addEventListener(‘click’, function(e) {
-if (e.target.closest(’.line-btn’)) {
-const block = e.target.closest(’.content-block’);
-const allBlocks = document.querySelectorAll(’.content-block’);
-if (allBlocks.length > 1) {
-block.remove();
-} else {
-showNotification(‘Cannot delete the last block’, ‘error’);
-}
-}
-});
-
-// Handle image upload
-document.getElementById(‘imageInput’).addEventListener(‘change’, function(e) {
-const file = e.target.files[0];
-if (!file) return;
-
-const reader = new FileReader();
-reader.onload = function(event) {
-const newBlock = document.createElement(‘div’);
-newBlock.className = ‘content-block’;
-newBlock.draggable = true;
-newBlock.innerHTML = `<div class="drag-handle"><i class="fas fa-grip-vertical"></i></div> <div class="media-embed"> <button class="media-delete-btn"> <i class="fas fa-times"></i> </button> <img src="${event.target.result}" alt="Uploaded image"> <input  type="text"  class="media-caption-input"  placeholder="Add a caption (optional)..." > </div>`;
-document.getElementById(‘editorContainer’).appendChild(newBlock);
-setupDragAndDrop(newBlock);
-};
-reader.readAsDataURL(file);
-e.target.value = ‘’;
-});
-
-// Handle audio upload
-document.getElementById(‘audioInput’).addEventListener(‘change’, function(e) {
-const file = e.target.files[0];
-if (!file) return;
-
-const reader = new FileReader();
-reader.onload = function(event) {
-const newBlock = document.createElement(‘div’);
-newBlock.className = ‘content-block’;
-newBlock.draggable = true;
-newBlock.innerHTML = `<div class="drag-handle"><i class="fas fa-grip-vertical"></i></div> <div class="media-embed"> <button class="media-delete-btn"> <i class="fas fa-times"></i> </button> <div class="custom-audio-player"> <button class="play-btn"> <i class="fas fa-play"></i> </button> <div class="audio-info"> <div class="audio-title">${file.name}</div> <div class="waveform-container"> <div class="waveform-progress"></div> <div class="waveform-bars"> ${Array(20).fill(0).map(() =>`<div class="waveform-bar" style="height: ${Math.random() * 60 + 20}%"></div>`).join('')} </div> </div> <div class="audio-time"> <span class="current-time">0:00</span> <span class="duration">0:00</span> </div> </div> <audio src="${event.target.result}" style="display: none;"></audio> </div> <input  type="text"  class="media-caption-input"  placeholder="Add a caption (optional)..." > </div> `;
-document.getElementById(‘editorContainer’).appendChild(newBlock);
-setupDragAndDrop(newBlock);
-
-// Setup audio player
-const audio = newBlock.querySelector('audio');
-const playBtn = newBlock.querySelector('.play-btn');
-const waveformContainer = newBlock.querySelector('.waveform-container');
-const waveformProgress = newBlock.querySelector('.waveform-progress');
-const currentTimeEl = newBlock.querySelector('.current-time');
-const durationEl = newBlock.querySelector('.duration');
-
-audio.addEventListener('loadedmetadata', function() {
-  const duration = Math.floor(audio.duration);
-  const mins = Math.floor(duration / 60);
-  const secs = duration % 60;
-  durationEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-});
-
-playBtn.addEventListener('click', function() {
-  if (audio.paused) {
-    audio.play();
-    playBtn.querySelector('i').className = 'fas fa-pause';
-  } else {
-    audio.pause();
-    playBtn.querySelector('i').className = 'fas fa-play';
-  }
-});
-
-audio.addEventListener('timeupdate', function() {
-  const progress = (audio.currentTime / audio.duration) * 100;
-  waveformProgress.style.width = progress + '%';
-  const currentMins = Math.floor(audio.currentTime / 60);
-  const currentSecs = Math.floor(audio.currentTime % 60);
-  currentTimeEl.textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
-});
-
-audio.addEventListener('ended', function() {
-  playBtn.querySelector('i').className = 'fas fa-play';
-  waveformProgress.style.width = '0%';
-  currentTimeEl.textContent = '0:00';
-});
-
-waveformContainer.addEventListener('click', function(event) {
-  const rect = waveformContainer.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const percentage = x / rect.width;
-  audio.currentTime = percentage * audio.duration;
-});
-```
-
-};
-reader.readAsDataURL(file);
-e.target.value = ‘’;
-});
-
-// Handle file upload
-document.getElementById(‘fileInput’).addEventListener(‘change’, function(e) {
-const file = e.target.files[0];
-if (!file) return;
-alert(`File "${file.name}" uploaded successfully!\n\nFile uploads would be processed by your backend system.`);
-e.target.value = ‘’;
-});
-
-// Delete media
-document.addEventListener(‘click’, function(e) {
-if (e.target.closest(’.media-delete-btn’)) {
-const block = e.target.closest(’.content-block’);
-block.remove();
-}
-});
-
-// Drag and drop functionality
-function setupDragAndDrop(element) {
-element.addEventListener(‘dragstart’, function(e) {
-draggedElement = this;
-this.classList.add(‘dragging’);
-e.dataTransfer.effectAllowed = ‘move’;
-});
-
-element.addEventListener(‘dragend’, function() {
-this.classList.remove(‘dragging’);
-draggedElement = null;
-});
-
-element.addEventListener(‘dragover’, function(e) {
-e.preventDefault();
-const afterElement = getDragAfterElement(e.clientY);
-const container = document.getElementById(‘editorContainer’);
-
-if (afterElement == null) {
-  container.appendChild(draggedElement);
-} else {
-  container.insertBefore(draggedElement, afterElement);
-}
-
-});
-}
-
-function getDragAfterElement(y) {
-const container = document.getElementById(‘editorContainer’);
-const draggableElements = […container.querySelectorAll(’.content-block:not(.dragging)’)];
-
-return draggableElements.reduce((closest, child) => {
-const box = child.getBoundingClientRect();
-const offset = y - box.top - box.height / 2;
-
-if (offset < 0 && offset > closest.offset) {
-  return { offset: offset, element: child };
-} else {
-  return closest;
-}
-
-}, { offset: Number.NEGATIVE_INFINITY }).element;
-}
-
-// Setup initial drag and drop
-document.querySelectorAll(’.content-block’).forEach(setupDragAndDrop);
-
-// Notification
-function showNotification(message, type = ‘success’) {
-const notification = document.createElement(‘div’);
-notification.className = `notification ${type}`;
-notification.innerHTML = `<i class="notification-icon fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> <span>${message}</span>`;
-document.body.appendChild(notification);
-
-setTimeout(() => {
-notification.style.animation = ‘slideIn 0.3s ease reverse’;
-setTimeout(() => notification.remove(), 300);
-}, 3000);
-}
-
-// Gather content helper function
-function gatherContent() {
-const contentBlocks = [];
-const blocks = document.querySelectorAll(’.content-block’);
-
-blocks.forEach(block => {
-const textarea = block.querySelector(’.content-editable’);
-if (textarea) {
-const text = textarea.value.trim();
-if (text) {
-contentBlocks.push({
-type: ‘text’,
-content: text
-});
-}
-}
-
-const img = block.querySelector('.media-embed img');
-if (img) {
-  const caption = block.querySelector('.media-caption-input')?.value || '';
-  contentBlocks.push({
-    type: 'image',
-    content: img.src,
-    caption: caption
-  });
-}
-
-const audio = block.querySelector('.media-embed audio');
-if (audio) {
-  const audioTitle = block.querySelector('.audio-title')?.textContent || '';
-  const caption = block.querySelector('.media-caption-input')?.value || '';
-  contentBlocks.push({
-    type: 'audio',
-    content: audio.src,
-    title: audioTitle,
-    caption: caption
-  });
-}
-
-});
-
-return contentBlocks;
-}
-
-// Publish article
-document.getElementById(‘publishBtn’).addEventListener(‘click’, async function() {
-const publishBtn = this;
-publishBtn.disabled = true;
-
-const title = document.getElementById(‘articleTitle’).value.trim();
-const author = document.getElementById(‘authorName’).textContent;
-const date = document.getElementById(‘currentDate’).textContent;
-
-if (!title) {
-showNotification(‘Please add a title to your article’, ‘error’);
-publishBtn.disabled = false;
-return;
-}
-
-const contentBlocks = gatherContent();
-
-if (contentBlocks.length === 0) {
-showNotification(‘Please add some content to your article’, ‘error’);
-publishBtn.disabled = false;
-return;
-}
-
-const articleData = {
-title: title,
-    author: author,
-    date: date,
-    dateCreated: new Date().toISOString(),
-    content: contentBlocks,
-    authorId: window.currentUser?.uid || 'anonymous',
-    authorEmail: window.currentUser?.email || '',
-    status: 'published'
-  };
-
-  try {
-    // Import Firestore
-    const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-    const db = getFirestore(window.firebaseApp);
-    
-    // Add article to Firestore
-    const docRef = await addDoc(collection(db, 'articles'), articleData);
-    
-    showNotification('Article published successfully!', 'success');
-    clearDraft(); // Clear the draft after successful publish
-    
-    // Optional: Redirect or reset
-    setTimeout(() => {
-      console.log('Article ID:', docRef.id);
-      publishBtn.disabled = false; // Re-enable button
-      // Optionally reload to start fresh
-      if (confirm('Article published successfully! Would you like to create another article?')) {
-        location.reload();
-      }
-    }, 1500);
-    
-  } catch (error) {
-    console.error('Error publishing article:', error);
-    showNotification('Failed to publish article. Please try again.', 'error');
-    publishBtn.disabled = false; // Re-enable on error
-  }
-});
-
-// User button click
-document.getElementById('userBtn').addEventListener('click', function() {
-  if (window.currentUser) {
-    showNotification(`Logged in as ${window.currentUser.email}`, 'success');
-  } else {
-    showNotification('Not logged in', 'error');
-  }
-});
-
-// Logo click - go to home
-document.querySelector('.logo-img').addEventListener('click', function() {
-  window.location.href = 'index.html';
-});
-
-// Auto-save functionality (optional)
-let autoSaveTimer;
-function autoSave() {
-  clearTimeout(autoSaveTimer);
-  autoSaveTimer = setTimeout(() => {
-    const title = document.getElementById('articleTitle').value.trim();
-    if (title) {
-      const draftData = {
-        title: title,
-        content: gatherContent(),
-        lastSaved: new Date().toISOString()
-      };
-      localStorage.setItem('articleDraft', JSON.stringify(draftData));
-      console.log('Draft auto-saved');
-    }
-  }, 2000);
-}
-
-// Clear draft after successful publish
-function clearDraft() {
-  localStorage.removeItem('articleDraft');
-}
-
-// Trigger auto-save on input
-document.addEventListener('input', function(e) {
-  if (e.target.classList.contains('article-title-input') || 
-      e.target.classList.contains('content-editable') ||
-      e.target.classList.contains('media-caption-input')) {
-    autoSave();
-  }
-});
-
-// Load draft on page load
-window.addEventListener('load', function() {
-  const savedDraft = localStorage.getItem('articleDraft');
-  if (savedDraft) {
-    const shouldLoad = confirm('Found a saved draft. Would you like to load it?');
-    if (shouldLoad) {
-      const draft = JSON.parse(savedDraft);
-      document.getElementById('articleTitle').value = draft.title;
-      autoResize(document.getElementById('articleTitle'));
-      
-      // Clear existing content blocks except the first one
-      const existingBlocks = document.querySelectorAll('.content-block');
-      existingBlocks.forEach((block, index) => {
-        if (index > 0) block.remove();
-      });
-      
-      // Load content blocks
-      const firstTextarea = document.querySelector('.content-editable');
-      let firstTextSet = false;
-      
-      draft.content.forEach(item => {
-        if (item.type === 'text') {
-          if (!firstTextSet) {
-            firstTextarea.value = item.content;
-            autoResize(firstTextarea);
-            firstTextSet = true;
-          } else {
-            const newBlock = document.createElement('div');
-            newBlock.className = 'content-block';
-            newBlock.draggable = true;
-            newBlock.innerHTML = `
-              <div class="drag-handle"><i class="fas fa-grip-vertical"></i></div>
-              <div class="content-line">
-                <textarea class="content-editable" rows="1">${item.content}</textarea>
-                <div class="line-actions">
-                  <button class="line-btn" title="Delete line">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </div>
-            `;
-            document.getElementById('editorContainer').appendChild(newBlock);
-            setupDragAndDrop(newBlock);
-            autoResize(newBlock.querySelector('textarea'));
-          }
-        }
-      });
-      
-      showNotification('Draft loaded successfully', 'success');
-    } else {
-      clearDraft();
-    }
-  }
-});
-
-// Keyboard shortcuts
-document.addEventListener('keydown', function(e) {
-  // Ctrl/Cmd + S to save draft
-  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-    e.preventDefault();
-    autoSave();
-    showNotification('Draft saved', 'success');
-  }
+async function loadArticles() {
+  const articleList = document.getElementById('articleList');
   
-  // Ctrl/Cmd + Enter to publish
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-    e.preventDefault();
-    document.getElementById('publishBtn').click();
+  try {
+    // First, try without the JOIN to see if Articles table is accessible
+    const { data, error } = await supabase
+      .from('Articles')
+      .select('*')
+      .order('CreatedAt', { ascending: false });
+
+    console.log('Supabase response:', { data, error });
+
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+
+    allArticles = data;
+
+    if (!data || data.length === 0) {
+      articleList.innerHTML = '<li class="no-articles">No articles found. Start by adding some to your database!</li>';
+      return;
+    }
+
+    renderArticles(data);
+  } catch (error) {
+    console.error('Error loading articles:', error);
+    articleList.innerHTML = `<li class="error-message">
+      <i class="fas fa-exclamation-triangle" style="font-size: 32px; margin-bottom: 16px;"></i>
+      <p>Error loading articles: ${error.message}</p>
+      <p style="font-size: 12px; margin-top: 8px;">Check console for details. Common issues:</p>
+      <ul style="text-align: left; display: inline-block; margin-top: 8px;">
+        <li>RLS (Row Level Security) is enabled - add a policy to allow SELECT</li>
+        <li>Table name might be case-sensitive (try "articles" instead of "Articles")</li>
+        <li>Network/CORS issues</li>
+      </ul>
+    </li>`;
   }
-});
+}
+
+function renderArticles(articles) {
+  const articleList = document.getElementById('articleList');
+  
+  if (!articles || articles.length === 0) {
+    articleList.innerHTML = '<li class="no-articles">No articles match your search.</li>';
+    return;
+  }
+
+  articleList.innerHTML = articles.map(article => {
+    const authorName = 'Author'; // Will fetch separately once basic query works
+    const date = formatDate(article.CreatedAt || article.createdat);
+    const readTime = calculateReadTime(article.Title || article.title);
+    
+    return `
+      <li class="article-item" onclick="openArticle(${article.ArticleID || article.articleid})">
+        <h2 class="article-title">${escapeHtml(article.Title || article.title)}</h2>
+        <div class="article-meta">
+          <span>${escapeHtml(authorName)}</span>
+          <div class="meta-dot"></div>
+          <span>${date}</span>
+          <div class="meta-dot"></div>
+          <span>${readTime} min read</span>
+          <div class="meta-dot"></div>
+          <span><i class="fas fa-heart"></i> ${article.LikesCount || article.likescount || 0}</span>
+          <div class="meta-dot"></div>
+          <span><i class="fas fa-eye"></i> ${article.ViewsCount || article.viewscount || 0}</span>
+        </div>
+      </li>
+    `;
+  }).join('');
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const options = { month: 'short', day: 'numeric', year: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+}
+
+function calculateReadTime(title) {
+  const wordsPerMinute = 200;
+  const words = title.split(' ').length;
+  const readTime = Math.max(1, Math.ceil(words / wordsPerMinute * 10));
+  return readTime;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function openArticle(articleId) {
+  window.location.href = `article.html?id=${articleId}`;
+}
+
+function searchArticles() {
+  const searchQuery = prompt('Search articles:');
+  if (searchQuery && searchQuery.trim()) {
+    const filtered = allArticles.filter(article => 
+      article.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (article.Users?.FullName || '').toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    renderArticles(filtered);
+  } else if (searchQuery === '') {
+    renderArticles(allArticles);
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('light-theme');
+  const theme = document.body.classList.contains("light-theme") ? "light" : "dark";
+  try {
+    localStorage.setItem("theme", theme);
+  } catch (e) {
+    console.log('LocalStorage not available');
+  }
+}
+
+try {
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-theme");
+  }
+} catch (e) {
+  console.log('LocalStorage not available');
+}
+
+loadArticles();
 </script>
+
 </body>
 </html>
