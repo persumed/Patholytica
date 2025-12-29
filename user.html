@@ -11,11 +11,13 @@ table { border-collapse: collapse; width: 100%; margin-top: 20px; }
 th, td { border: 1px solid #555; padding: 8px; text-align: left; }
 th { background: #333; }
 tr:nth-child(even) { background: #222; }
+.error { color: red; margin-top: 20px; }
 </style>
 </head>
 <body>
 
 <h1>Users Table</h1>
+<div id="errorContainer" class="error"></div>
 <table id="usersTable">
   <thead>
     <tr>
@@ -28,40 +30,52 @@ tr:nth-child(even) { background: #222; }
       <th>CreatedAt</th>
     </tr>
   </thead>
-  <tbody></tbody>
+  <tbody>
+    <tr><td colspan="7">Loading...</td></tr>
+  </tbody>
 </table>
 
 <script>
 const SUPABASE_URL = 'https://aforyattbmwcafvtgnry.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmb3J5YXR0Ym13Y2FmdnRnbnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwMDMxMDMsImV4cCI6MjA4MjU3OTEwM30.1kq2-0rxukjO-OevldWSFod-6FfcZmOP7NEa517WEW0';
+const SUPABASE_KEY = 'sb_publishable_p16iKxaLD9u2tdWAYhitpg_-X4rvsts';
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function loadUsers() {
-  const { data, error } = await supabase.from('users').select('*').order('userid', { ascending: true });
   const tbody = document.querySelector('#usersTable tbody');
-  
-  if (error) {
-    tbody.innerHTML = `<tr><td colspan="7" style="color:red">Error: ${error.message}</td></tr>`;
-    return;
-  }
+  const errorDiv = document.getElementById('errorContainer');
+  errorDiv.textContent = '';
 
-  if (!data || data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7">No users found.</td></tr>`;
-    return;
-  }
+  try {
+    const { data, error } = await supabase
+      .from('users') // lowercase table name
+      .select('*')
+      .order('userid', { ascending: true });
 
-  tbody.innerHTML = data.map(user => `
-    <tr>
-      <td>${user.userid}</td>
-      <td>${user.username}</td>
-      <td>${user.email}</td>
-      <td>${user.bronze}</td>
-      <td>${user.gold}</td>
-      <td>${user.platinum}</td>
-      <td>${new Date(user.createdat).toLocaleString()}</td>
-    </tr>
-  `).join('');
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7">No users found.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map(user => `
+      <tr>
+        <td>${user.userid}</td>
+        <td>${user.username}</td>
+        <td>${user.email}</td>
+        <td>${user.bronze ?? 0}</td>
+        <td>${user.gold ?? 0}</td>
+        <td>${user.platinum ?? 0}</td>
+        <td>${user.createdat ? new Date(user.createdat).toLocaleString() : ''}</td>
+      </tr>
+    `).join('');
+
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="7">Failed to load users.</td></tr>`;
+    errorDiv.textContent = `Error fetching users: ${err.message}`;
+    console.error(err);
+  }
 }
 
 loadUsers();
