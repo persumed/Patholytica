@@ -38,7 +38,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function loadUsers() {
-  const { data, error } = await supabase.from('Users').select('*').order('UserID', { ascending: true });
+  const { data, error } = await supabase.from('users').select('*').order('userid', { ascending: true });
   const tbody = document.querySelector('#usersTable tbody');
   
   if (error) {
@@ -53,13 +53,13 @@ async function loadUsers() {
 
   tbody.innerHTML = data.map(user => `
     <tr>
-      <td>${user.UserID}</td>
-      <td>${user.Username}</td>
-      <td>${user.Email}</td>
-      <td>${user.Bronze}</td>
-      <td>${user.Gold}</td>
-      <td>${user.Platinum}</td>
-      <td>${new Date(user.CreatedAt).toLocaleString()}</td>
+      <td>${user.userid}</td>
+      <td>${user.username}</td>
+      <td>${user.email}</td>
+      <td>${user.bronze}</td>
+      <td>${user.gold}</td>
+      <td>${user.platinum}</td>
+      <td>${new Date(user.createdat).toLocaleString()}</td>
     </tr>
   `).join('');
 }
