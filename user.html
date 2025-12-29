@@ -11,21 +11,17 @@
   --bg-color: #0f0f0f;
   --text-primary: #fff;
   --text-secondary: #aaa;
-  --card-bg: #1f1f1f;
   --hover-bg: #2a2a2a;
   --border-color: #303030;
   --accent: #3ea6ff;
-  --accent-hover: #2d8ed6;
 }
 body.light-theme {
   --bg-color: #ffffff;
   --text-primary: #0f0f0f;
   --text-secondary: #606060;
-  --card-bg: #f9f9f9;
   --hover-bg: #f0f0f0;
   --border-color: #e5e5e5;
   --accent: #065fd4;
-  --accent-hover: #0448a3;
 }
 * { box-sizing: border-box; }
 html, body { 
@@ -87,465 +83,205 @@ body.light-theme .logo-img {
   justify-content: center;
   font-size: 18px;
   transition: background 0.2s ease;
-  position: relative;
 }
 .icon-btn:hover {
   background: var(--hover-bg);
 }
-.icon-btn.active {
+.profile-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 80px 24px 80px;
+  padding-top: calc(70px + env(safe-area-inset-top));
+}
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border-color);
+}
+.profile-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.profile-info {
+  flex: 1;
+}
+.profile-name {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+.profile-stats {
+  display: flex;
+  gap: 24px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stat-value {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.badge-icon {
+  font-size: 12px;
+}
+.badge-icon.bronze { color: #cd7f32; }
+.badge-icon.gold { color: #ffd700; }
+.badge-icon.platinum { color: #e5e4e2; }
+.tabs {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--border-color);
+}
+.tab-btn {
+  padding: 12px 0;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.2s ease;
+}
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+.tab-btn.active {
+  color: var(--text-primary);
+}
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+}
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+.article-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.article-item {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.article-item:hover {
+  background: var(--hover-bg);
+  margin: 0 -12px;
+  padding: 24px 12px;
+}
+.article-title {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+  color: var(--text-primary);
+  word-wrap: break-word;
+}
+.article-item:hover .article-title {
   color: var(--accent);
 }
-
-.profile-container {
-max-width: 1200px;
-width: 100%;
-margin: 0 auto;
-padding: 80px 24px 40px;
-padding-top: calc(70px + env(safe-area-inset-top));
-}
-
-.profile-header {
-display: flex;
-gap: 32px;
-margin-bottom: 40px;
-padding-bottom: 32px;
-border-bottom: 1px solid var(–border-color);
-}
-
-.profile-avatar {
-width: 120px;
-height: 120px;
-min-width: 120px;
-border-radius: 50%;
-background: linear-gradient(135deg, var(–accent), var(–accent-hover));
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 48px;
-color: white;
-font-weight: 600;
-position: relative;
-}
-
-.avatar-edit-btn {
-position: absolute;
-bottom: 0;
-right: 0;
-width: 36px;
-height: 36px;
-border-radius: 50%;
-background: var(–card-bg);
-border: 2px solid var(–bg-color);
-color: var(–text-primary);
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 14px;
-transition: all 0.2s ease;
-}
-
-.avatar-edit-btn:hover {
-background: var(–hover-bg);
-transform: scale(1.1);
-}
-
-.profile-info {
-flex: 1;
-min-width: 0;
-}
-
-.profile-name {
-font-size: 32px;
-font-weight: 600;
-margin: 0 0 8px 0;
-}
-
-.profile-username {
-font-size: 16px;
-color: var(–text-secondary);
-margin: 0 0 16px 0;
-}
-
-.profile-bio {
-font-size: 15px;
-line-height: 1.6;
-color: var(–text-primary);
-margin: 0 0 20px 0;
-}
-
-.profile-stats {
-display: flex;
-gap: 32px;
-margin-bottom: 20px;
-}
-
-.stat-item {
-display: flex;
-flex-direction: column;
-}
-
-.stat-value {
-font-size: 20px;
-font-weight: 600;
-color: var(–text-primary);
-}
-
-.stat-label {
-font-size: 13px;
-color: var(–text-secondary);
-margin-top: 2px;
-}
-
-.profile-actions {
-display: flex;
-gap: 12px;
-flex-wrap: wrap;
-}
-
-.action-btn {
-display: flex;
-align-items: center;
-gap: 8px;
-padding: 10px 20px;
-border-radius: 20px;
-background: var(–card-bg);
-border: 1px solid var(–border-color);
-color: var(–text-primary);
-cursor: pointer;
-font-size: 14px;
-font-weight: 500;
-transition: all 0.2s ease;
-}
-
-.action-btn:hover {
-background: var(–hover-bg);
-border-color: var(–text-secondary);
-}
-
-.action-btn.primary {
-background: var(–accent);
-border-color: var(–accent);
-color: white;
-}
-
-.action-btn.primary:hover {
-background: var(–accent-hover);
-}
-
-.tabs-container {
-display: flex;
-gap: 32px;
-margin-bottom: 32px;
-border-bottom: 1px solid var(–border-color);
-overflow-x: auto;
-}
-
-.tab-btn {
-padding: 12px 0;
-background: transparent;
-border: none;
-color: var(–text-secondary);
-cursor: pointer;
-font-size: 15px;
-font-weight: 500;
-position: relative;
-white-space: nowrap;
-transition: color 0.2s ease;
-}
-
-.tab-btn:hover {
-color: var(–text-primary);
-}
-
-.tab-btn.active {
-color: var(–text-primary);
-}
-
-.tab-btn.active::after {
-content: ‘’;
-position: absolute;
-bottom: -1px;
-left: 0;
-right: 0;
-height: 2px;
-background: var(–accent);
-}
-
-.tab-content {
-display: none;
-}
-
-.tab-content.active {
-display: block;
-}
-
-.articles-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-gap: 24px;
-margin-bottom: 40px;
-}
-
-.article-card {
-background: var(–card-bg);
-border-radius: 12px;
-overflow: hidden;
-border: 1px solid var(–border-color);
-transition: all 0.2s ease;
-cursor: pointer;
-}
-
-.article-card:hover {
-border-color: var(–text-secondary);
-transform: translateY(-2px);
-}
-
-.article-thumbnail {
-width: 100%;
-height: 180px;
-background: linear-gradient(135deg, var(–hover-bg), var(–card-bg));
-display: flex;
-align-items: center;
-justify-content: center;
-color: var(–text-secondary);
-font-size: 48px;
-}
-
-.article-thumbnail img {
-width: 100%;
-height: 100%;
-object-fit: cover;
-}
-
-.article-content {
-padding: 16px;
-}
-
-.article-title {
-font-size: 16px;
-font-weight: 600;
-margin: 0 0 8px 0;
-line-height: 1.4;
-display: -webkit-box;
--webkit-line-clamp: 2;
--webkit-box-orient: vertical;
-overflow: hidden;
-}
-
 .article-meta {
-font-size: 13px;
-color: var(–text-secondary);
-display: flex;
-align-items: center;
-gap: 12px;
-margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
-
-.article-description {
-font-size: 14px;
-color: var(–text-secondary);
-line-height: 1.5;
-display: -webkit-box;
--webkit-line-clamp: 2;
--webkit-box-orient: vertical;
-overflow: hidden;
+.meta-dot {
+  width: 3px;
+  height: 3px;
+  background: var(--text-secondary);
+  border-radius: 50%;
 }
-
-.article-stats {
-display: flex;
-gap: 16px;
-margin-top: 12px;
-padding-top: 12px;
-border-top: 1px solid var(–border-color);
-font-size: 13px;
-color: var(–text-secondary);
+.library-item {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
-
-.article-stats i {
-margin-right: 4px;
+.library-item:hover {
+  background: var(--hover-bg);
+  margin: 0 -12px;
+  padding: 20px 12px;
 }
-
-.settings-section {
-margin-bottom: 32px;
-background: var(–card-bg);
-border-radius: 12px;
-padding: 24px;
-border: 1px solid var(–border-color);
+.library-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
 }
-
-.settings-section h3 {
-margin: 0 0 20px 0;
-font-size: 18px;
-font-weight: 600;
+.library-item:hover .library-title {
+  color: var(--accent);
 }
-
-.setting-item {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 16px 0;
-border-bottom: 1px solid var(–border-color);
+.library-meta {
+  font-size: 14px;
+  color: var(--text-secondary);
 }
-
-.setting-item:last-child {
-border-bottom: none;
+.comment-item {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-color);
 }
-
-.setting-info {
-flex: 1;
+.comment-article {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
 }
-
-.setting-label {
-font-size: 15px;
-font-weight: 500;
-margin-bottom: 4px;
+.comment-text {
+  font-size: 15px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.5;
 }
-
-.setting-description {
-font-size: 13px;
-color: var(–text-secondary);
+.comment-meta {
+  font-size: 13px;
+  color: var(--text-secondary);
 }
-
-.toggle-switch {
-position: relative;
-width: 48px;
-height: 24px;
-}
-
-.toggle-switch input {
-opacity: 0;
-width: 0;
-height: 0;
-}
-
-.toggle-slider {
-position: absolute;
-cursor: pointer;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-background-color: var(–hover-bg);
-transition: 0.3s;
-border-radius: 24px;
-}
-
-.toggle-slider:before {
-position: absolute;
-content: “”;
-height: 18px;
-width: 18px;
-left: 3px;
-bottom: 3px;
-background-color: white;
-transition: 0.3s;
-border-radius: 50%;
-}
-
-input:checked + .toggle-slider {
-background-color: var(–accent);
-}
-
-input:checked + .toggle-slider:before {
-transform: translateX(24px);
-}
-
-.form-group {
-margin-bottom: 20px;
-}
-
-.form-label {
-display: block;
-font-size: 14px;
-font-weight: 500;
-margin-bottom: 8px;
-}
-
-.form-input {
-width: 100%;
-padding: 12px 16px;
-border: 1px solid var(–border-color);
-border-radius: 8px;
-background: var(–bg-color);
-color: var(–text-primary);
-font-size: 14px;
-font-family: inherit;
-transition: border-color 0.2s ease;
-}
-
-.form-input:focus {
-outline: none;
-border-color: var(–accent);
-}
-
-.form-textarea {
-min-height: 100px;
-resize: vertical;
-}
-
-.empty-state {
-text-align: center;
-padding: 60px 20px;
-color: var(–text-secondary);
-}
-
-.empty-state i {
-font-size: 48px;
-margin-bottom: 16px;
-opacity: 0.5;
-}
-
-.empty-state h3 {
-margin: 0 0 8px 0;
-font-size: 18px;
-color: var(–text-primary);
-}
-
-.empty-state p {
-margin: 0;
-font-size: 14px;
-}
-
 @media (max-width: 768px) {
-.profile-container {
-padding: 70px 16px 40px;
-}
-
-.profile-header {
-flex-direction: column;
-align-items: center;
-text-align: center;
-}
-
-.profile-avatar {
-width: 100px;
-height: 100px;
-font-size: 40px;
-}
-
-.profile-name {
-font-size: 24px;
-}
-
-.profile-stats {
-justify-content: center;
-}
-
-.profile-actions {
-justify-content: center;
-}
-
-.articles-grid {
-grid-template-columns: 1fr;
-}
-
-.tabs-container {
-gap: 24px;
-}
+  .profile-container {
+    padding: 90px 16px 80px;
+  }
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .profile-name {
+    font-size: 24px;
+  }
+  .article-title {
+    font-size: 20px;
+  }
+  .tabs {
+    gap: 20px;
+    overflow-x: auto;
+  }
 }
 </style>
-
 </head>
 <body>
 
@@ -556,7 +292,7 @@ gap: 24px;
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
-      <button class="icon-btn active" title="User">
+      <button class="icon-btn" title="User">
         <i class="fas fa-user"></i>
       </button>
     </div>
@@ -565,278 +301,200 @@ gap: 24px;
 
 <div class="profile-container">
   <div class="profile-header">
-    <div class="profile-avatar">
-      SM
-      <button class="avatar-edit-btn" onclick="editAvatar()">
-        <i class="fas fa-camera"></i>
-      </button>
-    </div>
-
-<div class="profile-info">
-  <h1 class="profile-name">Dr. Sarah Mitchell</h1>
-  <div class="profile-username">@sarahmitchell_md</div>
-  <p class="profile-bio">
-    Cardiovascular pathologist and researcher. Associate Professor at Johns Hopkins Medicine. 
-    Passionate about advancing diagnostic techniques and medical education.
-  </p>
-  
-  <div class="profile-stats">
-    <div class="stat-item">
-      <div class="stat-value">47</div>
-      <div class="stat-label">Articles</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value">12.4K</div>
-      <div class="stat-label">Followers</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-value">1,823</div>
-      <div class="stat-label">Following</div>
+    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop" alt="Dr. Sarah Mitchell" class="profile-photo">
+    <div class="profile-info">
+      <h1 class="profile-name">Dr. Sarah Mitchell</h1>
+      <div class="profile-stats">
+        <div class="stat-item">
+          <i class="fas fa-file-alt"></i>
+          <span class="stat-value">47</span>
+          <span>Articles</span>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-medal badge-icon bronze"></i>
+          <span class="stat-value">124</span>
+          <span>Bronze</span>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-medal badge-icon gold"></i>
+          <span class="stat-value">38</span>
+          <span>Gold</span>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-medal badge-icon platinum"></i>
+          <span class="stat-value">12</span>
+          <span>Platinum</span>
+        </div>
+      </div>
     </div>
   </div>
-  
-  <div class="profile-actions">
-    <button class="action-btn primary" onclick="switchTab('edit')">
-      <i class="fas fa-edit"></i>
-      Edit Profile
-    </button>
-    <button class="action-btn" onclick="shareProfile()">
-      <i class="fas fa-share"></i>
-      Share
-    </button>
-    <button class="action-btn" onclick="switchTab('settings')">
-      <i class="fas fa-cog"></i>
-      Settings
-    </button>
-  </div>
-</div>
 
-  </div>
-
-  <div class="tabs-container">
-    <button class="tab-btn active" data-tab="articles" onclick="switchTab('articles')">Articles</button>
-    <button class="tab-btn" data-tab="saved" onclick="switchTab('saved')">Saved</button>
-    <button class="tab-btn" data-tab="playlists" onclick="switchTab('playlists')">Playlists</button>
-    <button class="tab-btn" data-tab="edit" onclick="switchTab('edit')">Edit Profile</button>
-    <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')">Settings</button>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('articles')">Published Articles</button>
+    <button class="tab-btn" onclick="switchTab('libraries')">Libraries</button>
+    <button class="tab-btn" onclick="switchTab('comments')">Comments</button>
   </div>
 
   <div class="tab-content active" id="articles-tab">
-    <div class="articles-grid">
-      <div class="article-card" onclick="openArticle()">
-        <div class="article-thumbnail">
-          <i class="fas fa-heart-pulse"></i>
+    <ul class="article-list">
+      <li class="article-item" onclick="openArticle()">
+        <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
+        <div class="article-meta">
+          <span>Mar 15, 2024</span>
+          <div class="meta-dot"></div>
+          <span>12 min read</span>
+          <div class="meta-dot"></div>
+          <span>3.2K views</span>
         </div>
-        <div class="article-content">
-          <h3 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h3>
-          <div class="article-meta">
-            <span><i class="fas fa-calendar"></i> Mar 15, 2024</span>
-            <span><i class="fas fa-clock"></i> 12 min read</span>
-          </div>
-          <p class="article-description">
-            The cardiovascular system represents one of the most critical organ systems in human physiology...
-          </p>
-          <div class="article-stats">
-            <span><i class="fas fa-eye"></i> 3.2K</span>
-            <span><i class="fas fa-thumbs-up"></i> 247</span>
-            <span><i class="fas fa-comment"></i> 18</span>
-          </div>
-        </div>
-      </div>
+      </li>
 
-  <div class="article-card">
-    <div class="article-thumbnail">
-      <i class="fas fa-microscope"></i>
+  <li class="article-item" onclick="openArticle()">
+    <h2 class="article-title">Advanced Diagnostic Techniques in Cardiac Imaging</h2>
+    <div class="article-meta">
+      <span>Mar 8, 2024</span>
+      <div class="meta-dot"></div>
+      <span>15 min read</span>
+      <div class="meta-dot"></div>
+      <span>2.8K views</span>
     </div>
-    <div class="article-content">
-      <h3 class="article-title">Advanced Diagnostic Techniques in Cardiac Imaging</h3>
-      <div class="article-meta">
-        <span><i class="fas fa-calendar"></i> Mar 8, 2024</span>
-        <span><i class="fas fa-clock"></i> 15 min read</span>
-      </div>
-      <p class="article-description">
-        Modern cardiac imaging has evolved dramatically with the introduction of advanced technologies...
-      </p>
-      <div class="article-stats">
-        <span><i class="fas fa-eye"></i> 2.8K</span>
-        <span><i class="fas fa-thumbs-up"></i> 193</span>
-        <span><i class="fas fa-comment"></i> 12</span>
-      </div>
-    </div>
-  </div>
+  </li>
 
-  <div class="article-card">
-    <div class="article-thumbnail">
-      <i class="fas fa-dna"></i>
+  <li class="article-item" onclick="openArticle()">
+    <h2 class="article-title">Molecular Pathology in Heart Disease Research</h2>
+    <div class="article-meta">
+      <span>Feb 28, 2024</span>
+      <div class="meta-dot"></div>
+      <span>18 min read</span>
+      <div class="meta-dot"></div>
+      <span>4.1K views</span>
     </div>
-    <div class="article-content">
-      <h3 class="article-title">Molecular Pathology in Heart Disease Research</h3>
-      <div class="article-meta">
-        <span><i class="fas fa-calendar"></i> Feb 28, 2024</span>
-        <span><i class="fas fa-clock"></i> 18 min read</span>
-      </div>
-      <p class="article-description">
-        Recent advances in molecular biology have opened new avenues for understanding cardiac pathology...
-      </p>
-      <div class="article-stats">
-        <span><i class="fas fa-eye"></i> 4.1K</span>
-        <span><i class="fas fa-thumbs-up"></i> 312</span>
-        <span><i class="fas fa-comment"></i> 24</span>
-      </div>
-    </div>
-  </div>
-</div>
+  </li>
 
-  </div>
-
-  <div class="tab-content" id="saved-tab">
-    <div class="empty-state">
-      <i class="fas fa-bookmark"></i>
-      <h3>No saved articles yet</h3>
-      <p>Articles you save will appear here</p>
+  <li class="article-item" onclick="openArticle()">
+    <h2 class="article-title">Inflammation Biomarkers in Cardiovascular Disease</h2>
+    <div class="article-meta">
+      <span>Feb 22, 2024</span>
+      <div class="meta-dot"></div>
+      <span>10 min read</span>
+      <div class="meta-dot"></div>
+      <span>2.1K views</span>
     </div>
-  </div>
+  </li>
 
-  <div class="tab-content" id="playlists-tab">
-    <div class="articles-grid">
-      <div class="article-card">
-        <div class="article-thumbnail">
-          <i class="fas fa-list"></i>
-        </div>
-        <div class="article-content">
-          <h3 class="article-title">Cardiology Research Collection</h3>
-          <div class="article-meta">
-            <span>Updated Mar 15, 2024</span>
-          </div>
-          <p class="article-description">
-            A curated collection of my latest research and findings in cardiovascular pathology
-          </p>
-          <div class="article-stats">
-            <span><i class="fas fa-file-alt"></i> 12 articles</span>
-          </div>
-        </div>
-      </div>
+  <li class="article-item" onclick="openArticle()">
+    <h2 class="article-title">Hypertensive Heart Disease: Pathophysiology and Treatment</h2>
+    <div class="article-meta">
+      <span>Feb 15, 2024</span>
+      <div class="meta-dot"></div>
+      <span>14 min read</span>
+      <div class="meta-dot"></div>
+      <span>3.5K views</span>
+    </div>
+  </li>
 
-  <div class="article-card">
-    <div class="article-thumbnail">
-      <i class="fas fa-graduation-cap"></i>
+  <li class="article-item" onclick="openArticle()">
+    <h2 class="article-title">Atherosclerotic Plaque Development: A Timeline</h2>
+    <div class="article-meta">
+      <span>Feb 8, 2024</span>
+      <div class="meta-dot"></div>
+      <span>16 min read</span>
+      <div class="meta-dot"></div>
+      <span>2.9K views</span>
     </div>
-    <div class="article-content">
-      <h3 class="article-title">Medical Student Resources</h3>
-      <div class="article-meta">
-        <span>Updated Mar 10, 2024</span>
-      </div>
-      <p class="article-description">
-        Essential reading materials and guides for medical students studying pathology
-      </p>
-      <div class="article-stats">
-        <span><i class="fas fa-file-alt"></i> 8 articles</span>
-      </div>
+  </li>
+
+  <li class="article-item" onclick="openArticle()">
+    <h2 class="article-title">Clinical Applications of Cardiac MRI in Diagnosis</h2>
+    <div class="article-meta">
+      <span>Feb 1, 2024</span>
+      <div class="meta-dot"></div>
+      <span>11 min read</span>
+      <div class="meta-dot"></div>
+      <span>1.8K views</span>
     </div>
-  </div>
-</div>
+  </li>
+
+  <li class="article-item" onclick="openArticle()">
+    <h2 class="article-title">Genetic Predisposition to Cardiovascular Disease</h2>
+    <div class="article-meta">
+      <span>Jan 25, 2024</span>
+      <div class="meta-dot"></div>
+      <span>13 min read</span>
+      <div class="meta-dot"></div>
+      <span>2.4K views</span>
+    </div>
+  </li>
+</ul>
 
   </div>
 
-  <div class="tab-content" id="edit-tab">
-    <div class="settings-section">
-      <h3>Profile Information</h3>
-      <div class="form-group">
-        <label class="form-label">Full Name</label>
-        <input type="text" class="form-input" value="Dr. Sarah Mitchell">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Username</label>
-        <input type="text" class="form-input" value="sarahmitchell_md">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Bio</label>
-        <textarea class="form-input form-textarea">Cardiovascular pathologist and researcher. Associate Professor at Johns Hopkins Medicine. Passionate about advancing diagnostic techniques and medical education.</textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Location</label>
-        <input type="text" class="form-input" value="Baltimore, MD">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Website</label>
-        <input type="url" class="form-input" value="https://sarahmitchellmd.com">
-      </div>
-      <button class="action-btn primary">
-        <i class="fas fa-save"></i>
-        Save Changes
-      </button>
-    </div>
+  <div class="tab-content" id="libraries-tab">
+    <ul class="article-list">
+      <li class="library-item" onclick="openLibrary()">
+        <h3 class="library-title">Cardiovascular Research Collection</h3>
+        <div class="library-meta">24 articles • Updated Mar 15, 2024</div>
+      </li>
+
+  <li class="library-item" onclick="openLibrary()">
+    <h3 class="library-title">Medical Student Resources</h3>
+    <div class="library-meta">18 articles • Updated Mar 10, 2024</div>
+  </li>
+
+  <li class="library-item" onclick="openLibrary()">
+    <h3 class="library-title">Diagnostic Imaging Techniques</h3>
+    <div class="library-meta">15 articles • Updated Mar 5, 2024</div>
+  </li>
+
+  <li class="library-item" onclick="openLibrary()">
+    <h3 class="library-title">Clinical Case Studies</h3>
+    <div class="library-meta">31 articles • Updated Feb 28, 2024</div>
+  </li>
+
+  <li class="library-item" onclick="openLibrary()">
+    <h3 class="library-title">Pathophysiology Fundamentals</h3>
+    <div class="library-meta">22 articles • Updated Feb 20, 2024</div>
+  </li>
+</ul>
+
   </div>
 
-  <div class="tab-content" id="settings-tab">
-    <div class="settings-section">
-      <h3>Notifications</h3>
-      <div class="setting-item">
-        <div class="setting-info">
-          <div class="setting-label">Email notifications</div>
-          <div class="setting-description">Receive email updates about new comments and interactions</div>
-        </div>
-        <label class="toggle-switch">
-          <input type="checkbox" checked>
-          <span class="toggle-slider"></span>
-        </label>
+  <div class="tab-content" id="comments-tab">
+    <div>
+      <div class="comment-item">
+        <div class="comment-article">On "Understanding Cardiovascular Pathology"</div>
+        <div class="comment-text">Excellent point about imaging technology. The development of cardiac MRI has been particularly transformative in our field.</div>
+        <div class="comment-meta">Mar 15, 2024</div>
       </div>
-      <div class="setting-item">
-        <div class="setting-info">
-          <div class="setting-label">Push notifications</div>
-          <div class="setting-description">Get notified about important updates on your device</div>
-        </div>
-        <label class="toggle-switch">
-          <input type="checkbox" checked>
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-      <div class="setting-item">
-        <div class="setting-info">
-          <div class="setting-label">Comment notifications</div>
-          <div class="setting-description">Get notified when someone comments on your articles</div>
-        </div>
-        <label class="toggle-switch">
-          <input type="checkbox" checked>
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-    </div>
 
-<div class="settings-section">
-  <h3>Privacy</h3>
-  <div class="setting-item">
-    <div class="setting-info">
-      <div class="setting-label">Profile visibility</div>
-      <div class="setting-description">Make your profile visible to everyone</div>
-    </div>
-    <label class="toggle-switch">
-      <input type="checkbox" checked>
-      <span class="toggle-slider"></span>
-    </label>
+  <div class="comment-item">
+    <div class="comment-article">On "Molecular Mechanisms of Cancer Progression"</div>
+    <div class="comment-text">This multi-factorial approach is crucial. Have you considered exploring the role of genetic predisposition in greater detail?</div>
+    <div class="comment-meta">Mar 12, 2024</div>
   </div>
-  <div class="setting-item">
-    <div class="setting-info">
-      <div class="setting-label">Show reading history</div>
-      <div class="setting-description">Let others see what articles you've been reading</div>
-    </div>
-    <label class="toggle-switch">
-      <input type="checkbox">
-      <span class="toggle-slider"></span>
-    </label>
-  </div>
-</div>
 
-<div class="settings-section">
-  <h3>Account</h3>
-  <button class="action-btn" style="margin-right: 12px;">
-    <i class="fas fa-key"></i>
-    Change Password
-  </button>
-  <button class="action-btn" style="color: #ff4444; border-color: #ff4444;">
-    <i class="fas fa-sign-out-alt"></i>
-    Sign Out
-  </button>
+  <div class="comment-item">
+    <div class="comment-article">On "Clinical Applications of Immunotherapy"</div>
+    <div class="comment-text">The inflammatory biomarkers you mention are indeed valuable. We've been using them extensively in our clinical practice with promising results.</div>
+    <div class="comment-meta">Mar 10, 2024</div>
+  </div>
+
+  <div class="comment-item">
+    <div class="comment-article">On "Advances in Neurological Imaging"</div>
+    <div class="comment-text">Great review! Would love to see more discussion on the cost-effectiveness of these new imaging modalities.</div>
+    <div class="comment-meta">Mar 8, 2024</div>
+  </div>
+
+  <div class="comment-item">
+    <div class="comment-article">On "Genetic Markers in Personalized Medicine"</div>
+    <div class="comment-text">This is an important area of research. The integration of genetic testing into routine clinical practice is long overdue.</div>
+    <div class="comment-meta">Mar 5, 2024</div>
+  </div>
+
+  <div class="comment-item">
+    <div class="comment-article">On "Hypertensive Heart Disease Treatment"</div>
+    <div class="comment-text">Comprehensive overview. It would be helpful to include more data on patient outcomes with different treatment protocols.</div>
+    <div class="comment-meta">Mar 2, 2024</div>
+  </div>
 </div>
 
   </div>
@@ -856,42 +514,20 @@ function switchTab(tabName) {
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.remove('active');
   });
-  
   document.querySelectorAll('.tab-content').forEach(content => {
     content.classList.remove('active');
   });
   
-  const tabBtn = document.querySelector(`[data-tab="${tabName}"]`);
-  if (tabBtn) {
-    tabBtn.classList.add('active');
-  }
-  
-  const tabContent = document.getElementById(`${tabName}-tab`);
-  if (tabContent) {
-    tabContent.classList.add('active');
-  }
-}
-
-function editAvatar() {
-  alert('Avatar upload functionality would open a file picker here');
-}
-
-function shareProfile() {
-  if (navigator.share) {
-    navigator.share({
-      title: 'Dr. Sarah Mitchell - Patholytica',
-      text: 'Check out my profile on Patholytica',
-      url: window.location.href
-    }).catch(err => console.log('Share cancelled'));
-  } else {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      alert('Profile link copied to clipboard!');
-    });
-  }
+  event.target.classList.add('active');
+  document.getElementById(tabName + '-tab').classList.add('active');
 }
 
 function openArticle() {
-  alert('This would navigate to the full article');
+  alert('Navigate to article');
+}
+
+function openLibrary() {
+  alert('Navigate to library');
 }
 </script>
 
