@@ -15,7 +15,7 @@ tr:nth-child(even) { background: #222; }
 </head>
 <body>
 
-<h1>Users//Table</h1>
+<h1>Users Table</h1>
 <table id="usersTable">
   <thead>
     <tr>
@@ -33,14 +33,18 @@ tr:nth-child(even) { background: #222; }
 
 <script>
 const SUPABASE_URL = 'https://aforyattbmwcafvtgnry.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_p16iKxaLD9u2tdWAYhitpg_-X4rvsts';
+const SUPABASE_KEY = 'sb_publishable_p16iKxaLD9u2tdWAYhitpg_-X4rvsts';
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function loadUsers() {
-  const { data, error } = await supabase.from('users').select('*').order('userid', { ascending: true });
   const tbody = document.querySelector('#usersTable tbody');
-  
+
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .order('userid', { ascending: true });
+
   if (error) {
     tbody.innerHTML = `<tr><td colspan="7" style="color:red">Error: ${error.message}</td></tr>`;
     return;
