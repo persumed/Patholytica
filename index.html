@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Patholytica — Profile</title>
+<title>Patholytica — Library</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
@@ -87,95 +87,12 @@ body.light-theme .logo-img {
 .icon-btn:hover {
   background: var(--hover-bg);
 }
-.profile-container {
+.list-container {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
   padding: 80px 24px 80px;
   padding-top: calc(70px + env(safe-area-inset-top));
-}
-.profile-header {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 32px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid var(--border-color);
-}
-.profile-photo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-.profile-info {
-  flex: 1;
-}
-.profile-name {
-  font-size: 28px;
-  font-weight: 600;
-  margin: 0 0 16px 0;
-}
-.profile-stats {
-  display: flex;
-  gap: 24px;
-  font-size: 14px;
-  color: var(--text-secondary);
-  flex-wrap: wrap;
-}
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.stat-value {
-  color: var(--text-primary);
-  font-weight: 500;
-}
-.badge-icon {
-  font-size: 12px;
-}
-.badge-icon.bronze { color: #cd7f32; }
-.badge-icon.gold { color: #ffd700; }
-.badge-icon.platinum { color: #e5e4e2; }
-.tabs {
-  display: flex;
-  gap: 32px;
-  margin-bottom: 32px;
-  border-bottom: 1px solid var(--border-color);
-}
-.tab-btn {
-  padding: 12px 0;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  position: relative;
-  transition: color 0.2s ease;
-}
-.tab-btn:hover {
-  color: var(--text-primary);
-}
-.tab-btn.active {
-  color: var(--text-primary);
-}
-.tab-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--accent);
-}
-.tab-content {
-  display: none;
-}
-.tab-content.active {
-  display: block;
 }
 .article-list {
   list-style: none;
@@ -195,10 +112,10 @@ body.light-theme .logo-img {
 }
 .article-title {
   font-family: 'Times New Roman', Times, serif;
-  font-size: 24px;
+  font-size: 42px;
   font-weight: bold;
   margin: 0 0 8px 0;
-  line-height: 1.3;
+  line-height: 1.2;
   color: var(--text-primary);
   word-wrap: break-word;
 }
@@ -219,66 +136,15 @@ body.light-theme .logo-img {
   background: var(--text-secondary);
   border-radius: 50%;
 }
-.library-item {
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border-color);
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-.library-item:hover {
-  background: var(--hover-bg);
-  margin: 0 -12px;
-  padding: 20px 12px;
-}
-.library-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 8px 0;
-  color: var(--text-primary);
-}
-.library-item:hover .library-title {
-  color: var(--accent);
-}
-.library-meta {
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-.comment-item {
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border-color);
-}
-.comment-article {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-}
-.comment-text {
-  font-size: 15px;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-  line-height: 1.5;
-}
-.comment-meta {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
 @media (max-width: 768px) {
-  .profile-container {
+  .list-container {
     padding: 90px 16px 80px;
   }
-  .profile-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .profile-name {
-    font-size: 24px;
-  }
   .article-title {
-    font-size: 20px;
+    font-size: 32px;
   }
-  .tabs {
-    gap: 20px;
-    overflow-x: auto;
+  .article-meta {
+    font-size: 13px;
   }
 }
 </style>
@@ -289,6 +155,9 @@ body.light-theme .logo-img {
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
+      <button class="icon-btn" onclick="searchArticles()" title="Search">
+        <i class="fas fa-search"></i>
+      </button>
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
@@ -299,205 +168,174 @@ body.light-theme .logo-img {
   </div>
 </div>
 
-<div class="profile-container">
-  <div class="profile-header">
-    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop" alt="Dr. Sarah Mitchell" class="profile-photo">
-    <div class="profile-info">
-      <h1 class="profile-name">Dr. Sarah Mitchell</h1>
-      <div class="profile-stats">
-        <div class="stat-item">
-          <i class="fas fa-file-alt"></i>
-          <span class="stat-value">47</span>
-          <span>Articles</span>
-        </div>
-        <div class="stat-item">
-          <i class="fas fa-medal badge-icon bronze"></i>
-          <span class="stat-value">124</span>
-          <span>Bronze</span>
-        </div>
-        <div class="stat-item">
-          <i class="fas fa-medal badge-icon gold"></i>
-          <span class="stat-value">38</span>
-          <span>Gold</span>
-        </div>
-        <div class="stat-item">
-          <i class="fas fa-medal badge-icon platinum"></i>
-          <span class="stat-value">12</span>
-          <span>Platinum</span>
-        </div>
+<div class="list-container">
+  <ul class="article-list">
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
+      <div class="article-meta">
+        <span>Dr. Sarah Mitchell</span>
+        <div class="meta-dot"></div>
+        <span>Mar 15, 2024</span>
+        <div class="meta-dot"></div>
+        <span>12 min read</span>
       </div>
-    </div>
+    </li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
+  <div class="article-meta">
+    <span>Dr. James Chen</span>
+    <div class="meta-dot"></div>
+    <span>Mar 12, 2024</span>
+    <div class="meta-dot"></div>
+    <span>8 min read</span>
   </div>
+</li>
 
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('articles')">Published Articles</button>
-    <button class="tab-btn" onclick="switchTab('libraries')">Libraries</button>
-    <button class="tab-btn" onclick="switchTab('comments')">Comments</button>
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
+  <div class="article-meta">
+    <span>Dr. Emily Rodriguez</span>
+    <div class="meta-dot"></div>
+    <span>Mar 10, 2024</span>
+    <div class="meta-dot"></div>
+    <span>15 min read</span>
   </div>
+</li>
 
-  <div class="tab-content active" id="articles-tab">
-    <ul class="article-list">
-      <li class="article-item" onclick="openArticle()">
-        <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
-        <div class="article-meta">
-          <span>Mar 15, 2024</span>
-          <div class="meta-dot"></div>
-          <span>12 min read</span>
-          <div class="meta-dot"></div>
-          <span>3.2K views</span>
-        </div>
-      </li>
-
-  <li class="article-item" onclick="openArticle()">
-    <h2 class="article-title">Advanced Diagnostic Techniques in Cardiac Imaging</h2>
-    <div class="article-meta">
-      <span>Mar 8, 2024</span>
-      <div class="meta-dot"></div>
-      <span>15 min read</span>
-      <div class="meta-dot"></div>
-      <span>2.8K views</span>
-    </div>
-  </li>
-
-  <li class="article-item" onclick="openArticle()">
-    <h2 class="article-title">Molecular Pathology in Heart Disease Research</h2>
-    <div class="article-meta">
-      <span>Feb 28, 2024</span>
-      <div class="meta-dot"></div>
-      <span>18 min read</span>
-      <div class="meta-dot"></div>
-      <span>4.1K views</span>
-    </div>
-  </li>
-
-  <li class="article-item" onclick="openArticle()">
-    <h2 class="article-title">Inflammation Biomarkers in Cardiovascular Disease</h2>
-    <div class="article-meta">
-      <span>Feb 22, 2024</span>
-      <div class="meta-dot"></div>
-      <span>10 min read</span>
-      <div class="meta-dot"></div>
-      <span>2.1K views</span>
-    </div>
-  </li>
-
-  <li class="article-item" onclick="openArticle()">
-    <h2 class="article-title">Hypertensive Heart Disease: Pathophysiology and Treatment</h2>
-    <div class="article-meta">
-      <span>Feb 15, 2024</span>
-      <div class="meta-dot"></div>
-      <span>14 min read</span>
-      <div class="meta-dot"></div>
-      <span>3.5K views</span>
-    </div>
-  </li>
-
-  <li class="article-item" onclick="openArticle()">
-    <h2 class="article-title">Atherosclerotic Plaque Development: A Timeline</h2>
-    <div class="article-meta">
-      <span>Feb 8, 2024</span>
-      <div class="meta-dot"></div>
-      <span>16 min read</span>
-      <div class="meta-dot"></div>
-      <span>2.9K views</span>
-    </div>
-  </li>
-
-  <li class="article-item" onclick="openArticle()">
-    <h2 class="article-title">Clinical Applications of Cardiac MRI in Diagnosis</h2>
-    <div class="article-meta">
-      <span>Feb 1, 2024</span>
-      <div class="meta-dot"></div>
-      <span>11 min read</span>
-      <div class="meta-dot"></div>
-      <span>1.8K views</span>
-    </div>
-  </li>
-
-  <li class="article-item" onclick="openArticle()">
-    <h2 class="article-title">Genetic Predisposition to Cardiovascular Disease</h2>
-    <div class="article-meta">
-      <span>Jan 25, 2024</span>
-      <div class="meta-dot"></div>
-      <span>13 min read</span>
-      <div class="meta-dot"></div>
-      <span>2.4K views</span>
-    </div>
-  </li>
-</ul>
-
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
+  <div class="article-meta">
+    <span>Dr. Robert Kim</span>
+    <div class="meta-dot"></div>
+    <span>Mar 8, 2024</span>
+    <div class="meta-dot"></div>
+    <span>10 min read</span>
   </div>
+</li>
 
-  <div class="tab-content" id="libraries-tab">
-    <ul class="article-list">
-      <li class="library-item" onclick="openLibrary()">
-        <h3 class="library-title">Cardiovascular Research Collection</h3>
-        <div class="library-meta">24 articles • Updated Mar 15, 2024</div>
-      </li>
-
-  <li class="library-item" onclick="openLibrary()">
-    <h3 class="library-title">Medical Student Resources</h3>
-    <div class="library-meta">18 articles • Updated Mar 10, 2024</div>
-  </li>
-
-  <li class="library-item" onclick="openLibrary()">
-    <h3 class="library-title">Diagnostic Imaging Techniques</h3>
-    <div class="library-meta">15 articles • Updated Mar 5, 2024</div>
-  </li>
-
-  <li class="library-item" onclick="openLibrary()">
-    <h3 class="library-title">Clinical Case Studies</h3>
-    <div class="library-meta">31 articles • Updated Feb 28, 2024</div>
-  </li>
-
-  <li class="library-item" onclick="openLibrary()">
-    <h3 class="library-title">Pathophysiology Fundamentals</h3>
-    <div class="library-meta">22 articles • Updated Feb 20, 2024</div>
-  </li>
-</ul>
-
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
+  <div class="article-meta">
+    <span>Dr. Lisa Zhang</span>
+    <div class="meta-dot"></div>
+    <span>Mar 5, 2024</span>
+    <div class="meta-dot"></div>
+    <span>14 min read</span>
   </div>
+</li>
 
-  <div class="tab-content" id="comments-tab">
-    <div>
-      <div class="comment-item">
-        <div class="comment-article">On "Understanding Cardiovascular Pathology"</div>
-        <div class="comment-text">Excellent point about imaging technology. The development of cardiac MRI has been particularly transformative in our field.</div>
-        <div class="comment-meta">Mar 15, 2024</div>
-      </div>
-
-  <div class="comment-item">
-    <div class="comment-article">On "Molecular Mechanisms of Cancer Progression"</div>
-    <div class="comment-text">This multi-factorial approach is crucial. Have you considered exploring the role of genetic predisposition in greater detail?</div>
-    <div class="comment-meta">Mar 12, 2024</div>
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
+  <div class="article-meta">
+    <span>Dr. Robert Kim</span>
+    <div class="meta-dot"></div>
+    <span>Mar 8, 2024</span>
+    <div class="meta-dot"></div>
+    <span>10 min read</span>
   </div>
+</li>
 
-  <div class="comment-item">
-    <div class="comment-article">On "Clinical Applications of Immunotherapy"</div>
-    <div class="comment-text">The inflammatory biomarkers you mention are indeed valuable. We've been using them extensively in our clinical practice with promising results.</div>
-    <div class="comment-meta">Mar 10, 2024</div>
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
+  <div class="article-meta">
+    <span>Dr. Lisa Zhang</span>
+    <div class="meta-dot"></div>
+    <span>Mar 5, 2024</span>
+    <div class="meta-dot"></div>
+    <span>14 min read</span>
   </div>
+</li>
 
-  <div class="comment-item">
-    <div class="comment-article">On "Advances in Neurological Imaging"</div>
-    <div class="comment-text">Great review! Would love to see more discussion on the cost-effectiveness of these new imaging modalities.</div>
-    <div class="comment-meta">Mar 8, 2024</div>
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
+  <div class="article-meta">
+    <span>Dr. Michael Johnson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 3, 2024</span>
+    <div class="meta-dot"></div>
+    <span>11 min read</span>
   </div>
+</li>
 
-  <div class="comment-item">
-    <div class="comment-article">On "Genetic Markers in Personalized Medicine"</div>
-    <div class="comment-text">This is an important area of research. The integration of genetic testing into routine clinical practice is long overdue.</div>
-    <div class="comment-meta">Mar 5, 2024</div>
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
+  <div class="article-meta">
+    <span>Dr. Michael Johnson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 14, 2024</span>
+    <div class="meta-dot"></div>
+    <span>18 min read</span>
   </div>
+</li>
 
-  <div class="comment-item">
-    <div class="comment-article">On "Hypertensive Heart Disease Treatment"</div>
-    <div class="comment-text">Comprehensive overview. It would be helpful to include more data on patient outcomes with different treatment protocols.</div>
-    <div class="comment-meta">Mar 2, 2024</div>
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
+  <div class="article-meta">
+    <span>Dr. Anna Williams</span>
+    <div class="meta-dot"></div>
+    <span>Mar 11, 2024</span>
+    <div class="meta-dot"></div>
+    <span>16 min read</span>
   </div>
-</div>
+</li>
 
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
+  <div class="article-meta">
+    <span>Dr. David Park</span>
+    <div class="meta-dot"></div>
+    <span>Mar 9, 2024</span>
+    <div class="meta-dot"></div>
+    <span>20 min read</span>
   </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
+  <div class="article-meta">
+    <span>Dr. Rachel Green</span>
+    <div class="meta-dot"></div>
+    <span>Mar 7, 2024</span>
+    <div class="meta-dot"></div>
+    <span>13 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
+  <div class="article-meta">
+    <span>Dr. Thomas Anderson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 7, 2024</span>
+    <div class="meta-dot"></div>
+    <span>11 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
+  <div class="article-meta">
+    <span>Dr. Rachel Green</span>
+    <div class="meta-dot"></div>
+    <span>Mar 4, 2024</span>
+    <div class="meta-dot"></div>
+    <span>13 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">The Role of Microbiome in Human Health</h2>
+  <div class="article-meta">
+    <span>Dr. Jennifer Lee</span>
+    <div class="meta-dot"></div>
+    <span>Mar 1, 2024</span>
+    <div class="meta-dot"></div>
+    <span>9 min read</span>
+  </div>
+</li>
+
+  </ul>
 </div>
 
 <script>
@@ -510,24 +348,15 @@ if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
 }
 
-function switchTab(tabName) {
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  document.querySelectorAll('.tab-content').forEach(content => {
-    content.classList.remove('active');
-  });
-  
-  event.target.classList.add('active');
-  document.getElementById(tabName + '-tab').classList.add('active');
+function openArticle(url) {
+  window.location.href = 'https://' + url;
 }
 
-function openArticle() {
-  alert('Navigate to article');
-}
-
-function openLibrary() {
-  alert('Navigate to library');
+function searchArticles() {
+  const searchQuery = prompt('Search articles:');
+  if (searchQuery && searchQuery.trim()) {
+    alert(`Searching for: "${searchQuery}"\n\nSearch functionality would filter the article list.`);
+  }
 }
 </script>
 
