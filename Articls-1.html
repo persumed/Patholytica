@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Patholytica — Reader</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg-color: #0f0f0f;
+  --text-primary: #fff;
+  --text-secondary: #aaa;
+  --card-bg: #1f1f1f;
+  --hover-bg: #2a2a2a;
+  --border-color: #303030;
+  --accent: #3ea6ff;
+  --accent-hover: #2d8ed6;
+  --error-color: #ff4444;
+  --loading-color: #666;
+}
+body.light-theme {
+  --bg-color: #ffffff;
+  --text-primary: #0f0f0f;
+  --text-secondary: #606060;
+  --card-bg: #f9f9f9;
+  --hover-bg: #f0f0f0;
+  --border-color: #e5e5e5;
+  --accent: #065fd4;
+  --accent-hover: #0448a3;
+  --error-color: #cc0000;
+  --loading-color: #999;
+}
+* { box-sizing: border-box; }
+html, body { 
+  margin: 0; 
+  padding: 0; 
+  min-height: 100%; 
+  font-family: "Roboto", Arial, sans-serif;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+body {
+  background: var(--bg-color);
+  color: var(--text-primary);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.header-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-color);
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 40;
+  width: 100%;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.logo-img {
+  height: 28px;
+  width: auto;
+  transition: filter 0.2s ease;
+  cursor: pointer;
+}
+body.light-theme .logo-img {
+  filter: invert(1);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: background 0.2s ease;
+  position: relative;
+}
+.icon-btn:hover {
+  background: var(--hover-bg);
+}
+.icon-btn.active {
+  color: var(--accent);
+}
+.comment-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--accent);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.reading-container {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 80px 24px 120px;
+  padding-top: calc(70px + env(safe-area-inset-top));
+}
+.loading-state, .error-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+}
+.error-state {
+  color: var(--error-color);
+}
+.error-state button {
+  margin-top: 16px;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.article-title {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 42px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+  word-wrap: break-word;
+}
+.article-meta {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+.author-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.article-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 0px 0 24px 0;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.action-btn:hover {
+  background: var(--hover-bg);
+  border-color: var(--text-secondary);
+}
+.action-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+.action-btn i {
+  font-size: 16px;
+}
+.action-count {
+  font-size: 13px;
+  margin-left: 4px;
+}
+.content-line {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 21px;
+  line-height: 1.8;
+  margin: 0 0 24px 0;
+  position: relative;
+  transition: background 0.2s ease;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.content-line.has-comments::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+.content-editable {
+  outline: none;
+  min-height: 1.8em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  flex: 1;
+  cursor: text;
+}
+.content-editable:focus {
+  background: var(--hover-bg);
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: 4px;
+}
+.comment-trigger {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  flex-shrink: 0;
+  margin-top: 4px;
+  opacity: 0;
+}
+.content-line:hover .comment-trigger {
+  opacity: 1;
+}
+.comment-trigger:hover,
+.comment-trigger.active {
+  background: var(--hover-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+  opacity: 1;
+}
+.media-embed {
+  margin: 32px 0;
+  padding: 24px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  max-width: 100%;
+  overflow: hidden;
+}
+.media-embed img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+}
+.image-carousel {
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+}
+.carousel-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 4px 0;
+}
+.carousel-track::-webkit-scrollbar {
+  height: 6px;
+}
+.carousel-track::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+.carousel-track img {
+  scroll-snap-align: start;
+  min-width: 80%;
+  max-width: 80%;
+}
+.media-caption {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-style: italic;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.comment-panel {
+  position: fixed;
+  right: -400px;
+  top: calc(53px + env(safe-area-inset-top));
+  width: 380px;
+  height: calc(100vh - 53px - env(safe-area-inset-top));
+  background: var(--card-bg);
+  border-left: 1px solid var(--border-color);
+  transition: right 0.3s ease;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+}
+.comment-panel.active {
+  right: 0;
+}
+.comment-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.comment-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+.close-comments {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 4px;
+}
+.comment-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+.comment-item {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+.comment-item:last-child {
+  border-bottom: none;
+}
+.comment-line-ref {
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: var(--hover-bg);
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.comment-author {
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.comment-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.comment-text {
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+.comment-input-area {
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-color);
+}
+.comment-context {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  padding: 8px;
+  background: var(--hover-bg);
+  border-radius: 4px;
+  font-style: italic;
+  word-wrap: break-word;
+}
+.comment-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+  margin-bottom: 12px;
+}
+.comment-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.comment-submit {
+  width: 100%;
+  padding: 10px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+.comment-submit:hover {
+  background: var(--accent-hover);
+}
+@media (max-width: 768px) {
+  .reading-container {
+    padding: 90px 16px 100px;
+  }
+  .article-title {
+    font-size: 32px;
+  }
+  .content-line {
+    font-size: 19px;
+  }
+  .comment-panel {
+    width: 100%;
+    right: -100%;
+  }
+  .carousel-track img {
+    min-width: 90%;
+    max-width: 90%;
+  }
+  .article-actions {
+    gap: 8px;
+  }
+  .action-btn {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+}
+@media (min-width: 769px) {
+  .reading-container {
+    max-width: 900px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="header-wrapper">
+  <div class="header">
+    <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo" onclick="goHome()">
+    <div class="header-actions">
+      <button class="icon-btn" id="commentsBtn" onclick="toggleComments()" title="Comments">
+        <i class="fas fa-comment"></i>
+        <span class="comment-badge" id="commentBadge">0</span>
+      </button>
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fas fa-circle-half-stroke"></i>
+      </button>
+      <button class="icon-btn" onclick="goToProfile()" title="User Profile">
+        <i class="fas fa-user"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="reading-container" id="readingContainer">
+  <div id="loadingState" class="loading-state">
+    <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 16px;"></i>
+    <p>Loading article...</p>
+  </div>
+  
+  <div id="errorState" class="error-state" style="display: none;">
+    <i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom: 16px;"></i>
+    <p>Failed to load article. Please try again.</p>
+    <button onclick="goHome()">Back to Library</button>
+  </div>
+  
+  <div id="articleContent" style="display: none;">
+    <!-- Article content will be populated here -->
+  </div>
+</div>
+
+<div class="comment-panel" id="commentPanel">
+  <div class="comment-header">
+    <h3 id="commentTitle">All Comments</h3>
+    <button class="close-comments" onclick="closeComments()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="comment-list" id="commentList"></div>
+  <div class="comment-input-area" id="commentInputArea" style="display: none;">
+    <div class="comment-context" id="commentContext"></div>
+    <textarea class="comment-input" id="commentInput" placeholder="Add a comment..."></textarea>
+    <button class="comment-submit" onclick="submitComment()">Post Comment</button>
+  </div>
+</div>
+
+<script>
+// Supabase configuration
+const SUPABASE_URL = 'https://raaylemyoajafvufkldf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhYXlsZW15b2FqYWZ2dWZrbGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwMjE0MDAsImV4cCI6MjA4MjU5NzQwMH0.8qHi4IPItPZEXAzD3nL_M5PBDfADAk-XntODwYZyaG8';
+
+// Initialize Supabase client
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Global variables
+let currentArticle = null;
+let currentArticleId = null;
+let currentLineNumber = null;
+let comments = {};
+let isLiked = false;
+let isSaved = false;
+let isSubscribed = false;
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', function() {
+  loadTheme();
+  loadArticle();
+});
+
+// Theme management
+function toggleTheme() {
+  document.body.classList.toggle('light-theme');
+  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
+}
+
+function loadTheme() {
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-theme");
+  }
+}
+
+// Article loading and display
+async function loadArticle() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const articleId = urlParams.get('id');
+  const articleSlug = urlParams.get('slug');
+  
+  if (!articleId) {
+    showErrorState();
+    return;
+  }
+  
+  showLoadingState();
+  
+  try {
+    // Fetch article with author and stats
+    const { data: articleData, error: articleError } = await supabase
+      .from('articles')
+      .select(`
+        *,
+        users!inner(id, full_name, display_name, profile_photo_url),
+        article_stats!inner(views_count, likes_count, comments_count, saves_count)
+      `)
+      .eq('id', articleId)
+      .eq('status', 'published')
+      .single();
+    
+    if (articleError) throw articleError;
+    if (!articleData) throw new Error('Article not found');
+    
+    currentArticle = articleData;
+    currentArticleId = articleId;
+    
+    // Increment view count
+    await incrementViewCount();
+    
+    // Load comments
+    await loadComments();
+    
+    // Check user interactions (likes, saves, etc.)
+    await loadUserInteractions();
+    
+    // Display article
+    displayArticle();
+    hideLoadingState();
+    
+  } catch (error) {
+    console.error('Error loading article:', error);
+    showErrorState();
+  }
+}
+
+async function incrementViewCount() {
+  try {
+    await supabase
+      .from('article_stats')
+      .update({ views_count: currentArticle.article_stats.views_count + 1 })
+      .eq('article_id', currentArticleId);
+  } catch (error) {
+    console.error('Error incrementing view count:', error);
+  }
+}
+
+async function loadComments() {
+  try {
+    const { data, error } = await supabase
+      .from('comments')
+      .select(`
+        *,
+        users!inner(id, full_name, display_name, profile_photo_url)
+      `)
+      .eq('article_id', currentArticleId)
+      .order('created_at', { ascending: true });
+    
+    if (error) throw error;
+    
+    // Group comments by line number
+    comments = {};
+    data.forEach(comment => {
+      const lineNum = comment.line_number || 0;
+      if (!comments[lineNum]) comments[lineNum] = [];
+      comments[lineNum].push({
+        id: comment.id,
+        author: comment.users.display_name || comment.users.full_name,
+        time: formatTimeAgo(new Date(comment.created_at)),
+        text: comment.content,
+        line: lineNum
+      });
+    });
+    
+    updateCommentBadge();
+    
+  } catch (error) {
+    console.error('Error loading comments:', error);
+  }
+}
+
+async function loadUserInteractions() {
+  // In a real app, this would check the current user's interactions
+  // For now, we'll use localStorage to simulate this
+  const userId = 'current-user'; // This would come from auth
+  
+  // Check if article is liked
+  const likedKey = `liked_${currentArticleId}_${userId}`;
+  isLiked = localStorage.getItem(likedKey) === 'true';
+  
+  // Check if article is saved
+  const savedKey = `saved_${currentArticleId}_${userId}`;
+  isSaved = localStorage.getItem(savedKey) === 'true';
+  
+  // Check if subscribed to author
+  const subscribedKey = `subscribed_${currentArticle.users.id}_${userId}`;
+  isSubscribed = localStorage.getItem(subscribedKey) === 'true';
+}
+
+function displayArticle() {
+  const articleContent = document.getElementById('articleContent');
+  const authorName = currentArticle.users?.display_name || currentArticle.users?.full_name || 'Unknown Author';
+  const publishedDate = new Date(currentArticle.published_at || currentArticle.created_at).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  const readTime = currentArticle.read_time_minutes || Math.ceil((currentArticle.summary || '').length / 200);
+  
+  let contentHTML = `
+    <h1 class="article-title">${escapeHtml(currentArticle.title)}</h1>
+    <div class="article-meta">
+      <span class="author-name">${escapeHtml(authorName)}</span> • Published ${publishedDate} • ${readTime} min read
+    </div>
+    
+    <div class="article-actions">
+      <button class="action-btn ${isLiked ? 'active' : ''}" id="likeBtn" onclick="toggleLike()">
+        <i class="fas fa-thumbs-up"></i>
+        <span>Like</span>
+        <span class="action-count" id="likeCount">${currentArticle.article_stats.likes_count}</span>
+      </button>
+      <button class="action-btn ${isSubscribed ? 'active' : ''}" id="subscribeBtn" onclick="toggleSubscribe()">
+        <i class="fas fa-bell"></i>
+        <span id="subscribeText">${isSubscribed ? 'Subscribed' : 'Subscribe'}</span>
+      </button>
+      <button class="action-btn" onclick="shareArticle()">
+        <i class="fas fa-share"></i>
+        <span>Share</span>
+      </button>
+      <button class="action-btn ${isSaved ? 'active' : ''}" id="saveBtn" onclick="toggleSave()">
+        <i class="fas fa-bookmark"></i>
+        <span>Save</span>
+      </button>
+    </div>
+  `;
+  
+  // Add article content
+  if (currentArticle.summary) {
+    contentHTML += `
+      <div class="content-line" data-line="0">
+        <div class="content-editable">
+          ${escapeHtml(currentArticle.summary)}
+        </div>
+        <button class="comment-trigger" onclick="openLineComments(0, event)">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+    `;
+  }
+  
+  // Add placeholder content for demonstration
+  contentHTML += `
+    <div class="content-line" data-line="1">
+      <div class="content-editable">
+        This article provides comprehensive insights into ${currentArticle.category?.toLowerCase() || 'medical research'}. 
+        The content explores key concepts and recent advances in the field.
+      </div>
+      <button class="comment-trigger" onclick="openLineComments(1, event)">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+    
+    <div class="content-line" data-line="2">
+      <div class="content-editable">
+        Recent studies have shown significant progress in understanding the underlying mechanisms 
+        and developing new therapeutic approaches for improved patient outcomes.
+      </div>
+      <button class="comment-trigger" onclick="openLineComments(2, event)">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+    
+    <div class="content-line" data-line="3">
+      <div class="content-editable">
+        The implications of these findings extend beyond the immediate clinical applications, 
+        potentially influencing future research directions and treatment protocols.
+      </div>
+      <button class="comment-trigger" onclick="openLineComments(3, event)">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+  `;
+  
+  articleContent.innerHTML = contentHTML;
+  articleContent.style.display = 'block';
+}
+
+// Comment functionality
+function toggleComments() {
+  const panel = document.getElementById('commentPanel');
+  const btn = document.getElementById('commentsBtn');
+  
+  if (panel.classList.contains('active')) {
+    closeComments();
+  } else {
+    currentLineNumber = null;
+    loadAllComments();
+    panel.classList.add('active');
+    btn.classList.add('active');
+    document.getElementById('commentInputArea').style.display = 'none';
+  }
+}
+
+function closeComments() {
+  document.getElementById('commentPanel').classList.remove('active');
+  document.getElementById('commentsBtn').classList.remove('active');
+  currentLineNumber = null;
+}
+
+function openLineComments(lineNumber, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  
+  currentLineNumber = lineNumber;
+  const panel = document.getElementById('commentPanel');
+  const btn = document.getElementById('commentsBtn');
+  
+  panel.classList.add('active');
+  btn.classList.add('active');
+  
+  const lineText = document.querySelector(`[data-line="${lineNumber}"] .content-editable`).textContent;
+  const preview = lineText.length > 60 ? lineText.substring(0, 60) + '...' : lineText;
+  
+  document.getElementById('commentTitle').textContent = `Line ${lineNumber}`;
+  document.getElementById('commentContext').textContent = `"${preview}"`;
+  document.getElementById('commentInputArea').style.display = 'block';
+  
+  loadLineComments(lineNumber);
+}
+
+function loadAllComments() {
+  const commentList = document.getElementById('commentList');
+  document.getElementById('commentTitle').textContent = 'All Comments';
+  
+  let allComments = [];
+  for (let line in comments) {
+    comments[line].forEach(comment => allComments.push({...comment, line: line}));
+  }
+  
+  if (allComments.length === 0) {
+    commentList.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">No comments yet.</p>';
+  } else {
+    commentList.innerHTML = allComments.map(comment => `
+      <div class="comment-item">
+        <div class="comment-line-ref">Line ${comment.line}</div>
+        <div class="comment-author">${escapeHtml(comment.author)}</div>
+        <div class="comment-time">${comment.time}</div>
+        <div class="comment-text">${escapeHtml(comment.text)}</div>
+      </div>
+    `).join('');
+  }
+}
+
+function loadLineComments(lineNumber) {
+  const commentList = document.getElementById('commentList');
+  const lineComments = comments[lineNumber] || [];
+  
+  if (lineComments.length === 0) {
+    commentList.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">No comments on this line yet.</p>';
+  } else {
+    commentList.innerHTML = lineComments.map(comment => `
+      <div class="comment-item">
+        <div class="comment-author">${escapeHtml(comment.author)}</div>
+        <div class="comment-time">${comment.time}</div>
+        <div class="comment-text">${escapeHtml(comment.text)}</div>
+      </div>
+    `).join('');
+  }
+}
+
+async function submitComment() {
+  const input = document.getElementById('commentInput');
+  const text = input.value.trim();
+  
+  if (!text || currentLineNumber === null) return;
+  
+  try {
+    const { data, error } = await supabase
+      .from('comments')
+      .insert({
+        article_id: currentArticleId,
+        user_id: 'current-user', // This would come from auth
+        line_number: currentLineNumber,
+        content: text
+      })
+      .select('*, users!inner(id, full_name, display_name)')
+      .single();
+    
+    if (error) throw error;
+    
+    // Add comment to local storage
+    if (!comments[currentLineNumber]) comments[currentLineNumber] = [];
+    comments[currentLineNumber].push({
+      id: data.id,
+      author: data.users.display_name || data.users.full_name || 'You',
+      time: 'Just now',
+      text: text
+    });
+    
+    // Update UI
+    const line = document.querySelector(`[data-line="${currentLineNumber}"]`);
+    line.classList.add('has-comments');
+    const trigger = line.querySelector('.comment-trigger');
+    trigger.classList.add('active');
+    trigger.innerHTML = '<i class="fas fa-comment"></i>';
+    
+    updateCommentBadge();
+    input.value = '';
+    loadLineComments(currentLineNumber);
+    
+  } catch (error) {
+    console.error('Error submitting comment:', error);
+    alert('Failed to post comment. Please try again.');
+  }
+}
+
+function updateCommentBadge() {
+  let total = 0;
+  for (let line in comments) total += comments[line].length;
+  document.getElementById('commentBadge').textContent = total;
+}
+
+// Article action functions
+async function toggleLike() {
+  isLiked = !isLiked;
+  const btn = document.getElementById('likeBtn');
+  const count = document.getElementById('likeCount');
+  const currentCount = parseInt(count.textContent);
+  
+  if (isLiked) {
+    btn.classList.add('active');
+    count.textContent = currentCount + 1;
+    // In a real app, this would create a like record
+    localStorage.setItem(`liked_${currentArticleId}_current-user`, 'true');
+  } else {
+    btn.classList.remove('active');
+    count.textContent = currentCount - 1;
+    localStorage.removeItem(`liked_${currentArticleId}_current-user`);
+  }
+}
+
+function toggleSubscribe() {
+  isSubscribed = !isSubscribed;
+  const btn = document.getElementById('subscribeBtn');
+  const text = document.getElementById('subscribeText');
+  
+  if (isSubscribed) {
+    btn.classList.add('active');
+    text.textContent = 'Subscribed';
+    localStorage.setItem(`subscribed_${currentArticle.users.id}_current-user`, 'true');
+  } else {
+    btn.classList.remove('active');
+    text.textContent = 'Subscribe';
+    localStorage.removeItem(`subscribed_${currentArticle.users.id}_current-user`);
+  }
+}
+
+function shareArticle() {
+  if (navigator.share) {
+    navigator.share({
+      title: currentArticle.title,
+      text: `Check out this article by ${currentArticle.users?.full_name}`,
+      url: window.location.href
+    }).catch(err => console.log('Share cancelled'));
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      alert('Link copied to clipboard!');
+    });
+  }
+}
+
+function toggleSave() {
+  isSaved = !isSaved;
+  const btn = document.getElementById('saveBtn');
+  
+  if (isSaved) {
+    btn.classList.add('active');
+    localStorage.setItem(`saved_${currentArticleId}_current-user`, 'true');
+    // In a real app, this would create a save record
+    alert('Article saved for later!');
+  } else {
+    btn.classList.remove('active');
+    localStorage.removeItem(`saved_${currentArticleId}_current-user`);
+    alert('Article removed from saved items.');
+  }
+}
+
+// Utility functions
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function formatTimeAgo(date) {
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins} minutes ago`;
+  if (diffHours < 24) return `${diffHours} hours ago`;
+  return `${diffDays} days ago`;
+}
+
+function goHome() {
+  window.location.href = 'Lists.html';
+}
+
+function goToProfile() {
+  window.location.href = 'User.html';
+}
+
+// State management functions
+function showLoadingState() {
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('errorState').style.display = 'none';
+  document.getElementById('articleContent').style.display = 'none';
+}
+
+function hideLoadingState() {
+  document.getElementById('loadingState').style.display = 'none';
+}
+
+function showErrorState() {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('errorState').style.display = 'block';
+  document.getElementById('articleContent').style.display = 'none';
+}
+</script>
+
+</body>
+</html>
