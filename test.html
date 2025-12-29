@@ -205,21 +205,18 @@ async function loadArticles() {
   const articleList = document.getElementById('articleList');
   
   try {
+    // Use lowercase table name - PostgreSQL default
     const { data, error } = await supabase
-      .from('Articles')
-      .select(`
-        ArticleID,
-        Title,
-        LikesCount,
-        ViewsCount,
-        CreatedAt,
-        Users (
-          FullName
-        )
-      `)
-      .order('CreatedAt', { ascending: false });
+      .from('articles')
+      .select('*')
+      .order('createdat', { ascending: false });
 
-    if (error) throw error;
+    console.log('Supabase response:', { data, error });
+
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
 
     allArticles = data;
 
@@ -234,7 +231,12 @@ async function loadArticles() {
     articleList.innerHTML = `<li class="error-message">
       <i class="fas fa-exclamation-triangle" style="font-size: 32px; margin-bottom: 16px;"></i>
       <p>Error loading articles: ${error.message}</p>
-      <p style="font-size: 12px; margin-top: 8px;">Check console for details</p>
+      <p style="font-size: 12px; margin-top: 8px;">Check console for details. Common issues:</p>
+      <ul style="text-align: left; display: inline-block; margin-top: 8px;">
+        <li>RLS (Row Level Security) is enabled - add a policy to allow SELECT</li>
+        <li>Table doesn't exist or has no data</li>
+        <li>Network/CORS issues</li>
+      </ul>
     </li>`;
   }
 }
@@ -248,13 +250,13 @@ function renderArticles(articles) {
   }
 
   articleList.innerHTML = articles.map(article => {
-    const authorName = article.Users?.FullName || 'Unknown Author';
-    const date = formatDate(article.CreatedAt);
-    const readTime = calculateReadTime(article.Title);
+    const authorName = 'Author'; // Will fetch separately once basic query works
+    const date = formatDate(article.createdat);
+    const readTime = calculateReadTime(article.title);
     
     return `
-      <li class="article-item" onclick="openArticle(${article.ArticleID})">
-        <h2 class="article-title">${escapeHtml(article.Title)}</h2>
+      <li class="article-item" onclick="openArticle(${article.articleid})">
+        <h2 class="article-title">${escapeHtml(article.title)}</h2>
         <div class="article-meta">
           <span>${escapeHtml(authorName)}</span>
           <div class="meta-dot"></div>
@@ -262,9 +264,9 @@ function renderArticles(articles) {
           <div class="meta-dot"></div>
           <span>${readTime} min read</span>
           <div class="meta-dot"></div>
-          <span><i class="fas fa-heart"></i> ${article.LikesCount || 0}</span>
+          <span><i class="fas fa-heart"></i> ${article.likescount || 0}</span>
           <div class="meta-dot"></div>
-          <span><i class="fas fa-eye"></i> ${article.ViewsCount || 0}</span>
+          <span><i class="fas fa-eye"></i> ${article.viewscount || 0}</span>
         </div>
       </li>
     `;
@@ -298,8 +300,7 @@ function searchArticles() {
   const searchQuery = prompt('Search articles:');
   if (searchQuery && searchQuery.trim()) {
     const filtered = allArticles.filter(article => 
-      article.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (article.Users?.FullName || '').toLowerCase().includes(searchQuery.toLowerCase())
+      article.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     renderArticles(filtered);
   } else if (searchQuery === '') {
