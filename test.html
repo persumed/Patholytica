@@ -4,32 +4,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Create Article — Patholytica</title>
+<title>Patholytica — Library</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --bg-color: #0f0f0f;
   --text-primary: #fff;
   --text-secondary: #aaa;
-  --card-bg: #1f1f1f;
   --hover-bg: #2a2a2a;
   --border-color: #303030;
   --accent: #3ea6ff;
-  --accent-hover: #2d8ed6;
-  --success: #2ba640;
-  --error: #e74c3c;
 }
 body.light-theme {
   --bg-color: #ffffff;
   --text-primary: #0f0f0f;
   --text-secondary: #606060;
-  --card-bg: #f9f9f9;
   --hover-bg: #f0f0f0;
   --border-color: #e5e5e5;
   --accent: #065fd4;
-  --accent-hover: #0448a3;
-  --success: #2ba640;
-  --error: #e74c3c;
 }
 * { box-sizing: border-box; }
 html, body { 
@@ -64,11 +57,14 @@ body {
   max-width: 100%;
   margin: 0 auto;
 }
-.logo-text {
-  font-size: 24px;
-  font-weight: bold;
+.logo-img {
+  height: 28px;
+  width: auto;
+  transition: filter 0.2s ease;
   cursor: pointer;
-  color: var(--text-primary);
+}
+body.light-theme .logo-img {
+  filter: invert(1);
 }
 .header-actions {
   display: flex;
@@ -92,268 +88,79 @@ body {
 .icon-btn:hover {
   background: var(--hover-bg);
 }
-.publish-btn {
-  padding: 8px 24px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.2s ease;
-}
-.publish-btn:hover {
-  background: var(--accent-hover);
-}
-.publish-btn:disabled {
-  background: var(--border-color);
-  cursor: not-allowed;
-}
-.editor-container {
+.list-container {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
-  padding: 80px 24px 120px;
+  padding: 80px 24px 80px;
   padding-top: calc(70px + env(safe-area-inset-top));
 }
-.article-title-input {
+.article-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.article-item {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.article-item:hover {
+  background: var(--hover-bg);
+  margin: 0 -12px;
+  padding: 24px 12px;
+}
+.article-title {
   font-family: 'Times New Roman', Times, serif;
   font-size: 42px;
   font-weight: bold;
-  margin: 0 0 24px 0;
+  margin: 0 0 8px 0;
   line-height: 1.2;
-  background: transparent;
-  border: none;
   color: var(--text-primary);
-  width: 100%;
-  outline: none;
-  resize: none;
-  overflow: hidden;
-}
-.article-title-input::placeholder {
-  color: var(--text-secondary);
-}
-.article-meta-display {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 32px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border-color);
-}
-.content-line {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 21px;
-  line-height: 1.8;
-  margin: 0 0 24px 0;
-  position: relative;
-  transition: background 0.2s ease;
   word-wrap: break-word;
-  overflow-wrap: break-word;
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
 }
-.content-editable {
-  outline: none;
-  min-height: 1.8em;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  flex: 1;
-  cursor: text;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 21px;
-  line-height: 1.8;
-  resize: none;
-  overflow: hidden;
-  padding: 4px 0;
-}
-.content-editable::placeholder {
-  color: var(--text-secondary);
-}
-.content-editable:focus {
-  background: var(--hover-bg);
-  padding: 4px 8px;
-  margin: -4px -8px;
-  border-radius: 4px;
-}
-.line-actions {
-  display: flex;
-  gap: 4px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.content-line:hover .line-actions {
-  opacity: 1;
-}
-.line-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  transition: all 0.2s ease;
-}
-.line-btn:hover {
-  background: var(--hover-bg);
+.article-item:hover .article-title {
   color: var(--accent);
 }
-.media-embed {
-  margin: 32px 0;
-  padding: 24px 0;
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-  max-width: 100%;
-  overflow: hidden;
-  position: relative;
-}
-.media-embed img {
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-  display: block;
-}
-.media-caption-input {
+.article-meta {
   font-size: 14px;
   color: var(--text-secondary);
-  margin-top: 8px;
-  font-style: italic;
-  background: transparent;
-  border: none;
-  outline: none;
-  width: 100%;
-  padding: 4px;
-}
-.media-caption-input::placeholder {
-  color: var(--text-secondary);
-}
-.media-delete-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.7);
-  color: white;
-  border: none;
-  cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.media-embed:hover .media-delete-btn {
-  opacity: 1;
-}
-.media-delete-btn:hover {
-  background: var(--error);
-}
-.upload-toolbar {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 24px;
-  padding: 8px 16px;
-  display: flex;
   gap: 8px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-  z-index: 20;
+  flex-wrap: wrap;
 }
-.upload-btn {
-  width: 40px;
-  height: 40px;
+.meta-dot {
+  width: 3px;
+  height: 3px;
+  background: var(--text-secondary);
   border-radius: 50%;
-  background: transparent;
-  border: none;
+}
+.loading-spinner {
+  text-align: center;
+  padding: 40px;
   color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  transition: all 0.2s ease;
 }
-.upload-btn:hover {
-  background: var(--hover-bg);
-  color: var(--text-primary);
+.error-message {
+  text-align: center;
+  padding: 40px;
+  color: #ff4444;
 }
-.upload-btn input {
-  display: none;
-}
-.divider {
-  width: 1px;
-  height: 24px;
-  background: var(--border-color);
-  margin: 8px 0;
-}
-.notification {
-  position: fixed;
-  top: 80px;
-  right: 24px;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 16px 24px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  animation: slideIn 0.3s ease;
-}
-@keyframes slideIn {
-  from {
-    transform: translateX(400px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-.notification.success {
-  border-left: 4px solid var(--success);
-}
-.notification.error {
-  border-left: 4px solid var(--error);
-}
-.notification-icon {
-  font-size: 20px;
-}
-.notification.success .notification-icon {
-  color: var(--success);
-}
-.notification.error .notification-icon {
-  color: var(--error);
+.no-articles {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
 }
 @media (max-width: 768px) {
-  .editor-container {
-    padding: 90px 16px 100px;
+  .list-container {
+    padding: 90px 16px 80px;
   }
-  .article-title-input {
+  .article-title {
     font-size: 32px;
   }
-  .content-editable {
-    font-size: 19px;
-  }
-  .notification {
-    right: 16px;
-    left: 16px;
+  .article-meta {
+    font-size: 13px;
   }
 }
 </style>
@@ -362,305 +169,163 @@ body {
 
 <div class="header-wrapper">
   <div class="header">
-    <div class="logo-text">Patholytica</div>
+    <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
+      <button class="icon-btn" onclick="searchArticles()" title="Search">
+        <i class="fas fa-search"></i>
+      </button>
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
-      <button class="publish-btn" onclick="publishArticle()" id="publishBtn">
-        <i class="fas fa-upload"></i> Publish
-      </button>
-      <button class="icon-btn" onclick="showUserMenu()" title="User" id="userBtn">
+      <button class="icon-btn" title="User">
         <i class="fas fa-user"></i>
       </button>
     </div>
   </div>
 </div>
 
-<div class="editor-container" id="editorContainer">
-  <textarea 
-    class="article-title-input" 
-    id="articleTitle" 
-    placeholder="Article Title"
-    rows="1"
-    oninput="autoResize(this)"
-  ></textarea>
-
-  <div class="article-meta-display" id="articleMeta">
-    <span id="authorName">Author Name</span> • <span id="currentDate">Date</span>
-  </div>
-
-  <div class="content-line" data-line="1">
-    <textarea 
-      class="content-editable" 
-      placeholder="Start writing your article..."
-      rows="1"
-      oninput="autoResize(this)"
-    ></textarea>
-    <div class="line-actions">
-      <button class="line-btn" onclick="deleteLine(this)" title="Delete line">
-        <i class="fas fa-trash"></i>
-      </button>
-    </div>
-  </div>
+<div class="list-container">
+  <ul class="article-list" id="articleList">
+    <li class="loading-spinner">
+      <i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i>
+      <p>Loading articles...</p>
+    </li>
+  </ul>
 </div>
-
-<div class="upload-toolbar">
-  <button class="upload-btn" onclick="addNewParagraph()" title="Add paragraph">
-    <i class="fas fa-plus"></i>
-  </button>
-  <div class="divider"></div>
-  <label class="upload-btn" title="Upload image">
-    <i class="fas fa-image"></i>
-    <input type="file" accept="image/*" onchange="handleImageUpload(event)">
-  </label>
-</div>
-
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { 
-  getAuth, 
-  onAuthStateChanged
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
-  authDomain: "patholytica.firebaseapp.com",
-  projectId: "patholytica",
-  storageBucket: "patholytica.firebasestorage.app",
-  messagingSenderId: "738430635282",
-  appId: "1:738430635282:web:8451ef380447c7611137cb"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-// Set current date
-const today = new Date();
-const dateStr = today.toLocaleDateString('en-US', { 
-  year: 'numeric', 
-  month: 'long', 
-  day: 'numeric' 
-});
-document.getElementById('currentDate').textContent = dateStr;
-
-// Listen for auth state
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    const displayName = user.displayName || user.email?.split('@')[0] || 'Author';
-    document.getElementById('authorName').textContent = displayName;
-    window.currentUser = user;
-  } else {
-    document.getElementById('authorName').textContent = 'Guest Author';
-    window.currentUser = null;
-  }
-});
-
-// Make auth available globally
-window.firebaseAuth = auth;
-</script>
 
 <script>
-// Supabase configuration (replace with your actual Supabase URL and key)
-const SUPABASE_URL = 'https://your-project.supabase.co';
-const SUPABASE_KEY = 'your-anon-key';
+const SUPABASE_URL = 'https://aforyattbmwcafvtgnry.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmb3J5YXR0Ym13Y2FmdnRnbnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwMDMxMDMsImV4cCI6MjA4MjU3OTEwM30.1kq2-0rxukjO-OevldWSFod-6FfcZmOP7NEa517WEW0';
 
-let lineCounter = 1;
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let allArticles = [];
+
+async function loadArticles() {
+  const articleList = document.getElementById('articleList');
+  
+  try {
+    const { data, error } = await supabase
+      .from('Articles')
+      .select(`
+        ArticleID,
+        Title,
+        LikesCount,
+        ViewsCount,
+        CreatedAt,
+        Users (
+          FullName
+        )
+      `)
+      .order('CreatedAt', { ascending: false });
+
+    if (error) throw error;
+
+    allArticles = data;
+
+    if (!data || data.length === 0) {
+      articleList.innerHTML = '<li class="no-articles">No articles found. Start by adding some to your database!</li>';
+      return;
+    }
+
+    renderArticles(data);
+  } catch (error) {
+    console.error('Error loading articles:', error);
+    articleList.innerHTML = `<li class="error-message">
+      <i class="fas fa-exclamation-triangle" style="font-size: 32px; margin-bottom: 16px;"></i>
+      <p>Error loading articles: ${error.message}</p>
+      <p style="font-size: 12px; margin-top: 8px;">Check console for details</p>
+    </li>`;
+  }
+}
+
+function renderArticles(articles) {
+  const articleList = document.getElementById('articleList');
+  
+  if (!articles || articles.length === 0) {
+    articleList.innerHTML = '<li class="no-articles">No articles match your search.</li>';
+    return;
+  }
+
+  articleList.innerHTML = articles.map(article => {
+    const authorName = article.Users?.FullName || 'Unknown Author';
+    const date = formatDate(article.CreatedAt);
+    const readTime = calculateReadTime(article.Title);
+    
+    return `
+      <li class="article-item" onclick="openArticle(${article.ArticleID})">
+        <h2 class="article-title">${escapeHtml(article.Title)}</h2>
+        <div class="article-meta">
+          <span>${escapeHtml(authorName)}</span>
+          <div class="meta-dot"></div>
+          <span>${date}</span>
+          <div class="meta-dot"></div>
+          <span>${readTime} min read</span>
+          <div class="meta-dot"></div>
+          <span><i class="fas fa-heart"></i> ${article.LikesCount || 0}</span>
+          <div class="meta-dot"></div>
+          <span><i class="fas fa-eye"></i> ${article.ViewsCount || 0}</span>
+        </div>
+      </li>
+    `;
+  }).join('');
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const options = { month: 'short', day: 'numeric', year: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+}
+
+function calculateReadTime(title) {
+  const wordsPerMinute = 200;
+  const words = title.split(' ').length;
+  const readTime = Math.max(1, Math.ceil(words / wordsPerMinute * 10));
+  return readTime;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function openArticle(articleId) {
+  window.location.href = `article.html?id=${articleId}`;
+}
+
+function searchArticles() {
+  const searchQuery = prompt('Search articles:');
+  if (searchQuery && searchQuery.trim()) {
+    const filtered = allArticles.filter(article => 
+      article.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (article.Users?.FullName || '').toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    renderArticles(filtered);
+  } else if (searchQuery === '') {
+    renderArticles(allArticles);
+  }
+}
 
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
-  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
+  const theme = document.body.classList.contains("light-theme") ? "light" : "dark";
+  try {
+    localStorage.setItem("theme", theme);
+  } catch (e) {
+    console.log('LocalStorage not available');
+  }
 }
-
-if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light-theme");
-}
-
-function autoResize(textarea) {
-  textarea.style.height = 'auto';
-  textarea.style.height = textarea.scrollHeight + 'px';
-}
-
-function addNewParagraph() {
-  lineCounter++;
-  const newLine = document.createElement('div');
-  newLine.className = 'content-line';
-  newLine.setAttribute('data-line', lineCounter);
-  newLine.innerHTML = `
-    <textarea 
-      class="content-editable" 
-      placeholder="Continue writing..."
-      rows="1"
-      oninput="autoResize(this)"
-    ></textarea>
-
-<div class="line-actions">
-  <button class="line-btn" onclick="deleteLine(this)" title="Delete line">
-    <i class="fas fa-trash"></i>
-  </button>
-</div>
-
-`;
-document.getElementById(‘editorContainer’).appendChild(newLine);
-const textarea = newLine.querySelector(‘textarea’);
-textarea.focus();
-}
-
-function deleteLine(btn) {
-const line = btn.closest(’.content-line’);
-const allLines = document.querySelectorAll(’.content-line’);
-if (allLines.length > 1) {
-line.remove();
-} else {
-showNotification(‘Cannot delete the last paragraph’, ‘error’);
-}
-}
-
-function handleImageUpload(event) {
-const file = event.target.files[0];
-if (!file) return;
-
-const reader = new FileReader();
-reader.onload = function(e) {
-const mediaEmbed = document.createElement(‘div’);
-mediaEmbed.className = ‘media-embed’;
-mediaEmbed.innerHTML = `<button class="media-delete-btn" onclick="deleteMedia(this)"> <i class="fas fa-times"></i> </button> <img src="${e.target.result}" alt="Uploaded image"> <input  type="text"  class="media-caption-input"  placeholder="Add a caption (optional)..." >`;
-document.getElementById(‘editorContainer’).appendChild(mediaEmbed);
-};
-reader.readAsDataURL(file);
-event.target.value = ‘’;
-}
-
-function deleteMedia(btn) {
-const mediaEmbed = btn.closest(’.media-embed’);
-mediaEmbed.remove();
-}
-
-function showNotification(message, type = ‘success’) {
-const notification = document.createElement(‘div’);
-notification.className = `notification ${type}`;
-notification.innerHTML = `<i class="notification-icon fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> <span>${message}</span>`;
-document.body.appendChild(notification);
-
-setTimeout(() => {
-notification.style.animation = ‘slideIn 0.3s ease reverse’;
-setTimeout(() => notification.remove(), 300);
-}, 3000);
-}
-
-async function publishArticle() {
-const publishBtn = document.getElementById(‘publishBtn’);
-publishBtn.disabled = true;
-
-// Gather article data
-const title = document.getElementById(‘articleTitle’).value.trim();
-const author = document.getElementById(‘authorName’).textContent;
-const date = document.getElementById(‘currentDate’).textContent;
-
-if (!title) {
-showNotification(‘Please add a title to your article’, ‘error’);
-publishBtn.disabled = false;
-return;
-}
-
-// Gather content
-const contentLines = [];
-const textareas = document.querySelectorAll(’.content-line textarea’);
-textareas.forEach(textarea => {
-const text = textarea.value.trim();
-if (text) {
-contentLines.push({
-type: ‘text’,
-content: text
-});
-}
-});
-
-// Gather media
-const mediaElements = document.querySelectorAll(’.media-embed’);
-mediaElements.forEach(media => {
-const img = media.querySelector(‘img’);
-const caption = media.querySelector(’.media-caption-input’)?.value || ‘’;
-if (img) {
-contentLines.push({
-type: ‘image’,
-content: img.src,
-caption: caption
-});
-}
-});
-
-if (contentLines.length === 0) {
-showNotification(‘Please add some content to your article’, ‘error’);
-publishBtn.disabled = false;
-return;
-}
-
-// Prepare article data
-const articleData = {
-title: title,
-author: author,
-published_date: new Date().toISOString(),
-content: contentLines,
-user_id: window.currentUser?.uid || null,
-status: ‘published’
-};
 
 try {
-// Send to Supabase
-const response = await fetch(`${SUPABASE_URL}/rest/v1/articles`, {
-method: ‘POST’,
-headers: {
-‘Content-Type’: ‘application/json’,
-‘apikey’: SUPABASE_KEY,
-‘Authorization’: `Bearer ${SUPABASE_KEY}`,
-‘Prefer’: ‘return=representation’
-},
-body: JSON.stringify(articleData)
-});
-
-if (response.ok) {
-  const data = await response.json();
-  showNotification('Article published successfully!', 'success');
-  
-  // Clear the form after 2 seconds
-  setTimeout(() => {
-    if (confirm('Article published! Would you like to create another article?')) {
-      location.reload();
-    }
-  }, 2000);
-} else {
-  throw new Error('Failed to publish article');
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-theme");
+  }
+} catch (e) {
+  console.log('LocalStorage not available');
 }
 
-} catch (error) {
-console.error(‘Error publishing article:’, error);
-showNotification(‘Error publishing article. Please try again.’, ‘error’);
-} finally {
-publishBtn.disabled = false;
-}
-}
-
-function showUserMenu() {
-if (window.currentUser) {
-const action = confirm(`Logged in as ${window.currentUser.email}\n\nClick OK to sign out`);
-if (action) {
-window.firebaseAuth.signOut().then(() => {
-showNotification(‘Signed out successfully’, ‘success’);
-});
-}
-} else {
-alert(‘Not logged in. Please log in to publish articles.’);
-}
-}
-
-// Initialize first textarea
-document.addEventListener(‘DOMContentLoaded’, () => {
-const firstTextarea = document.querySelector(’.content-editable’);
-if (firstTextarea) {
-autoResize(firstTextarea);
-}
-});
+loadArticles();
 </script>
 
 </body>
