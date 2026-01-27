@@ -14,6 +14,7 @@
   --hover-bg: #2a2a2a;
   --border-color: #303030;
   --accent: #3ea6ff;
+  --accent-green: #2ecc71;
 }
 body.light-theme {
   --bg-color: #ffffff;
@@ -22,6 +23,7 @@ body.light-theme {
   --hover-bg: #f0f0f0;
   --border-color: #e5e5e5;
   --accent: #065fd4;
+  --accent-green: #27ae60;
 }
 * { box-sizing: border-box; }
 html, body { 
@@ -91,8 +93,8 @@ body.light-theme .logo-img {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
-  padding: 80px 24px 80px;
-  padding-top: calc(70px + env(safe-area-inset-top));
+  padding: 24px 24px 80px;
+  padding-top: calc(65px + env(safe-area-inset-top));
 }
 .article-list {
   list-style: none;
@@ -136,14 +138,43 @@ body.light-theme .logo-img {
   background: var(--text-secondary);
   border-radius: 50%;
 }
+.footer {
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.footer-stats {
+  margin-bottom: 8px;
+}
+.article-count {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+.footer-tagline {
+  margin-bottom: 8px;
+}
+.footer-location {
+  font-size: 13px;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
 @media (max-width: 768px) {
   .list-container {
-    padding: 90px 16px 80px;
+    padding: 16px 16px 80px;
+    padding-top: calc(65px + env(safe-area-inset-top));
   }
   .article-title {
     font-size: 32px;
   }
   .article-meta {
+    font-size: 13px;
+  }
+  .footer {
+    padding: 20px 16px;
     font-size: 13px;
   }
 }
@@ -338,6 +369,18 @@ body.light-theme .logo-img {
   </ul>
 </div>
 
+<footer class="footer">
+  <div class="footer-stats">
+    <span class="article-count" id="articleCount">15</span> articles accessible
+  </div>
+  <div class="footer-tagline">
+    Patholytica is a Medicinebank project aiming to unify academic sharing
+  </div>
+  <div class="footer-location" id="userLocation">
+    Loading location...
+  </div>
+</footer>
+
 <script>
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
@@ -357,6 +400,36 @@ function searchArticles() {
   if (searchQuery && searchQuery.trim()) {
     alert(`Searching for: "${searchQuery}"\n\nSearch functionality would filter the article list.`);
   }
+}
+
+// Count articles and update footer
+const articleCount = document.querySelectorAll('.article-item').length;
+document.getElementById('articleCount').textContent = articleCount;
+
+// Get user location
+if ("geolocation" in navigator) {
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
+        .then(response => response.json())
+        .then(data => {
+          const city = data.address.city || data.address.town || data.address.village || '';
+          const state = data.address.state || '';
+          const country = data.address.country || '';
+          
+          let locationText = [city, state, country].filter(Boolean).join(', ');
+          document.getElementById('userLocation').textContent = locationText || 'Location unavailable';
+        })
+        .catch(() => {
+          document.getElementById('userLocation').textContent = 'Location unavailable';
+        });
+    },
+    function() {
+      document.getElementById('userLocation').textContent = 'Location access denied';
+    }
+  );
+} else {
+  document.getElementById('userLocation').textContent = 'Geolocation not supported';
 }
 </script>
 
