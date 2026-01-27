@@ -15,6 +15,9 @@
   --border-color: #303030;
   --accent: #3ea6ff;
   --accent-green: #2ecc71;
+  --bronze: #cd7f32;
+  --gold: #ffd700;
+  --platinum: #e5e4e2;
 }
 body.light-theme {
   --bg-color: #ffffff;
@@ -138,6 +141,36 @@ body.light-theme .logo-img {
   background: var(--text-secondary);
   border-radius: 50%;
 }
+.medal-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+.medal-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+}
+.medal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.medal-dot.bronze {
+  background: var(--bronze);
+}
+.medal-dot.gold {
+  background: var(--gold);
+}
+.medal-dot.platinum {
+  background: var(--platinum);
+}
+.medal-count {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
 .footer {
   background: var(--bg-color);
   border-top: 1px solid var(--border-color);
@@ -172,6 +205,12 @@ body.light-theme .logo-img {
   }
   .article-meta {
     font-size: 13px;
+  }
+  .medal-stats {
+    gap: 10px;
+  }
+  .medal-item {
+    font-size: 12px;
   }
   .footer {
     padding: 20px 16px;
@@ -210,6 +249,20 @@ body.light-theme .logo-img {
         <div class="meta-dot"></div>
         <span>12 min read</span>
       </div>
+      <div class="medal-stats">
+        <div class="medal-item">
+          <div class="medal-dot bronze"></div>
+          <span class="medal-count">247</span>
+        </div>
+        <div class="medal-item">
+          <div class="medal-dot gold"></div>
+          <span class="medal-count">89</span>
+        </div>
+        <div class="medal-item">
+          <div class="medal-dot platinum"></div>
+          <span class="medal-count">34</span>
+        </div>
+      </div>
     </li>
 
 <li class="article-item" onclick="openArticle('patholytica.com/library')">
@@ -220,6 +273,20 @@ body.light-theme .logo-img {
     <span>Mar 12, 2024</span>
     <div class="meta-dot"></div>
     <span>8 min read</span>
+  </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">192</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">67</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">28</span>
+    </div>
   </div>
 </li>
 
@@ -232,6 +299,20 @@ body.light-theme .logo-img {
     <div class="meta-dot"></div>
     <span>15 min read</span>
   </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">318</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">124</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">56</span>
+    </div>
+  </div>
 </li>
 
 <li class="article-item" onclick="openArticle('patholytica.com/library')">
@@ -242,6 +323,20 @@ body.light-theme .logo-img {
     <span>Mar 8, 2024</span>
     <div class="meta-dot"></div>
     <span>10 min read</span>
+  </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">276</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">98</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">41</span>
+    </div>
   </div>
 </li>
 
@@ -254,6 +349,20 @@ body.light-theme .logo-img {
     <div class="meta-dot"></div>
     <span>14 min read</span>
   </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">203</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">79</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">32</span>
+    </div>
+  </div>
 </li>
 
 <li class="article-item" onclick="openArticle('patholytica.com/library')">
@@ -264,6 +373,20 @@ body.light-theme .logo-img {
     <span>Mar 8, 2024</span>
     <div class="meta-dot"></div>
     <span>10 min read</span>
+  </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">165</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">58</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">23</span>
+    </div>
   </div>
 </li>
 
@@ -276,6 +399,20 @@ body.light-theme .logo-img {
     <div class="meta-dot"></div>
     <span>14 min read</span>
   </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">221</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">83</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">37</span>
+    </div>
+  </div>
 </li>
 
 <li class="article-item" onclick="openArticle('patholytica.com/library')">
@@ -286,6 +423,20 @@ body.light-theme .logo-img {
     <span>Mar 3, 2024</span>
     <div class="meta-dot"></div>
     <span>11 min read</span>
+  </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">189</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">71</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">29</span>
+    </div>
   </div>
 </li>
 
@@ -298,6 +449,20 @@ body.light-theme .logo-img {
     <div class="meta-dot"></div>
     <span>18 min read</span>
   </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">294</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">112</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">48</span>
+    </div>
+  </div>
 </li>
 
 <li class="article-item" onclick="openArticle('patholytica.com/library')">
@@ -308,6 +473,20 @@ body.light-theme .logo-img {
     <span>Mar 11, 2024</span>
     <div class="meta-dot"></div>
     <span>16 min read</span>
+  </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">256</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">94</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">39</span>
+    </div>
   </div>
 </li>
 
@@ -320,6 +499,20 @@ body.light-theme .logo-img {
     <div class="meta-dot"></div>
     <span>20 min read</span>
   </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">312</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">118</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">51</span>
+    </div>
+  </div>
 </li>
 
 <li class="article-item" onclick="openArticle('patholytica.com/library')">
@@ -330,6 +523,20 @@ body.light-theme .logo-img {
     <span>Mar 7, 2024</span>
     <div class="meta-dot"></div>
     <span>13 min read</span>
+  </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">234</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">87</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">36</span>
+    </div>
   </div>
 </li>
 
@@ -342,6 +549,20 @@ body.light-theme .logo-img {
     <div class="meta-dot"></div>
     <span>11 min read</span>
   </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">178</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">64</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">26</span>
+    </div>
+  </div>
 </li>
 
 <li class="article-item" onclick="openArticle('patholytica.com/library')">
@@ -353,6 +574,20 @@ body.light-theme .logo-img {
     <div class="meta-dot"></div>
     <span>13 min read</span>
   </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">267</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">101</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">43</span>
+    </div>
+  </div>
 </li>
 
 <li class="article-item" onclick="openArticle('patholytica.com/library')">
@@ -363,6 +598,20 @@ body.light-theme .logo-img {
     <span>Mar 1, 2024</span>
     <div class="meta-dot"></div>
     <span>9 min read</span>
+  </div>
+  <div class="medal-stats">
+    <div class="medal-item">
+      <div class="medal-dot bronze"></div>
+      <span class="medal-count">198</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot gold"></div>
+      <span class="medal-count">73</span>
+    </div>
+    <div class="medal-item">
+      <div class="medal-dot platinum"></div>
+      <span class="medal-count">30</span>
+    </div>
   </div>
 </li>
 
