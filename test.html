@@ -15,9 +15,6 @@
   --border-color: #303030;
   --accent: #3ea6ff;
   --accent-green: #2ecc71;
-  --bronze: #cd7f32;
-  --gold: #ffd700;
-  --platinum: #e5e4e2;
 }
 body.light-theme {
   --bg-color: #ffffff;
@@ -141,235 +138,206 @@ body.light-theme .logo-img {
   background: var(--text-secondary);
   border-radius: 50%;
 }
-.medal-stats {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.views-count {
   margin-top: 8px;
-}
-.medal-item {
+  font-size: 13px;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 13px;
+  gap: 6px;
 }
-.medal-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-.medal-dot.bronze {
-  background: var(--bronze);
-}
-.medal-dot.gold {
-  background: var(--gold);
-}
-.medal-dot.platinum {
-  background: var(--platinum);
-}
-.medal-count {
-  color: var(--text-secondary);
-  font-weight: 500;
+.views-count i {
+  font-size: 14px;
 }
 
 /* Preview Modal Styles */
 .preview-modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  z-index: 100;
-  animation: fadeIn 0.3s ease;
-  overflow-y: auto;
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.85);
+z-index: 100;
+animation: fadeIn 0.3s ease;
+overflow-y: auto;
 }
 .preview-modal.active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 40px 20px;
 }
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+from { opacity: 0; }
+to { opacity: 1; }
 }
 .preview-content {
-  background: var(--bg-color);
-  max-width: 800px;
-  width: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  animation: slideUp 0.3s ease;
-  position: relative;
+background: var(–bg-color);
+max-width: 800px;
+width: 100%;
+border-radius: 16px;
+overflow: hidden;
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+animation: slideUp 0.3s ease;
+position: relative;
 }
 @keyframes slideUp {
-  from { 
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to { 
-    transform: translateY(0);
-    opacity: 1;
-  }
+from {
+transform: translateY(30px);
+opacity: 0;
+}
+to {
+transform: translateY(0);
+opacity: 1;
+}
 }
 .preview-image {
-  width: 100%;
-  height: 350px;
-  object-fit: cover;
-  display: block;
+width: 100%;
+height: 350px;
+object-fit: cover;
+display: block;
 }
 .preview-body {
-  padding: 32px;
+padding: 32px;
 }
 .preview-title {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 36px;
-  font-weight: bold;
-  margin: 0 0 16px 0;
-  line-height: 1.2;
-  color: var(--text-primary);
+font-family: ‘Times New Roman’, Times, serif;
+font-size: 36px;
+font-weight: bold;
+margin: 0 0 16px 0;
+line-height: 1.2;
+color: var(–text-primary);
 }
 .preview-meta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  flex-wrap: wrap;
-}
-.preview-medals {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
-  padding: 16px;
-  background: var(--hover-bg);
-  border-radius: 8px;
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 24px;
+color: var(–text-secondary);
+font-size: 14px;
+flex-wrap: wrap;
 }
 .preview-excerpt {
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  margin-bottom: 24px;
+font-size: 16px;
+line-height: 1.7;
+color: var(–text-secondary);
+margin-bottom: 24px;
 }
 .preview-actions {
-  display: flex;
-  gap: 12px;
+display: flex;
+gap: 12px;
 }
 .preview-btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+padding: 12px 24px;
+border-radius: 8px;
+border: none;
+cursor: pointer;
+font-size: 15px;
+font-weight: 500;
+transition: all 0.2s ease;
 }
 .preview-btn.primary {
-  background: var(--accent);
-  color: white;
+background: var(–accent);
+color: white;
 }
 .preview-btn.primary:hover {
-  filter: brightness(1.1);
+filter: brightness(1.1);
 }
 .preview-btn.secondary {
-  background: var(--hover-bg);
-  color: var(--text-primary);
+background: var(–hover-bg);
+color: var(–text-primary);
 }
 .preview-btn.secondary:hover {
-  background: var(--border-color);
+background: var(–border-color);
 }
 .close-preview {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.6);
-  border: none;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
-  z-index: 10;
+position: absolute;
+top: 16px;
+right: 16px;
+width: 44px;
+height: 44px;
+border-radius: 50%;
+background: rgba(0, 0, 0, 0.6);
+border: none;
+color: white;
+font-size: 20px;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: background 0.2s ease;
+z-index: 10;
 }
 .close-preview:hover {
-  background: rgba(0, 0, 0, 0.8);
+background: rgba(0, 0, 0, 0.8);
 }
 
 .footer {
-  background: var(--bg-color);
-  border-top: 1px solid var(--border-color);
-  padding: 24px;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.6;
+background: var(–bg-color);
+border-top: 1px solid var(–border-color);
+padding: 24px;
+text-align: center;
+color: var(–text-secondary);
+font-size: 14px;
+line-height: 1.6;
 }
 .footer-stats {
-  margin-bottom: 8px;
+margin-bottom: 8px;
 }
 .article-count {
-  color: var(--accent-green);
-  font-weight: 600;
+color: var(–accent-green);
+font-weight: 600;
 }
 .footer-tagline {
-  margin-bottom: 8px;
+margin-bottom: 8px;
 }
 .footer-location {
-  font-size: 13px;
-  color: var(--text-secondary);
-  opacity: 0.8;
+font-size: 13px;
+color: var(–text-secondary);
+opacity: 0.8;
 }
 @media (max-width: 768px) {
-  .list-container {
-    padding: 16px 16px 80px;
-    padding-top: calc(65px + env(safe-area-inset-top));
-  }
-  .article-title {
-    font-size: 32px;
-  }
-  .article-meta {
-    font-size: 13px;
-  }
-  .medal-stats {
-    gap: 10px;
-  }
-  .medal-item {
-    font-size: 12px;
-  }
-  .footer {
-    padding: 20px 16px;
-    font-size: 13px;
-  }
-  .preview-modal.active {
-    padding: 20px 10px;
-    align-items: flex-start;
-  }
-  .preview-image {
-    height: 250px;
-  }
-  .preview-body {
-    padding: 24px 20px;
-  }
-  .preview-title {
-    font-size: 28px;
-  }
-  .preview-actions {
-    flex-direction: column;
-  }
-  .preview-btn {
-    width: 100%;
-  }
+.list-container {
+padding: 16px 16px 80px;
+padding-top: calc(65px + env(safe-area-inset-top));
+}
+.article-title {
+font-size: 32px;
+}
+.article-meta {
+font-size: 13px;
+}
+.views-count {
+font-size: 12px;
+}
+.footer {
+padding: 20px 16px;
+font-size: 13px;
+}
+.preview-modal.active {
+padding: 20px 10px;
+align-items: flex-start;
+}
+.preview-image {
+height: 250px;
+}
+.preview-body {
+padding: 24px 20px;
+}
+.preview-title {
+font-size: 28px;
+}
+.preview-actions {
+flex-direction: column;
+}
+.preview-btn {
+width: 100%;
+}
 }
 </style>
+
 </head>
 <body>
 
@@ -398,378 +366,200 @@ body.light-theme .logo-img {
         <span>Dr. Sarah Mitchell</span>
         <div class="meta-dot"></div>
         <span>Mar 15, 2024</span>
-        <div class="meta-dot"></div>
-        <span>12 min read</span>
       </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">247</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">89</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">34</span>
-        </div>
+      <div class="views-count">
+        <i class="fas fa-eye"></i>
+        <span>12,547 views</span>
       </div>
     </li>
 
-    <li class="article-item" onclick="openPreview(1)">
-      <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
-      <div class="article-meta">
-        <span>Dr. James Chen</span>
-        <div class="meta-dot"></div>
-        <span>Mar 12, 2024</span>
-        <div class="meta-dot"></div>
-        <span>8 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">192</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">67</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">28</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(1)">
+  <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
+  <div class="article-meta">
+    <span>Dr. James Chen</span>
+    <div class="meta-dot"></div>
+    <span>Mar 12, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>8,921 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(2)">
-      <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
-      <div class="article-meta">
-        <span>Dr. Emily Rodriguez</span>
-        <div class="meta-dot"></div>
-        <span>Mar 10, 2024</span>
-        <div class="meta-dot"></div>
-        <span>15 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">318</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">124</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">56</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(2)">
+  <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
+  <div class="article-meta">
+    <span>Dr. Emily Rodriguez</span>
+    <div class="meta-dot"></div>
+    <span>Mar 10, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>18,234 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(3)">
-      <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
-      <div class="article-meta">
-        <span>Dr. Robert Kim</span>
-        <div class="meta-dot"></div>
-        <span>Mar 8, 2024</span>
-        <div class="meta-dot"></div>
-        <span>10 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">276</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">98</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">41</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(3)">
+  <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
+  <div class="article-meta">
+    <span>Dr. Robert Kim</span>
+    <div class="meta-dot"></div>
+    <span>Mar 8, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>14,876 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(4)">
-      <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
-      <div class="article-meta">
-        <span>Dr. Lisa Zhang</span>
-        <div class="meta-dot"></div>
-        <span>Mar 5, 2024</span>
-        <div class="meta-dot"></div>
-        <span>14 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">203</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">79</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">32</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(4)">
+  <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
+  <div class="article-meta">
+    <span>Dr. Lisa Zhang</span>
+    <div class="meta-dot"></div>
+    <span>Mar 5, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>10,342 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(5)">
-      <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
-      <div class="article-meta">
-        <span>Dr. Robert Kim</span>
-        <div class="meta-dot"></div>
-        <span>Mar 8, 2024</span>
-        <div class="meta-dot"></div>
-        <span>10 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">165</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">58</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">23</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(5)">
+  <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
+  <div class="article-meta">
+    <span>Dr. Robert Kim</span>
+    <div class="meta-dot"></div>
+    <span>Mar 8, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>7,654 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(6)">
-      <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
-      <div class="article-meta">
-        <span>Dr. Lisa Zhang</span>
-        <div class="meta-dot"></div>
-        <span>Mar 5, 2024</span>
-        <div class="meta-dot"></div>
-        <span>14 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">221</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">83</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">37</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(6)">
+  <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
+  <div class="article-meta">
+    <span>Dr. Lisa Zhang</span>
+    <div class="meta-dot"></div>
+    <span>Mar 5, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>11,223 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(7)">
-      <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
-      <div class="article-meta">
-        <span>Dr. Michael Johnson</span>
-        <div class="meta-dot"></div>
-        <span>Mar 3, 2024</span>
-        <div class="meta-dot"></div>
-        <span>11 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">189</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">71</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">29</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(7)">
+  <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
+  <div class="article-meta">
+    <span>Dr. Michael Johnson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 3, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>9,451 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(8)">
-      <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
-      <div class="article-meta">
-        <span>Dr. Michael Johnson</span>
-        <div class="meta-dot"></div>
-        <span>Mar 14, 2024</span>
-        <div class="meta-dot"></div>
-        <span>18 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">294</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">112</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">48</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(8)">
+  <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
+  <div class="article-meta">
+    <span>Dr. Michael Johnson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 14, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>16,789 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(9)">
-      <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
-      <div class="article-meta">
-        <span>Dr. Anna Williams</span>
-        <div class="meta-dot"></div>
-        <span>Mar 11, 2024</span>
-        <div class="meta-dot"></div>
-        <span>16 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">256</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">94</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">39</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(9)">
+  <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
+  <div class="article-meta">
+    <span>Dr. Anna Williams</span>
+    <div class="meta-dot"></div>
+    <span>Mar 11, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>13,567 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(10)">
-      <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
-      <div class="article-meta">
-        <span>Dr. David Park</span>
-        <div class="meta-dot"></div>
-        <span>Mar 9, 2024</span>
-        <div class="meta-dot"></div>
-        <span>20 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">312</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">118</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">51</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(10)">
+  <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
+  <div class="article-meta">
+    <span>Dr. David Park</span>
+    <div class="meta-dot"></div>
+    <span>Mar 9, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>19,012 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(11)">
-      <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
-      <div class="article-meta">
-        <span>Dr. Rachel Green</span>
-        <div class="meta-dot"></div>
-        <span>Mar 7, 2024</span>
-        <div class="meta-dot"></div>
-        <span>13 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">234</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">87</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">36</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(11)">
+  <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
+  <div class="article-meta">
+    <span>Dr. Rachel Green</span>
+    <div class="meta-dot"></div>
+    <span>Mar 7, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>11,890 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(12)">
-      <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
-      <div class="article-meta">
-        <span>Dr. Thomas Anderson</span>
-        <div class="meta-dot"></div>
-        <span>Mar 7, 2024</span>
-        <div class="meta-dot"></div>
-        <span>11 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">178</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">64</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">26</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(12)">
+  <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
+  <div class="article-meta">
+    <span>Dr. Thomas Anderson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 7, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>8,456 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(13)">
-      <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
-      <div class="article-meta">
-        <span>Dr. Rachel Green</span>
-        <div class="meta-dot"></div>
-        <span>Mar 4, 2024</span>
-        <div class="meta-dot"></div>
-        <span>13 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">267</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">101</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">43</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(13)">
+  <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
+  <div class="article-meta">
+    <span>Dr. Rachel Green</span>
+    <div class="meta-dot"></div>
+    <span>Mar 4, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>15,234 views</span>
+  </div>
+</li>
 
-    <li class="article-item" onclick="openPreview(14)">
-      <h2 class="article-title">The Role of Microbiome in Human Health</h2>
-      <div class="article-meta">
-        <span>Dr. Jennifer Lee</span>
-        <div class="meta-dot"></div>
-        <span>Mar 1, 2024</span>
-        <div class="meta-dot"></div>
-        <span>9 min read</span>
-      </div>
-      <div class="medal-stats">
-        <div class="medal-item">
-          <div class="medal-dot bronze"></div>
-          <span class="medal-count">198</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot gold"></div>
-          <span class="medal-count">73</span>
-        </div>
-        <div class="medal-item">
-          <div class="medal-dot platinum"></div>
-          <span class="medal-count">30</span>
-        </div>
-      </div>
-    </li>
+<li class="article-item" onclick="openPreview(14)">
+  <h2 class="article-title">The Role of Microbiome in Human Health</h2>
+  <div class="article-meta">
+    <span>Dr. Jennifer Lee</span>
+    <div class="meta-dot"></div>
+    <span>Mar 1, 2024</span>
+  </div>
+  <div class="views-count">
+    <i class="fas fa-eye"></i>
+    <span>9,876 views</span>
+  </div>
+</li>
+
   </ul>
 </div>
 
 <!-- Preview Modal -->
+
 <div class="preview-modal" id="previewModal" onclick="closePreviewOnBackdrop(event)">
   <div class="preview-content">
     <button class="close-preview" onclick="closePreview()">
@@ -779,7 +569,6 @@ body.light-theme .logo-img {
     <div class="preview-body">
       <h2 class="preview-title" id="previewTitle"></h2>
       <div class="preview-meta" id="previewMeta"></div>
-      <div class="preview-medals" id="previewMedals"></div>
       <p class="preview-excerpt" id="previewExcerpt"></p>
       <div class="preview-actions">
         <button class="preview-btn primary" onclick="readFullArticle()">
@@ -812,136 +601,121 @@ const articles = [
     title: "Understanding Cardiovascular Pathology: A Comprehensive Review",
     author: "Dr. Sarah Mitchell",
     date: "Mar 15, 2024",
-    readTime: "12 min read",
+    views: "12,547 views",
     image: "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?w=800&h=400&fit=crop",
-    excerpt: "This comprehensive review explores the latest findings in cardiovascular pathology, examining the cellular and molecular mechanisms underlying heart disease. We discuss recent advances in diagnostic techniques, therapeutic interventions, and the role of inflammation in cardiovascular disorders.",
-    medals: { bronze: 247, gold: 89, platinum: 34 }
+    excerpt: "This comprehensive review explores the latest findings in cardiovascular pathology, examining the cellular and molecular mechanisms underlying heart disease. We discuss recent advances in diagnostic techniques, therapeutic interventions, and the role of inflammation in cardiovascular disorders."
   },
   {
     title: "Advances in Neurological Imaging Techniques",
     author: "Dr. James Chen",
     date: "Mar 12, 2024",
-    readTime: "8 min read",
+    views: "8,921 views",
     image: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&h=400&fit=crop",
-    excerpt: "Modern neuroimaging has revolutionized our understanding of brain structure and function. This article examines cutting-edge MRI techniques, functional connectivity mapping, and artificial intelligence applications in neurological diagnosis.",
-    medals: { bronze: 192, gold: 67, platinum: 28 }
+    excerpt: "Modern neuroimaging has revolutionized our understanding of brain structure and function. This article examines cutting-edge MRI techniques, functional connectivity mapping, and artificial intelligence applications in neurological diagnosis."
   },
   {
     title: "Molecular Mechanisms of Cancer Progression",
     author: "Dr. Emily Rodriguez",
     date: "Mar 10, 2024",
-    readTime: "15 min read",
+    views: "18,234 views",
     image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800&h=400&fit=crop",
-    excerpt: "An in-depth analysis of the molecular pathways driving cancer development and metastasis. We explore genetic mutations, epigenetic modifications, and the tumor microenvironment's role in cancer progression and treatment resistance.",
-    medals: { bronze: 318, gold: 124, platinum: 56 }
+    excerpt: "An in-depth analysis of the molecular pathways driving cancer development and metastasis. We explore genetic mutations, epigenetic modifications, and the tumor microenvironment's role in cancer progression and treatment resistance."
   },
   {
     title: "Clinical Applications of Immunotherapy in Modern Medicine",
     author: "Dr. Robert Kim",
     date: "Mar 8, 2024",
-    readTime: "10 min read",
+    views: "14,876 views",
     image: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&h=400&fit=crop",
-    excerpt: "Immunotherapy has transformed cancer treatment and autoimmune disease management. This review covers checkpoint inhibitors, CAR-T cell therapy, and emerging combination approaches that harness the immune system's power.",
-    medals: { bronze: 276, gold: 98, platinum: 41 }
+    excerpt: "Immunotherapy has transformed cancer treatment and autoimmune disease management. This review covers checkpoint inhibitors, CAR-T cell therapy, and emerging combination approaches that harness the immune system's power."
   },
   {
     title: "Genetic Markers in Personalized Medicine Approaches",
     author: "Dr. Lisa Zhang",
     date: "Mar 5, 2024",
-    readTime: "14 min read",
+    views: "10,342 views",
     image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=400&fit=crop",
-    excerpt: "Personalized medicine leverages genetic information to tailor treatments to individual patients. We examine pharmacogenomics, biomarker discovery, and the integration of genomic data into clinical practice.",
-    medals: { bronze: 203, gold: 79, platinum: 32 }
+    excerpt: "Personalized medicine leverages genetic information to tailor treatments to individual patients. We examine pharmacogenomics, biomarker discovery, and the integration of genomic data into clinical practice."
   },
   {
     title: "Hypertensive Heart Disease: Current Treatment Protocols",
     author: "Dr. Robert Kim",
     date: "Mar 8, 2024",
-    readTime: "10 min read",
+    views: "7,654 views",
     image: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=800&h=400&fit=crop",
-    excerpt: "Hypertension remains a leading cause of cardiovascular morbidity. This article reviews evidence-based treatment strategies, including lifestyle modifications, pharmacological interventions, and novel therapeutic targets.",
-    medals: { bronze: 165, gold: 58, platinum: 23 }
+    excerpt: "Hypertension remains a leading cause of cardiovascular morbidity. This article reviews evidence-based treatment strategies, including lifestyle modifications, pharmacological interventions, and novel therapeutic targets."
   },
   {
     title: "Atherosclerosis and Inflammatory Biomarkers",
     author: "Dr. Lisa Zhang",
     date: "Mar 5, 2024",
-    readTime: "14 min read",
+    views: "11,223 views",
     image: "https://images.unsplash.com/photo-1584362917165-526a968579e8?w=800&h=400&fit=crop",
-    excerpt: "Inflammation plays a central role in atherosclerosis development. We discuss emerging biomarkers, imaging techniques for plaque characterization, and anti-inflammatory therapeutic approaches.",
-    medals: { bronze: 221, gold: 83, platinum: 37 }
+    excerpt: "Inflammation plays a central role in atherosclerosis development. We discuss emerging biomarkers, imaging techniques for plaque characterization, and anti-inflammatory therapeutic approaches."
   },
   {
     title: "Cardiac Imaging Advances in Diagnostic Accuracy",
     author: "Dr. Michael Johnson",
     date: "Mar 3, 2024",
-    readTime: "11 min read",
+    views: "9,451 views",
     image: "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=800&h=400&fit=crop",
-    excerpt: "Recent technological advances have dramatically improved cardiac imaging capabilities. This review covers coronary CT angiography, cardiac MRI, and machine learning algorithms that enhance diagnostic precision.",
-    medals: { bronze: 189, gold: 71, platinum: 29 }
+    excerpt: "Recent technological advances have dramatically improved cardiac imaging capabilities. This review covers coronary CT angiography, cardiac MRI, and machine learning algorithms that enhance diagnostic precision."
   },
   {
     title: "Systematic Review of Diabetes Management Strategies",
     author: "Dr. Michael Johnson",
     date: "Mar 14, 2024",
-    readTime: "18 min read",
+    views: "16,789 views",
     image: "https://images.unsplash.com/photo-1615486511262-2f3fa5c6bde8?w=800&h=400&fit=crop",
-    excerpt: "A comprehensive systematic review examining contemporary diabetes management approaches. We analyze pharmacological interventions, continuous glucose monitoring, and integrated care models for optimal glycemic control.",
-    medals: { bronze: 294, gold: 112, platinum: 48 }
+    excerpt: "A comprehensive systematic review examining contemporary diabetes management approaches. We analyze pharmacological interventions, continuous glucose monitoring, and integrated care models for optimal glycemic control."
   },
   {
     title: "Meta-Analysis of Anticoagulation Therapies",
     author: "Dr. Anna Williams",
     date: "Mar 11, 2024",
-    readTime: "16 min read",
+    views: "13,567 views",
     image: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&h=400&fit=crop",
-    excerpt: "This meta-analysis compares efficacy and safety profiles of novel oral anticoagulants versus traditional warfarin therapy. We examine bleeding risks, stroke prevention, and patient-specific treatment selection.",
-    medals: { bronze: 256, gold: 94, platinum: 39 }
+    excerpt: "This meta-analysis compares efficacy and safety profiles of novel oral anticoagulants versus traditional warfarin therapy. We examine bleeding risks, stroke prevention, and patient-specific treatment selection."
   },
   {
     title: "Clinical Outcomes in Surgical Interventions",
     author: "Dr. David Park",
     date: "Mar 9, 2024",
-    readTime: "20 min read",
+    views: "19,012 views",
     image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&h=400&fit=crop",
-    excerpt: "An extensive analysis of surgical outcomes across various procedures. We evaluate perioperative complications, long-term survival rates, and factors influencing postoperative recovery and patient satisfaction.",
-    medals: { bronze: 312, gold: 118, platinum: 51 }
+    excerpt: "An extensive analysis of surgical outcomes across various procedures. We evaluate perioperative complications, long-term survival rates, and factors influencing postoperative recovery and patient satisfaction."
   },
   {
     title: "Evidence-Based Approaches to Pain Management",
     author: "Dr. Rachel Green",
     date: "Mar 7, 2024",
-    readTime: "13 min read",
+    views: "11,890 views",
     image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=400&fit=crop",
-    excerpt: "Modern pain management requires a multimodal approach. This review examines pharmacological options, interventional techniques, and complementary therapies supported by current clinical evidence.",
-    medals: { bronze: 234, gold: 87, platinum: 36 }
+    excerpt: "Modern pain management requires a multimodal approach. This review examines pharmacological options, interventional techniques, and complementary therapies supported by current clinical evidence."
   },
   {
     title: "Breakthrough in Gene Therapy Applications",
     author: "Dr. Thomas Anderson",
     date: "Mar 7, 2024",
-    readTime: "11 min read",
+    views: "8,456 views",
     image: "https://images.unsplash.com/photo-1582719471137-c3967ffb1c42?w=800&h=400&fit=crop",
-    excerpt: "Gene therapy is transforming treatment for previously incurable genetic disorders. We explore CRISPR technology, viral vector delivery systems, and successful clinical applications in inherited diseases.",
-    medals: { bronze: 178, gold: 64, platinum: 26 }
+    excerpt: "Gene therapy is transforming treatment for previously incurable genetic disorders. We explore CRISPR technology, viral vector delivery systems, and successful clinical applications in inherited diseases."
   },
   {
     title: "Immunotherapy Advances in Oncology",
     author: "Dr. Rachel Green",
     date: "Mar 4, 2024",
-    readTime: "13 min read",
+    views: "15,234 views",
     image: "https://images.unsplash.com/photo-1579165466991-467135ad3110?w=800&h=400&fit=crop",
-    excerpt: "The oncology landscape has been revolutionized by immunotherapeutic approaches. This article reviews PD-1/PD-L1 inhibitors, combination strategies, and biomarkers predicting treatment response.",
-    medals: { bronze: 267, gold: 101, platinum: 43 }
+    excerpt: "The oncology landscape has been revolutionized by immunotherapeutic approaches. This article reviews PD-1/PD-L1 inhibitors, combination strategies, and biomarkers predicting treatment response."
   },
   {
     title: "The Role of Microbiome in Human Health",
     author: "Dr. Jennifer Lee",
     date: "Mar 1, 2024",
-    readTime: "9 min read",
+    views: "9,876 views",
     image: "https://images.unsplash.com/photo-1576671081837-49000212a370?w=800&h=400&fit=crop",
-    excerpt: "The human microbiome influences diverse aspects of health and disease. We examine gut-brain axis interactions, metabolic regulation, and therapeutic modulation of microbial communities.",
-    medals: { bronze: 198, gold: 73, platinum: 30 }
+    excerpt: "The human microbiome influences diverse aspects of health and disease. We examine gut-brain axis interactions, metabolic regulation, and therapeutic modulation of microbial communities."
   }
 ];
 
@@ -958,22 +732,7 @@ function openPreview(index) {
     <div class="meta-dot"></div>
     <span>${article.date}</span>
     <div class="meta-dot"></div>
-    <span>${article.readTime}</span>
-  `;
-  
-  document.getElementById('previewMedals').innerHTML = `
-    <div class="medal-item">
-      <div class="medal-dot bronze"></div>
-      <span class="medal-count">${article.medals.bronze}</span>
-    </div>
-    <div class="medal-item">
-      <div class="medal-dot gold"></div>
-      <span class="medal-count">${article.medals.gold}</span>
-    </div>
-    <div class="medal-item">
-      <div class="medal-dot platinum"></div>
-      <span class="medal-count">${article.medals.platinum}</span>
-    </div>
+    <span><i class="fas fa-eye"></i> ${article.views}</span>
   `;
   
   modal.classList.add('active');
