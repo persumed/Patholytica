@@ -3,133 +3,82 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Patholytica — Library</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile Card UI</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg-primary: #faf8f5;
-  --bg-secondary: #f0ede7;
-  --text-primary: #1a1512;
-  --text-secondary: #6b6460;
-  --accent-red: #c7372f;
-  --accent-blue: #2a5a7a;
-  --border-subtle: #e0ddd7;
-  --shadow: rgba(26, 21, 18, 0.08);
-}
-
-body.dark-theme {
-–bg-primary: #1a1512;
-–bg-secondary: #252220;
-–text-primary: #faf8f5;
-–text-secondary: #a39d98;
-–accent-red: #e85a52;
-–accent-blue: #5b9cc9;
-–border-subtle: #3a3632;
-–shadow: rgba(0, 0, 0, 0.3);
-}
-
-- {
-  box-sizing: border-box;
+* {
   margin: 0;
   padding: 0;
-  }
-
-html, body {
-min-height: 100%;
-font-family: “IBM Plex Sans”, sans-serif;
-overflow-x: hidden;
-max-width: 100vw;
+  box-sizing: border-box;
 }
 
 body {
-background: var(–bg-primary);
-color: var(–text-primary);
-transition: background 0.4s ease, color 0.4s ease;
-line-height: 1.6;
-}
-
-/* HEADER */
-.header-wrapper {
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-background: var(–bg-primary);
-padding-top: env(safe-area-inset-top);
-border-bottom: 2px solid var(–border-subtle);
-z-index: 40;
-backdrop-filter: blur(12px);
-background: rgba(250, 248, 245, 0.95);
-}
-
-body.dark-theme .header-wrapper {
-background: rgba(26, 21, 18, 0.95);
-}
-
-.header {
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 16px 32px;
-max-width: 1400px;
-margin: 0 auto;
-}
-
-.logo-img {
-height: 32px;
-width: auto;
-transition: filter 0.3s ease;
-cursor: pointer;
-}
-
-body.dark-theme .logo-img {
-filter: invert(1);
-}
-
-.header-actions {
-display: flex;
-align-items: center;
-gap: 12px;
-}
-
-.icon-btn {
-width: 44px;
-height: 44px;
-border-radius: 50%;
-background: transparent;
-border: 1.5px solid var(–border-subtle);
-color: var(–text-primary);
-cursor: pointer;
+font-family: ‘DM Sans’, sans-serif;
+background: linear-gradient(135deg, #e8eef2 0%, #f5f7fa 100%);
+min-height: 100vh;
 display: flex;
 align-items: center;
 justify-content: center;
-font-size: 18px;
-transition: all 0.3s ease;
+padding: 40px 20px;
+position: relative;
+overflow: hidden;
 }
 
-.icon-btn:hover {
-background: var(–bg-secondary);
-border-color: var(–text-secondary);
-transform: translateY(-2px);
+body::before {
+content: ‘’;
+position: absolute;
+width: 500px;
+height: 500px;
+background: radial-gradient(circle, rgba(186, 220, 233, 0.3) 0%, transparent 70%);
+top: -100px;
+left: -100px;
+border-radius: 50%;
 }
 
-/* MAIN CONTENT */
-.library-container {
-max-width: 1400px;
-margin: 0 auto;
-padding: 120px 32px 80px;
+body::after {
+content: ‘’;
+position: absolute;
+width: 400px;
+height: 400px;
+background: radial-gradient(circle, rgba(210, 227, 236, 0.3) 0%, transparent 70%);
+bottom: -80px;
+right: -80px;
+border-radius: 50%;
 }
 
-.library-header {
-margin-bottom: 80px;
-text-align: center;
+.container {
+display: flex;
+gap: 40px;
+position: relative;
+z-index: 1;
+flex-wrap: wrap;
+justify-content: center;
+}
+
+.profile-card {
+width: 380px;
+background: rgba(255, 255, 255, 0.7);
+backdrop-filter: blur(20px);
+border-radius: 32px;
+padding: 48px 36px;
+box-shadow:
+0 20px 60px rgba(0, 0, 0, 0.08),
+0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+animation: slideUp 0.6s ease forwards;
 opacity: 0;
-animation: fadeInUp 0.8s ease forwards;
 }
 
-@keyframes fadeInUp {
+.profile-card:nth-child(1) {
+animation-delay: 0.1s;
+}
+
+.profile-card:nth-child(2) {
+animation-delay: 0.2s;
+}
+
+@keyframes slideUp {
 to {
 opacity: 1;
 transform: translateY(0);
@@ -140,934 +89,326 @@ transform: translateY(30px);
 }
 }
 
-.library-title {
-font-family: ‘Playfair Display’, serif;
-font-size: 72px;
-font-weight: 900;
-letter-spacing: -2px;
-margin-bottom: 16px;
-line-height: 0.95;
+.profile-card:hover {
+transform: translateY(-8px);
+box-shadow:
+0 30px 80px rgba(0, 0, 0, 0.12),
+0 0 0 1px rgba(255, 255, 255, 0.6) inset;
 }
 
-.library-subtitle {
-font-size: 18px;
-color: var(–text-secondary);
-font-weight: 500;
-letter-spacing: 0.5px;
-}
-
-/* ARTICLE GRID */
-.articles-grid {
-display: grid;
-grid-template-columns: repeat(12, 1fr);
-gap: 32px;
-margin-bottom: 60px;
-}
-
-.article-card {
+.avatar-wrapper {
 position: relative;
-cursor: pointer;
-opacity: 0;
-transform: translateY(40px);
-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.article-card.revealed {
-opacity: 1;
-transform: translateY(0);
-}
-
-/* Different grid spans for visual interest */
-.article-card:nth-child(1) { grid-column: span 8; }
-.article-card:nth-child(2) { grid-column: span 4; }
-.article-card:nth-child(3) { grid-column: span 5; }
-.article-card:nth-child(4) { grid-column: span 7; }
-.article-card:nth-child(5) { grid-column: span 6; }
-.article-card:nth-child(6) { grid-column: span 6; }
-.article-card:nth-child(7) { grid-column: span 4; }
-.article-card:nth-child(8) { grid-column: span 8; }
-.article-card:nth-child(9) { grid-column: span 7; }
-.article-card:nth-child(10) { grid-column: span 5; }
-.article-card:nth-child(11) { grid-column: span 12; }
-.article-card:nth-child(12) { grid-column: span 6; }
-.article-card:nth-child(13) { grid-column: span 6; }
-.article-card:nth-child(14) { grid-column: span 5; }
-.article-card:nth-child(15) { grid-column: span 7; }
-
-.article-image {
 width: 100%;
-aspect-ratio: 16/10;
+aspect-ratio: 1;
+margin-bottom: 32px;
+border-radius: 24px;
 overflow: hidden;
-border-radius: 4px;
-margin-bottom: 20px;
-position: relative;
-background: var(–bg-secondary);
+background: linear-gradient(135deg, #e0e7ec 0%, #cfd9df 100%);
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.article-image::after {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%);
-opacity: 0;
-transition: opacity 0.4s ease;
-}
-
-.article-card:hover .article-image::after {
-opacity: 1;
-}
-
-.article-image img {
+.avatar-wrapper img {
 width: 100%;
 height: 100%;
 object-fit: cover;
-transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-filter: grayscale(0.3);
+transition: transform 0.4s ease;
 }
 
-.article-card:hover .article-image img {
+.profile-card:hover .avatar-wrapper img {
 transform: scale(1.05);
-filter: grayscale(0);
 }
 
-/* Image placeholders with abstract patterns */
-.image-placeholder {
-width: 100%;
-height: 100%;
+.profile-info {
+text-align: left;
+margin-bottom: 32px;
+}
+
+.name-wrapper {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 12px;
+}
+
+.name {
+font-size: 26px;
+font-weight: 700;
+color: #1a1f2e;
+letter-spacing: -0.5px;
+}
+
+.verified-badge {
+width: 24px;
+height: 24px;
+background: #22c55e;
+border-radius: 50%;
 display: flex;
 align-items: center;
 justify-content: center;
-font-size: 64px;
-color: #fff;
+flex-shrink: 0;
+animation: pop 0.5s ease 0.8s both;
+}
+
+@keyframes pop {
+0% { transform: scale(0); opacity: 0; }
+50% { transform: scale(1.2); }
+100% { transform: scale(1); opacity: 1; }
+}
+
+.verified-badge::after {
+content: ‘✓’;
+color: white;
+font-size: 14px;
+font-weight: bold;
+}
+
+.bio {
+font-size: 16px;
+color: #6b7280;
+line-height: 1.6;
+font-weight: 400;
+}
+
+.stats {
+display: flex;
+gap: 32px;
+margin-bottom: 28px;
+padding-bottom: 28px;
+border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.stat-item {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.stat-icon {
+width: 20px;
+height: 20px;
+color: #9ca3af;
+}
+
+.stat-value {
+font-size: 17px;
+font-weight: 600;
+color: #374151;
+}
+
+.follow-btn {
+width: 100%;
+height: 52px;
+background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+border: none;
+border-radius: 16px;
+color: white;
+font-size: 16px;
+font-weight: 600;
+font-family: ‘DM Sans’, sans-serif;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+box-shadow: 0 4px 14px rgba(31, 41, 55, 0.25);
 position: relative;
 overflow: hidden;
 }
 
-.image-placeholder::before {
+.follow-btn::before {
 content: ‘’;
 position: absolute;
 inset: 0;
-background: linear-gradient(135deg, var(–accent-blue), var(–accent-red));
-opacity: 0.9;
+background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+opacity: 0;
+transition: opacity 0.3s ease;
 }
 
-.image-placeholder i {
+.follow-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 20px rgba(31, 41, 55, 0.35);
+}
+
+.follow-btn:hover::before {
+opacity: 1;
+}
+
+.follow-btn:active {
+transform: translateY(0);
+}
+
+.follow-btn-text {
 position: relative;
 z-index: 1;
 }
 
-/* Varied background patterns */
-.article-card:nth-child(1) .image-placeholder::before { background: linear-gradient(135deg, #2a5a7a, #c7372f); }
-.article-card:nth-child(2) .image-placeholder::before { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
-.article-card:nth-child(3) .image-placeholder::before { background: linear-gradient(135deg, #059669, #f59e0b); }
-.article-card:nth-child(4) .image-placeholder::before { background: linear-gradient(135deg, #dc2626, #7c2d12); }
-.article-card:nth-child(5) .image-placeholder::before { background: linear-gradient(135deg, #0891b2, #4f46e5); }
-.article-card:nth-child(6) .image-placeholder::before { background: linear-gradient(135deg, #7c3aed, #db2777); }
-.article-card:nth-child(7) .image-placeholder::before { background: linear-gradient(135deg, #ea580c, #facc15); }
-.article-card:nth-child(8) .image-placeholder::before { background: linear-gradient(135deg, #2563eb, #06b6d4); }
-.article-card:nth-child(9) .image-placeholder::before { background: linear-gradient(135deg, #be123c, #475569); }
-.article-card:nth-child(10) .image-placeholder::before { background: linear-gradient(135deg, #15803d, #a16207); }
-.article-card:nth-child(11) .image-placeholder::before { background: linear-gradient(135deg, #374151, #9333ea); }
-.article-card:nth-child(12) .image-placeholder::before { background: linear-gradient(135deg, #be185d, #f97316); }
-.article-card:nth-child(13) .image-placeholder::before { background: linear-gradient(135deg, #0369a1, #0f766e); }
-.article-card:nth-child(14) .image-placeholder::before { background: linear-gradient(135deg, #7e22ce, #dc2626); }
-.article-card:nth-child(15) .image-placeholder::before { background: linear-gradient(135deg, #15803d, #1e40af); }
-
-.article-category {
-display: inline-block;
-font-size: 12px;
-font-weight: 600;
-letter-spacing: 1.5px;
-text-transform: uppercase;
-color: var(–accent-red);
-margin-bottom: 12px;
-}
-
-.article-title {
-font-family: ‘Playfair Display’, serif;
-font-size: 28px;
-font-weight: 700;
-line-height: 1.2;
-margin-bottom: 12px;
-transition: color 0.3s ease;
-}
-
-.article-card:hover .article-title {
-color: var(–accent-red);
-}
-
-.article-excerpt {
-font-size: 15px;
-color: var(–text-secondary);
-line-height: 1.6;
-margin-bottom: 16px;
-display: -webkit-box;
--webkit-line-clamp: 2;
--webkit-box-orient: vertical;
-overflow: hidden;
-}
-
-.article-meta {
-display: flex;
-align-items: center;
-gap: 16px;
-font-size: 13px;
-color: var(–text-secondary);
-}
-
-.meta-divider {
-width: 1px;
-height: 12px;
-background: var(–border-subtle);
-}
-
-/* INTERLUDE SECTIONS */
-.interlude {
-grid-column: 1 / -1;
-margin: 40px 0;
-padding: 60px;
-background: var(–bg-secondary);
-border-radius: 4px;
-border-left: 4px solid var(–accent-red);
+.follow-btn-icon {
+font-size: 20px;
 position: relative;
-opacity: 0;
-transform: translateX(-40px);
-transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+z-index: 1;
+transition: transform 0.3s ease;
 }
 
-.interlude.revealed {
-opacity: 1;
-transform: translateX(0);
+.follow-btn:hover .follow-btn-icon {
+transform: rotate(90deg);
 }
 
-.interlude-label {
-font-size: 11px;
-font-weight: 600;
-letter-spacing: 2px;
-text-transform: uppercase;
-color: var(–accent-red);
-margin-bottom: 20px;
+/* Variant styling */
+.profile-card:nth-child(2) .avatar-wrapper {
+background: linear-gradient(135deg, #d5dce2 0%, #c4cdd4 100%);
 }
 
-.interlude-title {
-font-family: ‘Playfair Display’, serif;
-font-size: 36px;
-font-weight: 700;
-line-height: 1.3;
-margin-bottom: 16px;
+.profile-card:nth-child(2) .verified-badge {
+background: #10b981;
 }
 
-.interlude-content {
-font-size: 17px;
-color: var(–text-secondary);
-line-height: 1.7;
-max-width: 800px;
-}
-
-.interlude-media {
-display: grid;
-grid-template-columns: 2fr 1fr;
-gap: 24px;
-margin-top: 32px;
-}
-
-.media-visual {
-aspect-ratio: 16/9;
-background: var(–bg-primary);
-border-radius: 4px;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 72px;
-color: var(–accent-blue);
-position: relative;
-overflow: hidden;
-}
-
-.media-visual::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: radial-gradient(circle at 30% 50%, var(–accent-red) 0%, transparent 60%),
-radial-gradient(circle at 70% 50%, var(–accent-blue) 0%, transparent 60%);
-opacity: 0.1;
-}
-
-.media-audio {
-display: flex;
-flex-direction: column;
-justify-content: center;
-gap: 20px;
-}
-
-.audio-control {
-display: flex;
-align-items: center;
-gap: 16px;
-padding: 20px;
-background: var(–bg-primary);
-border-radius: 4px;
-cursor: pointer;
-transition: all 0.3s ease;
-}
-
-.audio-control:hover {
-transform: translateX(8px);
-box-shadow: 0 4px 12px var(–shadow);
-}
-
-.play-button {
-width: 48px;
-height: 48px;
-border-radius: 50%;
-background: var(–accent-red);
-color: #fff;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 18px;
-flex-shrink: 0;
-}
-
-.audio-info h4 {
-font-size: 15px;
-font-weight: 600;
-margin-bottom: 4px;
-}
-
-.audio-info p {
-font-size: 13px;
-color: var(–text-secondary);
-}
-
-/* PULL QUOTE */
-.pull-quote {
-grid-column: 1 / -1;
-text-align: center;
-padding: 80px 60px;
-position: relative;
-opacity: 0;
-transform: scale(0.95);
-transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.pull-quote.revealed {
-opacity: 1;
-transform: scale(1);
-}
-
-.pull-quote::before {
-content: ‘”’;
-position: absolute;
-top: 0;
-left: 50%;
-transform: translateX(-50%);
-font-family: ‘Playfair Display’, serif;
-font-size: 180px;
-color: var(–accent-red);
-opacity: 0.15;
-line-height: 1;
-}
-
-.pull-quote blockquote {
-font-family: ‘Playfair Display’, serif;
-font-size: 32px;
-font-weight: 700;
-line-height: 1.4;
-margin-bottom: 24px;
-position: relative;
-}
-
-.pull-quote cite {
-font-family: ‘IBM Plex Sans’, sans-serif;
-font-size: 16px;
-font-weight: 600;
-font-style: normal;
-color: var(–text-secondary);
-text-transform: uppercase;
-letter-spacing: 1px;
-}
-
-/* FOOTER */
-.footer {
-background: var(–bg-secondary);
-border-top: 2px solid var(–border-subtle);
-padding: 48px 32px;
-margin-top: 80px;
-}
-
-.footer-content {
-max-width: 1400px;
-margin: 0 auto;
-text-align: center;
-}
-
-.footer-stats {
-margin-bottom: 16px;
-font-size: 16px;
-}
-
-.article-count {
-color: var(–accent-red);
-font-weight: 600;
-font-size: 24px;
-}
-
-.footer-tagline {
-margin-bottom: 12px;
-font-size: 15px;
-color: var(–text-secondary);
-}
-
-.footer-location {
-font-size: 13px;
-color: var(–text-secondary);
-opacity: 0.7;
-}
-
-/* RESPONSIVE */
-@media (max-width: 1024px) {
-.articles-grid {
-grid-template-columns: repeat(6, 1fr);
-gap: 24px;
-}
-
-.article-card {
-grid-column: span 6 !important;
-}
-
-.library-title {
-font-size: 56px;
-}
-
-.interlude-media {
-grid-template-columns: 1fr;
-}
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-.library-container {
-padding: 100px 20px 60px;
+.container {
+gap: 30px;
 }
 
-.header {
-padding: 12px 20px;
+.profile-card {
+width: 100%;
+max-width: 380px;
+padding: 40px 32px;
 }
 
-.library-title {
-font-size: 42px;
-}
-
-.library-header {
-margin-bottom: 48px;
-}
-
-.articles-grid {
-grid-template-columns: 1fr;
-gap: 32px;
-}
-
-.article-title {
+.name {
 font-size: 24px;
 }
 
-.interlude {
-padding: 32px 24px;
+body {
+padding: 30px 16px;
+}
 }
 
-.interlude-title {
-font-size: 28px;
-}
-
-.pull-quote {
-padding: 48px 24px;
-}
-
-.pull-quote blockquote {
-font-size: 24px;
-}
+/* Icon styles */
+svg {
+width: 100%;
+height: 100%;
 }
 </style>
 
 </head>
 <body>
 
-<div class="header-wrapper">
-  <div class="header">
-    <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
-    <div class="header-actions">
-      <button class="icon-btn" onclick="searchArticles()" title="Search">
-        <i class="fas fa-search"></i>
-      </button>
-      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-        <i class="fas fa-circle-half-stroke"></i>
-      </button>
-      <button class="icon-btn" title="User">
-        <i class="fas fa-user"></i>
-      </button>
+<div class="container">
+  <!-- Card 1 -->
+  <div class="profile-card">
+    <div class="avatar-wrapper">
+      <img src="/mnt/user-data/uploads/7d57b361250cf1236d918c38970d71a9e05a789a.heic" alt="Sophie Bennett">
     </div>
+
+<div class="profile-info">
+  <div class="name-wrapper">
+    <h2 class="name">Sophie Bennett</h2>
+    <div class="verified-badge"></div>
+  </div>
+  <p class="bio">Product Designer who focuses on simplicity & usability.</p>
+</div>
+
+<div class="stats">
+  <div class="stat-item">
+    <div class="stat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+    </div>
+    <span class="stat-value">312</span>
+  </div>
+  
+  <div class="stat-item">
+    <div class="stat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+    </div>
+    <span class="stat-value">48</span>
   </div>
 </div>
 
-<div class="library-container">
-  <div class="library-header">
-    <h1 class="library-title">The Library</h1>
-    <p class="library-subtitle">Curated Research & Clinical Insights</p>
+<button class="follow-btn">
+  <span class="follow-btn-text">Follow</span>
+  <span class="follow-btn-icon">+</span>
+</button>
+
   </div>
 
-  <div class="articles-grid">
+  <!-- Card 2 -->
 
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-heart-pulse"></i>
+  <div class="profile-card">
+    <div class="avatar-wrapper">
+      <img src="/mnt/user-data/uploads/7d57b361250cf1236d918c38970d71a9e05a789a.heic" alt="Sophie Bennett">
     </div>
-  </div>
-  <span class="article-category">Cardiology</span>
-  <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
-  <p class="article-excerpt">An in-depth exploration of cardiovascular disease mechanisms, diagnostic approaches, and therapeutic interventions shaping modern cardiology practice.</p>
-  <div class="article-meta">
-    <span>Dr. Sarah Mitchell</span>
-    <div class="meta-divider"></div>
-    <span>Mar 15, 2024</span>
-    <div class="meta-divider"></div>
-    <span>12 min</span>
-  </div>
-</article>
 
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-brain"></i>
-    </div>
+<div class="profile-info">
+  <div class="name-wrapper">
+    <h2 class="name">Sophie Bennett</h2>
+    <div class="verified-badge"></div>
   </div>
-  <span class="article-category">Neurology</span>
-  <h2 class="article-title">Advances in Neurological Imaging</h2>
-  <p class="article-excerpt">Revolutionary brain imaging technologies transforming diagnosis and treatment of neurological disorders.</p>
-  <div class="article-meta">
-    <span>Dr. James Chen</span>
-    <div class="meta-divider"></div>
-    <span>Mar 12, 2024</span>
-    <div class="meta-divider"></div>
-    <span>8 min</span>
-  </div>
-</article>
+  <p class="bio">Product Designer who focuses on simplicity & usability.</p>
+</div>
 
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-dna"></i>
+<div class="stats">
+  <div class="stat-item">
+    <div class="stat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
     </div>
+    <span class="stat-value">312</span>
   </div>
-  <span class="article-category">Oncology</span>
-  <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
-  <p class="article-excerpt">Cellular pathways and genetic mutations driving oncogenesis and metastatic spread across cancer types.</p>
-  <div class="article-meta">
-    <span>Dr. Emily Rodriguez</span>
-    <div class="meta-divider"></div>
-    <span>Mar 10, 2024</span>
-    <div class="meta-divider"></div>
-    <span>15 min</span>
-  </div>
-</article>
-
-<div class="interlude">
-  <div class="interlude-label">Research Spotlight</div>
-  <h3 class="interlude-title">Personalized Medicine Increases Treatment Efficacy by 40%</h3>
-  <p class="interlude-content">Recent multi-center studies demonstrate that genomic profiling and targeted therapy selection improve patient outcomes significantly. This marks a pivotal shift in oncology treatment paradigms, with implications for cardiovascular and neurological care protocols.</p>
-  <div class="interlude-media">
-    <div class="media-visual">
-      <i class="fas fa-microscope"></i>
+  
+  <div class="stat-item">
+    <div class="stat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
     </div>
-    <div class="media-audio">
-      <div class="audio-control" onclick="playAudio(this, 0)">
-        <div class="play-button">
-          <i class="fas fa-play"></i>
-        </div>
-        <div class="audio-info">
-          <h4>Listen to Research Summary</h4>
-          <p>Narrated by Dr. Mitchell • 2:15</p>
-        </div>
-      </div>
-      <div class="audio-control" onclick="playAudio(this, 1)">
-        <div class="play-button">
-          <i class="fas fa-play"></i>
-        </div>
-        <div class="audio-info">
-          <h4>Expert Commentary</h4>
-          <p>Analysis by Dr. Chen • 3:40</p>
-        </div>
-      </div>
-    </div>
+    <span class="stat-value">48</span>
   </div>
 </div>
 
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-syringe"></i>
-    </div>
-  </div>
-  <span class="article-category">Immunology</span>
-  <h2 class="article-title">Clinical Applications of Immunotherapy</h2>
-  <p class="article-excerpt">Breakthrough immunotherapy treatments transforming patient outcomes across disease categories.</p>
-  <div class="article-meta">
-    <span>Dr. Robert Kim</span>
-    <div class="meta-divider"></div>
-    <span>Mar 8, 2024</span>
-    <div class="meta-divider"></div>
-    <span>10 min</span>
-  </div>
-</article>
-
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-dna"></i>
-    </div>
-  </div>
-  <span class="article-category">Genetics</span>
-  <h2 class="article-title">Genetic Markers in Personalized Medicine</h2>
-  <p class="article-excerpt">Genomic profiling enables tailored treatment strategies for patients with complex conditions.</p>
-  <div class="article-meta">
-    <span>Dr. Lisa Zhang</span>
-    <div class="meta-divider"></div>
-    <span>Mar 5, 2024</span>
-    <div class="meta-divider"></div>
-    <span>14 min</span>
-  </div>
-</article>
-
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-heartbeat"></i>
-    </div>
-  </div>
-  <span class="article-category">Cardiology</span>
-  <h2 class="article-title">Hypertensive Heart Disease: Current Protocols</h2>
-  <p class="article-excerpt">Evidence-based guidelines for managing hypertension-related cardiac complications.</p>
-  <div class="article-meta">
-    <span>Dr. Robert Kim</span>
-    <div class="meta-divider"></div>
-    <span>Mar 8, 2024</span>
-    <div class="meta-divider"></div>
-    <span>10 min</span>
-  </div>
-</article>
-
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-bacteria"></i>
-    </div>
-  </div>
-  <span class="article-category">Pathology</span>
-  <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
-  <p class="article-excerpt">The role of systemic inflammation in plaque formation and cardiovascular risk assessment.</p>
-  <div class="article-meta">
-    <span>Dr. Lisa Zhang</span>
-    <div class="meta-divider"></div>
-    <span>Mar 5, 2024</span>
-    <div class="meta-divider"></div>
-    <span>14 min</span>
-  </div>
-</article>
-
-<div class="pull-quote">
-  <blockquote>"The future of medicine lies in understanding the molecular signatures that define each patient's unique biology."</blockquote>
-  <cite>Dr. Lisa Zhang — Genetic Research Lead</cite>
-</div>
-
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-x-ray"></i>
-    </div>
-  </div>
-  <span class="article-category">Imaging</span>
-  <h2 class="article-title">Cardiac Imaging Advances</h2>
-  <p class="article-excerpt">Next-generation modalities enhancing early detection of cardiac abnormalities.</p>
-  <div class="article-meta">
-    <span>Dr. Michael Johnson</span>
-    <div class="meta-divider"></div>
-    <span>Mar 3, 2024</span>
-    <div class="meta-divider"></div>
-    <span>11 min</span>
-  </div>
-</article>
-
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-pills"></i>
-    </div>
-  </div>
-  <span class="article-category">Endocrinology</span>
-  <h2 class="article-title">Diabetes Management Strategies</h2>
-  <p class="article-excerpt">Comprehensive analysis of interventions for optimal glycemic control.</p>
-  <div class="article-meta">
-    <span>Dr. Michael Johnson</span>
-    <div class="meta-divider"></div>
-    <span>Mar 14, 2024</span>
-    <div class="meta-divider"></div>
-    <span>18 min</span>
-  </div>
-</article>
-
-<div class="interlude">
-  <div class="interlude-label">Clinical Breakthrough</div>
-  <h3 class="interlude-title">Gene Therapy Achieves 85% Success Rate in Phase III Trials</h3>
-  <p class="interlude-content">Three novel gene therapy treatments for hereditary disorders demonstrate unprecedented efficacy in late-stage clinical trials. The FDA fast-track designation signals imminent approval, offering hope to thousands of patients with previously untreatable conditions.</p>
-  <div class="interlude-media">
-    <div class="media-visual">
-      <i class="fas fa-dna"></i>
-    </div>
-    <div class="media-audio">
-      <div class="audio-control" onclick="playAudio(this, 2)">
-        <div class="play-button">
-          <i class="fas fa-play"></i>
-        </div>
-        <div class="audio-info">
-          <h4>Trial Results Overview</h4>
-          <p>Dr. Anderson explains • 2:45</p>
-        </div>
-      </div>
-      <div class="audio-control" onclick="playAudio(this, 3)">
-        <div class="play-button">
-          <i class="fas fa-play"></i>
-        </div>
-        <div class="audio-info">
-          <h4>Patient Impact Discussion</h4>
-          <p>Clinical perspective • 4:10</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-vial"></i>
-    </div>
-  </div>
-  <span class="article-category">Hematology</span>
-  <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
-  <p class="article-excerpt">Evaluating novel anticoagulants versus traditional warfarin across clinical settings.</p>
-  <div class="article-meta">
-    <span>Dr. Anna Williams</span>
-    <div class="meta-divider"></div>
-    <span>Mar 11, 2024</span>
-    <div class="meta-divider"></div>
-    <span>16 min</span>
-  </div>
-</article>
-
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-user-nurse"></i>
-    </div>
-  </div>
-  <span class="article-category">Surgery</span>
-  <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
-  <p class="article-excerpt">Comparing minimally invasive versus traditional surgical approaches.</p>
-  <div class="article-meta">
-    <span>Dr. David Park</span>
-    <div class="meta-divider"></div>
-    <span>Mar 9, 2024</span>
-    <div class="meta-divider"></div>
-    <span>20 min</span>
-  </div>
-</article>
-
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-notes-medical"></i>
-    </div>
-  </div>
-  <span class="article-category">Pain Medicine</span>
-  <h2 class="article-title">Evidence-Based Pain Management</h2>
-  <p class="article-excerpt">Multimodal strategies addressing biological, psychological, and social factors.</p>
-  <div class="article-meta">
-    <span>Dr. Rachel Green</span>
-    <div class="meta-divider"></div>
-    <span>Mar 7, 2024</span>
-    <div class="meta-divider"></div>
-    <span>13 min</span>
-  </div>
-</article>
-
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-dna"></i>
-    </div>
-  </div>
-  <span class="article-category">Gene Therapy</span>
-  <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
-  <p class="article-excerpt">Novel editing techniques showing success in treating hereditary diseases.</p>
-  <div class="article-meta">
-    <span>Dr. Thomas Anderson</span>
-    <div class="meta-divider"></div>
-    <span>Mar 7, 2024</span>
-    <div class="meta-divider"></div>
-    <span>11 min</span>
-  </div>
-</article>
-
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-shield-virus"></i>
-    </div>
-  </div>
-  <span class="article-category">Oncology</span>
-  <h2 class="article-title">Immunotherapy Advances</h2>
-  <p class="article-excerpt">Checkpoint inhibitors and CAR-T cell therapies showing unprecedented results.</p>
-  <div class="article-meta">
-    <span>Dr. Rachel Green</span>
-    <div class="meta-divider"></div>
-    <span>Mar 4, 2024</span>
-    <div class="meta-divider"></div>
-    <span>13 min</span>
-  </div>
-</article>
-
-<article class="article-card" onclick="openArticle('patholytica.com/library')">
-  <div class="article-image">
-    <div class="image-placeholder">
-      <i class="fas fa-viruses"></i>
-    </div>
-  </div>
-  <span class="article-category">Microbiome</span>
-  <h2 class="article-title">The Role of Microbiome in Human Health</h2>
-  <p class="article-excerpt">Exploring gut-brain axis and microbiota's influence on immunity and metabolism.</p>
-  <div class="article-meta">
-    <span>Dr. Jennifer Lee</span>
-    <div class="meta-divider"></div>
-    <span>Mar 1, 2024</span>
-    <div class="meta-divider"></div>
-    <span>9 min</span>
-  </div>
-</article>
+<button class="follow-btn">
+  <span class="follow-btn-text">Follow</span>
+  <span class="follow-btn-icon">+</span>
+</button>
 
   </div>
 </div>
-
-<footer class="footer">
-  <div class="footer-content">
-    <div class="footer-stats">
-      <span class="article-count" id="articleCount">15</span> articles accessible
-    </div>
-    <div class="footer-tagline">
-      Patholytica is a Medicinebank project aiming to unify academic sharing
-    </div>
-    <div class="footer-location" id="userLocation">
-      Loading location...
-    </div>
-  </div>
-</footer>
 
 <script>
-// Theme toggle
-function toggleTheme() {
-  document.body.classList.toggle('dark-theme');
-  localStorage.setItem("theme", document.body.classList.contains("dark-theme") ? "dark" : "light");
-}
-
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark-theme");
-}
-
-// Navigation
-function openArticle(url) {
-  window.location.href = 'https://' + url;
-}
-
-function searchArticles() {
-  const searchQuery = prompt('Search articles:');
-  if (searchQuery && searchQuery.trim()) {
-    alert(`Searching for: "${searchQuery}"\n\nSearch functionality would filter the article list.`);
-  }
-}
-
-// Audio playback simulation
-function playAudio(element, index) {
-  const playButton = element.querySelector('.play-button i');
-  const isPlaying = playButton.classList.contains('fa-pause');
-  
-  // Stop all other audio
-  document.querySelectorAll('.play-button i').forEach(btn => {
-    btn.classList.remove('fa-pause');
-    btn.classList.add('fa-play');
-  });
-  
-  if (!isPlaying) {
-    playButton.classList.remove('fa-play');
-    playButton.classList.add('fa-pause');
+// Add interaction for follow button
+document.querySelectorAll('.follow-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const text = this.querySelector('.follow-btn-text');
+    const icon = this.querySelector('.follow-btn-icon');
     
-    // Simulate audio duration
-    const durations = [135000, 220000, 165000, 250000];
-    setTimeout(() => {
-      playButton.classList.remove('fa-pause');
-      playButton.classList.add('fa-play');
-    }, durations[index] || 3000);
-  }
-}
-
-// Intersection Observer for scroll animations
-const observerOptions = {
-  threshold: 0.15,
-  rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry, index) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => {
-        entry.target.classList.add('revealed');
-      }, index * 50);
+    if (text.textContent === 'Follow') {
+      text.textContent = 'Following';
+      icon.textContent = '✓';
+      this.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    } else {
+      text.textContent = 'Follow';
+      icon.textContent = '+';
+      this.style.background = 'linear-gradient(135deg, #1f2937 0%, #374151 100%)';
     }
   });
-}, observerOptions);
-
-// Observe all animatable elements
-document.querySelectorAll('.article-card, .interlude, .pull-quote').forEach(el => {
-  observer.observe(el);
 });
-
-// Article count
-const articleCount = document.querySelectorAll('.article-card').length;
-document.getElementById('articleCount').textContent = articleCount;
-
-// Geolocation
-if ("geolocation" in navigator) {
-  navigator.geolocation.getCurrentPosition(
-    function(position) {
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
-        .then(response => response.json())
-        .then(data => {
-          const city = data.address.city || data.address.town || data.address.village || '';
-          const state = data.address.state || '';
-          const country = data.address.country || '';
-          
-          let locationText = [city, state, country].filter(Boolean).join(', ');
-          document.getElementById('userLocation').textContent = locationText || 'Location unavailable';
-        })
-        .catch(() => {
-          document.getElementById('userLocation').textContent = 'Location unavailable';
-        });
-    },
-    function() {
-      document.getElementById('userLocation').textContent = 'Location access denied';
-    }
-  );
-} else {
-  document.getElementById('userLocation').textContent = 'Geolocation not supported';
-}
 </script>
 
 </body>
