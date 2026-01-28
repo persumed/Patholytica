@@ -3,34 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <title>Posts</title>
-  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
 <h3>Posts</h3>
 <div id="posts">Loading...</div>
+<div id="debug" style="margin-top: 20px; padding: 10px; background: #f0f0f0;"></div>
 
 <script>
-const supabase = supabasejs.createClient(
-  "https://vduqewqyvszfquntmark.supabase.co",
-  "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
-);
+const debug = document.getElementById("debug");
+debug.innerHTML += "<p>Script loaded</p>";
 
-async function loadPosts() {
-  const { data, error } = await supabase
-    .from("posts")
-    .select("content");
+try {
+  const supabase = window.supabase.createClient(
+    "https://vduqewqyvszfquntmark.supabase.co",
+    "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
+  );
+  debug.innerHTML += "<p>Supabase client created</p>";
 
-  if (error) {
-    document.getElementById("posts").innerText = "Error";
-    return;
+  async function loadPosts() {
+    debug.innerHTML += "<p>Fetching posts...</p>";
+    
+    const { data, error } = await supabase
+      .from("posts")
+      .select("content");
+
+    debug.innerHTML += "<p>Response received</p>";
+    debug.innerHTML += "<p>Data: " + JSON.stringify(data) + "</p>";
+    debug.innerHTML += "<p>Error: " + JSON.stringify(error) + "</p>";
+
+    if (error) {
+      document.getElementById("posts").innerText = "Error: " + error.message;
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      document.getElementById("posts").innerText = "No posts found";
+      return;
+    }
+
+    document.getElementById("posts").innerHTML =
+      data.map(p => `<p>${p.content}</p>`).join("");
   }
 
-  document.getElementById("posts").innerHTML =
-    data.map(p => `<p>${p.content}</p>`).join("");
+  loadPosts();
+  
+} catch (e) {
+  debug.innerHTML += "<p>Caught error: " + e.message + "</p>";
 }
-
-loadPosts();
 </script>
 
 </body>
