@@ -105,16 +105,59 @@ body.light-theme .logo-img {
   padding: 24px 0;
   border-bottom: 1px solid var(--border-color);
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(30px);
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.article-item.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 .article-item:hover {
   background: var(--hover-bg);
   margin: 0 -12px;
   padding: 24px 12px;
 }
+.article-thumbnail {
+  flex-shrink: 0;
+  width: 200px;
+  height: 134px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+}
+.article-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.article-item:hover .article-thumbnail img {
+  transform: scale(1.05);
+}
+.article-thumbnail-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(135deg, 
+    var(--accent) 0%, 
+    var(--accent-green) 100%);
+}
+.article-content {
+  flex: 1;
+  min-width: 0;
+}
 .article-title {
   font-family: 'Times New Roman', Times, serif;
-  font-size: 42px;
+  font-size: 32px;
   font-weight: bold;
   margin: 0 0 8px 0;
   line-height: 1.2;
@@ -123,6 +166,16 @@ body.light-theme .logo-img {
 }
 .article-item:hover .article-title {
   color: var(--accent);
+}
+.article-excerpt {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 12px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .article-meta {
   font-size: 14px;
@@ -138,206 +191,186 @@ body.light-theme .logo-img {
   background: var(--text-secondary);
   border-radius: 50%;
 }
-.views-count {
-  margin-top: 8px;
-  font-size: 13px;
+.article-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.tag {
+  font-size: 12px;
+  padding: 4px 12px;
+  background: var(--hover-bg);
+  border-radius: 16px;
   color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+.article-item:hover .tag {
+  background: var(--accent);
+  color: #fff;
+}
+.scroll-reveal {
+  position: sticky;
+  top: calc(65px + env(safe-area-inset-top) + 24px);
+  background: var(--hover-bg);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px 0;
+  border: 1px solid var(--border-color);
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.4s ease;
+}
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.scroll-reveal h3 {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  color: var(--text-primary);
+}
+.scroll-reveal p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.scroll-reveal-image {
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin-top: 16px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  font-size: 64px;
+  color: rgba(255, 255, 255, 0.9);
 }
-.views-count i {
-  font-size: 14px;
+.audio-player {
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--bg-color);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-
-/* Preview Modal Styles */
-.preview-modal {
-display: none;
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.85);
-z-index: 100;
-animation: fadeIn 0.3s ease;
-overflow-y: auto;
+.play-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
 }
-.preview-modal.active {
-display: flex;
-align-items: center;
-justify-content: center;
-padding: 40px 20px;
+.play-btn:hover {
+  transform: scale(1.1);
 }
-@keyframes fadeIn {
-from { opacity: 0; }
-to { opacity: 1; }
+.audio-info {
+  flex: 1;
 }
-.preview-content {
-background: var(–bg-color);
-max-width: 800px;
-width: 100%;
-border-radius: 16px;
-overflow: hidden;
-box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-animation: slideUp 0.3s ease;
-position: relative;
+.audio-title {
+  font-size: 13px;
+  color: var(--text-primary);
+  margin: 0;
 }
-@keyframes slideUp {
-from {
-transform: translateY(30px);
-opacity: 0;
+.audio-duration {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 4px 0 0 0;
 }
-to {
-transform: translateY(0);
-opacity: 1;
+.featured-quote {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-green) 100%);
+  padding: 32px;
+  border-radius: 12px;
+  margin: 40px 0;
+  color: #fff;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.4s ease;
 }
+.featured-quote.visible {
+  opacity: 1;
+  transform: scale(1);
 }
-.preview-image {
-width: 100%;
-height: 350px;
-object-fit: cover;
-display: block;
+.featured-quote blockquote {
+  margin: 0;
+  font-size: 24px;
+  font-style: italic;
+  line-height: 1.4;
 }
-.preview-body {
-padding: 32px;
+.featured-quote cite {
+  display: block;
+  margin-top: 16px;
+  font-size: 16px;
+  font-style: normal;
+  opacity: 0.9;
 }
-.preview-title {
-font-family: ‘Times New Roman’, Times, serif;
-font-size: 36px;
-font-weight: bold;
-margin: 0 0 16px 0;
-line-height: 1.2;
-color: var(–text-primary);
-}
-.preview-meta {
-display: flex;
-align-items: center;
-gap: 12px;
-margin-bottom: 24px;
-color: var(–text-secondary);
-font-size: 14px;
-flex-wrap: wrap;
-}
-.preview-excerpt {
-font-size: 16px;
-line-height: 1.7;
-color: var(–text-secondary);
-margin-bottom: 24px;
-}
-.preview-actions {
-display: flex;
-gap: 12px;
-}
-.preview-btn {
-padding: 12px 24px;
-border-radius: 8px;
-border: none;
-cursor: pointer;
-font-size: 15px;
-font-weight: 500;
-transition: all 0.2s ease;
-}
-.preview-btn.primary {
-background: var(–accent);
-color: white;
-}
-.preview-btn.primary:hover {
-filter: brightness(1.1);
-}
-.preview-btn.secondary {
-background: var(–hover-bg);
-color: var(–text-primary);
-}
-.preview-btn.secondary:hover {
-background: var(–border-color);
-}
-.close-preview {
-position: absolute;
-top: 16px;
-right: 16px;
-width: 44px;
-height: 44px;
-border-radius: 50%;
-background: rgba(0, 0, 0, 0.6);
-border: none;
-color: white;
-font-size: 20px;
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-transition: background 0.2s ease;
-z-index: 10;
-}
-.close-preview:hover {
-background: rgba(0, 0, 0, 0.8);
-}
-
 .footer {
-background: var(–bg-color);
-border-top: 1px solid var(–border-color);
-padding: 24px;
-text-align: center;
-color: var(–text-secondary);
-font-size: 14px;
-line-height: 1.6;
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
 }
 .footer-stats {
-margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 .article-count {
-color: var(–accent-green);
-font-weight: 600;
+  color: var(--accent-green);
+  font-weight: 600;
 }
 .footer-tagline {
-margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 .footer-location {
-font-size: 13px;
-color: var(–text-secondary);
-opacity: 0.8;
+  font-size: 13px;
+  color: var(--text-secondary);
+  opacity: 0.8;
 }
 @media (max-width: 768px) {
-.list-container {
-padding: 16px 16px 80px;
-padding-top: calc(65px + env(safe-area-inset-top));
-}
-.article-title {
-font-size: 32px;
-}
-.article-meta {
-font-size: 13px;
-}
-.views-count {
-font-size: 12px;
-}
-.footer {
-padding: 20px 16px;
-font-size: 13px;
-}
-.preview-modal.active {
-padding: 20px 10px;
-align-items: flex-start;
-}
-.preview-image {
-height: 250px;
-}
-.preview-body {
-padding: 24px 20px;
-}
-.preview-title {
-font-size: 28px;
-}
-.preview-actions {
-flex-direction: column;
-}
-.preview-btn {
-width: 100%;
-}
+  .list-container {
+    padding: 16px 16px 80px;
+    padding-top: calc(65px + env(safe-area-inset-top));
+  }
+  .article-item {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .article-thumbnail {
+    width: 100%;
+    height: 200px;
+  }
+  .article-title {
+    font-size: 24px;
+  }
+  .article-meta {
+    font-size: 13px;
+  }
+  .footer {
+    padding: 20px 16px;
+    font-size: 13px;
+  }
+  .scroll-reveal {
+    padding: 20px;
+    margin: 30px 0;
+  }
+  .featured-quote {
+    padding: 24px;
+  }
+  .featured-quote blockquote {
+    font-size: 20px;
+  }
 }
 </style>
-
 </head>
 <body>
 
@@ -360,226 +393,428 @@ width: 100%;
 
 <div class="list-container">
   <ul class="article-list">
-    <li class="article-item" onclick="openPreview(0)">
-      <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
-      <div class="article-meta">
-        <span>Dr. Sarah Mitchell</span>
-        <div class="meta-dot"></div>
-        <span>Mar 15, 2024</span>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <div class="article-thumbnail">
+        <div class="article-thumbnail-placeholder">
+          <i class="fas fa-heart-pulse"></i>
+        </div>
       </div>
-      <div class="views-count">
-        <i class="fas fa-eye"></i>
-        <span>12,547 views</span>
+      <div class="article-content">
+        <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
+        <p class="article-excerpt">An in-depth exploration of cardiovascular disease mechanisms, diagnostic approaches, and therapeutic interventions in modern cardiology practice.</p>
+        <div class="article-meta">
+          <span>Dr. Sarah Mitchell</span>
+          <div class="meta-dot"></div>
+          <span>Mar 15, 2024</span>
+          <div class="meta-dot"></div>
+          <span>12 min read</span>
+        </div>
+        <div class="article-tags">
+          <span class="tag">Cardiology</span>
+          <span class="tag">Pathology</span>
+          <span class="tag">Research</span>
+        </div>
       </div>
     </li>
 
-<li class="article-item" onclick="openPreview(1)">
-  <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
-  <div class="article-meta">
-    <span>Dr. James Chen</span>
-    <div class="meta-dot"></div>
-    <span>Mar 12, 2024</span>
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+      <i class="fas fa-brain"></i>
+    </div>
   </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>8,921 views</span>
-  </div>
-</li>
-
-<li class="article-item" onclick="openPreview(2)">
-  <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
-  <div class="article-meta">
-    <span>Dr. Emily Rodriguez</span>
-    <div class="meta-dot"></div>
-    <span>Mar 10, 2024</span>
-  </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>18,234 views</span>
+  <div class="article-content">
+    <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
+    <p class="article-excerpt">Latest developments in brain imaging technologies revolutionizing diagnosis and treatment of neurological disorders.</p>
+    <div class="article-meta">
+      <span>Dr. James Chen</span>
+      <div class="meta-dot"></div>
+      <span>Mar 12, 2024</span>
+      <div class="meta-dot"></div>
+      <span>8 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Neurology</span>
+      <span class="tag">Imaging</span>
+      <span class="tag">Technology</span>
+    </div>
   </div>
 </li>
 
-<li class="article-item" onclick="openPreview(3)">
-  <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
-  <div class="article-meta">
-    <span>Dr. Robert Kim</span>
-    <div class="meta-dot"></div>
-    <span>Mar 8, 2024</span>
+<div class="scroll-reveal">
+  <h3>💡 Featured Insight</h3>
+  <p>Recent studies show that personalized medicine approaches increase treatment efficacy by up to 40% in oncology patients, marking a significant shift in cancer care paradigms.</p>
+  <div class="scroll-reveal-image">
+    <i class="fas fa-microscope"></i>
   </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>14,876 views</span>
+  <div class="audio-player">
+    <button class="play-btn" onclick="playAudio(this)">
+      <i class="fas fa-play"></i>
+    </button>
+    <div class="audio-info">
+      <p class="audio-title">Listen to this insight</p>
+      <p class="audio-duration">0:45 duration</p>
+    </div>
+  </div>
+</div>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+      <i class="fas fa-dna"></i>
+    </div>
+  </div>
+  <div class="article-content">
+    <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
+    <p class="article-excerpt">Understanding cellular pathways and genetic mutations driving oncogenesis and metastatic spread in various cancer types.</p>
+    <div class="article-meta">
+      <span>Dr. Emily Rodriguez</span>
+      <div class="meta-dot"></div>
+      <span>Mar 10, 2024</span>
+      <div class="meta-dot"></div>
+      <span>15 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Oncology</span>
+      <span class="tag">Genetics</span>
+      <span class="tag">Molecular Biology</span>
+    </div>
   </div>
 </li>
 
-<li class="article-item" onclick="openPreview(4)">
-  <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
-  <div class="article-meta">
-    <span>Dr. Lisa Zhang</span>
-    <div class="meta-dot"></div>
-    <span>Mar 5, 2024</span>
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+      <i class="fas fa-syringe"></i>
+    </div>
   </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>10,342 views</span>
-  </div>
-</li>
-
-<li class="article-item" onclick="openPreview(5)">
-  <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
-  <div class="article-meta">
-    <span>Dr. Robert Kim</span>
-    <div class="meta-dot"></div>
-    <span>Mar 8, 2024</span>
-  </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>7,654 views</span>
+  <div class="article-content">
+    <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
+    <p class="article-excerpt">Exploring breakthrough immunotherapy treatments transforming patient outcomes across multiple disease categories.</p>
+    <div class="article-meta">
+      <span>Dr. Robert Kim</span>
+      <div class="meta-dot"></div>
+      <span>Mar 8, 2024</span>
+      <div class="meta-dot"></div>
+      <span>10 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Immunology</span>
+      <span class="tag">Treatment</span>
+      <span class="tag">Innovation</span>
+    </div>
   </div>
 </li>
 
-<li class="article-item" onclick="openPreview(6)">
-  <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
-  <div class="article-meta">
-    <span>Dr. Lisa Zhang</span>
-    <div class="meta-dot"></div>
-    <span>Mar 5, 2024</span>
+<div class="featured-quote">
+  <blockquote>"The future of medicine lies not in treating disease, but in understanding the molecular signatures that define each patient's unique biology."</blockquote>
+  <cite>— Dr. Lisa Zhang, Genetic Research Lead</cite>
+</div>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+      <i class="fas fa-user-md"></i>
+    </div>
   </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>11,223 views</span>
+  <div class="article-content">
+    <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
+    <p class="article-excerpt">How genomic profiling is enabling tailored treatment strategies for individual patients with complex conditions.</p>
+    <div class="article-meta">
+      <span>Dr. Lisa Zhang</span>
+      <div class="meta-dot"></div>
+      <span>Mar 5, 2024</span>
+      <div class="meta-dot"></div>
+      <span>14 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Genetics</span>
+      <span class="tag">Personalized Medicine</span>
+      <span class="tag">Biomarkers</span>
+    </div>
   </div>
 </li>
 
-<li class="article-item" onclick="openPreview(7)">
-  <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
-  <div class="article-meta">
-    <span>Dr. Michael Johnson</span>
-    <div class="meta-dot"></div>
-    <span>Mar 3, 2024</span>
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+      <i class="fas fa-heartbeat"></i>
+    </div>
   </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>9,451 views</span>
-  </div>
-</li>
-
-<li class="article-item" onclick="openPreview(8)">
-  <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
-  <div class="article-meta">
-    <span>Dr. Michael Johnson</span>
-    <div class="meta-dot"></div>
-    <span>Mar 14, 2024</span>
-  </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>16,789 views</span>
+  <div class="article-content">
+    <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
+    <p class="article-excerpt">Evidence-based guidelines for managing hypertension-related cardiac complications in diverse patient populations.</p>
+    <div class="article-meta">
+      <span>Dr. Robert Kim</span>
+      <div class="meta-dot"></div>
+      <span>Mar 8, 2024</span>
+      <div class="meta-dot"></div>
+      <span>10 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Cardiology</span>
+      <span class="tag">Hypertension</span>
+      <span class="tag">Clinical Guidelines</span>
+    </div>
   </div>
 </li>
 
-<li class="article-item" onclick="openPreview(9)">
-  <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
-  <div class="article-meta">
-    <span>Dr. Anna Williams</span>
-    <div class="meta-dot"></div>
-    <span>Mar 11, 2024</span>
+<div class="scroll-reveal">
+  <h3>📊 Research Highlight</h3>
+  <p>A landmark meta-analysis of over 50,000 patients reveals inflammatory biomarkers predict cardiovascular events with 85% accuracy, opening new pathways for preventive care.</p>
+  <div class="scroll-reveal-image">
+    <i class="fas fa-chart-line"></i>
   </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>13,567 views</span>
+  <div class="audio-player">
+    <button class="play-btn" onclick="playAudio(this)">
+      <i class="fas fa-play"></i>
+    </button>
+    <div class="audio-info">
+      <p class="audio-title">Research summary audio</p>
+      <p class="audio-duration">1:20 duration</p>
+    </div>
+  </div>
+</div>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+      <i class="fas fa-bacteria"></i>
+    </div>
+  </div>
+  <div class="article-content">
+    <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
+    <p class="article-excerpt">Investigating the role of systemic inflammation in plaque formation and cardiovascular risk assessment.</p>
+    <div class="article-meta">
+      <span>Dr. Lisa Zhang</span>
+      <div class="meta-dot"></div>
+      <span>Mar 5, 2024</span>
+      <div class="meta-dot"></div>
+      <span>14 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Cardiology</span>
+      <span class="tag">Biomarkers</span>
+      <span class="tag">Prevention</span>
+    </div>
   </div>
 </li>
 
-<li class="article-item" onclick="openPreview(10)">
-  <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
-  <div class="article-meta">
-    <span>Dr. David Park</span>
-    <div class="meta-dot"></div>
-    <span>Mar 9, 2024</span>
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+      <i class="fas fa-x-ray"></i>
+    </div>
   </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>19,012 views</span>
-  </div>
-</li>
-
-<li class="article-item" onclick="openPreview(11)">
-  <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
-  <div class="article-meta">
-    <span>Dr. Rachel Green</span>
-    <div class="meta-dot"></div>
-    <span>Mar 7, 2024</span>
-  </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>11,890 views</span>
+  <div class="article-content">
+    <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
+    <p class="article-excerpt">Next-generation imaging modalities enhancing early detection of cardiac abnormalities and improving patient outcomes.</p>
+    <div class="article-meta">
+      <span>Dr. Michael Johnson</span>
+      <div class="meta-dot"></div>
+      <span>Mar 3, 2024</span>
+      <div class="meta-dot"></div>
+      <span>11 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Imaging</span>
+      <span class="tag">Diagnostics</span>
+      <span class="tag">Technology</span>
+    </div>
   </div>
 </li>
 
-<li class="article-item" onclick="openPreview(12)">
-  <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
-  <div class="article-meta">
-    <span>Dr. Thomas Anderson</span>
-    <div class="meta-dot"></div>
-    <span>Mar 7, 2024</span>
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+      <i class="fas fa-pills"></i>
+    </div>
   </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>8,456 views</span>
-  </div>
-</li>
-
-<li class="article-item" onclick="openPreview(13)">
-  <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
-  <div class="article-meta">
-    <span>Dr. Rachel Green</span>
-    <div class="meta-dot"></div>
-    <span>Mar 4, 2024</span>
-  </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>15,234 views</span>
+  <div class="article-content">
+    <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
+    <p class="article-excerpt">Comprehensive analysis of pharmacological and lifestyle interventions for optimal glycemic control and complication prevention.</p>
+    <div class="article-meta">
+      <span>Dr. Michael Johnson</span>
+      <div class="meta-dot"></div>
+      <span>Mar 14, 2024</span>
+      <div class="meta-dot"></div>
+      <span>18 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Endocrinology</span>
+      <span class="tag">Diabetes</span>
+      <span class="tag">Meta-Analysis</span>
+    </div>
   </div>
 </li>
 
-<li class="article-item" onclick="openPreview(14)">
-  <h2 class="article-title">The Role of Microbiome in Human Health</h2>
-  <div class="article-meta">
-    <span>Dr. Jennifer Lee</span>
-    <div class="meta-dot"></div>
-    <span>Mar 1, 2024</span>
+<div class="featured-quote">
+  <blockquote>"Evidence-based medicine is not just about following guidelines—it's about synthesizing the best available data with clinical expertise and patient values."</blockquote>
+  <cite>— Dr. Anna Williams, Clinical Research Director</cite>
+</div>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);">
+      <i class="fas fa-vial"></i>
+    </div>
   </div>
-  <div class="views-count">
-    <i class="fas fa-eye"></i>
-    <span>9,876 views</span>
+  <div class="article-content">
+    <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
+    <p class="article-excerpt">Evaluating efficacy and safety profiles of novel anticoagulants versus traditional warfarin therapy in diverse clinical settings.</p>
+    <div class="article-meta">
+      <span>Dr. Anna Williams</span>
+      <div class="meta-dot"></div>
+      <span>Mar 11, 2024</span>
+      <div class="meta-dot"></div>
+      <span>16 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Hematology</span>
+      <span class="tag">Pharmacology</span>
+      <span class="tag">Meta-Analysis</span>
+    </div>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
+      <i class="fas fa-user-nurse"></i>
+    </div>
+  </div>
+  <div class="article-content">
+    <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
+    <p class="article-excerpt">Large-scale outcomes analysis comparing minimally invasive versus traditional surgical approaches across multiple specialties.</p>
+    <div class="article-meta">
+      <span>Dr. David Park</span>
+      <div class="meta-dot"></div>
+      <span>Mar 9, 2024</span>
+      <div class="meta-dot"></div>
+      <span>20 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Surgery</span>
+      <span class="tag">Outcomes Research</span>
+      <span class="tag">Clinical Trials</span>
+    </div>
+  </div>
+</li>
+
+<div class="scroll-reveal">
+  <h3>🔬 Clinical Breakthrough</h3>
+  <p>Gene therapy shows promise in treating previously incurable genetic disorders, with three new FDA approvals expected in 2024 following successful Phase III trials.</p>
+  <div class="scroll-reveal-image">
+    <i class="fas fa-flask"></i>
+  </div>
+  <div class="audio-player">
+    <button class="play-btn" onclick="playAudio(this)">
+      <i class="fas fa-play"></i>
+    </button>
+    <div class="audio-info">
+      <p class="audio-title">Breakthrough explained</p>
+      <p class="audio-duration">1:05 duration</p>
+    </div>
+  </div>
+</div>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%);">
+      <i class="fas fa-notes-medical"></i>
+    </div>
+  </div>
+  <div class="article-content">
+    <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
+    <p class="article-excerpt">Multimodal strategies for chronic pain addressing biological, psychological, and social factors in treatment plans.</p>
+    <div class="article-meta">
+      <span>Dr. Rachel Green</span>
+      <div class="meta-dot"></div>
+      <span>Mar 7, 2024</span>
+      <div class="meta-dot"></div>
+      <span>13 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Pain Medicine</span>
+      <span class="tag">Treatment</span>
+      <span class="tag">Evidence-Based</span>
+    </div>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%);">
+      <i class="fas fa-dna"></i>
+    </div>
+  </div>
+  <div class="article-content">
+    <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
+    <p class="article-excerpt">Novel gene editing techniques showing remarkable success in treating hereditary diseases and genetic disorders.</p>
+    <div class="article-meta">
+      <span>Dr. Thomas Anderson</span>
+      <div class="meta-dot"></div>
+      <span>Mar 7, 2024</span>
+      <div class="meta-dot"></div>
+      <span>11 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Gene Therapy</span>
+      <span class="tag">CRISPR</span>
+      <span class="tag">Innovation</span>
+    </div>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);">
+      <i class="fas fa-shield-virus"></i>
+    </div>
+  </div>
+  <div class="article-content">
+    <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
+    <p class="article-excerpt">Harnessing the immune system to fight cancer with checkpoint inhibitors and CAR-T cell therapies showing unprecedented results.</p>
+    <div class="article-meta">
+      <span>Dr. Rachel Green</span>
+      <div class="meta-dot"></div>
+      <span>Mar 4, 2024</span>
+      <div class="meta-dot"></div>
+      <span>13 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Oncology</span>
+      <span class="tag">Immunotherapy</span>
+      <span class="tag">CAR-T</span>
+    </div>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <div class="article-thumbnail">
+    <div class="article-thumbnail-placeholder" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+      <i class="fas fa-viruses"></i>
+    </div>
+  </div>
+  <div class="article-content">
+    <h2 class="article-title">The Role of Microbiome in Human Health</h2>
+    <p class="article-excerpt">Exploring gut-brain axis connections and microbiota's influence on immunity, metabolism, and mental health outcomes.</p>
+    <div class="article-meta">
+      <span>Dr. Jennifer Lee</span>
+      <div class="meta-dot"></div>
+      <span>Mar 1, 2024</span>
+      <div class="meta-dot"></div>
+      <span>9 min read</span>
+    </div>
+    <div class="article-tags">
+      <span class="tag">Microbiome</span>
+      <span class="tag">Gastroenterology</span>
+      <span class="tag">Research</span>
+    </div>
   </div>
 </li>
 
   </ul>
-</div>
-
-<!-- Preview Modal -->
-
-<div class="preview-modal" id="previewModal" onclick="closePreviewOnBackdrop(event)">
-  <div class="preview-content">
-    <button class="close-preview" onclick="closePreview()">
-      <i class="fas fa-times"></i>
-    </button>
-    <img class="preview-image" id="previewImage" src="" alt="Article preview">
-    <div class="preview-body">
-      <h2 class="preview-title" id="previewTitle"></h2>
-      <div class="preview-meta" id="previewMeta"></div>
-      <p class="preview-excerpt" id="previewExcerpt"></p>
-      <div class="preview-actions">
-        <button class="preview-btn primary" onclick="readFullArticle()">
-          <i class="fas fa-book-open"></i> Read Full Article
-        </button>
-        <button class="preview-btn secondary" onclick="closePreview()">
-          Close Preview
-        </button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <footer class="footer">
@@ -595,166 +830,6 @@ width: 100%;
 </footer>
 
 <script>
-// Article data with preview content
-const articles = [
-  {
-    title: "Understanding Cardiovascular Pathology: A Comprehensive Review",
-    author: "Dr. Sarah Mitchell",
-    date: "Mar 15, 2024",
-    views: "12,547 views",
-    image: "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?w=800&h=400&fit=crop",
-    excerpt: "This comprehensive review explores the latest findings in cardiovascular pathology, examining the cellular and molecular mechanisms underlying heart disease. We discuss recent advances in diagnostic techniques, therapeutic interventions, and the role of inflammation in cardiovascular disorders."
-  },
-  {
-    title: "Advances in Neurological Imaging Techniques",
-    author: "Dr. James Chen",
-    date: "Mar 12, 2024",
-    views: "8,921 views",
-    image: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&h=400&fit=crop",
-    excerpt: "Modern neuroimaging has revolutionized our understanding of brain structure and function. This article examines cutting-edge MRI techniques, functional connectivity mapping, and artificial intelligence applications in neurological diagnosis."
-  },
-  {
-    title: "Molecular Mechanisms of Cancer Progression",
-    author: "Dr. Emily Rodriguez",
-    date: "Mar 10, 2024",
-    views: "18,234 views",
-    image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800&h=400&fit=crop",
-    excerpt: "An in-depth analysis of the molecular pathways driving cancer development and metastasis. We explore genetic mutations, epigenetic modifications, and the tumor microenvironment's role in cancer progression and treatment resistance."
-  },
-  {
-    title: "Clinical Applications of Immunotherapy in Modern Medicine",
-    author: "Dr. Robert Kim",
-    date: "Mar 8, 2024",
-    views: "14,876 views",
-    image: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&h=400&fit=crop",
-    excerpt: "Immunotherapy has transformed cancer treatment and autoimmune disease management. This review covers checkpoint inhibitors, CAR-T cell therapy, and emerging combination approaches that harness the immune system's power."
-  },
-  {
-    title: "Genetic Markers in Personalized Medicine Approaches",
-    author: "Dr. Lisa Zhang",
-    date: "Mar 5, 2024",
-    views: "10,342 views",
-    image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=400&fit=crop",
-    excerpt: "Personalized medicine leverages genetic information to tailor treatments to individual patients. We examine pharmacogenomics, biomarker discovery, and the integration of genomic data into clinical practice."
-  },
-  {
-    title: "Hypertensive Heart Disease: Current Treatment Protocols",
-    author: "Dr. Robert Kim",
-    date: "Mar 8, 2024",
-    views: "7,654 views",
-    image: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=800&h=400&fit=crop",
-    excerpt: "Hypertension remains a leading cause of cardiovascular morbidity. This article reviews evidence-based treatment strategies, including lifestyle modifications, pharmacological interventions, and novel therapeutic targets."
-  },
-  {
-    title: "Atherosclerosis and Inflammatory Biomarkers",
-    author: "Dr. Lisa Zhang",
-    date: "Mar 5, 2024",
-    views: "11,223 views",
-    image: "https://images.unsplash.com/photo-1584362917165-526a968579e8?w=800&h=400&fit=crop",
-    excerpt: "Inflammation plays a central role in atherosclerosis development. We discuss emerging biomarkers, imaging techniques for plaque characterization, and anti-inflammatory therapeutic approaches."
-  },
-  {
-    title: "Cardiac Imaging Advances in Diagnostic Accuracy",
-    author: "Dr. Michael Johnson",
-    date: "Mar 3, 2024",
-    views: "9,451 views",
-    image: "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=800&h=400&fit=crop",
-    excerpt: "Recent technological advances have dramatically improved cardiac imaging capabilities. This review covers coronary CT angiography, cardiac MRI, and machine learning algorithms that enhance diagnostic precision."
-  },
-  {
-    title: "Systematic Review of Diabetes Management Strategies",
-    author: "Dr. Michael Johnson",
-    date: "Mar 14, 2024",
-    views: "16,789 views",
-    image: "https://images.unsplash.com/photo-1615486511262-2f3fa5c6bde8?w=800&h=400&fit=crop",
-    excerpt: "A comprehensive systematic review examining contemporary diabetes management approaches. We analyze pharmacological interventions, continuous glucose monitoring, and integrated care models for optimal glycemic control."
-  },
-  {
-    title: "Meta-Analysis of Anticoagulation Therapies",
-    author: "Dr. Anna Williams",
-    date: "Mar 11, 2024",
-    views: "13,567 views",
-    image: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&h=400&fit=crop",
-    excerpt: "This meta-analysis compares efficacy and safety profiles of novel oral anticoagulants versus traditional warfarin therapy. We examine bleeding risks, stroke prevention, and patient-specific treatment selection."
-  },
-  {
-    title: "Clinical Outcomes in Surgical Interventions",
-    author: "Dr. David Park",
-    date: "Mar 9, 2024",
-    views: "19,012 views",
-    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&h=400&fit=crop",
-    excerpt: "An extensive analysis of surgical outcomes across various procedures. We evaluate perioperative complications, long-term survival rates, and factors influencing postoperative recovery and patient satisfaction."
-  },
-  {
-    title: "Evidence-Based Approaches to Pain Management",
-    author: "Dr. Rachel Green",
-    date: "Mar 7, 2024",
-    views: "11,890 views",
-    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=400&fit=crop",
-    excerpt: "Modern pain management requires a multimodal approach. This review examines pharmacological options, interventional techniques, and complementary therapies supported by current clinical evidence."
-  },
-  {
-    title: "Breakthrough in Gene Therapy Applications",
-    author: "Dr. Thomas Anderson",
-    date: "Mar 7, 2024",
-    views: "8,456 views",
-    image: "https://images.unsplash.com/photo-1582719471137-c3967ffb1c42?w=800&h=400&fit=crop",
-    excerpt: "Gene therapy is transforming treatment for previously incurable genetic disorders. We explore CRISPR technology, viral vector delivery systems, and successful clinical applications in inherited diseases."
-  },
-  {
-    title: "Immunotherapy Advances in Oncology",
-    author: "Dr. Rachel Green",
-    date: "Mar 4, 2024",
-    views: "15,234 views",
-    image: "https://images.unsplash.com/photo-1579165466991-467135ad3110?w=800&h=400&fit=crop",
-    excerpt: "The oncology landscape has been revolutionized by immunotherapeutic approaches. This article reviews PD-1/PD-L1 inhibitors, combination strategies, and biomarkers predicting treatment response."
-  },
-  {
-    title: "The Role of Microbiome in Human Health",
-    author: "Dr. Jennifer Lee",
-    date: "Mar 1, 2024",
-    views: "9,876 views",
-    image: "https://images.unsplash.com/photo-1576671081837-49000212a370?w=800&h=400&fit=crop",
-    excerpt: "The human microbiome influences diverse aspects of health and disease. We examine gut-brain axis interactions, metabolic regulation, and therapeutic modulation of microbial communities."
-  }
-];
-
-function openPreview(index) {
-  const article = articles[index];
-  const modal = document.getElementById('previewModal');
-  
-  document.getElementById('previewImage').src = article.image;
-  document.getElementById('previewTitle').textContent = article.title;
-  document.getElementById('previewExcerpt').textContent = article.excerpt;
-  
-  document.getElementById('previewMeta').innerHTML = `
-    <span>${article.author}</span>
-    <div class="meta-dot"></div>
-    <span>${article.date}</span>
-    <div class="meta-dot"></div>
-    <span><i class="fas fa-eye"></i> ${article.views}</span>
-  `;
-  
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function closePreview() {
-  const modal = document.getElementById('previewModal');
-  modal.classList.remove('active');
-  document.body.style.overflow = 'auto';
-}
-
-function closePreviewOnBackdrop(event) {
-  if (event.target.id === 'previewModal') {
-    closePreview();
-  }
-}
-
-function readFullArticle() {
-  window.location.href = 'https://patholytica.com/library';
-}
-
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
   localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
@@ -764,12 +839,51 @@ if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
 }
 
+function openArticle(url) {
+  window.location.href = 'https://' + url;
+}
+
 function searchArticles() {
   const searchQuery = prompt('Search articles:');
   if (searchQuery && searchQuery.trim()) {
     alert(`Searching for: "${searchQuery}"\n\nSearch functionality would filter the article list.`);
   }
 }
+
+function playAudio(btn) {
+  const icon = btn.querySelector('i');
+  if (icon.classList.contains('fa-play')) {
+    icon.classList.remove('fa-play');
+    icon.classList.add('fa-pause');
+    // Simulate audio playing
+    setTimeout(() => {
+      icon.classList.remove('fa-pause');
+      icon.classList.add('fa-play');
+    }, 3000);
+  } else {
+    icon.classList.remove('fa-pause');
+    icon.classList.add('fa-play');
+  }
+}
+
+// Intersection Observer for scroll animations
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, observerOptions);
+
+// Observe all article items and scroll reveals
+document.querySelectorAll('.article-item, .scroll-reveal, .featured-quote').forEach(el => {
+  observer.observe(el);
+});
 
 // Count articles and update footer
 const articleCount = document.querySelectorAll('.article-item').length;
@@ -800,13 +914,6 @@ if ("geolocation" in navigator) {
 } else {
   document.getElementById('userLocation').textContent = 'Geolocation not supported';
 }
-
-// Close modal on Escape key
-document.addEventListener('keydown', function(event) {
-  if (event.key === 'Escape') {
-    closePreview();
-  }
-});
 </script>
 
 </body>
