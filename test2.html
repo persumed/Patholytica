@@ -6,6 +6,9 @@
 <meta name="theme-color" content="#0f0f0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="Patholytica - A Medicinebank project for academic sharing">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://ui-avatars.com">
 <title>Patholytica — Library</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -72,6 +75,9 @@ background-repeat: no-repeat;
 opacity: 0.3;
 pointer-events: none;
 transition: opacity 0.5s ease;
+image-rendering: -webkit-optimize-contrast;
+image-rendering: crisp-edges;
+will-change: opacity;
 }
 
 /* Background always darkened - dark overlay */
@@ -222,13 +228,14 @@ width: 16px;
 /* Floating Search Bar - Below Header */
 .search-container {
 position: fixed;
-top: calc(65px + env(safe-area-inset-top) + 16px);
+top: calc(65px + env(safe-area-inset-top) + 100px);
 left: 50%;
 transform: translateX(-50%);
 z-index: 35;
 width: 90%;
 max-width: 600px;
 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+will-change: transform, opacity;
 }
 
 .search-container.hidden {
@@ -355,20 +362,124 @@ color: rgba(0, 0, 0, 0.6);
 color: var(--accent);
 }
 
+/* Stories Preview Section */
+.stories-container {
+position: fixed;
+top: calc(65px + env(safe-area-inset-top));
+left: 0;
+right: 0;
+z-index: 30;
+background: var(--bg-color);
+border-bottom: 1px solid var(--border-color);
+padding: 16px 0;
+overflow-x: auto;
+overflow-y: hidden;
+-webkit-overflow-scrolling: touch;
+scrollbar-width: none;
+}
+
+.stories-container::-webkit-scrollbar {
+display: none;
+}
+
+.stories-wrapper {
+display: flex;
+gap: 16px;
+padding: 0 24px;
+width: max-content;
+}
+
+.story-item {
+flex-shrink: 0;
+display: flex;
+flex-direction: column;
+align-items: center;
+cursor: pointer;
+transition: transform 0.2s ease;
+width: 70px;
+}
+
+.story-item:hover {
+transform: scale(1.05);
+}
+
+.story-avatar-wrapper {
+position: relative;
+width: 64px;
+height: 64px;
+border-radius: 50%;
+padding: 3px;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+background-size: 200% 200%;
+animation: gradientShift 3s ease infinite;
+will-change: background-position;
+}
+
+@keyframes gradientShift {
+0%, 100% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+}
+
+.story-avatar {
+width: 100%;
+height: 100%;
+border-radius: 50%;
+object-fit: cover;
+background: var(--bg-color);
+padding: 2px;
+display: block;
+}
+
+.story-username {
+margin-top: 6px;
+font-size: 12px;
+color: var(--text-secondary);
+text-align: center;
+max-width: 70px;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+
+.story-item.new .story-avatar-wrapper {
+background: var(--border-color);
+}
+
+.story-item.new .story-avatar-wrapper::after {
+content: '+';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+font-size: 24px;
+color: var(--text-primary);
+font-weight: 300;
+z-index: 1;
+}
+
+body.light-theme .story-avatar-wrapper {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+}
+
+body.light-theme .story-item.new .story-avatar-wrapper {
+background: var(--border-color);
+}
+
 /* Page wrapper to control layout */
 .page-wrapper {
 position: relative;
 width: 100%;
-padding-top: calc(65px + env(safe-area-inset-top));
+padding-top: calc(65px + env(safe-area-inset-top) + 100px);
 }
 
 /* Beautiful Welcome Banner - MORE BACKGROUND VISIBLE */
 .welcome-banner {
 display: block;
-padding: 220px 24px 200px;
+padding: 180px 24px 160px;
 text-align: center;
 width: 100%;
 position: relative;
+will-change: transform;
 }
 
 /* Welcome text always white - regardless of theme */
@@ -381,6 +492,43 @@ margin: 0 0 16px 0;
 line-height: 1.2;
 letter-spacing: -1px;
 text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+position: relative;
+min-height: 1.2em;
+display: block;
+width: 100%;
+text-align: center;
+}
+
+.welcome-banner-text-wrapper {
+position: relative;
+display: inline-block;
+width: auto;
+min-height: 1.2em;
+max-width: 90%;
+}
+
+.welcome-text-item {
+position: absolute;
+top: 0;
+left: 50%;
+transform: translateX(-50%) translateY(20px);
+width: auto;
+opacity: 0;
+transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+pointer-events: none;
+white-space: nowrap;
+will-change: opacity, transform;
+}
+
+.welcome-text-item.active {
+opacity: 1;
+transform: translateX(-50%) translateY(0);
+pointer-events: auto;
+}
+
+.welcome-text-item.fade-out {
+opacity: 0;
+transform: translateX(-50%) translateY(-20px);
 }
 
 .welcome-subtitle {
@@ -407,6 +555,7 @@ max-width: 900px;
 width: 100%;
 margin: 0 auto;
 padding: 24px 24px 80px;
+contain: layout style paint;
 }
 
 /* Compact Article List - Full Width Container */
@@ -414,6 +563,7 @@ padding: 24px 24px 80px;
 list-style: none;
 margin: 0;
 padding: 0;
+contain: layout;
 }
 
 .article-item {
@@ -421,6 +571,8 @@ padding: 24px 0;
 border-bottom: 1px solid var(--border-color);
 cursor: pointer;
 transition: background 0.2s ease;
+content-visibility: auto;
+contain-intrinsic-size: 200px;
 }
 
 .article-item:hover {
@@ -505,6 +657,7 @@ transform: translateY(20px);
 transition: all 0.3s ease;
 z-index: 100;
 box-shadow: 0 4px 15px rgba(62, 166, 255, 0.4);
+will-change: transform, opacity;
 }
 
 .back-to-top.visible {
@@ -518,9 +671,36 @@ box-shadow: 0 6px 20px rgba(62, 166, 255, 0.5);
 }
 
 @media (max-width: 768px) {
+.stories-container {
+padding: 12px 0;
+}
+
+.stories-wrapper {
+padding: 0 16px;
+gap: 12px;
+}
+
+.story-item {
+width: 60px;
+}
+
+.story-avatar-wrapper {
+width: 56px;
+height: 56px;
+}
+
+.story-username {
+font-size: 11px;
+max-width: 60px;
+}
+
+.page-wrapper {
+padding-top: calc(65px + env(safe-area-inset-top) + 90px);
+}
+
 .search-container {
 width: calc(100% - 32px);
-top: calc(65px + env(safe-area-inset-top) + 12px);
+top: calc(65px + env(safe-area-inset-top) + 90px);
 }
 
 .search-container.compact {
@@ -550,9 +730,13 @@ font-size: 14px;
 padding: 16px 16px 80px;
 }
 .welcome-banner {
-padding: 160px 16px 140px;
+padding: 140px 16px 120px;
 }
 .welcome-banner-text {
+font-size: 42px;
+}
+
+.welcome-text-item {
 font-size: 42px;
 }
 .welcome-subtitle {
@@ -637,6 +821,13 @@ right: 20px;
   </div>
 </div>
 
+<!-- Stories Preview Section -->
+<div class="stories-container" id="storiesContainer">
+  <div class="stories-wrapper" id="storiesWrapper">
+    <!-- Stories will be dynamically generated -->
+  </div>
+</div>
+
 <!-- Floating Search Bar Below Header -->
 
 <div class="search-container" id="searchContainer">
@@ -646,7 +837,6 @@ right: 20px;
       class="search-input" 
       id="searchInput" 
       placeholder="Search articles..."
-      onkeyup="handleSearch(event)"
     >
     <i class="fas fa-search search-icon"></i>
   </div>
@@ -655,7 +845,9 @@ right: 20px;
 <div class="page-wrapper">
   <!-- Beautiful Welcome Banner (always shown) -->
   <div class="welcome-banner" id="welcomeBanner">
-    <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome to Patholytica</h1>
+    <h1 class="welcome-banner-text" id="welcomeBannerText">
+      <span class="welcome-banner-text-wrapper" id="welcomeTextWrapper"></span>
+    </h1>
     <p class="welcome-subtitle" id="welcomeSubtitle">A Medicinebank project</p>
   </div>
 
@@ -882,15 +1074,42 @@ const supabase = window.supabase.createClient(
   "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
 );
 
+// Global variable to control animation
+let welcomeAnimationInterval = null;
+let isUserLoggedIn = false;
+
+// Function to stop welcome text animation
+function stopWelcomeAnimation() {
+  if (welcomeAnimationInterval) {
+    clearInterval(welcomeAnimationInterval);
+    welcomeAnimationInterval = null;
+  }
+}
+
+// Function to update welcome text (for logged in users)
+function updateWelcomeText(text) {
+  const wrapper = document.getElementById('welcomeTextWrapper');
+  if (!wrapper) return;
+  
+  // Clear existing content
+  wrapper.innerHTML = '';
+  
+  // Create new element with the text
+  const element = createWelcomeTextElement(text);
+  element.classList.add('active');
+  wrapper.appendChild(element);
+}
+
 // Check authentication state
 onAuthStateChanged(auth, async (user) => {
   const authButtons = document.getElementById('authButtons');
   const userWelcome = document.getElementById('userWelcome');
-  const welcomeBannerText = document.getElementById('welcomeBannerText');
   const welcomeSubtitle = document.getElementById('welcomeSubtitle');
   
   if (user) {
-    // User is logged in
+    // User is logged in - stop animation and show personalized message
+    isUserLoggedIn = true;
+    stopWelcomeAnimation();
     authButtons.classList.remove('show');
     userWelcome.classList.add('show');
     
@@ -905,27 +1124,30 @@ onAuthStateChanged(auth, async (user) => {
       if (data && data.full_name) {
         // Extract first name from full name
         const firstName = data.full_name.split(' ')[0];
-        welcomeBannerText.textContent = `Welcome, ${firstName}`;
+        updateWelcomeText(`Welcome, ${firstName}`);
         welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
       } else {
         // Fallback to email username or display name
         const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-        welcomeBannerText.textContent = `Welcome, ${firstName}`;
+        updateWelcomeText(`Welcome, ${firstName}`);
         welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
       // Fallback
       const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-      welcomeBannerText.textContent = `Welcome, ${firstName}`;
+      updateWelcomeText(`Welcome, ${firstName}`);
       welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
     }
   } else {
-    // User is logged out
+    // User is logged out - start animation
+    isUserLoggedIn = false;
     authButtons.classList.add('show');
     userWelcome.classList.remove('show');
-    welcomeBannerText.textContent = 'Welcome to Patholytica';
     welcomeSubtitle.textContent = 'A Medicinebank project';
+    
+    // Restart animation
+    initWelcomeTextAnimation();
   }
 });
 
@@ -973,9 +1195,216 @@ function setRandomBackground() {
 // Call on page load
 setRandomBackground();
 
+// Generate Stories Preview
+function generateStories() {
+  const storiesWrapper = document.getElementById('storiesWrapper');
+  if (!storiesWrapper) return;
+  
+  // Sample user data - in production, this would come from your API
+  const stories = [
+    { username: 'Your Story', isNew: true, avatar: 'https://ui-avatars.com/api/?name=You&background=3ea6ff&color=fff&size=128' },
+    { username: 'Dr. Sarah', avatar: 'https://ui-avatars.com/api/?name=Sarah+Mitchell&background=667eea&color=fff&size=128' },
+    { username: 'Dr. James', avatar: 'https://ui-avatars.com/api/?name=James+Chen&background=764ba2&color=fff&size=128' },
+    { username: 'Dr. Emily', avatar: 'https://ui-avatars.com/api/?name=Emily+Rodriguez&background=f093fb&color=fff&size=128' },
+    { username: 'Dr. Robert', avatar: 'https://ui-avatars.com/api/?name=Robert+Kim&background=4facfe&color=fff&size=128' },
+    { username: 'Dr. Lisa', avatar: 'https://ui-avatars.com/api/?name=Lisa+Zhang&background=00f2fe&color=fff&size=128' },
+    { username: 'Dr. Michael', avatar: 'https://ui-avatars.com/api/?name=Michael+Johnson&background=667eea&color=fff&size=128' },
+    { username: 'Dr. Anna', avatar: 'https://ui-avatars.com/api/?name=Anna+Williams&background=764ba2&color=fff&size=128' },
+  ];
+  
+  stories.forEach((story, index) => {
+    const storyItem = document.createElement('div');
+    storyItem.className = `story-item ${story.isNew ? 'new' : ''}`;
+    storyItem.setAttribute('data-index', index);
+    
+    const avatarWrapper = document.createElement('div');
+    avatarWrapper.className = 'story-avatar-wrapper';
+    
+    if (story.isNew) {
+      avatarWrapper.innerHTML = '<div class="story-avatar"></div>';
+    } else {
+      const avatar = document.createElement('img');
+      avatar.className = 'story-avatar';
+      avatar.src = story.avatar;
+      avatar.alt = story.username;
+      avatar.loading = 'lazy';
+      avatar.decoding = 'async';
+      avatarWrapper.appendChild(avatar);
+    }
+    
+    const username = document.createElement('div');
+    username.className = 'story-username';
+    username.textContent = story.username;
+    
+    storyItem.appendChild(avatarWrapper);
+    storyItem.appendChild(username);
+    
+    storyItem.addEventListener('click', () => {
+      // Handle story click - could open story viewer
+      console.log('Story clicked:', story.username);
+    });
+    
+    storiesWrapper.appendChild(storyItem);
+  });
+}
+
+// Initialize stories on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', generateStories);
+} else {
+  generateStories();
+}
+
+// Multi-language Welcome Text Animation (Apple Style)
+const welcomeTranslations = [
+  { text: 'Welcome to Patholytica', lang: 'English' },
+  { text: 'Bienvenue sur Patholytica', lang: 'French' },
+  { text: 'Willkommen bei Patholytica', lang: 'German' },
+  { text: 'Bienvenido a Patholytica', lang: 'Spanish' },
+  { text: 'Benvenuto su Patholytica', lang: 'Italian' },
+  { text: 'Bem-vindo ao Patholytica', lang: 'Portuguese' },
+  { text: 'Welkom bij Patholytica', lang: 'Dutch' },
+  { text: 'Välkommen till Patholytica', lang: 'Swedish' },
+  { text: 'Velkommen til Patholytica', lang: 'Norwegian' },
+  { text: 'Velkommen til Patholytica', lang: 'Danish' },
+  { text: 'Tervetuloa Patholyticaan', lang: 'Finnish' },
+  { text: 'أهلاً بك في Patholytica', lang: 'Arabic' },
+  { text: 'Patholyticaへようこそ', lang: 'Japanese' },
+  { text: 'Patholytica에 오신 것을 환영합니다', lang: 'Korean' },
+  { text: '欢迎来到 Patholytica', lang: 'Chinese (Simplified)' },
+  { text: '歡迎來到 Patholytica', lang: 'Chinese (Traditional)' },
+  { text: 'Добро пожаловать в Patholytica', lang: 'Russian' },
+  { text: 'Hoş geldiniz Patholytica', lang: 'Turkish' },
+  { text: 'ברוכים הבאים ל-Patholytica', lang: 'Hebrew' },
+  { text: 'स्वागत है Patholytica में', lang: 'Hindi' },
+  { text: 'Selamat datang di Patholytica', lang: 'Indonesian' },
+  { text: 'ยินดีต้อนรับสู่ Patholytica', lang: 'Thai' },
+  { text: 'Chào mừng đến với Patholytica', lang: 'Vietnamese' },
+  { text: 'Witamy w Patholytica', lang: 'Polish' },
+  { text: 'Vítejte v Patholytica', lang: 'Czech' },
+  { text: 'Üdvözöljük a Patholyticában', lang: 'Hungarian' },
+  { text: 'Bun venit la Patholytica', lang: 'Romanian' },
+  { text: 'Καλώς ήρθατε στο Patholytica', lang: 'Greek' },
+];
+
+let currentTranslationIndex = 0;
+let isAnimating = false;
+
+function createWelcomeTextElement(text) {
+  const element = document.createElement('span');
+  element.className = 'welcome-text-item';
+  element.textContent = text;
+  return element;
+}
+
+function animateWelcomeText() {
+  const wrapper = document.getElementById('welcomeTextWrapper');
+  if (!wrapper || isAnimating) return;
+  
+  isAnimating = true;
+  const currentElement = wrapper.querySelector('.welcome-text-item.active');
+  const nextIndex = (currentTranslationIndex + 1) % welcomeTranslations.length;
+  const nextTranslation = welcomeTranslations[nextIndex];
+  
+  // Create new element
+  const newElement = createWelcomeTextElement(nextTranslation.text);
+  wrapper.appendChild(newElement);
+  
+  // Force reflow to ensure initial state
+  newElement.offsetHeight;
+  
+  // Start fade in animation
+  requestAnimationFrame(() => {
+    newElement.classList.add('active');
+  });
+  
+  // Fade out current element
+  if (currentElement) {
+    currentElement.classList.add('fade-out');
+    currentElement.classList.remove('active');
+    
+    // Remove old element after animation
+    setTimeout(() => {
+      if (currentElement.parentNode) {
+        currentElement.remove();
+      }
+    }, 1200);
+  }
+  
+  // Update index
+  currentTranslationIndex = nextIndex;
+  
+  // Reset animation flag after transition completes
+  setTimeout(() => {
+    isAnimating = false;
+  }, 1200);
+}
+
+// Initialize welcome text animation
+function initWelcomeTextAnimation() {
+  // Don't start animation if user is logged in
+  if (isUserLoggedIn) return;
+  
+  const wrapper = document.getElementById('welcomeTextWrapper');
+  if (!wrapper) return;
+  
+  // Clear any existing interval
+  stopWelcomeAnimation();
+  
+  // Start with first translation
+  const firstTranslation = welcomeTranslations[0];
+  wrapper.innerHTML = '';
+  const firstElement = createWelcomeTextElement(firstTranslation.text);
+  firstElement.classList.add('active');
+  wrapper.appendChild(firstElement);
+  
+  // Reset index
+  currentTranslationIndex = 0;
+  
+  // Start cycling through translations
+  // Change text every 3 seconds (Apple-style timing)
+  welcomeAnimationInterval = setInterval(() => {
+    if (!isUserLoggedIn) {
+      animateWelcomeText();
+    }
+  }, 3000);
+}
+
+// Initialize on page load (only if user is not logged in)
+// The auth state change handler will manage this
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    // Wait a bit for auth to initialize, then start animation if needed
+    setTimeout(() => {
+      if (!isUserLoggedIn) {
+        initWelcomeTextAnimation();
+      }
+    }, 500);
+  });
+} else {
+  setTimeout(() => {
+    if (!isUserLoggedIn) {
+      initWelcomeTextAnimation();
+    }
+  }, 500);
+}
+
 // Scroll to top function
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Debounce function for performance
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
 }
 
 // Scroll behavior for search bar and back to top button
@@ -984,8 +1413,9 @@ const searchContainer = document.getElementById('searchContainer');
 const backToTop = document.getElementById('backToTop');
 const scrollThreshold = 50;
 let isCompact = false;
+let ticking = false;
 
-window.addEventListener('scroll', function() {
+function handleScroll() {
   const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
   
   // Only show search bar when at the very top
@@ -1017,10 +1447,18 @@ window.addEventListener('scroll', function() {
   }
   
   lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-}, false);
+  ticking = false;
+}
 
-// Search functionality
-function handleSearch(event) {
+window.addEventListener('scroll', function() {
+  if (!ticking) {
+    window.requestAnimationFrame(handleScroll);
+    ticking = true;
+  }
+}, { passive: true });
+
+// Search functionality with debouncing
+function performSearch(event) {
   const searchTerm = event.target.value.toLowerCase();
   const articles = document.querySelectorAll('.article-item');
   let visibleCount = 0;
@@ -1040,6 +1478,18 @@ function handleSearch(event) {
   // Update article count
   document.getElementById('articleCount').textContent = searchTerm ? visibleCount : articles.length;
 }
+
+const handleSearch = debounce(performSearch, 150);
+
+// Initialize search handler
+document.addEventListener('DOMContentLoaded', function() {
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', function(event) {
+      handleSearch(event);
+    });
+  }
+});
 
 // Function to update theme color meta tag for iOS status bar
 function updateThemeColor(isLight) {
