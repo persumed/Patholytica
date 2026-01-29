@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Patholytica — Login</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --bg-color: #0f0f0f;
@@ -175,6 +176,11 @@ body.light-theme .logo-img {
   opacity: 0.9;
   transform: translateY(-1px);
 }
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
 .btn-google {
   background: white;
   color: #444;
@@ -232,6 +238,18 @@ body.light-theme .btn-google {
 .error-message.show {
   display: block;
 }
+.success-message {
+  background: var(--accent-green);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  display: none;
+}
+.success-message.show {
+  display: block;
+}
 .forgot-password {
   text-align: right;
   margin-top: 8px;
@@ -243,6 +261,12 @@ body.light-theme .btn-google {
 }
 .forgot-password a:hover {
   text-decoration: underline;
+}
+.signup-extra {
+  display: none;
+}
+.signup-extra.show {
+  display: block;
 }
 @media (max-width: 768px) {
   .login-container {
@@ -277,8 +301,19 @@ body.light-theme .btn-google {
     <p class="login-subtitle">Sign in to access Patholytica Library</p>
 
 <div id="errorMessage" class="error-message"></div>
+<div id="successMessage" class="success-message"></div>
 
 <form id="loginForm">
+  <div class="form-group signup-extra">
+    <label class="form-label" for="fullName">Full Name</label>
+    <input type="text" id="fullName" class="form-input" placeholder="John Doe">
+  </div>
+  
+  <div class="form-group signup-extra">
+    <label class="form-label" for="username">Username</label>
+    <input type="text" id="username" class="form-input" placeholder="johndoe">
+  </div>
+  
   <div class="form-group">
     <label class="form-label" for="email">Email</label>
     <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
@@ -287,12 +322,12 @@ body.light-theme .btn-google {
   <div class="form-group">
     <label class="form-label" for="password">Password</label>
     <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
-    <div class="forgot-password">
+    <div class="forgot-password" id="forgotPasswordLink">
       <a href="#" onclick="forgotPassword(); return false;">Forgot password?</a>
     </div>
   </div>
   
-  <button type="submit" class="btn btn-primary">
+  <button type="submit" class="btn btn-primary" id="submitBtn">
     <span>Sign In</span>
   </button>
 </form>
@@ -307,7 +342,7 @@ body.light-theme .btn-google {
 </button>
 
 <div class="form-footer">
-  Don't have an account? <a href="#" onclick="showSignUp(); return false;">Sign up</a>
+  Don't have an account? <a href="#" onclick="toggleSignUpMode(); return false;">Sign up</a>
 </div>
 
   </div>
@@ -341,18 +376,90 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-// Make functions globally available
+// Initialize Supabase
+const supabase = window.supabase.createClient(
+  "https://vduqewqyvszfquntmark.supabase.co",
+  "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
+);
+
+// Store user data in Supabase
+async function createUserInSupabase(firebaseUser, fullName = null, username = null) {
+  try {
+    // Extract user data
+    const userData = {
+      email: firebaseUser.email,
+      username: username || firebaseUser.email.split('@')[0], // Default username from email
+      full_name: fullName || firebaseUser.displayName || null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    // Check if user already exists
+    const { data: existingUser, error: checkError } = await supabase
+      .from('users')
+      .select('user_id')
+      .eq('email', firebaseUser.email)
+      .single();
+
+    if (existingUser) {
+      console.log("User already exists in Supabase");
+      return existingUser;
+    }
+
+    // Insert new user
+    const { data, error } = await supabase
+      .from('users')
+      .insert([userData])
+      .select();
+
+    if (error) {
+      console.error("Supabase error:", error);
+      throw error;
+    }
+
+    console.log("User created in Supabase:", data);
+    return data;
+  } catch (error) {
+    console.error("Error creating user in Supabase:", error);
+    throw error;
+  }
+}
+
+// Update user data in Supabase
+async function updateUserInSupabase(email) {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .update({ updated_at: new Date().toISOString() })
+      .eq('email', email)
+      .select();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error updating user in Supabase:", error);
+  }
+}
+
+// Google Sign-In
 window.signInWithGoogle = async function() {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     console.log("Google sign-in successful:", result.user);
-    // Redirect to library page
-    window.location.href = "library.html";
+    
+    // Create/update user in Supabase
+    await createUserInSupabase(result.user);
+    
+    showSuccess("Signed in successfully!");
+    setTimeout(() => {
+      window.location.href = "library.html";
+    }, 1000);
   } catch (error) {
     showError(getErrorMessage(error.code));
   }
 };
 
+// Forgot Password
 window.forgotPassword = async function() {
   const email = document.getElementById('email').value;
   if (!email) {
@@ -362,28 +469,43 @@ window.forgotPassword = async function() {
   
   try {
     await sendPasswordResetEmail(auth, email);
-    alert("Password reset email sent! Check your inbox.");
+    showSuccess("Password reset email sent! Check your inbox.");
   } catch (error) {
     showError(getErrorMessage(error.code));
   }
 };
 
-window.showSignUp = function() {
+// Toggle between Sign In and Sign Up
+window.toggleSignUpMode = function() {
   const title = document.querySelector('.login-title');
   const subtitle = document.querySelector('.login-subtitle');
   const submitBtn = document.querySelector('.btn-primary span');
   const footer = document.querySelector('.form-footer');
+  const signupFields = document.querySelectorAll('.signup-extra');
+  const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+  const fullNameInput = document.getElementById('fullName');
+  const usernameInput = document.getElementById('username');
   
   if (title.textContent === "Welcome Back") {
+    // Switch to Sign Up mode
     title.textContent = "Create Account";
     subtitle.textContent = "Sign up to access Patholytica Library";
     submitBtn.textContent = "Sign Up";
-    footer.innerHTML = 'Already have an account? <a href="#" onclick="showSignUp(); return false;">Sign in</a>';
+    footer.innerHTML = 'Already have an account? <a href="#" onclick="toggleSignUpMode(); return false;">Sign in</a>';
+    signupFields.forEach(field => field.classList.add('show'));
+    forgotPasswordLink.style.display = 'none';
+    fullNameInput.required = true;
+    usernameInput.required = true;
   } else {
+    // Switch to Sign In mode
     title.textContent = "Welcome Back";
     subtitle.textContent = "Sign in to access Patholytica Library";
     submitBtn.textContent = "Sign In";
-    footer.innerHTML = 'Don\'t have an account? <a href="#" onclick="showSignUp(); return false;">Sign up</a>';
+    footer.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleSignUpMode(); return false;">Sign up</a>';
+    signupFields.forEach(field => field.classList.remove('show'));
+    forgotPasswordLink.style.display = 'block';
+    fullNameInput.required = false;
+    usernameInput.required = false;
   }
 };
 
@@ -393,30 +515,67 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
+  const fullName = document.getElementById('fullName').value;
+  const username = document.getElementById('username').value;
   const isSignUp = document.querySelector('.login-title').textContent === "Create Account";
+  const submitBtn = document.getElementById('submitBtn');
+  
+  submitBtn.disabled = true;
+  submitBtn.querySelector('span').textContent = isSignUp ? "Creating account..." : "Signing in...";
   
   try {
     if (isSignUp) {
+      // Sign up with Firebase
       const result = await createUserWithEmailAndPassword(auth, email, password);
       console.log("Sign-up successful:", result.user);
+      
+      // Create user in Supabase
+      await createUserInSupabase(result.user, fullName, username);
+      
+      showSuccess("Account created successfully!");
+      setTimeout(() => {
+        window.location.href = "library.html";
+      }, 1000);
     } else {
+      // Sign in with Firebase
       const result = await signInWithEmailAndPassword(auth, email, password);
       console.log("Sign-in successful:", result.user);
+      
+      // Update last login in Supabase
+      await updateUserInSupabase(email);
+      
+      showSuccess("Signed in successfully!");
+      setTimeout(() => {
+        window.location.href = "library.html";
+      }, 1000);
     }
-    // Redirect to library page
-    window.location.href = "library.html";
   } catch (error) {
     showError(getErrorMessage(error.code));
+    submitBtn.disabled = false;
+    submitBtn.querySelector('span').textContent = isSignUp ? "Sign Up" : "Sign In";
   }
 });
 
 function showError(message) {
   const errorDiv = document.getElementById('errorMessage');
+  const successDiv = document.getElementById('successMessage');
+  successDiv.classList.remove('show');
   errorDiv.textContent = message;
   errorDiv.classList.add('show');
   setTimeout(() => {
     errorDiv.classList.remove('show');
   }, 5000);
+}
+
+function showSuccess(message) {
+  const successDiv = document.getElementById('successMessage');
+  const errorDiv = document.getElementById('errorMessage');
+  errorDiv.classList.remove('show');
+  successDiv.textContent = message;
+  successDiv.classList.add('show');
+  setTimeout(() => {
+    successDiv.classList.remove('show');
+  }, 3000);
 }
 
 function getErrorMessage(errorCode) {
