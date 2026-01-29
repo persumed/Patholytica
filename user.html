@@ -26,40 +26,51 @@ body.light-theme {
   --accent-green: #27ae60;
 }
 * { box-sizing: border-box; }
-html, body { 
+html { 
+  margin: 0; 
+  padding: 0; 
+  height: 100%;
+  overflow-x: hidden;
+}
+body { 
   margin: 0; 
   padding: 0; 
   min-height: 100%; 
   font-family: "Roboto", Arial, sans-serif;
   overflow-x: hidden;
   max-width: 100vw;
-}
-body {
   background: var(--bg-color);
   color: var(--text-primary);
   transition: background 0.2s ease, color 0.2s ease;
   position: relative;
 }
 
-/* ABSOLUTELY STATIC Fixed Background Image */
-body::before {
-  content: '';
+/* ABSOLUTELY STATIC Fixed Background Image - NO SCROLL */
+.background-wrapper {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
-  z-index: -1;
   opacity: 0.3;
   pointer-events: none;
 }
 
-body.light-theme::before {
+body.light-theme .background-image {
   opacity: 0.15;
 }
 
@@ -206,22 +217,20 @@ body.light-theme .user-menu-dropdown {
 .user-menu-item i {
   width: 16px;
 }
-.list-container {
-  max-width: 900px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 24px 24px 80px;
-  padding-top: calc(65px + env(safe-area-inset-top));
-  background: transparent;
+
+/* Page wrapper to control layout */
+.page-wrapper {
   position: relative;
+  width: 100%;
+  padding-top: calc(65px + env(safe-area-inset-top));
 }
 
-/* Beautiful Welcome Banner */
+/* Beautiful Welcome Banner - MORE VISIBLE */
 .welcome-banner {
   display: none;
-  padding: 80px 24px 60px;
+  padding: 120px 24px 80px;
   text-align: center;
-  margin-bottom: 40px;
+  width: 100%;
   position: relative;
 }
 .welcome-banner.show {
@@ -249,18 +258,26 @@ body.light-theme .user-menu-dropdown {
   text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
 }
 
-/* Compact Article List - Original Style */
+/* Content container - FULL WIDTH */
+.content-container {
+  width: 100%;
+  background: var(--bg-color);
+  position: relative;
+  z-index: 1;
+}
+
+.list-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 24px 80px;
+}
+
+/* Compact Article List - Full Width Container */
 .article-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  background: rgba(15, 15, 15, 0.92);
-  backdrop-filter: blur(10px);
-  border-radius: 8px;
-}
-
-body.light-theme .article-list {
-  background: rgba(255, 255, 255, 0.92);
 }
 
 .article-item {
@@ -268,16 +285,6 @@ body.light-theme .article-list {
   border-bottom: 1px solid var(--border-color);
   cursor: pointer;
   transition: background 0.2s ease;
-}
-
-.article-item:first-child {
-  padding-top: 24px;
-  border-radius: 8px 8px 0 0;
-}
-
-.article-item:last-child {
-  border-bottom: none;
-  border-radius: 0 0 8px 8px;
 }
 
 .article-item:hover {
@@ -293,7 +300,6 @@ body.light-theme .article-list {
   line-height: 1.2;
   color: var(--text-primary);
   word-wrap: break-word;
-  padding: 0 24px;
 }
 .article-item:hover .article-title {
   color: var(--accent);
@@ -305,7 +311,6 @@ body.light-theme .article-list {
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 0 24px;
 }
 .meta-dot {
   width: 3px;
@@ -315,8 +320,7 @@ body.light-theme .article-list {
 }
 
 .footer {
-  background: rgba(15, 15, 15, 0.95);
-  backdrop-filter: blur(10px);
+  background: var(--bg-color);
   border-top: 1px solid var(--border-color);
   padding: 24px;
   text-align: center;
@@ -325,10 +329,7 @@ body.light-theme .article-list {
   line-height: 1.6;
   position: relative;
   z-index: 1;
-}
-
-body.light-theme .footer {
-  background: rgba(255, 255, 255, 0.95);
+  width: 100%;
 }
 
 .footer-stats {
@@ -349,11 +350,9 @@ body.light-theme .footer {
 @media (max-width: 768px) {
   .list-container {
     padding: 16px 16px 80px;
-    padding-top: calc(65px + env(safe-area-inset-top));
   }
   .welcome-banner {
-    padding: 60px 16px 40px;
-    margin-bottom: 24px;
+    padding: 100px 16px 60px;
   }
   .welcome-banner-text {
     font-size: 42px;
@@ -382,6 +381,11 @@ body.light-theme .footer {
 </style>
 </head>
 <body>
+
+<!-- ABSOLUTELY STATIC BACKGROUND - SEPARATE WRAPPER -->
+<div class="background-wrapper">
+  <div class="background-image"></div>
+</div>
 
 <div class="header-wrapper">
   <div class="header">
@@ -426,193 +430,198 @@ body.light-theme .footer {
   </div>
 </div>
 
-<div class="list-container">
+<div class="page-wrapper">
   <!-- Beautiful Welcome Banner (shown when logged in) -->
   <div class="welcome-banner" id="welcomeBanner">
     <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome</h1>
     <p class="welcome-subtitle">Explore the frontier of medical knowledge</p>
   </div>
 
-  <ul class="article-list">
+  <!-- Full Width Content Container -->
+  <div class="content-container">
+    <div class="list-container">
+      <ul class="article-list">
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
+          <div class="article-meta">
+            <span>Dr. Sarah Mitchell</span>
+            <div class="meta-dot"></div>
+            <span>Mar 15, 2024</span>
+            <div class="meta-dot"></div>
+            <span>12 min read</span>
+          </div>
+        </li>
+
     <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
+      <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
       <div class="article-meta">
-        <span>Dr. Sarah Mitchell</span>
+        <span>Dr. James Chen</span>
         <div class="meta-dot"></div>
-        <span>Mar 15, 2024</span>
+        <span>Mar 12, 2024</span>
         <div class="meta-dot"></div>
-        <span>12 min read</span>
+        <span>8 min read</span>
       </div>
     </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
-  <div class="article-meta">
-    <span>Dr. James Chen</span>
-    <div class="meta-dot"></div>
-    <span>Mar 12, 2024</span>
-    <div class="meta-dot"></div>
-    <span>8 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
+      <div class="article-meta">
+        <span>Dr. Emily Rodriguez</span>
+        <div class="meta-dot"></div>
+        <span>Mar 10, 2024</span>
+        <div class="meta-dot"></div>
+        <span>15 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
-  <div class="article-meta">
-    <span>Dr. Emily Rodriguez</span>
-    <div class="meta-dot"></div>
-    <span>Mar 10, 2024</span>
-    <div class="meta-dot"></div>
-    <span>15 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
+      <div class="article-meta">
+        <span>Dr. Robert Kim</span>
+        <div class="meta-dot"></div>
+        <span>Mar 8, 2024</span>
+        <div class="meta-dot"></div>
+        <span>10 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
-  <div class="article-meta">
-    <span>Dr. Robert Kim</span>
-    <div class="meta-dot"></div>
-    <span>Mar 8, 2024</span>
-    <div class="meta-dot"></div>
-    <span>10 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
+      <div class="article-meta">
+        <span>Dr. Lisa Zhang</span>
+        <div class="meta-dot"></div>
+        <span>Mar 5, 2024</span>
+        <div class="meta-dot"></div>
+        <span>14 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
-  <div class="article-meta">
-    <span>Dr. Lisa Zhang</span>
-    <div class="meta-dot"></div>
-    <span>Mar 5, 2024</span>
-    <div class="meta-dot"></div>
-    <span>14 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
+      <div class="article-meta">
+        <span>Dr. Robert Kim</span>
+        <div class="meta-dot"></div>
+        <span>Mar 8, 2024</span>
+        <div class="meta-dot"></div>
+        <span>10 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
-  <div class="article-meta">
-    <span>Dr. Robert Kim</span>
-    <div class="meta-dot"></div>
-    <span>Mar 8, 2024</span>
-    <div class="meta-dot"></div>
-    <span>10 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
+      <div class="article-meta">
+        <span>Dr. Lisa Zhang</span>
+        <div class="meta-dot"></div>
+        <span>Mar 5, 2024</span>
+        <div class="meta-dot"></div>
+        <span>14 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
-  <div class="article-meta">
-    <span>Dr. Lisa Zhang</span>
-    <div class="meta-dot"></div>
-    <span>Mar 5, 2024</span>
-    <div class="meta-dot"></div>
-    <span>14 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
+      <div class="article-meta">
+        <span>Dr. Michael Johnson</span>
+        <div class="meta-dot"></div>
+        <span>Mar 3, 2024</span>
+        <div class="meta-dot"></div>
+        <span>11 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
-  <div class="article-meta">
-    <span>Dr. Michael Johnson</span>
-    <div class="meta-dot"></div>
-    <span>Mar 3, 2024</span>
-    <div class="meta-dot"></div>
-    <span>11 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
+      <div class="article-meta">
+        <span>Dr. Michael Johnson</span>
+        <div class="meta-dot"></div>
+        <span>Mar 14, 2024</span>
+        <div class="meta-dot"></div>
+        <span>18 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
-  <div class="article-meta">
-    <span>Dr. Michael Johnson</span>
-    <div class="meta-dot"></div>
-    <span>Mar 14, 2024</span>
-    <div class="meta-dot"></div>
-    <span>18 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
+      <div class="article-meta">
+        <span>Dr. Anna Williams</span>
+        <div class="meta-dot"></div>
+        <span>Mar 11, 2024</span>
+        <div class="meta-dot"></div>
+        <span>16 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
-  <div class="article-meta">
-    <span>Dr. Anna Williams</span>
-    <div class="meta-dot"></div>
-    <span>Mar 11, 2024</span>
-    <div class="meta-dot"></div>
-    <span>16 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
+      <div class="article-meta">
+        <span>Dr. David Park</span>
+        <div class="meta-dot"></div>
+        <span>Mar 9, 2024</span>
+        <div class="meta-dot"></div>
+        <span>20 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
-  <div class="article-meta">
-    <span>Dr. David Park</span>
-    <div class="meta-dot"></div>
-    <span>Mar 9, 2024</span>
-    <div class="meta-dot"></div>
-    <span>20 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
+      <div class="article-meta">
+        <span>Dr. Rachel Green</span>
+        <div class="meta-dot"></div>
+        <span>Mar 7, 2024</span>
+        <div class="meta-dot"></div>
+        <span>13 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
-  <div class="article-meta">
-    <span>Dr. Rachel Green</span>
-    <div class="meta-dot"></div>
-    <span>Mar 7, 2024</span>
-    <div class="meta-dot"></div>
-    <span>13 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
+      <div class="article-meta">
+        <span>Dr. Thomas Anderson</span>
+        <div class="meta-dot"></div>
+        <span>Mar 7, 2024</span>
+        <div class="meta-dot"></div>
+        <span>11 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
-  <div class="article-meta">
-    <span>Dr. Thomas Anderson</span>
-    <div class="meta-dot"></div>
-    <span>Mar 7, 2024</span>
-    <div class="meta-dot"></div>
-    <span>11 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
+      <div class="article-meta">
+        <span>Dr. Rachel Green</span>
+        <div class="meta-dot"></div>
+        <span>Mar 4, 2024</span>
+        <div class="meta-dot"></div>
+        <span>13 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
-  <div class="article-meta">
-    <span>Dr. Rachel Green</span>
-    <div class="meta-dot"></div>
-    <span>Mar 4, 2024</span>
-    <div class="meta-dot"></div>
-    <span>13 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">The Role of Microbiome in Human Health</h2>
+      <div class="article-meta">
+        <span>Dr. Jennifer Lee</span>
+        <div class="meta-dot"></div>
+        <span>Mar 1, 2024</span>
+        <div class="meta-dot"></div>
+        <span>9 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">The Role of Microbiome in Human Health</h2>
-  <div class="article-meta">
-    <span>Dr. Jennifer Lee</span>
-    <div class="meta-dot"></div>
-    <span>Mar 1, 2024</span>
-    <div class="meta-dot"></div>
-    <span>9 min read</span>
-  </div>
-</li>
+      </ul>
+    </div>
 
-  </ul>
+    <footer class="footer">
+      <div class="footer-stats">
+        <span class="article-count" id="articleCount">15</span> articles accessible
+      </div>
+      <div class="footer-tagline">
+        Patholytica is a Medicinebank project aiming to unify academic sharing
+      </div>
+      <div class="footer-location" id="userLocation">
+        Loading location...
+      </div>
+    </footer>
+  </div>
 </div>
-
-<footer class="footer">
-  <div class="footer-stats">
-    <span class="article-count" id="articleCount">15</span> articles accessible
-  </div>
-  <div class="footer-tagline">
-    Patholytica is a Medicinebank project aiming to unify academic sharing
-  </div>
-  <div class="footer-location" id="userLocation">
-    Loading location...
-  </div>
-</footer>
 
 <script type="module">
 // Import Firebase modules
