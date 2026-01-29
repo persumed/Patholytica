@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Patholytica — Library</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --bg-color: #0f0f0f;
@@ -89,12 +90,110 @@ body.light-theme .logo-img {
 .icon-btn:hover {
   background: var(--hover-bg);
 }
+.auth-buttons {
+  display: none;
+  gap: 12px;
+}
+.auth-buttons.show {
+  display: flex;
+}
+.btn-login, .btn-signup {
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: none;
+}
+.btn-login {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+.btn-login:hover {
+  background: var(--hover-bg);
+}
+.btn-signup {
+  background: var(--accent);
+  color: white;
+}
+.btn-signup:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.user-welcome {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+.user-welcome.show {
+  display: flex;
+}
+.welcome-text {
+  font-weight: 500;
+}
+.user-menu {
+  position: relative;
+}
+.user-menu-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none;
+  z-index: 1000;
+}
+.user-menu-dropdown.show {
+  display: block;
+}
+.user-menu-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+.user-menu-item:hover {
+  background: var(--hover-bg);
+}
+.user-menu-item i {
+  width: 16px;
+}
 .list-container {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
   padding: 24px 24px 80px;
   padding-top: calc(65px + env(safe-area-inset-top));
+}
+.welcome-banner {
+  display: none;
+  padding: 40px 24px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.welcome-banner.show {
+  display: block;
+}
+.welcome-banner-text {
+  font-family: Arial, sans-serif;
+  font-size: 48px;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.2;
 }
 .article-list {
   list-style: none;
@@ -167,6 +266,13 @@ body.light-theme .logo-img {
     padding: 16px 16px 80px;
     padding-top: calc(65px + env(safe-area-inset-top));
   }
+  .welcome-banner {
+    padding: 32px 16px;
+    margin-bottom: 16px;
+  }
+  .welcome-banner-text {
+    font-size: 32px;
+  }
   .article-title {
     font-size: 32px;
   }
@@ -175,6 +281,13 @@ body.light-theme .logo-img {
   }
   .footer {
     padding: 20px 16px;
+    font-size: 13px;
+  }
+  .auth-buttons {
+    gap: 8px;
+  }
+  .btn-login, .btn-signup {
+    padding: 6px 16px;
     font-size: 13px;
   }
 }
@@ -192,14 +305,45 @@ body.light-theme .logo-img {
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
-      <button class="icon-btn" title="User">
+
+  <!-- Auth buttons (shown when logged out) -->
+  <div class="auth-buttons" id="authButtons">
+    <a href="login.html" class="btn-login">Log In</a>
+  </div>
+  
+  <!-- User menu (shown when logged in) -->
+  <div class="user-welcome" id="userWelcome">
+    <div class="user-menu">
+      <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
         <i class="fas fa-user"></i>
       </button>
+      <div class="user-menu-dropdown" id="userMenuDropdown">
+        <div class="user-menu-item" onclick="window.location.href='profile.html'">
+          <i class="fas fa-user"></i>
+          <span>Profile</span>
+        </div>
+        <div class="user-menu-item" onclick="window.location.href='settings.html'">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </div>
+        <div class="user-menu-item" onclick="logOut()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Log Out</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
+  </div>
+</div>
+
 <div class="list-container">
+  <!-- Welcome Banner (shown when logged in) -->
+  <div class="welcome-banner" id="welcomeBanner">
+    <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome</h1>
+  </div>
+
   <ul class="article-list">
     <li class="article-item" onclick="openArticle('patholytica.com/library')">
       <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
@@ -381,6 +525,94 @@ body.light-theme .logo-img {
   </div>
 </footer>
 
+<script type="module">
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+  getAuth, 
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
+  authDomain: "patholytica.firebaseapp.com",
+  databaseURL: "https://patholytica-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "patholytica",
+  storageBucket: "patholytica.firebasestorage.app",
+  messagingSenderId: "738430635282",
+  appId: "1:738430635282:web:8451ef380447c7611137cb"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Initialize Supabase
+const supabase = window.supabase.createClient(
+  "https://vduqewqyvszfquntmark.supabase.co",
+  "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
+);
+
+// Check authentication state
+onAuthStateChanged(auth, async (user) => {
+  const authButtons = document.getElementById('authButtons');
+  const userWelcome = document.getElementById('userWelcome');
+  const welcomeBanner = document.getElementById('welcomeBanner');
+  const welcomeBannerText = document.getElementById('welcomeBannerText');
+  
+  if (user) {
+    // User is logged in
+    authButtons.classList.remove('show');
+    userWelcome.classList.add('show');
+    welcomeBanner.classList.add('show');
+    
+    // Get user data from Supabase to get first name
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('full_name')
+        .eq('email', user.email)
+        .single();
+      
+      if (data && data.full_name) {
+        // Extract first name from full name
+        const firstName = data.full_name.split(' ')[0];
+        welcomeBannerText.textContent = `Welcome, ${firstName}`;
+      } else {
+        // Fallback to email username or display name
+        const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+        welcomeBannerText.textContent = `Welcome, ${firstName}`;
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      // Fallback
+      const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+      welcomeBannerText.textContent = `Welcome, ${firstName}`;
+    }
+  } else {
+    // User is logged out
+    authButtons.classList.add('show');
+    userWelcome.classList.remove('show');
+    welcomeBanner.classList.remove('show');
+  }
+});
+
+// Log out function
+window.logOut = async function() {
+  try {
+    await signOut(auth);
+    console.log("User logged out");
+    // Reload page to update UI
+    window.location.reload();
+  } catch (error) {
+    console.error("Error logging out:", error);
+    alert("Error logging out. Please try again.");
+  }
+};
+</script>
+
 <script>
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
@@ -401,6 +633,21 @@ function searchArticles() {
     alert(`Searching for: "${searchQuery}"\n\nSearch functionality would filter the article list.`);
   }
 }
+
+function toggleUserMenu() {
+  const dropdown = document.getElementById('userMenuDropdown');
+  dropdown.classList.toggle('show');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+  const userMenu = document.querySelector('.user-menu');
+  const dropdown = document.getElementById('userMenuDropdown');
+  
+  if (userMenu && !userMenu.contains(event.target)) {
+    dropdown.classList.remove('show');
+  }
+});
 
 // Count articles and update footer
 const articleCount = document.querySelectorAll('.article-item').length;
