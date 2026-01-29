@@ -802,14 +802,14 @@ onAuthStateChanged(auth, async (user) => {
         // Fallback to email username or display name
         const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
         welcomeBannerText.textContent = `Welcome, ${firstName}`;
-        welcomeSubtitle.textContent = 'Explore the frontier of medical knowledge';
+        welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
       // Fallback
       const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
       welcomeBannerText.textContent = `Welcome, ${firstName}`;
-      welcomeSubtitle.textContent = 'Explore the frontier of medical knowledge';
+      welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
     }
   } else {
     // User is logged out
