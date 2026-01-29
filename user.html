@@ -71,9 +71,8 @@ pointer-events: none;
 transition: opacity 0.5s ease;
 }
 
-/* Background stays same opacity in light theme */
 body.light-theme .background-image {
-opacity: 0.3;
+opacity: 0.15;
 }
 
 .header-wrapper {
@@ -220,19 +219,20 @@ background: var(–hover-bg);
 width: 16px;
 }
 
-/* Search Bar Container - Now hides on scroll down */
+/* Floating Search Bar - Below Header */
 .search-container {
 position: fixed;
-top: calc(67px + env(safe-area-inset-top)); /* 2px lower than before */
-right: 24px;
-z-index: 30;
-width: 320px;
-max-width: calc(100vw - 48px);
+top: calc(65px + env(safe-area-inset-top) + 16px);
+left: 50%;
+transform: translateX(-50%);
+z-index: 35;
+width: 90%;
+max-width: 600px;
 transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .search-container.hidden {
-transform: translateY(-100px);
+transform: translateX(-50%) translateY(-80px);
 opacity: 0;
 pointer-events: none;
 }
@@ -240,57 +240,67 @@ pointer-events: none;
 .search-wrapper {
 position: relative;
 width: 100%;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+border-radius: 28px;
 }
 
 .search-input {
 width: 100%;
-padding: 12px 48px 12px 16px;
-border-radius: 24px;
-border: 1px solid rgba(255, 255, 255, 0.2);
-background: rgba(15, 15, 15, 0.8);
-backdrop-filter: blur(10px);
+padding: 14px 50px 14px 20px;
+border-radius: 28px;
+border: 1px solid rgba(255, 255, 255, 0.15);
+background: rgba(15, 15, 15, 0.85);
+backdrop-filter: blur(20px);
 color: #fff;
-font-size: 14px;
+font-size: 15px;
 font-family: “Roboto”, Arial, sans-serif;
 outline: none;
 transition: all 0.3s ease;
 }
 
 body.light-theme .search-input {
-background: rgba(255, 255, 255, 0.9);
-border: 1px solid rgba(0, 0, 0, 0.1);
+background: rgba(255, 255, 255, 0.92);
+border: 1px solid rgba(0, 0, 0, 0.08);
 color: #0f0f0f;
+box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .search-input::placeholder {
-color: rgba(255, 255, 255, 0.6);
+color: rgba(255, 255, 255, 0.5);
 }
 
 body.light-theme .search-input::placeholder {
-color: rgba(0, 0, 0, 0.5);
+color: rgba(0, 0, 0, 0.4);
 }
 
 .search-input:focus {
 border-color: var(–accent);
 background: rgba(15, 15, 15, 0.95);
+box-shadow: 0 4px 24px rgba(62, 166, 255, 0.2);
 }
 
 body.light-theme .search-input:focus {
 background: rgba(255, 255, 255, 0.98);
+box-shadow: 0 4px 24px rgba(6, 95, 212, 0.15);
 }
 
 .search-icon {
 position: absolute;
-right: 16px;
+right: 20px;
 top: 50%;
 transform: translateY(-50%);
-color: rgba(255, 255, 255, 0.6);
-font-size: 16px;
+color: rgba(255, 255, 255, 0.5);
+font-size: 18px;
 pointer-events: none;
+transition: color 0.3s ease;
 }
 
 body.light-theme .search-icon {
-color: rgba(0, 0, 0, 0.5);
+color: rgba(0, 0, 0, 0.4);
+}
+
+.search-input:focus + .search-icon {
+color: var(–accent);
 }
 
 /* Page wrapper to control layout */
@@ -300,7 +310,7 @@ width: 100%;
 padding-top: calc(65px + env(safe-area-inset-top));
 }
 
-/* Beautiful Welcome Banner - EVEN MORE VISIBLE */
+/* Beautiful Welcome Banner */
 .welcome-banner {
 display: block;
 padding: 180px 24px 120px;
@@ -313,32 +323,22 @@ position: relative;
 font-family: ‘Georgia’, ‘Times New Roman’, serif;
 font-size: 64px;
 font-weight: 300;
-color: #ffffff;
+color: var(–text-primary);
 margin: 0 0 16px 0;
 line-height: 1.2;
 letter-spacing: -1px;
 text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-/* Keep welcome text white in light theme */
-body.light-theme .welcome-banner-text {
-color: #ffffff;
-}
-
 .welcome-subtitle {
 font-family: ‘Georgia’, ‘Times New Roman’, serif;
 font-size: 20px;
 font-weight: 300;
-color: rgba(255, 255, 255, 0.9);
+color: var(–text-secondary);
 margin: 0;
 letter-spacing: 0.5px;
 font-style: italic;
 text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
-}
-
-/* Keep subtitle white in light theme */
-body.light-theme .welcome-subtitle {
-color: rgba(255, 255, 255, 0.9);
 }
 
 /* Content container - FULL WIDTH */
@@ -356,7 +356,7 @@ margin: 0 auto;
 padding: 24px 24px 80px;
 }
 
-/* Compact Article List - Full Width Container */
+/* Compact Article List */
 .article-list {
 list-style: none;
 margin: 0;
@@ -430,10 +430,16 @@ font-size: 13px;
 color: var(–text-secondary);
 opacity: 0.8;
 }
+
 @media (max-width: 768px) {
 .search-container {
-right: 16px;
-width: 280px;
+width: calc(100% - 32px);
+top: calc(65px + env(safe-area-inset-top) + 12px);
+}
+
+.search-input {
+padding: 12px 45px 12px 16px;
+font-size: 14px;
 }
 
 .list-container {
@@ -466,19 +472,12 @@ padding: 6px 16px;
 font-size: 13px;
 }
 }
-
-@media (max-width: 480px) {
-.search-container {
-right: 12px;
-width: calc(100vw - 24px);
-}
-}
 </style>
 
 </head>
 <body>
 
-<!-- ABSOLUTELY STATIC BACKGROUND - SEPARATE WRAPPER -->
+<!-- ABSOLUTELY STATIC BACKGROUND -->
 
 <div class="background-wrapper">
   <div class="background-image" id="backgroundImage"></div>
@@ -526,7 +525,7 @@ width: calc(100vw - 24px);
   </div>
 </div>
 
-<!-- Search Bar - Now hides on scroll -->
+<!-- Floating Search Bar Below Header -->
 
 <div class="search-container" id="searchContainer">
   <div class="search-wrapper">
@@ -542,7 +541,7 @@ width: calc(100vw - 24px);
 </div>
 
 <div class="page-wrapper">
-  <!-- Beautiful Welcome Banner (always shown) -->
+  <!-- Beautiful Welcome Banner -->
   <div class="welcome-banner" id="welcomeBanner">
     <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome to Patholytica</h1>
     <p class="welcome-subtitle" id="welcomeSubtitle">A Medicinebank project</p>
@@ -564,6 +563,7 @@ width: calc(100vw - 24px);
           </div>
         </li>
 
+```
 <li class="article-item" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
   <div class="article-meta">
@@ -732,6 +732,7 @@ width: calc(100vw - 24px);
     Loading location...
   </div>
 </footer>
+```
 
   </div>
 </div>
@@ -818,7 +819,6 @@ window.logOut = async function() {
   try {
     await signOut(auth);
     console.log("User logged out");
-    // Reload page to update UI
     window.location.reload();
   } catch (error) {
     console.error("Error logging out:", error);
@@ -830,21 +830,21 @@ window.logOut = async function() {
 <script>
 // Random Natural Landscape Backgrounds
 const backgroundImages = [
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80', // Mountains
-  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80', // Forest
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&q=80', // Lake
-  'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1920&q=80', // Meadow
-  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80', // Waterfall
-  'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=1920&q=80', // Canyon
-  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80', // Mountain Peak
-  'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=1920&q=80', // Glacier
-  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80', // Northern Lights
-  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1920&q=80', // Countryside
-  'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=1920&q=80', // Ocean Cliffs
-  'https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=1920&q=80', // Rocky Mountains
-  'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80', // Rolling Hills
-  'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1920&q=80', // Wilderness
-  'https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?w=1920&q=80' // Valley
+  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80',
+  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80',
+  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&q=80',
+  'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1920&q=80',
+  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80',
+  'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=1920&q=80',
+  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80',
+  'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=1920&q=80',
+  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80',
+  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1920&q=80',
+  'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=1920&q=80',
+  'https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=1920&q=80',
+  'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80',
+  'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1920&q=80',
+  'https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?w=1920&q=80'
 ];
 
 // Set random background on page load
@@ -854,13 +854,12 @@ function setRandomBackground() {
   backgroundElement.style.backgroundImage = `url('${backgroundImages[randomIndex]}')`;
 }
 
-// Call on page load
 setRandomBackground();
 
 // Scroll behavior for search bar
 let lastScrollTop = 0;
 const searchContainer = document.getElementById('searchContainer');
-const scrollThreshold = 10; // Minimum scroll distance to trigger hide/show
+const scrollThreshold = 50;
 
 window.addEventListener('scroll', function() {
   const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
@@ -881,6 +880,7 @@ window.addEventListener('scroll', function() {
 function handleSearch(event) {
   const searchTerm = event.target.value.toLowerCase();
   const articles = document.querySelectorAll('.article-item');
+  let visibleCount = 0;
   
   articles.forEach(article => {
     const title = article.querySelector('.article-title').textContent.toLowerCase();
@@ -888,15 +888,14 @@ function handleSearch(event) {
     
     if (title.includes(searchTerm) || meta.includes(searchTerm)) {
       article.style.display = '';
+      visibleCount++;
     } else {
       article.style.display = 'none';
     }
   });
   
   // Update article count
-  const visibleArticles = document.querySelectorAll('.article-item[style=""]').length;
-  const totalArticles = articles.length;
-  document.getElementById('articleCount').textContent = searchTerm ? visibleArticles : totalArticles;
+  document.getElementById('articleCount').textContent = searchTerm ? visibleCount : articles.length;
 }
 
 function toggleTheme() {
@@ -910,10 +909,6 @@ if (localStorage.getItem("theme") === "light") {
 
 function openArticle(url) {
   window.location.href = 'https://' + url;
-}
-
-function searchArticles() {
-  document.getElementById('searchInput').focus();
 }
 
 function toggleUserMenu() {
