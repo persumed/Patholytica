@@ -218,6 +218,90 @@ body.light-theme .user-menu-dropdown {
   width: 16px;
 }
 
+/* Floating Search Bar - Below Header */
+.search-container {
+  position: fixed;
+  top: calc(65px + env(safe-area-inset-top) + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 35;
+  width: 90%;
+  max-width: 600px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.search-container.hidden {
+  transform: translateX(-50%) translateY(-80px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.search-wrapper {
+  position: relative;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 28px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 50px 14px 20px;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(15, 15, 15, 0.85);
+  backdrop-filter: blur(20px);
+  color: #fff;
+  font-size: 15px;
+  font-family: "Roboto", Arial, sans-serif;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+body.light-theme .search-input {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #0f0f0f;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme .search-input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  background: rgba(15, 15, 15, 0.95);
+  box-shadow: 0 4px 24px rgba(62, 166, 255, 0.2);
+}
+
+body.light-theme .search-input:focus {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 4px 24px rgba(6, 95, 212, 0.15);
+}
+
+.search-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 18px;
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+body.light-theme .search-icon {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.search-input:focus + .search-icon {
+  color: var(--accent);
+}
+
 /* Page wrapper to control layout */
 .page-wrapper {
   position: relative;
@@ -346,6 +430,16 @@ body.light-theme .user-menu-dropdown {
   opacity: 0.8;
 }
 @media (max-width: 768px) {
+  .search-container {
+    width: calc(100% - 32px);
+    top: calc(65px + env(safe-area-inset-top) + 12px);
+  }
+
+  .search-input {
+    padding: 12px 45px 12px 16px;
+    font-size: 14px;
+  }
+
   .list-container {
     padding: 16px 16px 80px;
   }
@@ -389,9 +483,6 @@ body.light-theme .user-menu-dropdown {
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
-      <button class="icon-btn" onclick="searchArticles()" title="Search">
-        <i class="fas fa-search"></i>
-      </button>
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
@@ -428,6 +519,20 @@ body.light-theme .user-menu-dropdown {
   </div>
 </div>
 
+<!-- Floating Search Bar Below Header -->
+<div class="search-container" id="searchContainer">
+  <div class="search-wrapper">
+    <input 
+      type="text" 
+      class="search-input" 
+      id="searchInput" 
+      placeholder="Search articles..."
+      onkeyup="handleSearch(event)"
+    >
+    <i class="fas fa-search search-icon"></i>
+  </div>
+</div>
+
 <div class="page-wrapper">
   <!-- Beautiful Welcome Banner (always shown) -->
   <div class="welcome-banner" id="welcomeBanner">
@@ -438,7 +543,7 @@ body.light-theme .user-menu-dropdown {
   <!-- Full Width Content Container -->
   <div class="content-container">
     <div class="list-container">
-      <ul class="article-list">
+      <ul class="article-list" id="articleList">
         <li class="article-item" onclick="openArticle('patholytica.com/library')">
           <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
           <div class="article-meta">
@@ -715,21 +820,21 @@ window.logOut = async function() {
 <script>
 // Random Natural Landscape Backgrounds
 const backgroundImages = [
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80', // Mountains
-  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80', // Forest
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&q=80', // Lake
-  'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1920&q=80', // Meadow
-  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80', // Waterfall
-  'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=1920&q=80', // Canyon
-  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80', // Mountain Peak
-  'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=1920&q=80', // Glacier
-  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80', // Northern Lights
-  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1920&q=80', // Countryside
-  'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=1920&q=80', // Ocean Cliffs
-  'https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=1920&q=80', // Rocky Mountains
-  'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80', // Rolling Hills
-  'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1920&q=80', // Wilderness
-  'https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?w=1920&q=80' // Valley
+  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80',
+  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80',
+  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&q=80',
+  'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1920&q=80',
+  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80',
+  'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=1920&q=80',
+  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80',
+  'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=1920&q=80',
+  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80',
+  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1920&q=80',
+  'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=1920&q=80',
+  'https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=1920&q=80',
+  'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80',
+  'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1920&q=80',
+  'https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?w=1920&q=80'
 ];
 
 // Set random background on page load
@@ -742,6 +847,48 @@ function setRandomBackground() {
 // Call on page load
 setRandomBackground();
 
+// Scroll behavior for search bar
+let lastScrollTop = 0;
+const searchContainer = document.getElementById('searchContainer');
+const scrollThreshold = 50;
+
+window.addEventListener('scroll', function() {
+  const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+  
+  // Scrolling down - hide search bar
+  if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
+    searchContainer.classList.add('hidden');
+  } 
+  // Scrolling up - show search bar
+  else if (currentScroll < lastScrollTop) {
+    searchContainer.classList.remove('hidden');
+  }
+  
+  lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+}, false);
+
+// Search functionality
+function handleSearch(event) {
+  const searchTerm = event.target.value.toLowerCase();
+  const articles = document.querySelectorAll('.article-item');
+  let visibleCount = 0;
+  
+  articles.forEach(article => {
+    const title = article.querySelector('.article-title').textContent.toLowerCase();
+    const meta = article.querySelector('.article-meta').textContent.toLowerCase();
+    
+    if (title.includes(searchTerm) || meta.includes(searchTerm)) {
+      article.style.display = '';
+      visibleCount++;
+    } else {
+      article.style.display = 'none';
+    }
+  });
+  
+  // Update article count
+  document.getElementById('articleCount').textContent = searchTerm ? visibleCount : articles.length;
+}
+
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
   localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
@@ -753,13 +900,6 @@ if (localStorage.getItem("theme") === "light") {
 
 function openArticle(url) {
   window.location.href = 'https://' + url;
-}
-
-function searchArticles() {
-  const searchQuery = prompt('Search articles:');
-  if (searchQuery && searchQuery.trim()) {
-    alert(`Searching for: "${searchQuery}"\n\nSearch functionality would filter the article list.`);
-  }
 }
 
 function toggleUserMenu() {
