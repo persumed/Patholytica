@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -32,6 +31,7 @@ html {
   padding: 0; 
   height: 100%;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 body { 
   margin: 0; 
@@ -46,546 +46,667 @@ body {
   position: relative;
 }
 
-/* Fixed Background Image */
+/* ABSOLUTELY STATIC Fixed Background Image - NO SCROLL */
 .background-wrapper {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100vh;
-z-index: -1;
-overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
 }
-
 .background-image {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-size: cover;
-background-position: center center;
-background-repeat: no-repeat;
-opacity: 0.3;
-pointer-events: none;
-transition: opacity 0.5s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.3;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
-
+/* Background always darkened - dark overlay */
 .background-overlay {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.1);
-pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  pointer-events: none;
 }
 
 .header-wrapper {
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-background: rgba(15, 15, 15, 0.95);
-backdrop-filter: blur(10px);
-padding-top: env(safe-area-inset-top);
-border-bottom: 1px solid var(–border-color);
-z-index: 40;
-width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 15, 15, 0.95);
+  backdrop-filter: blur(10px);
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 40;
+  width: 100%;
+  transition: transform 0.3s ease;
 }
-
 body.light-theme .header-wrapper {
-background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.95);
 }
-
 .header {
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 12px 24px;
-max-width: 100%;
-margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 .logo-img {
-height: 28px;
-width: auto;
-transition: filter 0.2s ease;
-cursor: pointer;
+  height: 28px;
+  width: auto;
+  transition: filter 0.2s ease;
+  cursor: pointer;
 }
 body.light-theme .logo-img {
-filter: invert(1);
+  filter: invert(1);
 }
 .header-actions {
-display: flex;
-align-items: center;
-gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 .icon-btn {
-width: 40px;
-height: 40px;
-border-radius: 50%;
-background: transparent;
-border: none;
-color: var(–text-primary);
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 18px;
-transition: background 0.2s ease;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: background 0.2s ease;
 }
 .icon-btn:hover {
-background: var(–hover-bg);
+  background: var(--hover-bg);
 }
 .auth-buttons {
-display: none;
-gap: 12px;
+  display: none;
+  gap: 12px;
 }
 .auth-buttons.show {
-display: flex;
+  display: flex;
 }
 .btn-login, .btn-signup {
-padding: 8px 20px;
-border-radius: 20px;
-font-size: 14px;
-font-weight: 500;
-cursor: pointer;
-transition: all 0.2s ease;
-text-decoration: none;
-border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: none;
 }
 .btn-login {
-background: transparent;
-color: var(–text-primary);
-border: 1px solid var(–border-color);
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 .btn-login:hover {
-background: var(–hover-bg);
+  background: var(--hover-bg);
 }
 .btn-signup {
-background: var(–accent);
-color: white;
+  background: var(--accent);
+  color: white;
 }
 .btn-signup:hover {
-opacity: 0.9;
-transform: translateY(-1px);
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 .user-welcome {
-display: none;
-align-items: center;
-gap: 12px;
-font-size: 14px;
-color: var(–text-primary);
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-primary);
 }
 .user-welcome.show {
-display: flex;
+  display: flex;
 }
 .welcome-text {
-font-weight: 500;
+  font-weight: 500;
 }
 .user-menu {
-position: relative;
+  position: relative;
 }
 .user-menu-dropdown {
-position: absolute;
-top: 50px;
-right: 0;
-background: rgba(15, 15, 15, 0.98);
-backdrop-filter: blur(10px);
-border: 1px solid var(–border-color);
-border-radius: 8px;
-padding: 8px 0;
-min-width: 180px;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-display: none;
-z-index: 1000;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: rgba(15, 15, 15, 0.98);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none;
+  z-index: 1000;
 }
-
 body.light-theme .user-menu-dropdown {
-background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255, 0.98);
 }
-
 .user-menu-dropdown.show {
-display: block;
+  display: block;
 }
 .user-menu-item {
-padding: 10px 16px;
-cursor: pointer;
-transition: background 0.2s ease;
-display: flex;
-align-items: center;
-gap: 10px;
-color: var(–text-primary);
-font-size: 14px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+  font-size: 14px;
 }
 .user-menu-item:hover {
-background: var(–hover-bg);
+  background: var(--hover-bg);
 }
 .user-menu-item i {
-width: 16px;
+  width: 16px;
 }
 
-/* Floating Search Bar - Hidden initially */
+/* Floating Search Bar - Below Header */
 .search-container {
-position: fixed;
-top: calc(65px + env(safe-area-inset-top) + 16px);
-left: 50%;
-transform: translateX(-50%);
-z-index: 35;
-width: 90%;
-max-width: 600px;
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.5s ease 0.3s;
+  position: fixed;
+  top: calc(65px + env(safe-area-inset-top) + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 35;
+  width: 90%;
+  max-width: 600px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
-
-.search-container.visible {
-opacity: 1;
-pointer-events: all;
+.search-container.hidden {
+  transform: translateX(-50%) translateY(-80px);
+  opacity: 0;
+  pointer-events: none;
 }
-
 .search-wrapper {
-position: relative;
-width: 100%;
-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-border-radius: 28px;
+  position: relative;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 28px;
 }
-
 .search-input {
-width: 100%;
-padding: 14px 50px 14px 20px;
-border-radius: 28px;
-border: 1px solid rgba(255, 255, 255, 0.15);
-background: rgba(15, 15, 15, 0.85);
-backdrop-filter: blur(20px);
-color: #fff;
-font-size: 15px;
-font-family: “Roboto”, Arial, sans-serif;
-outline: none;
-transition: all 0.3s ease;
+  width: 100%;
+  padding: 14px 50px 14px 20px;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(15, 15, 15, 0.85);
+  backdrop-filter: blur(20px);
+  color: #fff;
+  font-size: 15px;
+  font-family: "Roboto", Arial, sans-serif;
+  outline: none;
+  transition: all 0.3s ease;
 }
-
 body.light-theme .search-input {
-background: rgba(255, 255, 255, 0.92);
-border: 1px solid rgba(0, 0, 0, 0.08);
-color: #0f0f0f;
-box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #0f0f0f;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
-
 .search-input::placeholder {
-color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.5);
 }
-
 body.light-theme .search-input::placeholder {
-color: rgba(0, 0, 0, 0.4);
+  color: rgba(0, 0, 0, 0.4);
 }
-
 .search-input:focus {
-border-color: var(–accent);
-background: rgba(15, 15, 15, 0.95);
-box-shadow: 0 4px 24px rgba(62, 166, 255, 0.2);
+  border-color: var(--accent);
+  background: rgba(15, 15, 15, 0.95);
+  box-shadow: 0 4px 24px rgba(62, 166, 255, 0.2);
 }
-
 body.light-theme .search-input:focus {
-background: rgba(255, 255, 255, 0.98);
-box-shadow: 0 4px 24px rgba(6, 95, 212, 0.15);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 4px 24px rgba(6, 95, 212, 0.15);
 }
-
 .search-icon {
-position: absolute;
-right: 20px;
-top: 50%;
-transform: translateY(-50%);
-color: rgba(255, 255, 255, 0.5);
-font-size: 18px;
-pointer-events: none;
-transition: color 0.3s ease;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 18px;
+  pointer-events: none;
+  transition: color 0.3s ease;
 }
-
 body.light-theme .search-icon {
-color: rgba(0, 0, 0, 0.4);
+  color: rgba(0, 0, 0, 0.4);
 }
-
 .search-input:focus + .search-icon {
-color: var(–accent);
+  color: var(--accent);
 }
 
-/* Full Screen Welcome View */
-.welcome-screen {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100vh;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-z-index: 30;
-transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+/* Page wrapper to control layout */
+.page-wrapper {
+  position: relative;
+  width: 100%;
 }
 
-.welcome-screen.scrolled-up {
-transform: translateY(-100vh);
+/* HERO SECTION - Full viewport landing */
+.hero-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.welcome-content {
-text-align: center;
-margin-bottom: 60px;
+.hero-section.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-30px);
 }
 
-.welcome-banner-text {
-font-family: ‘Georgia’, ‘Times New Roman’, serif;
-font-size: 64px;
-font-weight: 300;
-color: #ffffff;
-margin: 0 0 16px 0;
-line-height: 1.2;
-letter-spacing: -1px;
-text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+.hero-content {
+  text-align: center;
+  padding: 24px;
 }
 
-.welcome-subtitle {
-font-family: ‘Georgia’, ‘Times New Roman’, serif;
-font-size: 20px;
-font-weight: 300;
-color: rgba(255, 255, 255, 0.8);
-margin: 0;
-letter-spacing: 0.5px;
-font-style: italic;
-text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+.hero-title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 72px;
+  font-weight: 300;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  line-height: 1.1;
+  letter-spacing: -2px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
-/* Arrow Down Button */
-.arrow-down-btn {
-width: 50px;
-height: 50px;
-border-radius: 50%;
-background: rgba(255, 255, 255, 0.1);
-backdrop-filter: blur(10px);
-border: 2px solid rgba(255, 255, 255, 0.3);
-color: white;
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 24px;
-transition: all 0.3s ease;
-animation: bounce 2s infinite;
+.hero-subtitle {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 22px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 60px 0;
+  letter-spacing: 1px;
+  font-style: italic;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
-.arrow-down-btn:hover {
-background: rgba(255, 255, 255, 0.2);
-border-color: rgba(255, 255, 255, 0.5);
-transform: translateY(-3px);
+/* Scroll Down Arrow */
+.scroll-indicator {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  animation: bounce 2s infinite;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.scroll-indicator:hover {
+  transform: translateX(-50%) scale(1.1);
+}
+
+.scroll-indicator.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(20px);
+}
+
+.scroll-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.scroll-arrow {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 20px;
+  transition: all 0.3s ease;
+}
+
+.scroll-indicator:hover .scroll-arrow {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 30px rgba(62, 166, 255, 0.3);
 }
 
 @keyframes bounce {
-0%, 20%, 50%, 80%, 100% {
-transform: translateY(0);
-}
-40% {
-transform: translateY(-10px);
-}
-60% {
-transform: translateY(-5px);
-}
-}
-
-/* Content Container - Initially below viewport */
-.page-wrapper {
-position: relative;
-width: 100%;
-padding-top: calc(65px + env(safe-area-inset-top));
-transform: translateY(100vh);
-transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  40% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(-5px);
+  }
 }
 
-.page-wrapper.visible {
-transform: translateY(0);
-}
-
+/* Content Container - Hidden initially, slides up */
 .content-container {
-width: 100%;
-background: var(–bg-color);
-position: relative;
-z-index: 1;
-min-height: 100vh;
+  width: 100%;
+  background: var(--bg-color);
+  position: fixed;
+  top: 100vh;
+  left: 0;
+  z-index: 20;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 100vh;
+}
+
+.content-container.visible {
+  transform: translateY(-100vh);
+  position: relative;
+  top: 0;
+}
+
+/* Welcome Banner inside content */
+.welcome-banner {
+  display: none;
+  padding: 80px 24px 40px;
+  text-align: center;
+  width: 100%;
+  background: var(--bg-color);
+}
+
+.welcome-banner.visible {
+  display: block;
+}
+
+.welcome-banner-text {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 48px;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+
+.welcome-subtitle {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--text-secondary);
+  margin: 0;
+  letter-spacing: 0.5px;
+  font-style: italic;
 }
 
 .list-container {
-max-width: 900px;
-width: 100%;
-margin: 0 auto;
-padding: 24px 24px 80px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 24px 80px;
 }
 
-/* Compact Article List */
+/* Compact Article List - Full Width Container */
 .article-list {
-list-style: none;
-margin: 0;
-padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .article-item {
-padding: 24px 0;
-border-bottom: 1px solid var(–border-color);
-cursor: pointer;
-transition: background 0.2s ease;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.article-item.animate-in {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .article-item:hover {
-background: var(–hover-bg);
-margin: 0 -12px;
-padding: 24px 12px;
+  background: var(--hover-bg);
+  margin: 0 -12px;
+  padding: 24px 12px;
 }
+
 .article-title {
-font-family: ‘Times New Roman’, Times, serif;
-font-size: 42px;
-font-weight: bold;
-margin: 0 0 8px 0;
-line-height: 1.2;
-color: var(–text-primary);
-word-wrap: break-word;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 42px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+  color: var(--text-primary);
+  word-wrap: break-word;
 }
+
 .article-item:hover .article-title {
-color: var(–accent);
+  color: var(--accent);
 }
+
 .article-meta {
-font-size: 14px;
-color: var(–text-secondary);
-display: flex;
-align-items: center;
-gap: 8px;
-flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
+
 .meta-dot {
-width: 3px;
-height: 3px;
-background: var(–text-secondary);
-border-radius: 50%;
+  width: 3px;
+  height: 3px;
+  background: var(--text-secondary);
+  border-radius: 50%;
 }
 
 .footer {
-background: var(–bg-color);
-border-top: 1px solid var(–border-color);
-padding: 24px;
-text-align: center;
-color: var(–text-secondary);
-font-size: 14px;
-line-height: 1.6;
-position: relative;
-z-index: 1;
-width: 100%;
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+  width: 100%;
 }
 
 .footer-stats {
-margin-bottom: 8px;
+  margin-bottom: 8px;
 }
+
 .article-count {
-color: var(–accent-green);
-font-weight: 600;
+  color: var(--accent-green);
+  font-weight: 600;
 }
+
 .footer-tagline {
-margin-bottom: 8px;
+  margin-bottom: 8px;
 }
+
 .footer-location {
-font-size: 13px;
-color: var(–text-secondary);
-opacity: 0.8;
+  font-size: 13px;
+  color: var(--text-secondary);
+  opacity: 0.8;
 }
+
+/* Back to top button */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(62, 166, 255, 0.4);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(62, 166, 255, 0.5);
+}
+
 @media (max-width: 768px) {
-.search-container {
-width: calc(100% - 32px);
-top: calc(65px + env(safe-area-inset-top) + 12px);
-}
-
-.search-input {
-padding: 12px 45px 12px 16px;
-font-size: 14px;
-}
-
-.list-container {
-padding: 16px 16px 80px;
-}
-.welcome-banner-text {
-font-size: 42px;
-}
-.welcome-subtitle {
-font-size: 16px;
-}
-.article-title {
-font-size: 32px;
-}
-.article-meta {
-font-size: 13px;
-}
-.footer {
-padding: 20px 16px;
-font-size: 13px;
-}
-.auth-buttons {
-gap: 8px;
-}
-.btn-login, .btn-signup {
-padding: 6px 16px;
-font-size: 13px;
-}
+  .hero-title {
+    font-size: 48px;
+  }
+  
+  .hero-subtitle {
+    font-size: 18px;
+    margin-bottom: 40px;
+  }
+  
+  .scroll-indicator {
+    bottom: 40px;
+  }
+  
+  .scroll-arrow {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+  }
+  
+  .search-container {
+    width: calc(100% - 32px);
+    top: calc(65px + env(safe-area-inset-top) + 12px);
+  }
+  .search-input {
+    padding: 12px 45px 12px 16px;
+    font-size: 14px;
+  }
+  .list-container {
+    padding: 16px 16px 80px;
+  }
+  .welcome-banner {
+    padding: 60px 16px 30px;
+  }
+  .welcome-banner-text {
+    font-size: 36px;
+  }
+  .welcome-subtitle {
+    font-size: 15px;
+  }
+  .article-title {
+    font-size: 32px;
+  }
+  .article-meta {
+    font-size: 13px;
+  }
+  .footer {
+    padding: 20px 16px;
+    font-size: 13px;
+  }
+  .auth-buttons {
+    gap: 8px;
+  }
+  .btn-login, .btn-signup {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
+  .back-to-top {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+    bottom: 20px;
+    right: 20px;
+  }
 }
 </style>
-
 </head>
 <body>
 
-<!-- Fixed Background -->
-
+<!-- ABSOLUTELY STATIC BACKGROUND - SEPARATE WRAPPER -->
 <div class="background-wrapper">
   <div class="background-image" id="backgroundImage"></div>
   <div class="background-overlay"></div>
 </div>
 
-<div class="header-wrapper">
+<div class="header-wrapper" id="headerWrapper">
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
-
-  <!-- Auth buttons (shown when logged out) -->
-  <div class="auth-buttons" id="authButtons">
-    <a href="login.html" class="btn-login">Log In</a>
-  </div>
-
-  <!-- User menu (shown when logged in) -->
-  <div class="user-welcome" id="userWelcome">
-    <div class="user-menu">
-      <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
-        <i class="fas fa-user"></i>
-      </button>
-      <div class="user-menu-dropdown" id="userMenuDropdown">
-        <div class="user-menu-item" onclick="window.location.href='profile.html'">
-          <i class="fas fa-user"></i>
-          <span>Profile</span>
-        </div>
-        <div class="user-menu-item" onclick="window.location.href='settings.html'">
-          <i class="fas fa-cog"></i>
-          <span>Settings</span>
-        </div>
-        <div class="user-menu-item" onclick="logOut()">
-          <i class="fas fa-sign-out-alt"></i>
-          <span>Log Out</span>
+      <!-- Auth buttons (shown when logged out) -->
+      <div class="auth-buttons" id="authButtons">
+        <a href="login.html" class="btn-login">Log In</a>
+      </div>
+      <!-- User menu (shown when logged in) -->
+      <div class="user-welcome" id="userWelcome">
+        <div class="user-menu">
+          <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
+            <i class="fas fa-user"></i>
+          </button>
+          <div class="user-menu-dropdown" id="userMenuDropdown">
+            <div class="user-menu-item" onclick="window.location.href='profile.html'">
+              <i class="fas fa-user"></i>
+              <span>Profile</span>
+            </div>
+            <div class="user-menu-item" onclick="window.location.href='settings.html'">
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </div>
+            <div class="user-menu-item" onclick="logOut()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Log Out</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-  </div>
-</div>
-
-<!-- Floating Search Bar -->
-
+<!-- Floating Search Bar Below Header -->
 <div class="search-container" id="searchContainer">
   <div class="search-wrapper">
     <input 
@@ -599,22 +720,31 @@ font-size: 13px;
   </div>
 </div>
 
-<!-- Full Screen Welcome -->
-
-<div class="welcome-screen" id="welcomeScreen">
-  <div class="welcome-content">
-    <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome to Patholytica</h1>
-    <p class="welcome-subtitle" id="welcomeSubtitle">A Medicinebank project</p>
+<div class="page-wrapper">
+  <!-- HERO SECTION - Full screen landing -->
+  <div class="hero-section" id="heroSection">
+    <div class="hero-content">
+      <h1 class="hero-title" id="heroTitle">Patholytica</h1>
+      <p class="hero-subtitle" id="heroSubtitle">A Medicinebank project</p>
+    </div>
+    
+    <!-- Scroll Down Arrow -->
+    <div class="scroll-indicator" id="scrollIndicator" onclick="revealContent()">
+      <span class="scroll-text">Explore</span>
+      <div class="scroll-arrow">
+        <i class="fas fa-chevron-down"></i>
+      </div>
+    </div>
   </div>
-  <button class="arrow-down-btn" onclick="revealContent()" title="View articles">
-    <i class="fas fa-chevron-down"></i>
-  </button>
-</div>
 
-<!-- Article Content -->
-
-<div class="page-wrapper" id="pageWrapper">
-  <div class="content-container">
+  <!-- Full Width Content Container - Hidden initially -->
+  <div class="content-container" id="contentContainer">
+    <!-- Welcome Banner inside content -->
+    <div class="welcome-banner" id="welcomeBanner">
+      <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome to Patholytica</h1>
+      <p class="welcome-subtitle" id="welcomeSubtitle">A Medicinebank project</p>
+    </div>
+    
     <div class="list-container">
       <ul class="article-list" id="articleList">
         <li class="article-item" onclick="openArticle('patholytica.com/library')">
@@ -627,177 +757,167 @@ font-size: 13px;
             <span>12 min read</span>
           </div>
         </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
-      <div class="article-meta">
-        <span>Dr. James Chen</span>
-        <div class="meta-dot"></div>
-        <span>Mar 12, 2024</span>
-        <div class="meta-dot"></div>
-        <span>8 min read</span>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
+          <div class="article-meta">
+            <span>Dr. James Chen</span>
+            <div class="meta-dot"></div>
+            <span>Mar 12, 2024</span>
+            <div class="meta-dot"></div>
+            <span>8 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
+          <div class="article-meta">
+            <span>Dr. Emily Rodriguez</span>
+            <div class="meta-dot"></div>
+            <span>Mar 10, 2024</span>
+            <div class="meta-dot"></div>
+            <span>15 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
+          <div class="article-meta">
+            <span>Dr. Robert Kim</span>
+            <div class="meta-dot"></div>
+            <span>Mar 8, 2024</span>
+            <div class="meta-dot"></div>
+            <span>10 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
+          <div class="article-meta">
+            <span>Dr. Lisa Zhang</span>
+            <div class="meta-dot"></div>
+            <span>Mar 5, 2024</span>
+            <div class="meta-dot"></div>
+            <span>14 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
+          <div class="article-meta">
+            <span>Dr. Robert Kim</span>
+            <div class="meta-dot"></div>
+            <span>Mar 8, 2024</span>
+            <div class="meta-dot"></div>
+            <span>10 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
+          <div class="article-meta">
+            <span>Dr. Lisa Zhang</span>
+            <div class="meta-dot"></div>
+            <span>Mar 5, 2024</span>
+            <div class="meta-dot"></div>
+            <span>14 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
+          <div class="article-meta">
+            <span>Dr. Michael Johnson</span>
+            <div class="meta-dot"></div>
+            <span>Mar 3, 2024</span>
+            <div class="meta-dot"></div>
+            <span>11 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
+          <div class="article-meta">
+            <span>Dr. Michael Johnson</span>
+            <div class="meta-dot"></div>
+            <span>Mar 14, 2024</span>
+            <div class="meta-dot"></div>
+            <span>18 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
+          <div class="article-meta">
+            <span>Dr. Anna Williams</span>
+            <div class="meta-dot"></div>
+            <span>Mar 11, 2024</span>
+            <div class="meta-dot"></div>
+            <span>16 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
+          <div class="article-meta">
+            <span>Dr. David Park</span>
+            <div class="meta-dot"></div>
+            <span>Mar 9, 2024</span>
+            <div class="meta-dot"></div>
+            <span>20 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
+          <div class="article-meta">
+            <span>Dr. Rachel Green</span>
+            <div class="meta-dot"></div>
+            <span>Mar 7, 2024</span>
+            <div class="meta-dot"></div>
+            <span>13 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
+          <div class="article-meta">
+            <span>Dr. Thomas Anderson</span>
+            <div class="meta-dot"></div>
+            <span>Mar 7, 2024</span>
+            <div class="meta-dot"></div>
+            <span>11 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
+          <div class="article-meta">
+            <span>Dr. Rachel Green</span>
+            <div class="meta-dot"></div>
+            <span>Mar 4, 2024</span>
+            <div class="meta-dot"></div>
+            <span>13 min read</span>
+          </div>
+        </li>
+        <li class="article-item" onclick="openArticle('patholytica.com/library')">
+          <h2 class="article-title">The Role of Microbiome in Human Health</h2>
+          <div class="article-meta">
+            <span>Dr. Jennifer Lee</span>
+            <div class="meta-dot"></div>
+            <span>Mar 1, 2024</span>
+            <div class="meta-dot"></div>
+            <span>9 min read</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="footer">
+      <div class="footer-stats">
+        <span class="article-count" id="articleCount">15</span> articles accessible
       </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
-      <div class="article-meta">
-        <span>Dr. Emily Rodriguez</span>
-        <div class="meta-dot"></div>
-        <span>Mar 10, 2024</span>
-        <div class="meta-dot"></div>
-        <span>15 min read</span>
+      <div class="footer-tagline">
+        Patholytica is a Medicinebank project aiming to unify academic sharing
       </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
-      <div class="article-meta">
-        <span>Dr. Robert Kim</span>
-        <div class="meta-dot"></div>
-        <span>Mar 8, 2024</span>
-        <div class="meta-dot"></div>
-        <span>10 min read</span>
+      <div class="footer-location" id="userLocation">
+        Loading location...
       </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
-      <div class="article-meta">
-        <span>Dr. Lisa Zhang</span>
-        <div class="meta-dot"></div>
-        <span>Mar 5, 2024</span>
-        <div class="meta-dot"></div>
-        <span>14 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
-      <div class="article-meta">
-        <span>Dr. Robert Kim</span>
-        <div class="meta-dot"></div>
-        <span>Mar 8, 2024</span>
-        <div class="meta-dot"></div>
-        <span>10 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
-      <div class="article-meta">
-        <span>Dr. Lisa Zhang</span>
-        <div class="meta-dot"></div>
-        <span>Mar 5, 2024</span>
-        <div class="meta-dot"></div>
-        <span>14 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
-      <div class="article-meta">
-        <span>Dr. Michael Johnson</span>
-        <div class="meta-dot"></div>
-        <span>Mar 3, 2024</span>
-        <div class="meta-dot"></div>
-        <span>11 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
-      <div class="article-meta">
-        <span>Dr. Michael Johnson</span>
-        <div class="meta-dot"></div>
-        <span>Mar 14, 2024</span>
-        <div class="meta-dot"></div>
-        <span>18 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
-      <div class="article-meta">
-        <span>Dr. Anna Williams</span>
-        <div class="meta-dot"></div>
-        <span>Mar 11, 2024</span>
-        <div class="meta-dot"></div>
-        <span>16 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
-      <div class="article-meta">
-        <span>Dr. David Park</span>
-        <div class="meta-dot"></div>
-        <span>Mar 9, 2024</span>
-        <div class="meta-dot"></div>
-        <span>20 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
-      <div class="article-meta">
-        <span>Dr. Rachel Green</span>
-        <div class="meta-dot"></div>
-        <span>Mar 7, 2024</span>
-        <div class="meta-dot"></div>
-        <span>13 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
-      <div class="article-meta">
-        <span>Dr. Thomas Anderson</span>
-        <div class="meta-dot"></div>
-        <span>Mar 7, 2024</span>
-        <div class="meta-dot"></div>
-        <span>11 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
-      <div class="article-meta">
-        <span>Dr. Rachel Green</span>
-        <div class="meta-dot"></div>
-        <span>Mar 4, 2024</span>
-        <div class="meta-dot"></div>
-        <span>13 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">The Role of Microbiome in Human Health</h2>
-      <div class="article-meta">
-        <span>Dr. Jennifer Lee</span>
-        <div class="meta-dot"></div>
-        <span>Mar 1, 2024</span>
-        <div class="meta-dot"></div>
-        <span>9 min read</span>
-      </div>
-    </li>
-  </ul>
-</div>
-
-<footer class="footer">
-  <div class="footer-stats">
-    <span class="article-count" id="articleCount">15</span> articles accessible
-  </div>
-  <div class="footer-tagline">
-    Patholytica is a Medicinebank project aiming to unify academic sharing
-  </div>
-  <div class="footer-location" id="userLocation">
-    Loading location...
-  </div>
-</footer>
-
+    </footer>
   </div>
 </div>
+
+<!-- Back to Top Button -->
+<button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+  <i class="fas fa-arrow-up"></i>
+</button>
 
 <script type="module">
 // Import Firebase modules
@@ -833,6 +953,8 @@ const supabase = window.supabase.createClient(
 onAuthStateChanged(auth, async (user) => {
   const authButtons = document.getElementById('authButtons');
   const userWelcome = document.getElementById('userWelcome');
+  const heroTitle = document.getElementById('heroTitle');
+  const heroSubtitle = document.getElementById('heroSubtitle');
   const welcomeBannerText = document.getElementById('welcomeBannerText');
   const welcomeSubtitle = document.getElementById('welcomeSubtitle');
   
@@ -852,11 +974,15 @@ onAuthStateChanged(auth, async (user) => {
       if (data && data.full_name) {
         // Extract first name from full name
         const firstName = data.full_name.split(' ')[0];
+        heroTitle.textContent = `Welcome, ${firstName}`;
+        heroSubtitle.textContent = 'arnabna fe manwar anwar';
         welcomeBannerText.textContent = `Welcome, ${firstName}`;
         welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
       } else {
         // Fallback to email username or display name
         const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+        heroTitle.textContent = `Welcome, ${firstName}`;
+        heroSubtitle.textContent = 'arnabna fe manwar anwar';
         welcomeBannerText.textContent = `Welcome, ${firstName}`;
         welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
       }
@@ -864,6 +990,8 @@ onAuthStateChanged(auth, async (user) => {
       console.error("Error fetching user data:", error);
       // Fallback
       const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+      heroTitle.textContent = `Welcome, ${firstName}`;
+      heroSubtitle.textContent = 'arnabna fe manwar anwar';
       welcomeBannerText.textContent = `Welcome, ${firstName}`;
       welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
     }
@@ -871,6 +999,8 @@ onAuthStateChanged(auth, async (user) => {
     // User is logged out
     authButtons.classList.add('show');
     userWelcome.classList.remove('show');
+    heroTitle.textContent = 'Patholytica';
+    heroSubtitle.textContent = 'A Medicinebank project';
     welcomeBannerText.textContent = 'Welcome to Patholytica';
     welcomeSubtitle.textContent = 'A Medicinebank project';
   }
@@ -891,6 +1021,9 @@ window.logOut = async function() {
 </script>
 
 <script>
+// Content revealed state
+let contentRevealed = false;
+
 // Random Natural Landscape Backgrounds
 const backgroundImages = [
   'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80',
@@ -920,31 +1053,100 @@ function setRandomBackground() {
 // Call on page load
 setRandomBackground();
 
-// Reveal content animation
-let contentRevealed = false;
-
-window.revealContent = function() {
+// Reveal content function - Animate cards up
+function revealContent() {
   if (contentRevealed) return;
-  
   contentRevealed = true;
-  const welcomeScreen = document.getElementById('welcomeScreen');
-  const pageWrapper = document.getElementById('pageWrapper');
-  const searchContainer = document.getElementById('searchContainer');
   
-  // Animate the welcome screen up
-  welcomeScreen.classList.add('scrolled-up');
+  const heroSection = document.getElementById('heroSection');
+  const scrollIndicator = document.getElementById('scrollIndicator');
+  const contentContainer = document.getElementById('contentContainer');
+  const welcomeBanner = document.getElementById('welcomeBanner');
+  const articleItems = document.querySelectorAll('.article-item');
   
-  // Animate the content up
-  pageWrapper.classList.add('visible');
+  // Hide hero and scroll indicator
+  heroSection.classList.add('hidden');
+  scrollIndicator.classList.add('hidden');
   
-  // Show search bar
-  searchContainer.classList.add('visible');
+  // Slide up content container
+  contentContainer.classList.add('visible');
+  welcomeBanner.classList.add('visible');
   
-  // Enable scrolling on body
+  // Animate cards in with stagger
+  articleItems.forEach((item, index) => {
+    setTimeout(() => {
+      item.classList.add('animate-in');
+    }, 300 + (index * 80));
+  });
+  
+  // Scroll to content area smoothly
   setTimeout(() => {
-    document.body.style.overflow = 'auto';
-  }, 800);
-};
+    welcomeBanner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+// Scroll to top function
+function scrollToTop() {
+  const heroSection = document.getElementById('heroSection');
+  const scrollIndicator = document.getElementById('scrollIndicator');
+  const contentContainer = document.getElementById('contentContainer');
+  const welcomeBanner = document.getElementById('welcomeBanner');
+  const articleItems = document.querySelectorAll('.article-item');
+  const backToTop = document.getElementById('backToTop');
+  
+  // Reset content revealed state
+  contentRevealed = false;
+  
+  // Show hero and scroll indicator
+  heroSection.classList.remove('hidden');
+  scrollIndicator.classList.remove('hidden');
+  
+  // Slide down content container
+  contentContainer.classList.remove('visible');
+  welcomeBanner.classList.remove('visible');
+  
+  // Reset card animations
+  articleItems.forEach(item => {
+    item.classList.remove('animate-in');
+  });
+  
+  // Hide back to top button
+  backToTop.classList.remove('visible');
+  
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Scroll behavior for search bar and back to top
+let lastScrollTop = 0;
+const searchContainer = document.getElementById('searchContainer');
+const backToTop = document.getElementById('backToTop');
+const scrollThreshold = 50;
+
+window.addEventListener('scroll', function() {
+  const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+  
+  // Only apply scroll behaviors after content is revealed
+  if (contentRevealed) {
+    // Scrolling down - hide search bar
+    if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
+      searchContainer.classList.add('hidden');
+    } 
+    // Scrolling up - show search bar
+    else if (currentScroll < lastScrollTop) {
+      searchContainer.classList.remove('hidden');
+    }
+    
+    // Show/hide back to top button
+    if (currentScroll > 300) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
+  }
+  
+  lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+}, false);
 
 // Search functionality
 function handleSearch(event) {
@@ -968,14 +1170,10 @@ function handleSearch(event) {
   document.getElementById('articleCount').textContent = searchTerm ? visibleCount : articles.length;
 }
 
-window.handleSearch = handleSearch;
-
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
   localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
 }
-
-window.toggleTheme = toggleTheme;
 
 if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
@@ -985,14 +1183,10 @@ function openArticle(url) {
   window.location.href = 'https://' + url;
 }
 
-window.openArticle = openArticle;
-
 function toggleUserMenu() {
   const dropdown = document.getElementById('userMenuDropdown');
   dropdown.classList.toggle('show');
 }
-
-window.toggleUserMenu = toggleUserMenu;
 
 // Close dropdown when clicking outside
 document.addEventListener('click', function(event) {
@@ -1034,9 +1228,17 @@ if ("geolocation" in navigator) {
   document.getElementById('userLocation').textContent = 'Geolocation not supported';
 }
 
-// Prevent scrolling until arrow is clicked
-document.body.style.overflow = 'hidden';
+// Keyboard support - press space or down arrow to reveal content
+document.addEventListener('keydown', function(event) {
+  if (!contentRevealed && (event.code === 'Space' || event.code === 'ArrowDown')) {
+    event.preventDefault();
+    revealContent();
+  }
+  if (contentRevealed && event.code === 'ArrowUp' && window.scrollY < 100) {
+    event.preventDefault();
+    scrollToTop();
+  }
+});
 </script>
-
 </body>
 </html>
