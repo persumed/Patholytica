@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<!-- Add these meta tags to control iOS status bar -->
-<meta name="theme-color" content="#0f0f0f" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f0f0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Patholytica — Library</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -91,16 +89,11 @@ position: fixed;
 top: 0;
 left: 0;
 right: 0;
-background: rgba(15, 15, 15, 0.95);
-backdrop-filter: blur(10px);
+background: var(--bg-color);
 padding-top: env(safe-area-inset-top);
 border-bottom: 1px solid var(--border-color);
 z-index: 40;
 width: 100%;
-}
-
-body.light-theme .header-wrapper {
-background: rgba(255, 255, 255, 0.95);
 }
 
 .header {
@@ -195,8 +188,7 @@ position: relative;
 position: absolute;
 top: 50px;
 right: 0;
-background: rgba(15, 15, 15, 0.98);
-backdrop-filter: blur(10px);
+background: var(--bg-color);
 border: 1px solid var(--border-color);
 border-radius: 8px;
 padding: 8px 0;
@@ -204,10 +196,6 @@ min-width: 180px;
 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 display: none;
 z-index: 1000;
-}
-
-body.light-theme .user-menu-dropdown {
-background: rgba(255, 255, 255, 0.98);
 }
 
 .user-menu-dropdown.show {
@@ -912,8 +900,7 @@ function handleSearch(event) {
 
 // Function to update theme color meta tag for iOS status bar
 function updateThemeColor(isLight) {
-  // Update or create theme-color meta tag
-  let metaThemeColor = document.querySelector('meta[name="theme-color"]:not([media])');
+  let metaThemeColor = document.querySelector('meta[name="theme-color"]');
   if (!metaThemeColor) {
     metaThemeColor = document.createElement('meta');
     metaThemeColor.name = 'theme-color';
