@@ -34,6 +34,7 @@ html {
   padding: 0; 
   height: 100%;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 body { 
   margin: 0; 
@@ -430,6 +431,40 @@ font-size: 13px;
 color: var(--text-secondary);
 opacity: 0.8;
 }
+
+/* Back to top button */
+.back-to-top {
+position: fixed;
+bottom: 30px;
+right: 30px;
+width: 50px;
+height: 50px;
+border-radius: 50%;
+background: var(--accent);
+color: white;
+border: none;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 18px;
+opacity: 0;
+transform: translateY(20px);
+transition: all 0.3s ease;
+z-index: 100;
+box-shadow: 0 4px 15px rgba(62, 166, 255, 0.4);
+}
+
+.back-to-top.visible {
+opacity: 1;
+transform: translateY(0);
+}
+
+.back-to-top:hover {
+transform: translateY(-3px);
+box-shadow: 0 6px 20px rgba(62, 166, 255, 0.5);
+}
+
 @media (max-width: 768px) {
 .search-container {
 width: calc(100% - 32px);
@@ -469,6 +504,13 @@ gap: 8px;
 .btn-login, .btn-signup {
 padding: 6px 16px;
 font-size: 13px;
+}
+.back-to-top {
+width: 44px;
+height: 44px;
+font-size: 16px;
+bottom: 20px;
+right: 20px;
 }
 }
 </style>
@@ -735,6 +777,11 @@ font-size: 13px;
   </div>
 </div>
 
+<!-- Back to Top Button -->
+<button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
 <script type="module">
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -856,9 +903,15 @@ function setRandomBackground() {
 // Call on page load
 setRandomBackground();
 
-// Scroll behavior for search bar
+// Scroll to top function
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Scroll behavior for search bar and back to top button
 let lastScrollTop = 0;
 const searchContainer = document.getElementById('searchContainer');
+const backToTop = document.getElementById('backToTop');
 const scrollThreshold = 50;
 
 window.addEventListener('scroll', function() {
@@ -871,6 +924,13 @@ window.addEventListener('scroll', function() {
   // Scrolling up - show search bar
   else if (currentScroll < lastScrollTop) {
     searchContainer.classList.remove('hidden');
+  }
+  
+  // Show/hide back to top button
+  if (currentScroll > 300) {
+    backToTop.classList.add('visible');
+  } else {
+    backToTop.classList.remove('visible');
   }
   
   lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
