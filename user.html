@@ -302,9 +302,7 @@ body.light-theme .search-icon {
 
 /* HERO SECTION - Full viewport landing */
 .hero-section {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
   height: 100vh;
   display: flex;
@@ -312,13 +310,6 @@ body.light-theme .search-icon {
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.hero-section.hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-30px);
 }
 
 .hero-content {
@@ -342,107 +333,94 @@ body.light-theme .search-icon {
   font-size: 22px;
   font-weight: 300;
   color: rgba(255, 255, 255, 0.85);
-  margin: 0 0 60px 0;
+  margin: 0;
   letter-spacing: 1px;
   font-style: italic;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
-/* Scroll Down Arrow */
-.scroll-indicator {
+/* Full Width Scroll Bar with Up Arrow */
+.scroll-bar {
   position: absolute;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  animation: bounce 2s infinite;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.scroll-indicator:hover {
-  transform: translateX(-50%) scale(1.1);
-}
-
-.scroll-indicator.hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-50%) translateY(20px);
-}
-
-.scroll-text {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
-}
-
-.scroll-arrow {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 20;
+}
+
+.scroll-bar:hover {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
+  height: 70px;
+}
+
+.scroll-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.scroll-arrow-up {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: rgba(255, 255, 255, 0.8);
   transition: all 0.3s ease;
 }
 
-.scroll-indicator:hover .scroll-arrow {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 30px rgba(62, 166, 255, 0.3);
+.scroll-bar:hover .scroll-arrow-up {
+  color: #ffffff;
+  transform: translateY(-3px);
 }
 
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateX(-50%) translateY(0);
+.scroll-arrow-up i {
+  font-size: 20px;
+  animation: pulseUp 2s infinite;
+}
+
+.scroll-text {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  opacity: 0.7;
+}
+
+@keyframes pulseUp {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.8;
   }
-  40% {
-    transform: translateX(-50%) translateY(-10px);
-  }
-  60% {
-    transform: translateX(-50%) translateY(-5px);
+  50% {
+    transform: translateY(-5px);
+    opacity: 1;
   }
 }
 
-/* Content Container - Hidden initially, slides up */
+/* Content Container - Below hero, scrolls naturally */
 .content-container {
   width: 100%;
   background: var(--bg-color);
-  position: fixed;
-  top: 100vh;
-  left: 0;
-  z-index: 20;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  min-height: 100vh;
-}
-
-.content-container.visible {
-  transform: translateY(-100vh);
   position: relative;
-  top: 0;
+  z-index: 20;
 }
 
 /* Welcome Banner inside content */
 .welcome-banner {
-  display: none;
   padding: 80px 24px 40px;
   text-align: center;
   width: 100%;
   background: var(--bg-color);
-}
-
-.welcome-banner.visible {
-  display: block;
 }
 
 .welcome-banner-text {
@@ -483,14 +461,7 @@ body.light-theme .search-icon {
   padding: 24px 0;
   border-bottom: 1px solid var(--border-color);
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.3s ease, opacity 0.3s ease;
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-.article-item.animate-in {
-  opacity: 1;
-  transform: translateY(0);
+  transition: background 0.2s ease;
 }
 
 .article-item:hover {
@@ -601,17 +572,23 @@ body.light-theme .search-icon {
   
   .hero-subtitle {
     font-size: 18px;
-    margin-bottom: 40px;
   }
   
-  .scroll-indicator {
-    bottom: 40px;
+  .scroll-bar {
+    height: 50px;
   }
   
-  .scroll-arrow {
-    width: 44px;
-    height: 44px;
+  .scroll-bar:hover {
+    height: 55px;
+  }
+  
+  .scroll-arrow-up i {
     font-size: 16px;
+  }
+  
+  .scroll-text {
+    font-size: 10px;
+    letter-spacing: 2px;
   }
   
   .search-container {
@@ -728,16 +705,16 @@ body.light-theme .search-icon {
       <p class="hero-subtitle" id="heroSubtitle">A Medicinebank project</p>
     </div>
     
-    <!-- Scroll Down Arrow -->
-    <div class="scroll-indicator" id="scrollIndicator" onclick="revealContent()">
-      <span class="scroll-text">Explore</span>
-      <div class="scroll-arrow">
-        <i class="fas fa-chevron-down"></i>
+    <!-- Full Width Scroll Bar with Up Arrow -->
+    <div class="scroll-bar" id="scrollBar" onclick="scrollToContent()">
+      <div class="scroll-arrow-up">
+        <i class="fas fa-chevron-up"></i>
+        <span class="scroll-text">View Articles</span>
       </div>
     </div>
   </div>
 
-  <!-- Full Width Content Container - Hidden initially -->
+  <!-- Content Container - Below hero, scrolls naturally -->
   <div class="content-container" id="contentContainer">
     <!-- Welcome Banner inside content -->
     <div class="welcome-banner" id="welcomeBanner">
@@ -1021,9 +998,6 @@ window.logOut = async function() {
 </script>
 
 <script>
-// Content revealed state
-let contentRevealed = false;
-
 // Random Natural Landscape Backgrounds
 const backgroundImages = [
   'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80',
@@ -1053,67 +1027,14 @@ function setRandomBackground() {
 // Call on page load
 setRandomBackground();
 
-// Reveal content function - Animate cards up
-function revealContent() {
-  if (contentRevealed) return;
-  contentRevealed = true;
-  
-  const heroSection = document.getElementById('heroSection');
-  const scrollIndicator = document.getElementById('scrollIndicator');
-  const contentContainer = document.getElementById('contentContainer');
+// Scroll to content - natural scroll behavior
+function scrollToContent() {
   const welcomeBanner = document.getElementById('welcomeBanner');
-  const articleItems = document.querySelectorAll('.article-item');
-  
-  // Hide hero and scroll indicator
-  heroSection.classList.add('hidden');
-  scrollIndicator.classList.add('hidden');
-  
-  // Slide up content container
-  contentContainer.classList.add('visible');
-  welcomeBanner.classList.add('visible');
-  
-  // Animate cards in with stagger
-  articleItems.forEach((item, index) => {
-    setTimeout(() => {
-      item.classList.add('animate-in');
-    }, 300 + (index * 80));
-  });
-  
-  // Scroll to content area smoothly
-  setTimeout(() => {
-    welcomeBanner.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
+  welcomeBanner.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Scroll to top function
 function scrollToTop() {
-  const heroSection = document.getElementById('heroSection');
-  const scrollIndicator = document.getElementById('scrollIndicator');
-  const contentContainer = document.getElementById('contentContainer');
-  const welcomeBanner = document.getElementById('welcomeBanner');
-  const articleItems = document.querySelectorAll('.article-item');
-  const backToTop = document.getElementById('backToTop');
-  
-  // Reset content revealed state
-  contentRevealed = false;
-  
-  // Show hero and scroll indicator
-  heroSection.classList.remove('hidden');
-  scrollIndicator.classList.remove('hidden');
-  
-  // Slide down content container
-  contentContainer.classList.remove('visible');
-  welcomeBanner.classList.remove('visible');
-  
-  // Reset card animations
-  articleItems.forEach(item => {
-    item.classList.remove('animate-in');
-  });
-  
-  // Hide back to top button
-  backToTop.classList.remove('visible');
-  
-  // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1126,23 +1047,20 @@ const scrollThreshold = 50;
 window.addEventListener('scroll', function() {
   const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
   
-  // Only apply scroll behaviors after content is revealed
-  if (contentRevealed) {
-    // Scrolling down - hide search bar
-    if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
-      searchContainer.classList.add('hidden');
-    } 
-    // Scrolling up - show search bar
-    else if (currentScroll < lastScrollTop) {
-      searchContainer.classList.remove('hidden');
-    }
-    
-    // Show/hide back to top button
-    if (currentScroll > 300) {
-      backToTop.classList.add('visible');
-    } else {
-      backToTop.classList.remove('visible');
-    }
+  // Scrolling down - hide search bar
+  if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
+    searchContainer.classList.add('hidden');
+  } 
+  // Scrolling up - show search bar
+  else if (currentScroll < lastScrollTop) {
+    searchContainer.classList.remove('hidden');
+  }
+  
+  // Show/hide back to top button
+  if (currentScroll > 300) {
+    backToTop.classList.add('visible');
+  } else {
+    backToTop.classList.remove('visible');
   }
   
   lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
@@ -1227,18 +1145,6 @@ if ("geolocation" in navigator) {
 } else {
   document.getElementById('userLocation').textContent = 'Geolocation not supported';
 }
-
-// Keyboard support - press space or down arrow to reveal content
-document.addEventListener('keydown', function(event) {
-  if (!contentRevealed && (event.code === 'Space' || event.code === 'ArrowDown')) {
-    event.preventDefault();
-    revealContent();
-  }
-  if (contentRevealed && event.code === 'ArrowUp' && window.scrollY < 100) {
-    event.preventDefault();
-    scrollToTop();
-  }
-});
 </script>
 </body>
 </html>
