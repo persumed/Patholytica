@@ -170,7 +170,6 @@ body.light-theme .logo-img {
 .user-menu-item i {
   width: 16px;
 }
-
 /* Stories Preview Section */
 .stories-container {
   position: fixed;
@@ -186,18 +185,15 @@ body.light-theme .logo-img {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
-
 .stories-container::-webkit-scrollbar {
   display: none;
 }
-
 .stories-wrapper {
   display: flex;
   gap: 16px;
   padding: 0 24px;
   width: max-content;
 }
-
 .story-item {
   flex-shrink: 0;
   display: flex;
@@ -207,11 +203,9 @@ body.light-theme .logo-img {
   transition: transform 0.2s ease;
   width: 70px;
 }
-
 .story-item:hover {
   transform: scale(1.05);
 }
-
 .story-avatar-wrapper {
   position: relative;
   width: 64px;
@@ -223,12 +217,10 @@ body.light-theme .logo-img {
   animation: gradientShift 3s ease infinite;
   will-change: background-position;
 }
-
 @keyframes gradientShift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
-
 .story-avatar {
   width: 100%;
   height: 100%;
@@ -238,7 +230,6 @@ body.light-theme .logo-img {
   padding: 2px;
   display: block;
 }
-
 .story-username {
   margin-top: 6px;
   font-size: 12px;
@@ -249,11 +240,9 @@ body.light-theme .logo-img {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 .story-item.new .story-avatar-wrapper {
   background: var(--border-color);
 }
-
 .story-item.new .story-avatar-wrapper::after {
   content: '+';
   position: absolute;
@@ -265,38 +254,18 @@ body.light-theme .logo-img {
   font-weight: 300;
   z-index: 1;
 }
-
 body.light-theme .story-avatar-wrapper {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
 }
-
 body.light-theme .story-item.new .story-avatar-wrapper {
   background: var(--border-color);
 }
-
 .list-container {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
   padding: 24px 24px 80px;
   padding-top: calc(65px + env(safe-area-inset-top) + 100px);
-}
-.welcome-banner {
-  display: none;
-  padding: 40px 24px;
-  text-align: center;
-  margin-bottom: 24px;
-}
-.welcome-banner.show {
-  display: block;
-}
-.welcome-banner-text {
-  font-family: Arial, sans-serif;
-  font-size: 48px;
-  font-weight: bold;
-  color: var(--text-primary);
-  margin: 0;
-  line-height: 1.2;
 }
 .article-list {
   list-style: none;
@@ -368,36 +337,24 @@ body.light-theme .story-item.new .story-avatar-wrapper {
   .stories-container {
     padding: 12px 0;
   }
-
   .stories-wrapper {
     padding: 0 16px;
     gap: 12px;
   }
-
   .story-item {
     width: 60px;
   }
-
   .story-avatar-wrapper {
     width: 56px;
     height: 56px;
   }
-
   .story-username {
     font-size: 11px;
     max-width: 60px;
   }
-
   .list-container {
     padding: 16px 16px 80px;
     padding-top: calc(65px + env(safe-area-inset-top) + 90px);
-  }
-  .welcome-banner {
-    padding: 32px 16px;
-    margin-bottom: 16px;
-  }
-  .welcome-banner-text {
-    font-size: 32px;
   }
   .article-title {
     font-size: 32px;
@@ -420,7 +377,6 @@ body.light-theme .story-item.new .story-avatar-wrapper {
 </style>
 </head>
 <body>
-
 <div class="header-wrapper">
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
@@ -431,36 +387,33 @@ body.light-theme .story-item.new .story-avatar-wrapper {
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
-
-  <!-- Auth buttons (shown when logged out) -->
-  <div class="auth-buttons" id="authButtons">
-    <a href="login.html" class="btn-login">Log In</a>
-  </div>
-  
-  <!-- User menu (shown when logged in) -->
-  <div class="user-welcome" id="userWelcome">
-    <div class="user-menu">
-      <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
-        <i class="fas fa-user"></i>
-      </button>
-      <div class="user-menu-dropdown" id="userMenuDropdown">
-        <div class="user-menu-item" onclick="window.location.href='profile.html'">
-          <i class="fas fa-user"></i>
-          <span>Profile</span>
-        </div>
-        <div class="user-menu-item" onclick="window.location.href='settings.html'">
-          <i class="fas fa-cog"></i>
-          <span>Settings</span>
-        </div>
-        <div class="user-menu-item" onclick="logOut()">
-          <i class="fas fa-sign-out-alt"></i>
-          <span>Log Out</span>
+      <!-- Auth buttons (shown when logged out) -->
+      <div class="auth-buttons" id="authButtons">
+        <a href="login.html" class="btn-login">Log In</a>
+      </div>
+      <!-- User menu (shown when logged in) -->
+      <div class="user-welcome" id="userWelcome">
+        <div class="user-menu">
+          <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
+            <i class="fas fa-user"></i>
+          </button>
+          <div class="user-menu-dropdown" id="userMenuDropdown">
+            <div class="user-menu-item" onclick="window.location.href='profile.html'">
+              <i class="fas fa-user"></i>
+              <span>Profile</span>
+            </div>
+            <div class="user-menu-item" onclick="window.location.href='settings.html'">
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </div>
+            <div class="user-menu-item" onclick="logOut()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Log Out</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
   </div>
 </div>
 
@@ -472,11 +425,6 @@ body.light-theme .story-item.new .story-avatar-wrapper {
 </div>
 
 <div class="list-container">
-  <!-- Welcome Banner (shown when logged in) -->
-  <div class="welcome-banner" id="welcomeBanner">
-    <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome</h1>
-  </div>
-
   <ul class="article-list">
     <li class="article-item" onclick="openArticle('patholytica.com/library')">
       <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
@@ -489,160 +437,159 @@ body.light-theme .story-item.new .story-avatar-wrapper {
       </div>
     </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
-  <div class="article-meta">
-    <span>Dr. James Chen</span>
-    <div class="meta-dot"></div>
-    <span>Mar 12, 2024</span>
-    <div class="meta-dot"></div>
-    <span>8 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
+      <div class="article-meta">
+        <span>Dr. James Chen</span>
+        <div class="meta-dot"></div>
+        <span>Mar 12, 2024</span>
+        <div class="meta-dot"></div>
+        <span>8 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
-  <div class="article-meta">
-    <span>Dr. Emily Rodriguez</span>
-    <div class="meta-dot"></div>
-    <span>Mar 10, 2024</span>
-    <div class="meta-dot"></div>
-    <span>15 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
+      <div class="article-meta">
+        <span>Dr. Emily Rodriguez</span>
+        <div class="meta-dot"></div>
+        <span>Mar 10, 2024</span>
+        <div class="meta-dot"></div>
+        <span>15 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
-  <div class="article-meta">
-    <span>Dr. Robert Kim</span>
-    <div class="meta-dot"></div>
-    <span>Mar 8, 2024</span>
-    <div class="meta-dot"></div>
-    <span>10 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
+      <div class="article-meta">
+        <span>Dr. Robert Kim</span>
+        <div class="meta-dot"></div>
+        <span>Mar 8, 2024</span>
+        <div class="meta-dot"></div>
+        <span>10 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
-  <div class="article-meta">
-    <span>Dr. Lisa Zhang</span>
-    <div class="meta-dot"></div>
-    <span>Mar 5, 2024</span>
-    <div class="meta-dot"></div>
-    <span>14 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
+      <div class="article-meta">
+        <span>Dr. Lisa Zhang</span>
+        <div class="meta-dot"></div>
+        <span>Mar 5, 2024</span>
+        <div class="meta-dot"></div>
+        <span>14 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
-  <div class="article-meta">
-    <span>Dr. Robert Kim</span>
-    <div class="meta-dot"></div>
-    <span>Mar 8, 2024</span>
-    <div class="meta-dot"></div>
-    <span>10 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
+      <div class="article-meta">
+        <span>Dr. Robert Kim</span>
+        <div class="meta-dot"></div>
+        <span>Mar 8, 2024</span>
+        <div class="meta-dot"></div>
+        <span>10 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
-  <div class="article-meta">
-    <span>Dr. Lisa Zhang</span>
-    <div class="meta-dot"></div>
-    <span>Mar 5, 2024</span>
-    <div class="meta-dot"></div>
-    <span>14 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
+      <div class="article-meta">
+        <span>Dr. Lisa Zhang</span>
+        <div class="meta-dot"></div>
+        <span>Mar 5, 2024</span>
+        <div class="meta-dot"></div>
+        <span>14 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
-  <div class="article-meta">
-    <span>Dr. Michael Johnson</span>
-    <div class="meta-dot"></div>
-    <span>Mar 3, 2024</span>
-    <div class="meta-dot"></div>
-    <span>11 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
+      <div class="article-meta">
+        <span>Dr. Michael Johnson</span>
+        <div class="meta-dot"></div>
+        <span>Mar 3, 2024</span>
+        <div class="meta-dot"></div>
+        <span>11 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
-  <div class="article-meta">
-    <span>Dr. Michael Johnson</span>
-    <div class="meta-dot"></div>
-    <span>Mar 14, 2024</span>
-    <div class="meta-dot"></div>
-    <span>18 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
+      <div class="article-meta">
+        <span>Dr. Michael Johnson</span>
+        <div class="meta-dot"></div>
+        <span>Mar 14, 2024</span>
+        <div class="meta-dot"></div>
+        <span>18 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
-  <div class="article-meta">
-    <span>Dr. Anna Williams</span>
-    <div class="meta-dot"></div>
-    <span>Mar 11, 2024</span>
-    <div class="meta-dot"></div>
-    <span>16 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
+      <div class="article-meta">
+        <span>Dr. Anna Williams</span>
+        <div class="meta-dot"></div>
+        <span>Mar 11, 2024</span>
+        <div class="meta-dot"></div>
+        <span>16 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
-  <div class="article-meta">
-    <span>Dr. David Park</span>
-    <div class="meta-dot"></div>
-    <span>Mar 9, 2024</span>
-    <div class="meta-dot"></div>
-    <span>20 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
+      <div class="article-meta">
+        <span>Dr. David Park</span>
+        <div class="meta-dot"></div>
+        <span>Mar 9, 2024</span>
+        <div class="meta-dot"></div>
+        <span>20 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
-  <div class="article-meta">
-    <span>Dr. Rachel Green</span>
-    <div class="meta-dot"></div>
-    <span>Mar 7, 2024</span>
-    <div class="meta-dot"></div>
-    <span>13 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
+      <div class="article-meta">
+        <span>Dr. Rachel Green</span>
+        <div class="meta-dot"></div>
+        <span>Mar 7, 2024</span>
+        <div class="meta-dot"></div>
+        <span>13 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
-  <div class="article-meta">
-    <span>Dr. Thomas Anderson</span>
-    <div class="meta-dot"></div>
-    <span>Mar 7, 2024</span>
-    <div class="meta-dot"></div>
-    <span>11 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
+      <div class="article-meta">
+        <span>Dr. Thomas Anderson</span>
+        <div class="meta-dot"></div>
+        <span>Mar 7, 2024</span>
+        <div class="meta-dot"></div>
+        <span>11 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
-  <div class="article-meta">
-    <span>Dr. Rachel Green</span>
-    <div class="meta-dot"></div>
-    <span>Mar 4, 2024</span>
-    <div class="meta-dot"></div>
-    <span>13 min read</span>
-  </div>
-</li>
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
+      <div class="article-meta">
+        <span>Dr. Rachel Green</span>
+        <div class="meta-dot"></div>
+        <span>Mar 4, 2024</span>
+        <div class="meta-dot"></div>
+        <span>13 min read</span>
+      </div>
+    </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')">
-  <h2 class="article-title">The Role of Microbiome in Human Health</h2>
-  <div class="article-meta">
-    <span>Dr. Jennifer Lee</span>
-    <div class="meta-dot"></div>
-    <span>Mar 1, 2024</span>
-    <div class="meta-dot"></div>
-    <span>9 min read</span>
-  </div>
-</li>
-
+    <li class="article-item" onclick="openArticle('patholytica.com/library')">
+      <h2 class="article-title">The Role of Microbiome in Human Health</h2>
+      <div class="article-meta">
+        <span>Dr. Jennifer Lee</span>
+        <div class="meta-dot"></div>
+        <span>Mar 1, 2024</span>
+        <div class="meta-dot"></div>
+        <span>9 min read</span>
+      </div>
+    </li>
   </ul>
 </div>
 
@@ -692,43 +639,15 @@ const supabase = window.supabase.createClient(
 onAuthStateChanged(auth, async (user) => {
   const authButtons = document.getElementById('authButtons');
   const userWelcome = document.getElementById('userWelcome');
-  const welcomeBanner = document.getElementById('welcomeBanner');
-  const welcomeBannerText = document.getElementById('welcomeBannerText');
   
   if (user) {
     // User is logged in
     authButtons.classList.remove('show');
     userWelcome.classList.add('show');
-    welcomeBanner.classList.add('show');
-    
-    // Get user data from Supabase to get first name
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('full_name')
-        .eq('email', user.email)
-        .single();
-      
-      if (data && data.full_name) {
-        // Extract first name from full name
-        const firstName = data.full_name.split(' ')[0];
-        welcomeBannerText.textContent = `Welcome, ${firstName}`;
-      } else {
-        // Fallback to email username or display name
-        const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-        welcomeBannerText.textContent = `Welcome, ${firstName}`;
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      // Fallback
-      const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-      welcomeBannerText.textContent = `Welcome, ${firstName}`;
-    }
   } else {
     // User is logged out
     authButtons.classList.add('show');
     userWelcome.classList.remove('show');
-    welcomeBanner.classList.remove('show');
   }
 });
 
@@ -821,9 +740,68 @@ function openArticle(url) {
 }
 
 function searchArticles() {
-  const searchQuery = prompt('Search articles:');
-  if (searchQuery && searchQuery.trim()) {
-    alert(`Searching for: "${searchQuery}"\n\nSearch functionality would filter the article list.`);
+  // Toggle search bar visibility
+  let searchBar = document.getElementById('searchBar');
+  
+  if (!searchBar) {
+    // Create search bar if it doesn't exist
+    searchBar = document.createElement('div');
+    searchBar.id = 'searchBar';
+    searchBar.style.cssText = `
+      position: fixed;
+      top: calc(65px + env(safe-area-inset-top));
+      left: 0;
+      right: 0;
+      background: var(--bg-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 24px;
+      z-index: 35;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    `;
+    
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Search articles...';
+    input.style.cssText = `
+      flex: 1;
+      padding: 10px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      background: var(--bg-color);
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+    `;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    closeBtn.style.cssText = `
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 18px;
+    `;
+    closeBtn.onclick = () => {
+      searchBar.style.display = 'none';
+    };
+    
+    searchBar.appendChild(input);
+    searchBar.appendChild(closeBtn);
+    document.body.insertBefore(searchBar, document.querySelector('.stories-container'));
+    
+    input.focus();
+  } else {
+    // Toggle visibility
+    searchBar.style.display = searchBar.style.display === 'none' ? 'flex' : 'none';
+    if (searchBar.style.display === 'flex') {
+      searchBar.querySelector('input').focus();
+    }
   }
 }
 
