@@ -579,6 +579,44 @@ window.publishArticle = async function() {
   publishBtn.textContent = 'Publishing...';
 
   try {
+    // First, get or create the user in the database
+    console.log('Looking up user with Firebase UID:', currentUser.uid);
+    
+    let { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('user_id')
+      .eq('user_id', currentUser.uid)
+      .single();
+
+    if (userError && userError.code !== 'PGRST116') {
+      throw new Error('Error looking up user: ' + userError.message);
+    }
+
+    let dbUserId;
+    
+    if (!userData) {
+      // User doesn't exist in database, create them
+      console.log('User not found, creating new user record');
+      const { data: newUser, error: createError } = await supabase
+        .from('users')
+        .insert([
+          {
+            user_id: currentUser.uid,
+            email: currentUser.email,
+            display_name: currentUser.displayName || currentUser.email?.split('@')[0]
+          }
+        ])
+        .select('user_id')
+        .single();
+
+      if (createError) throw new Error('Error creating user: ' + createError.message);
+      dbUserId = newUser.user_id;
+    } else {
+      dbUserId = userData.user_id;
+    }
+
+    console.log('Using database user_id:', dbUserId);
+
     // Insert article
     const { data: article, error: articleError } = await supabase
       .from('articles')
@@ -586,7 +624,7 @@ window.publishArticle = async function() {
         {
           title: title,
           content: content,
-          user_id: currentUser.uid,
+          user_id: dbUserId,
           views: 0,
           likes: 0
         }
@@ -595,6 +633,8 @@ window.publishArticle = async function() {
       .single();
 
     if (articleError) throw articleError;
+
+    console.log('Article created:', article);
 
     // Insert media items if any
     if (mediaItems.length > 0) {
