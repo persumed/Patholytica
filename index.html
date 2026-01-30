@@ -309,6 +309,18 @@ body.light-theme .story-item.new .story-avatar-wrapper {
   background: var(--text-secondary);
   border-radius: 50%;
 }
+.loading-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+.error-state {
+  text-align: center;
+  padding: 40px;
+  color: #ff4444;
+  font-size: 16px;
+}
 .footer {
   background: var(--bg-color);
   border-top: 1px solid var(--border-color);
@@ -425,177 +437,14 @@ body.light-theme .story-item.new .story-avatar-wrapper {
 </div>
 
 <div class="list-container">
-  <ul class="article-list">
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
-      <div class="article-meta">
-        <span>Dr. Sarah Mitchell</span>
-        <div class="meta-dot"></div>
-        <span>Mar 15, 2024</span>
-        <div class="meta-dot"></div>
-        <span>12 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
-      <div class="article-meta">
-        <span>Dr. James Chen</span>
-        <div class="meta-dot"></div>
-        <span>Mar 12, 2024</span>
-        <div class="meta-dot"></div>
-        <span>8 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
-      <div class="article-meta">
-        <span>Dr. Emily Rodriguez</span>
-        <div class="meta-dot"></div>
-        <span>Mar 10, 2024</span>
-        <div class="meta-dot"></div>
-        <span>15 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
-      <div class="article-meta">
-        <span>Dr. Robert Kim</span>
-        <div class="meta-dot"></div>
-        <span>Mar 8, 2024</span>
-        <div class="meta-dot"></div>
-        <span>10 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
-      <div class="article-meta">
-        <span>Dr. Lisa Zhang</span>
-        <div class="meta-dot"></div>
-        <span>Mar 5, 2024</span>
-        <div class="meta-dot"></div>
-        <span>14 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
-      <div class="article-meta">
-        <span>Dr. Robert Kim</span>
-        <div class="meta-dot"></div>
-        <span>Mar 8, 2024</span>
-        <div class="meta-dot"></div>
-        <span>10 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
-      <div class="article-meta">
-        <span>Dr. Lisa Zhang</span>
-        <div class="meta-dot"></div>
-        <span>Mar 5, 2024</span>
-        <div class="meta-dot"></div>
-        <span>14 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
-      <div class="article-meta">
-        <span>Dr. Michael Johnson</span>
-        <div class="meta-dot"></div>
-        <span>Mar 3, 2024</span>
-        <div class="meta-dot"></div>
-        <span>11 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
-      <div class="article-meta">
-        <span>Dr. Michael Johnson</span>
-        <div class="meta-dot"></div>
-        <span>Mar 14, 2024</span>
-        <div class="meta-dot"></div>
-        <span>18 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
-      <div class="article-meta">
-        <span>Dr. Anna Williams</span>
-        <div class="meta-dot"></div>
-        <span>Mar 11, 2024</span>
-        <div class="meta-dot"></div>
-        <span>16 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
-      <div class="article-meta">
-        <span>Dr. David Park</span>
-        <div class="meta-dot"></div>
-        <span>Mar 9, 2024</span>
-        <div class="meta-dot"></div>
-        <span>20 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
-      <div class="article-meta">
-        <span>Dr. Rachel Green</span>
-        <div class="meta-dot"></div>
-        <span>Mar 7, 2024</span>
-        <div class="meta-dot"></div>
-        <span>13 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
-      <div class="article-meta">
-        <span>Dr. Thomas Anderson</span>
-        <div class="meta-dot"></div>
-        <span>Mar 7, 2024</span>
-        <div class="meta-dot"></div>
-        <span>11 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
-      <div class="article-meta">
-        <span>Dr. Rachel Green</span>
-        <div class="meta-dot"></div>
-        <span>Mar 4, 2024</span>
-        <div class="meta-dot"></div>
-        <span>13 min read</span>
-      </div>
-    </li>
-
-    <li class="article-item" onclick="openArticle('patholytica.com/library')">
-      <h2 class="article-title">The Role of Microbiome in Human Health</h2>
-      <div class="article-meta">
-        <span>Dr. Jennifer Lee</span>
-        <div class="meta-dot"></div>
-        <span>Mar 1, 2024</span>
-        <div class="meta-dot"></div>
-        <span>9 min read</span>
-      </div>
-    </li>
+  <ul class="article-list" id="articleList">
+    <li class="loading-state">Loading articles...</li>
   </ul>
 </div>
 
 <footer class="footer">
   <div class="footer-stats">
-    <span class="article-count" id="articleCount">15</span> articles accessible
+    <span class="article-count" id="articleCount">0</span> articles accessible
   </div>
   <div class="footer-tagline">
     Patholytica is a Medicinebank project aiming to unify academic sharing
@@ -629,11 +478,107 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Initialize Supabase
+// Initialize Supabase with CORRECT key from your working example
 const supabase = window.supabase.createClient(
   "https://vduqewqyvszfquntmark.supabase.co",
   "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
 );
+
+// Load articles from Supabase
+async function loadArticles() {
+  const articleList = document.getElementById('articleList');
+  
+  try {
+    console.log('Fetching articles...');
+    
+    // Fetch articles
+    const { data: articles, error } = await supabase
+      .from('articles')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    console.log('Articles response:', { articles, error });
+
+    if (error) {
+      console.error('Error fetching articles:', error);
+      articleList.innerHTML = '<li class="error-state">Error loading articles: ' + error.message + '</li>';
+      return;
+    }
+
+    if (!articles || articles.length === 0) {
+      articleList.innerHTML = '<li class="loading-state">No articles found.</li>';
+      document.getElementById('articleCount').textContent = '0';
+      return;
+    }
+
+    // Fetch user data separately
+    const userIds = [...new Set(articles.map(a => a.user_id))];
+    console.log('Fetching users:', userIds);
+    
+    const { data: users, error: usersError } = await supabase
+      .from('users')
+      .select('user_id, username')
+      .in('user_id', userIds);
+
+    console.log('Users response:', { users, usersError });
+
+    // Create a user lookup map
+    const userMap = {};
+    if (users) {
+      users.forEach(user => {
+        userMap[user.user_id] = user;
+      });
+    }
+
+    // Clear loading state
+    articleList.innerHTML = '';
+
+    // Create article items
+    articles.forEach(article => {
+      const li = document.createElement('li');
+      li.className = 'article-item';
+      li.onclick = () => openArticle(article.id);
+      
+      // Get author username and format with @
+      const user = userMap[article.user_id];
+      const authorName = user?.username ? `@${user.username}` : 'Unknown Author';
+      
+      // Format date
+      const date = new Date(article.created_at);
+      const formattedDate = date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+      
+      // Calculate reading time (rough estimate: 200 words per minute)
+      const wordCount = article.content ? article.content.split(/\s+/).length : 0;
+      const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+      
+      li.innerHTML = `
+        <h2 class="article-title">${article.title}</h2>
+        <div class="article-meta">
+          <span>${authorName}</span>
+          <div class="meta-dot"></div>
+          <span>${formattedDate}</span>
+          <div class="meta-dot"></div>
+          <span>${article.views || 0} views</span>
+          <div class="meta-dot"></div>
+          <span>${readingTime} min read</span>
+        </div>
+      `;
+      
+      articleList.appendChild(li);
+    });
+
+    // Update article count
+    document.getElementById('articleCount').textContent = articles.length;
+    
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    articleList.innerHTML = '<li class="error-state">An unexpected error occurred: ' + err.message + '</li>';
+  }
+}
 
 // Check authentication state
 onAuthStateChanged(auth, async (user) => {
@@ -663,6 +608,9 @@ window.logOut = async function() {
     alert("Error logging out. Please try again.");
   }
 };
+
+// Load articles on page load
+loadArticles();
 </script>
 
 <script>
@@ -735,8 +683,9 @@ if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
 }
 
-function openArticle(url) {
-  window.location.href = 'https://' + url;
+function openArticle(articleId) {
+  // Navigate to article detail page
+  window.location.href = `article.html?id=${articleId}`;
 }
 
 function searchArticles() {
@@ -819,10 +768,6 @@ document.addEventListener('click', function(event) {
     dropdown.classList.remove('show');
   }
 });
-
-// Count articles and update footer
-const articleCount = document.querySelectorAll('.article-item').length;
-document.getElementById('articleCount').textContent = articleCount;
 
 // Get user location
 if ("geolocation" in navigator) {
