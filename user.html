@@ -319,13 +319,17 @@ transition: color 0.3s ease;
 color: var(--accent);
 }
 
-/* Stories Preview Section - Full Width Box */
+/* Stories Preview Section - Fixed Below Header */
 .stories-container {
-position: relative;
+position: fixed;
+top: calc(65px + env(safe-area-inset-top));
+left: 0;
+right: 0;
 width: 100%;
-margin: 0;
-padding: 0;
-display: block;
+z-index: 30;
+background: var(--bg-color);
+border-bottom: 1px solid var(--border-color);
+height: 80px;
 }
 
 .stories-panel {
@@ -335,12 +339,10 @@ padding: 16px 0;
 width: 100%;
 box-shadow: none;
 border-top: 1px solid var(--border-color);
-border-bottom: 1px solid var(--border-color);
 overflow-x: auto;
 overflow-y: hidden;
 -webkit-overflow-scrolling: touch;
 scrollbar-width: none;
-position: relative;
 touch-action: pan-x;
 }
 
@@ -477,6 +479,7 @@ padding: 220px 24px 60px;
 text-align: center;
 width: 100%;
 position: relative;
+margin-bottom: 60px;
 }
 
 /* Welcome text always white - regardless of theme */
@@ -508,7 +511,14 @@ width: 100%;
 background: var(--bg-color);
 position: relative;
 z-index: 1;
-margin-top: 60px;
+margin-top: calc(65px + env(safe-area-inset-top) + 80px);
+padding-top: 60px;
+}
+
+/* Spacer to account for fixed stories */
+.stories-spacer {
+height: 80px;
+width: 100%;
 }
 
 .list-container {
@@ -650,12 +660,14 @@ font-size: 16px;
 padding: 0;
 margin: 0;
 width: 100%;
+height: 80px;
 }
 
 .stories-panel {
 padding: 12px 0;
 border-radius: 0;
 width: 100%;
+height: 100%;
 }
 
 .stories-wrapper {
@@ -681,16 +693,26 @@ line-height: 1.2;
 }
 
 /* Mobile Content Spacing */
-.content-container {
-margin-top: 32px;
+.stories-container {
+height: 70px;
 }
 
-.list-container {
-padding: 16px 16px 80px;
+.stories-spacer {
+height: 70px;
+}
+
+.content-container {
+margin-top: calc(65px + env(safe-area-inset-top) + 70px);
+padding-top: 40px;
 }
 
 .welcome-banner {
 padding: 140px 16px 32px;
+margin-bottom: 40px;
+}
+
+.list-container {
+padding: 16px 16px 80px;
 }
 
 .welcome-banner-text {
@@ -770,8 +792,22 @@ padding: 120px 12px 24px;
 font-size: 36px;
 }
 
+.stories-container {
+height: 65px;
+}
+
+.stories-spacer {
+height: 65px;
+}
+
 .content-container {
-margin-top: 24px;
+margin-top: calc(65px + env(safe-area-inset-top) + 65px);
+padding-top: 32px;
+}
+
+.welcome-banner {
+margin-bottom: 32px;
+padding: 120px 12px 24px;
 }
 
 .header {
@@ -871,16 +907,10 @@ font-size: 16px;
     <p class="welcome-subtitle" id="welcomeSubtitle">A Medicinebank project</p>
   </div>
 
-  <!-- Stories Panel - Full Width Box -->
-  <div class="stories-container" id="storiesContainer">
-    <div class="stories-panel">
-      <div class="stories-wrapper" id="storiesWrapper">
-        <!-- Stories will be dynamically generated -->
-      </div>
-    </div>
-  </div>
-
   <!-- Full Width Content Container -->
+  
+  <!-- Spacer for fixed stories -->
+  <div class="stories-spacer"></div>
 
   <div class="content-container">
     <div class="list-container">
@@ -1065,6 +1095,15 @@ font-size: 16px;
   </div>
 </footer>
 
+  </div>
+</div>
+
+<!-- Stories Panel - Fixed Below Header -->
+<div class="stories-container" id="storiesContainer">
+  <div class="stories-panel">
+    <div class="stories-wrapper" id="storiesWrapper">
+      <!-- Stories will be dynamically generated -->
+    </div>
   </div>
 </div>
 
