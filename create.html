@@ -579,12 +579,12 @@ window.publishArticle = async function() {
   publishBtn.textContent = 'Publishing...';
 
   try {
-    // First, get or create the user in the database using firebase_uid
+    // First, try to find user by firebase_uid
     console.log('Looking up user with Firebase UID:', currentUser.uid);
     
     let { data: userData, error: userError } = await supabase
       .from('users')
-      .select('firebase_uid')
+      .select('firebase_uid, username')
       .eq('firebase_uid', currentUser.uid)
       .single();
 
@@ -593,21 +593,50 @@ window.publishArticle = async function() {
     }
 
     if (!userData) {
-      // User doesn't exist in database, create them
-      console.log('User not found, creating new user record');
-      const { data: newUser, error: createError } = await supabase
+      // User doesn't exist by firebase_uid, try to find by email
+      console.log('User not found by firebase_uid, checking by email:', currentUser.email);
+      
+      let { data: emailUser, error: emailError } = await supabase
         .from('users')
-        .insert([
-          {
-            firebase_uid: currentUser.uid,
-            email: currentUser.email,
-            full_name: currentUser.displayName || currentUser.email?.split('@')[0]
-          }
-        ])
-        .select('firebase_uid')
+        .select('firebase_uid, username, email')
+        .eq('email', currentUser.email)
         .single();
 
-      if (createError) throw new Error('Error creating user: ' + createError.message);
+      if (emailUser) {
+        // User exists but doesn't have firebase_uid set, update it
+        console.log('Found user by email, updating firebase_uid');
+        
+        const { error: updateError } = await supabase
+          .from('users')
+          .update({ 
+            firebase_uid: currentUser.uid,
+            username: emailUser.username || currentUser.email?.split('@')[0],
+            full_name: currentUser.displayName || emailUser.full_name || currentUser.email?.split('@')[0]
+          })
+          .eq('email', currentUser.email);
+
+        if (updateError) throw new Error('Error updating user: ' + updateError.message);
+        
+        userData = { firebase_uid: currentUser.uid };
+      } else {
+        // User doesn't exist at all, create them
+        console.log('User not found, creating new user record');
+        const { data: newUser, error: createError } = await supabase
+          .from('users')
+          .insert([
+            {
+              firebase_uid: currentUser.uid,
+              email: currentUser.email,
+              full_name: currentUser.displayName || currentUser.email?.split('@')[0],
+              username: currentUser.email?.split('@')[0] || 'user'
+            }
+          ])
+          .select('firebase_uid')
+          .single();
+
+        if (createError) throw new Error('Error creating user: ' + createError.message);
+        userData = newUser;
+      }
     }
 
     console.log('Using Firebase UID:', currentUser.uid);
