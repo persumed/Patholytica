@@ -485,16 +485,23 @@ const supabase = window.supabase.createClient(
 );
 
 // Load articles from Supabase
+// Load articles from Supabase
 async function loadArticles() {
   const articleList = document.getElementById('articleList');
   
   try {
     console.log('Fetching articles...');
     
-    // Fetch articles
+    // Fetch articles with user data joined
     const { data: articles, error } = await supabase
       .from('articles')
-      .select('*')
+      .select(`
+        *,
+        users!articles_firebase_user_id_fkey (
+          username,
+          firebase_uid
+        )
+      `)
       .order('created_at', { ascending: false });
 
     console.log('Articles response:', { articles, error });
@@ -511,25 +518,6 @@ async function loadArticles() {
       return;
     }
 
-    // Fetch user data separately
-    const userIds = [...new Set(articles.map(a => a.user_id))];
-    console.log('Fetching users:', userIds);
-    
-    const { data: users, error: usersError } = await supabase
-      .from('users')
-      .select('user_id, username')
-      .in('user_id', userIds);
-
-    console.log('Users response:', { users, usersError });
-
-    // Create a user lookup map
-    const userMap = {};
-    if (users) {
-      users.forEach(user => {
-        userMap[user.user_id] = user;
-      });
-    }
-
     // Clear loading state
     articleList.innerHTML = '';
 
@@ -540,8 +528,7 @@ async function loadArticles() {
       li.onclick = () => openArticle(article.id);
       
       // Get author username and format with @
-      const user = userMap[article.user_id];
-      const authorName = user?.username ? `@${user.username}` : 'Unknown Author';
+      const authorName = article.users?.username ? `@${article.users.username}` : 'Unknown Author';
       
       // Format date
       const date = new Date(article.created_at);
