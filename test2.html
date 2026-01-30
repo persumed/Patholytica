@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -97,9 +96,9 @@ position: fixed;
 top: 0;
 left: 0;
 right: 0;
-background: var(–bg-color);
+background: var(--bg-color);
 padding-top: env(safe-area-inset-top);
-border-bottom: 1px solid var(–border-color);
+border-bottom: 1px solid var(--border-color);
 z-index: 40;
 width: 100%;
 }
@@ -132,7 +131,7 @@ height: 40px;
 border-radius: 50%;
 background: transparent;
 border: none;
-color: var(–text-primary);
+color: var(--text-primary);
 cursor: pointer;
 display: flex;
 align-items: center;
@@ -141,7 +140,7 @@ font-size: 18px;
 transition: background 0.2s ease;
 }
 .icon-btn:hover {
-background: var(–hover-bg);
+background: var(--hover-bg);
 }
 .auth-buttons {
 display: none;
@@ -162,14 +161,14 @@ border: none;
 }
 .btn-login {
 background: transparent;
-color: var(–text-primary);
-border: 1px solid var(–border-color);
+color: var(--text-primary);
+border: 1px solid var(--border-color);
 }
 .btn-login:hover {
-background: var(–hover-bg);
+background: var(--hover-bg);
 }
 .btn-signup {
-background: var(–accent);
+background: var(--accent);
 color: white;
 }
 .btn-signup:hover {
@@ -181,7 +180,7 @@ display: none;
 align-items: center;
 gap: 12px;
 font-size: 14px;
-color: var(–text-primary);
+color: var(--text-primary);
 }
 .user-welcome.show {
 display: flex;
@@ -196,8 +195,8 @@ position: relative;
 position: absolute;
 top: 50px;
 right: 0;
-background: var(–bg-color);
-border: 1px solid var(–border-color);
+background: var(--bg-color);
+border: 1px solid var(--border-color);
 border-radius: 8px;
 padding: 8px 0;
 min-width: 180px;
@@ -216,11 +215,11 @@ transition: background 0.2s ease;
 display: flex;
 align-items: center;
 gap: 10px;
-color: var(–text-primary);
+color: var(--text-primary);
 font-size: 14px;
 }
 .user-menu-item:hover {
-background: var(–hover-bg);
+background: var(--hover-bg);
 }
 .user-menu-item i {
 width: 16px;
@@ -237,11 +236,6 @@ width: 90%;
 max-width: 600px;
 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 will-change: transform, opacity;
-display: none;
-}
-
-.search-container.active {
-display: block;
 }
 
 .search-container.hidden {
@@ -288,7 +282,7 @@ background: rgba(15, 15, 15, 0.85);
 backdrop-filter: blur(20px);
 color: #fff;
 font-size: 15px;
-font-family: “Roboto”, Arial, sans-serif;
+font-family: "Roboto", Arial, sans-serif;
 outline: none;
 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 opacity: 1;
@@ -328,7 +322,7 @@ color: rgba(0, 0, 0, 0.4);
 }
 
 .search-input:focus {
-border-color: var(–accent);
+border-color: var(--accent);
 background: rgba(15, 15, 15, 0.95);
 box-shadow: 0 4px 24px rgba(62, 166, 255, 0.2);
 }
@@ -365,7 +359,7 @@ color: rgba(0, 0, 0, 0.6);
 }
 
 .search-input:focus + .search-icon {
-color: var(–accent);
+color: var(--accent);
 }
 
 /* Stories Preview Section */
@@ -375,8 +369,8 @@ top: calc(65px + env(safe-area-inset-top));
 left: 0;
 right: 0;
 z-index: 30;
-background: var(–bg-color);
-border-bottom: 1px solid var(–border-color);
+background: var(--bg-color);
+border-bottom: 1px solid var(--border-color);
 padding: 16px 0;
 overflow-x: auto;
 overflow-y: hidden;
@@ -431,7 +425,7 @@ width: 100%;
 height: 100%;
 border-radius: 50%;
 object-fit: cover;
-background: var(–bg-color);
+background: var(--bg-color);
 padding: 2px;
 display: block;
 }
@@ -439,7 +433,7 @@ display: block;
 .story-username {
 margin-top: 6px;
 font-size: 12px;
-color: var(–text-secondary);
+color: var(--text-secondary);
 text-align: center;
 max-width: 70px;
 overflow: hidden;
@@ -448,17 +442,17 @@ white-space: nowrap;
 }
 
 .story-item.new .story-avatar-wrapper {
-background: var(–border-color);
+background: var(--border-color);
 }
 
 .story-item.new .story-avatar-wrapper::after {
-content: ‘+’;
+content: '+';
 position: absolute;
 top: 50%;
 left: 50%;
 transform: translate(-50%, -50%);
 font-size: 24px;
-color: var(–text-primary);
+color: var(--text-primary);
 font-weight: 300;
 z-index: 1;
 }
@@ -468,7 +462,7 @@ background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facf
 }
 
 body.light-theme .story-item.new .story-avatar-wrapper {
-background: var(–border-color);
+background: var(--border-color);
 }
 
 /* Page wrapper to control layout */
@@ -490,7 +484,7 @@ will-change: transform;
 
 /* Welcome text always white - regardless of theme */
 .welcome-banner-text {
-font-family: ‘Georgia’, ‘Times New Roman’, serif;
+font-family: 'Georgia', 'Times New Roman', serif;
 font-size: 64px;
 font-weight: 300;
 color: #ffffff;
@@ -538,7 +532,7 @@ transform: translateX(-50%) translateY(-20px);
 }
 
 .welcome-subtitle {
-font-family: ‘Georgia’, ‘Times New Roman’, serif;
+font-family: 'Georgia', 'Times New Roman', serif;
 font-size: 20px;
 font-weight: 300;
 color: rgba(255, 255, 255, 0.8);
@@ -551,7 +545,7 @@ text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
 /* Content container - FULL WIDTH */
 .content-container {
 width: 100%;
-background: var(–bg-color);
+background: var(--bg-color);
 position: relative;
 z-index: 1;
 }
@@ -574,7 +568,7 @@ contain: layout;
 
 .article-item {
 padding: 24px 0;
-border-bottom: 1px solid var(–border-color);
+border-bottom: 1px solid var(--border-color);
 cursor: pointer;
 transition: background 0.2s ease;
 content-visibility: auto;
@@ -582,25 +576,25 @@ contain-intrinsic-size: 200px;
 }
 
 .article-item:hover {
-background: var(–hover-bg);
+background: var(--hover-bg);
 margin: 0 -12px;
 padding: 24px 12px;
 }
 .article-title {
-font-family: ‘Times New Roman’, Times, serif;
+font-family: 'Times New Roman', Times, serif;
 font-size: 42px;
 font-weight: bold;
 margin: 0 0 8px 0;
 line-height: 1.2;
-color: var(–text-primary);
+color: var(--text-primary);
 word-wrap: break-word;
 }
 .article-item:hover .article-title {
-color: var(–accent);
+color: var(--accent);
 }
 .article-meta {
 font-size: 14px;
-color: var(–text-secondary);
+color: var(--text-secondary);
 display: flex;
 align-items: center;
 gap: 8px;
@@ -609,16 +603,16 @@ flex-wrap: wrap;
 .meta-dot {
 width: 3px;
 height: 3px;
-background: var(–text-secondary);
+background: var(--text-secondary);
 border-radius: 50%;
 }
 
 .footer {
-background: var(–bg-color);
-border-top: 1px solid var(–border-color);
+background: var(--bg-color);
+border-top: 1px solid var(--border-color);
 padding: 24px;
 text-align: center;
-color: var(–text-secondary);
+color: var(--text-secondary);
 font-size: 14px;
 line-height: 1.6;
 position: relative;
@@ -630,7 +624,7 @@ width: 100%;
 margin-bottom: 8px;
 }
 .article-count {
-color: var(–accent-green);
+color: var(--accent-green);
 font-weight: 600;
 }
 .footer-tagline {
@@ -638,7 +632,7 @@ margin-bottom: 8px;
 }
 .footer-location {
 font-size: 13px;
-color: var(–text-secondary);
+color: var(--text-secondary);
 opacity: 0.8;
 }
 
@@ -650,7 +644,7 @@ right: 30px;
 width: 50px;
 height: 50px;
 border-radius: 50%;
-background: var(–accent);
+background: var(--accent);
 color: white;
 border: none;
 cursor: pointer;
@@ -789,9 +783,6 @@ right: 20px;
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
-      <button class="icon-btn" onclick="toggleSearch()" title="Search">
-        <i class="fas fa-search"></i>
-      </button>
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
@@ -831,7 +822,6 @@ right: 20px;
 </div>
 
 <!-- Stories Preview Section -->
-
 <div class="stories-container" id="storiesContainer">
   <div class="stories-wrapper" id="storiesWrapper">
     <!-- Stories will be dynamically generated -->
@@ -1050,7 +1040,6 @@ right: 20px;
 </div>
 
 <!-- Back to Top Button -->
-
 <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
   <i class="fas fa-arrow-up"></i>
 </button>
@@ -1157,7 +1146,7 @@ onAuthStateChanged(auth, async (user) => {
     userWelcome.classList.remove('show');
     welcomeSubtitle.textContent = 'A Medicinebank project';
     
-    // Restart animation with random message
+    // Restart animation
     initWelcomeTextAnimation();
   }
 });
@@ -1266,7 +1255,7 @@ if (document.readyState === 'loading') {
   generateStories();
 }
 
-// Multi-language Welcome Text - Random on page load
+// Multi-language Welcome Text Animation (Apple Style)
 const welcomeTranslations = [
   { text: 'Welcome to Patholytica', lang: 'English' },
   { text: 'Bienvenue sur Patholytica', lang: 'French' },
@@ -1308,7 +1297,50 @@ function createWelcomeTextElement(text) {
   return element;
 }
 
-// Initialize welcome text with random message on page load
+function animateWelcomeText() {
+  const wrapper = document.getElementById('welcomeTextWrapper');
+  if (!wrapper || isAnimating) return;
+  
+  isAnimating = true;
+  const currentElement = wrapper.querySelector('.welcome-text-item.active');
+  const nextIndex = (currentTranslationIndex + 1) % welcomeTranslations.length;
+  const nextTranslation = welcomeTranslations[nextIndex];
+  
+  // Create new element
+  const newElement = createWelcomeTextElement(nextTranslation.text);
+  wrapper.appendChild(newElement);
+  
+  // Force reflow to ensure initial state
+  newElement.offsetHeight;
+  
+  // Start fade in animation
+  requestAnimationFrame(() => {
+    newElement.classList.add('active');
+  });
+  
+  // Fade out current element
+  if (currentElement) {
+    currentElement.classList.add('fade-out');
+    currentElement.classList.remove('active');
+    
+    // Remove old element after animation
+    setTimeout(() => {
+      if (currentElement.parentNode) {
+        currentElement.remove();
+      }
+    }, 1200);
+  }
+  
+  // Update index
+  currentTranslationIndex = nextIndex;
+  
+  // Reset animation flag after transition completes
+  setTimeout(() => {
+    isAnimating = false;
+  }, 1200);
+}
+
+// Initialize welcome text animation
 function initWelcomeTextAnimation() {
   // Don't start animation if user is logged in
   if (isUserLoggedIn) return;
@@ -1316,18 +1348,26 @@ function initWelcomeTextAnimation() {
   const wrapper = document.getElementById('welcomeTextWrapper');
   if (!wrapper) return;
   
-  // Select random translation
-  const randomIndex = Math.floor(Math.random() * welcomeTranslations.length);
-  const randomTranslation = welcomeTranslations[randomIndex];
+  // Clear any existing interval
+  stopWelcomeAnimation();
   
-  // Clear wrapper and add random welcome message
+  // Start with first translation
+  const firstTranslation = welcomeTranslations[0];
   wrapper.innerHTML = '';
-  const element = createWelcomeTextElement(randomTranslation.text);
-  element.classList.add('active');
-  wrapper.appendChild(element);
+  const firstElement = createWelcomeTextElement(firstTranslation.text);
+  firstElement.classList.add('active');
+  wrapper.appendChild(firstElement);
   
-  // Set current index for potential future use
-  currentTranslationIndex = randomIndex;
+  // Reset index
+  currentTranslationIndex = 0;
+  
+  // Start cycling through translations
+  // Change text every 3 seconds (Apple-style timing)
+  welcomeAnimationInterval = setInterval(() => {
+    if (!isUserLoggedIn) {
+      animateWelcomeText();
+    }
+  }, 3000);
 }
 
 // Initialize on page load (only if user is not logged in)
@@ -1349,31 +1389,6 @@ if (document.readyState === 'loading') {
   }, 500);
 }
 
-// Toggle search bar function
-function toggleSearch() {
-  const searchContainer = document.getElementById('searchContainer');
-  const searchInput = document.getElementById('searchInput');
-  
-  if (searchContainer.classList.contains('active')) {
-    // Hide search bar
-    searchContainer.classList.remove('active');
-    searchInput.value = '';
-    // Reset search results
-    const articles = document.querySelectorAll('.article-item');
-    articles.forEach(article => {
-      article.style.display = '';
-    });
-    document.getElementById('articleCount').textContent = articles.length;
-  } else {
-    // Show search bar
-    searchContainer.classList.add('active');
-    // Focus on input after animation
-    setTimeout(() => {
-      searchInput.focus();
-    }, 100);
-  }
-}
-
 // Scroll to top function
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1392,13 +1407,37 @@ function debounce(func, wait) {
   };
 }
 
-// Scroll behavior for back to top button
+// Scroll behavior for search bar and back to top button
 let lastScrollTop = 0;
+const searchContainer = document.getElementById('searchContainer');
 const backToTop = document.getElementById('backToTop');
+const scrollThreshold = 50;
+let isCompact = false;
 let ticking = false;
 
 function handleScroll() {
   const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+  
+  // Only show search bar when at the very top
+  if (currentScroll <= scrollThreshold) {
+    searchContainer.classList.remove('hidden');
+    searchContainer.classList.remove('compact');
+    isCompact = false;
+  } 
+  // Scrolling down - transform to compact circle and move right
+  else if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
+    if (!isCompact) {
+      searchContainer.classList.add('compact');
+      isCompact = true;
+      // After animation completes, hide it
+      setTimeout(() => {
+        if (isCompact && currentScroll > scrollThreshold) {
+          searchContainer.classList.add('hidden');
+        }
+      }, 400);
+    }
+  }
+  // Scrolling up but not at top - keep hidden (do nothing)
   
   // Show/hide back to top button
   if (currentScroll > 300) {
