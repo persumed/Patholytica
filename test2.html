@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -6,6 +7,9 @@
 <meta name="theme-color" content="#0f0f0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="Patholytica - A Medicinebank project for academic sharing">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://ui-avatars.com">
 <title>Patholytica — Library</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -72,6 +76,9 @@ background-repeat: no-repeat;
 opacity: 0.3;
 pointer-events: none;
 transition: opacity 0.5s ease;
+image-rendering: -webkit-optimize-contrast;
+image-rendering: crisp-edges;
+will-change: opacity;
 }
 
 /* Background always darkened - dark overlay */
@@ -90,9 +97,9 @@ position: fixed;
 top: 0;
 left: 0;
 right: 0;
-background: var(--bg-color);
+background: var(–bg-color);
 padding-top: env(safe-area-inset-top);
-border-bottom: 1px solid var(--border-color);
+border-bottom: 1px solid var(–border-color);
 z-index: 40;
 width: 100%;
 }
@@ -125,7 +132,7 @@ height: 40px;
 border-radius: 50%;
 background: transparent;
 border: none;
-color: var(--text-primary);
+color: var(–text-primary);
 cursor: pointer;
 display: flex;
 align-items: center;
@@ -134,7 +141,7 @@ font-size: 18px;
 transition: background 0.2s ease;
 }
 .icon-btn:hover {
-background: var(--hover-bg);
+background: var(–hover-bg);
 }
 .auth-buttons {
 display: none;
@@ -155,14 +162,14 @@ border: none;
 }
 .btn-login {
 background: transparent;
-color: var(--text-primary);
-border: 1px solid var(--border-color);
+color: var(–text-primary);
+border: 1px solid var(–border-color);
 }
 .btn-login:hover {
-background: var(--hover-bg);
+background: var(–hover-bg);
 }
 .btn-signup {
-background: var(--accent);
+background: var(–accent);
 color: white;
 }
 .btn-signup:hover {
@@ -174,7 +181,7 @@ display: none;
 align-items: center;
 gap: 12px;
 font-size: 14px;
-color: var(--text-primary);
+color: var(–text-primary);
 }
 .user-welcome.show {
 display: flex;
@@ -189,8 +196,8 @@ position: relative;
 position: absolute;
 top: 50px;
 right: 0;
-background: var(--bg-color);
-border: 1px solid var(--border-color);
+background: var(–bg-color);
+border: 1px solid var(–border-color);
 border-radius: 8px;
 padding: 8px 0;
 min-width: 180px;
@@ -209,149 +216,176 @@ transition: background 0.2s ease;
 display: flex;
 align-items: center;
 gap: 10px;
-color: var(--text-primary);
+color: var(–text-primary);
 font-size: 14px;
 }
 .user-menu-item:hover {
-background: var(--hover-bg);
+background: var(–hover-bg);
 }
 .user-menu-item i {
 width: 16px;
 }
 
-/* Search Backdrop Overlay */
-.search-backdrop {
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-background: rgba(0, 0, 0, 0.5);
-backdrop-filter: blur(4px);
-z-index: 45;
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.3s ease;
-}
-
-.search-backdrop.active {
-opacity: 1;
-pointer-events: auto;
-}
-
-body.light-theme .search-backdrop {
-background: rgba(0, 0, 0, 0.3);
-}
-
-/* Hidden Search Bar - Shown when search button is clicked */
+/* Floating Search Bar - Below Header */
 .search-container {
 position: fixed;
-top: calc(65px + env(safe-area-inset-top) + 16px);
+top: calc(65px + env(safe-area-inset-top) + 100px);
 left: 50%;
-transform: translateX(-50%) translateY(-100px);
-z-index: 50;
+transform: translateX(-50%);
+z-index: 35;
 width: 90%;
 max-width: 600px;
-opacity: 0;
-pointer-events: none;
 transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+will-change: transform, opacity;
+display: none;
 }
 
 .search-container.active {
-transform: translateX(-50%) translateY(0);
-opacity: 1;
-pointer-events: auto;
+display: block;
+}
+
+.search-container.hidden {
+transform: translateX(-50%) translateY(-80px);
+opacity: 0;
+pointer-events: none;
+}
+
+.search-container.compact {
+width: 60px;
+max-width: 60px;
+left: auto;
+right: 24px;
+transform: translateX(0);
 }
 
 .search-wrapper {
 position: relative;
 width: 100%;
-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 border-radius: 28px;
-background: var(--bg-color);
-border: 1px solid var(--border-color);
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+overflow: hidden;
+background: rgba(15, 15, 15, 0.85);
+backdrop-filter: blur(20px);
+}
+
+.search-container.compact .search-wrapper {
+border-radius: 50%;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+width: 60px;
+height: 60px;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
 .search-input {
 width: 100%;
-padding: 16px 60px 16px 24px;
+padding: 14px 50px 14px 20px;
 border-radius: 28px;
-border: 2px solid var(--border-color);
-background: var(--bg-color);
-color: var(--text-primary);
-font-size: 16px;
-font-family: "Roboto", Arial, sans-serif;
+border: 1px solid rgba(255, 255, 255, 0.15);
+background: rgba(15, 15, 15, 0.85);
+backdrop-filter: blur(20px);
+color: #fff;
+font-size: 15px;
+font-family: “Roboto”, Arial, sans-serif;
 outline: none;
-transition: all 0.3s ease;
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+opacity: 1;
+}
+
+.search-container.compact .search-input {
+padding: 14px;
+border-radius: 50%;
+opacity: 0;
+width: 60px;
+height: 60px;
+pointer-events: none;
 }
 
 body.light-theme .search-input {
-background: var(--bg-color);
-border: 2px solid var(--border-color);
-color: var(--text-primary);
+background: rgba(255, 255, 255, 0.92);
+border: 1px solid rgba(0, 0, 0, 0.08);
+color: #0f0f0f;
+box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .search-wrapper {
+background: rgba(255, 255, 255, 0.92);
+}
+
+body.light-theme .search-container.compact .search-wrapper {
+background: rgba(255, 255, 255, 0.92);
+border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .search-input::placeholder {
-color: var(--text-secondary);
+color: rgba(255, 255, 255, 0.5);
+}
+
+body.light-theme .search-input::placeholder {
+color: rgba(0, 0, 0, 0.4);
 }
 
 .search-input:focus {
-border-color: var(--accent);
-box-shadow: 0 0 0 4px rgba(62, 166, 255, 0.1);
+border-color: var(–accent);
+background: rgba(15, 15, 15, 0.95);
+box-shadow: 0 4px 24px rgba(62, 166, 255, 0.2);
 }
 
 body.light-theme .search-input:focus {
-box-shadow: 0 0 0 4px rgba(6, 95, 212, 0.1);
+background: rgba(255, 255, 255, 0.98);
+box-shadow: 0 4px 24px rgba(6, 95, 212, 0.15);
 }
 
 .search-icon {
 position: absolute;
-right: 24px;
+right: 20px;
 top: 50%;
 transform: translateY(-50%);
-color: var(--text-secondary);
-font-size: 20px;
+color: rgba(255, 255, 255, 0.5);
+font-size: 18px;
 pointer-events: none;
-transition: color 0.3s ease;
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-container.compact .search-icon {
+right: 50%;
+transform: translate(50%, -50%);
+font-size: 20px;
+color: rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme .search-icon {
+color: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme .search-container.compact .search-icon {
+color: rgba(0, 0, 0, 0.6);
 }
 
 .search-input:focus + .search-icon {
-color: var(--accent);
+color: var(–accent);
 }
 
 /* Stories Preview Section */
 .stories-container {
-position: relative;
-width: 100%;
-max-width: 900px;
-margin: 40px auto 0;
-padding: 0 24px;
-display: flex;
-align-items: flex-start;
-gap: 20px;
-}
-
-.stories-panel {
-background: var(--bg-color);
-border-radius: 20px;
-padding: 14px 0;
-flex: 1;
-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1);
-border: 1px solid var(--border-color);
+position: fixed;
+top: calc(65px + env(safe-area-inset-top));
+left: 0;
+right: 0;
+z-index: 30;
+background: var(–bg-color);
+border-bottom: 1px solid var(–border-color);
+padding: 16px 0;
 overflow-x: auto;
 overflow-y: hidden;
 -webkit-overflow-scrolling: touch;
 scrollbar-width: none;
-position: relative;
-backdrop-filter: blur(10px);
 }
 
-.stories-panel::-webkit-scrollbar {
+.stories-container::-webkit-scrollbar {
 display: none;
-}
-
-body.light-theme .stories-panel {
-box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .stories-wrapper {
@@ -397,7 +431,7 @@ width: 100%;
 height: 100%;
 border-radius: 50%;
 object-fit: cover;
-background: var(--bg-color);
+background: var(–bg-color);
 padding: 2px;
 display: block;
 }
@@ -405,7 +439,7 @@ display: block;
 .story-username {
 margin-top: 6px;
 font-size: 12px;
-color: var(--text-secondary);
+color: var(–text-secondary);
 text-align: center;
 max-width: 70px;
 overflow: hidden;
@@ -414,17 +448,17 @@ white-space: nowrap;
 }
 
 .story-item.new .story-avatar-wrapper {
-background: var(--border-color);
+background: var(–border-color);
 }
 
 .story-item.new .story-avatar-wrapper::after {
-content: '+';
+content: ‘+’;
 position: absolute;
 top: 50%;
 left: 50%;
 transform: translate(-50%, -50%);
 font-size: 24px;
-color: var(--text-primary);
+color: var(–text-primary);
 font-weight: 300;
 z-index: 1;
 }
@@ -434,80 +468,29 @@ background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facf
 }
 
 body.light-theme .story-item.new .story-avatar-wrapper {
-background: var(--border-color);
-}
-
-/* Creative Floating Search Button */
-.search-button {
-width: 56px;
-height: 56px;
-border-radius: 50%;
-background: linear-gradient(135deg, var(--accent) 0%, #667eea 100%);
-border: none;
-color: white;
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 22px;
-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-box-shadow: 0 6px 24px rgba(62, 166, 255, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
-flex-shrink: 0;
-position: sticky;
-top: calc(65px + env(safe-area-inset-top) + 20px);
-z-index: 10;
-}
-
-.search-button:hover {
-transform: translateY(-2px) scale(1.08);
-box-shadow: 0 8px 32px rgba(62, 166, 255, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
-background: linear-gradient(135deg, #4facfe 0%, #667eea 100%);
-}
-
-.search-button:active {
-transform: translateY(0) scale(1);
-box-shadow: 0 4px 16px rgba(62, 166, 255, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-.search-button.active {
-background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-box-shadow: 0 6px 24px rgba(255, 107, 107, 0.4);
-}
-
-.search-button.active:hover {
-background: linear-gradient(135deg, #ff5252 0%, #e53935 100%);
-box-shadow: 0 8px 32px rgba(255, 107, 107, 0.5);
-}
-
-body.light-theme .search-button {
-background: linear-gradient(135deg, var(--accent) 0%, #065fd4 100%);
-box-shadow: 0 4px 16px rgba(6, 95, 212, 0.3);
-}
-
-body.light-theme .search-button:hover {
-background: linear-gradient(135deg, #065fd4 0%, #004ba0 100%);
-box-shadow: 0 6px 24px rgba(6, 95, 212, 0.4);
+background: var(–border-color);
 }
 
 /* Page wrapper to control layout */
 .page-wrapper {
 position: relative;
 width: 100%;
-padding-top: calc(65px + env(safe-area-inset-top));
+padding-top: calc(65px + env(safe-area-inset-top) + 100px);
 }
 
 /* Beautiful Welcome Banner - MORE BACKGROUND VISIBLE */
 .welcome-banner {
 display: block;
-padding: 220px 24px 40px;
+padding: 180px 24px 160px;
 text-align: center;
 width: 100%;
 position: relative;
+will-change: transform;
 }
 
 /* Welcome text always white - regardless of theme */
 .welcome-banner-text {
-font-family: 'Georgia', 'Times New Roman', serif;
+font-family: ‘Georgia’, ‘Times New Roman’, serif;
 font-size: 64px;
 font-weight: 300;
 color: #ffffff;
@@ -515,10 +498,47 @@ margin: 0 0 16px 0;
 line-height: 1.2;
 letter-spacing: -1px;
 text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+position: relative;
+min-height: 1.2em;
+display: block;
+width: 100%;
+text-align: center;
+}
+
+.welcome-banner-text-wrapper {
+position: relative;
+display: inline-block;
+width: auto;
+min-height: 1.2em;
+max-width: 90%;
+}
+
+.welcome-text-item {
+position: absolute;
+top: 0;
+left: 50%;
+transform: translateX(-50%) translateY(20px);
+width: auto;
+opacity: 0;
+transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+pointer-events: none;
+white-space: nowrap;
+will-change: opacity, transform;
+}
+
+.welcome-text-item.active {
+opacity: 1;
+transform: translateX(-50%) translateY(0);
+pointer-events: auto;
+}
+
+.welcome-text-item.fade-out {
+opacity: 0;
+transform: translateX(-50%) translateY(-20px);
 }
 
 .welcome-subtitle {
-font-family: 'Georgia', 'Times New Roman', serif;
+font-family: ‘Georgia’, ‘Times New Roman’, serif;
 font-size: 20px;
 font-weight: 300;
 color: rgba(255, 255, 255, 0.8);
@@ -531,7 +551,7 @@ text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
 /* Content container - FULL WIDTH */
 .content-container {
 width: 100%;
-background: var(--bg-color);
+background: var(–bg-color);
 position: relative;
 z-index: 1;
 }
@@ -541,6 +561,7 @@ max-width: 900px;
 width: 100%;
 margin: 0 auto;
 padding: 24px 24px 80px;
+contain: layout style paint;
 }
 
 /* Compact Article List - Full Width Container */
@@ -548,35 +569,38 @@ padding: 24px 24px 80px;
 list-style: none;
 margin: 0;
 padding: 0;
+contain: layout;
 }
 
 .article-item {
 padding: 24px 0;
-border-bottom: 1px solid var(--border-color);
+border-bottom: 1px solid var(–border-color);
 cursor: pointer;
 transition: background 0.2s ease;
+content-visibility: auto;
+contain-intrinsic-size: 200px;
 }
 
 .article-item:hover {
-background: var(--hover-bg);
+background: var(–hover-bg);
 margin: 0 -12px;
 padding: 24px 12px;
 }
 .article-title {
-font-family: 'Times New Roman', Times, serif;
+font-family: ‘Times New Roman’, Times, serif;
 font-size: 42px;
 font-weight: bold;
 margin: 0 0 8px 0;
 line-height: 1.2;
-color: var(--text-primary);
+color: var(–text-primary);
 word-wrap: break-word;
 }
 .article-item:hover .article-title {
-color: var(--accent);
+color: var(–accent);
 }
 .article-meta {
 font-size: 14px;
-color: var(--text-secondary);
+color: var(–text-secondary);
 display: flex;
 align-items: center;
 gap: 8px;
@@ -585,16 +609,16 @@ flex-wrap: wrap;
 .meta-dot {
 width: 3px;
 height: 3px;
-background: var(--text-secondary);
+background: var(–text-secondary);
 border-radius: 50%;
 }
 
 .footer {
-background: var(--bg-color);
-border-top: 1px solid var(--border-color);
+background: var(–bg-color);
+border-top: 1px solid var(–border-color);
 padding: 24px;
 text-align: center;
-color: var(--text-secondary);
+color: var(–text-secondary);
 font-size: 14px;
 line-height: 1.6;
 position: relative;
@@ -606,7 +630,7 @@ width: 100%;
 margin-bottom: 8px;
 }
 .article-count {
-color: var(--accent-green);
+color: var(–accent-green);
 font-weight: 600;
 }
 .footer-tagline {
@@ -614,7 +638,7 @@ margin-bottom: 8px;
 }
 .footer-location {
 font-size: 13px;
-color: var(--text-secondary);
+color: var(–text-secondary);
 opacity: 0.8;
 }
 
@@ -626,7 +650,7 @@ right: 30px;
 width: 50px;
 height: 50px;
 border-radius: 50%;
-background: var(--accent);
+background: var(–accent);
 color: white;
 border: none;
 cursor: pointer;
@@ -639,6 +663,7 @@ transform: translateY(20px);
 transition: all 0.3s ease;
 z-index: 100;
 box-shadow: 0 4px 15px rgba(62, 166, 255, 0.4);
+will-change: transform, opacity;
 }
 
 .back-to-top.visible {
@@ -652,29 +677,8 @@ box-shadow: 0 6px 20px rgba(62, 166, 255, 0.5);
 }
 
 @media (max-width: 768px) {
-.search-container {
-width: calc(100% - 32px);
-top: calc(65px + env(safe-area-inset-top) + 12px);
-}
-
-.search-input {
-padding: 14px 50px 14px 20px;
-font-size: 15px;
-}
-
 .stories-container {
-padding: 0 16px;
-gap: 12px;
-margin-top: 24px;
-flex-direction: column;
-align-items: stretch;
-position: relative;
-}
-
-.stories-panel {
-border-radius: 16px;
 padding: 12px 0;
-width: 100%;
 }
 
 .stories-wrapper {
@@ -696,23 +700,49 @@ font-size: 11px;
 max-width: 60px;
 }
 
-.search-button {
-width: 52px;
-height: 52px;
-font-size: 20px;
-position: absolute;
-top: -8px;
+.page-wrapper {
+padding-top: calc(65px + env(safe-area-inset-top) + 90px);
+}
+
+.search-container {
+width: calc(100% - 32px);
+top: calc(65px + env(safe-area-inset-top) + 90px);
+}
+
+.search-container.compact {
+width: 50px;
+max-width: 50px;
+left: auto;
 right: 16px;
-margin: 0;
+transform: translateX(0);
+}
+
+.search-container.compact .search-wrapper {
+width: 50px;
+height: 50px;
+}
+
+.search-container.compact .search-input {
+width: 50px;
+height: 50px;
+}
+
+.search-input {
+padding: 12px 45px 12px 16px;
+font-size: 14px;
 }
 
 .list-container {
 padding: 16px 16px 80px;
 }
 .welcome-banner {
-padding: 160px 16px 40px;
+padding: 140px 16px 120px;
 }
 .welcome-banner-text {
+font-size: 42px;
+}
+
+.welcome-text-item {
 font-size: 42px;
 }
 .welcome-subtitle {
@@ -759,6 +789,9 @@ right: 20px;
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
+      <button class="icon-btn" onclick="toggleSearch()" title="Search">
+        <i class="fas fa-search"></i>
+      </button>
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
@@ -797,10 +830,16 @@ right: 20px;
   </div>
 </div>
 
-<!-- Search Backdrop Overlay -->
-<div class="search-backdrop" id="searchBackdrop"></div>
+<!-- Stories Preview Section -->
 
-<!-- Floating Search Bar (Hidden by default) -->
+<div class="stories-container" id="storiesContainer">
+  <div class="stories-wrapper" id="storiesWrapper">
+    <!-- Stories will be dynamically generated -->
+  </div>
+</div>
+
+<!-- Floating Search Bar Below Header -->
+
 <div class="search-container" id="searchContainer">
   <div class="search-wrapper">
     <input 
@@ -808,7 +847,6 @@ right: 20px;
       class="search-input" 
       id="searchInput" 
       placeholder="Search articles..."
-      onkeyup="handleSearch(event)"
     >
     <i class="fas fa-search search-icon"></i>
   </div>
@@ -817,20 +855,10 @@ right: 20px;
 <div class="page-wrapper">
   <!-- Beautiful Welcome Banner (always shown) -->
   <div class="welcome-banner" id="welcomeBanner">
-    <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome to Patholytica</h1>
+    <h1 class="welcome-banner-text" id="welcomeBannerText">
+      <span class="welcome-banner-text-wrapper" id="welcomeTextWrapper"></span>
+    </h1>
     <p class="welcome-subtitle" id="welcomeSubtitle">A Medicinebank project</p>
-  </div>
-
-  <!-- Stories Panel with Creative Search Button -->
-  <div class="stories-container" id="storiesContainer">
-    <div class="stories-panel">
-      <div class="stories-wrapper" id="storiesWrapper">
-        <!-- Stories will be dynamically generated -->
-      </div>
-    </div>
-    <button class="search-button" id="searchButton" onclick="toggleSearch()" title="Search articles">
-      <i class="fas fa-search" id="searchIcon"></i>
-    </button>
   </div>
 
   <!-- Full Width Content Container -->
@@ -1022,6 +1050,7 @@ right: 20px;
 </div>
 
 <!-- Back to Top Button -->
+
 <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
   <i class="fas fa-arrow-up"></i>
 </button>
@@ -1056,15 +1085,42 @@ const supabase = window.supabase.createClient(
   "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
 );
 
+// Global variable to control animation
+let welcomeAnimationInterval = null;
+let isUserLoggedIn = false;
+
+// Function to stop welcome text animation
+function stopWelcomeAnimation() {
+  if (welcomeAnimationInterval) {
+    clearInterval(welcomeAnimationInterval);
+    welcomeAnimationInterval = null;
+  }
+}
+
+// Function to update welcome text (for logged in users)
+function updateWelcomeText(text) {
+  const wrapper = document.getElementById('welcomeTextWrapper');
+  if (!wrapper) return;
+  
+  // Clear existing content
+  wrapper.innerHTML = '';
+  
+  // Create new element with the text
+  const element = createWelcomeTextElement(text);
+  element.classList.add('active');
+  wrapper.appendChild(element);
+}
+
 // Check authentication state
 onAuthStateChanged(auth, async (user) => {
   const authButtons = document.getElementById('authButtons');
   const userWelcome = document.getElementById('userWelcome');
-  const welcomeBannerText = document.getElementById('welcomeBannerText');
   const welcomeSubtitle = document.getElementById('welcomeSubtitle');
   
   if (user) {
-    // User is logged in
+    // User is logged in - stop animation and show personalized message
+    isUserLoggedIn = true;
+    stopWelcomeAnimation();
     authButtons.classList.remove('show');
     userWelcome.classList.add('show');
     
@@ -1079,27 +1135,30 @@ onAuthStateChanged(auth, async (user) => {
       if (data && data.full_name) {
         // Extract first name from full name
         const firstName = data.full_name.split(' ')[0];
-        welcomeBannerText.textContent = `Welcome, ${firstName}`;
+        updateWelcomeText(`Welcome, ${firstName}`);
         welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
       } else {
         // Fallback to email username or display name
         const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-        welcomeBannerText.textContent = `Welcome, ${firstName}`;
+        updateWelcomeText(`Welcome, ${firstName}`);
         welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
       // Fallback
       const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-      welcomeBannerText.textContent = `Welcome, ${firstName}`;
+      updateWelcomeText(`Welcome, ${firstName}`);
       welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
     }
   } else {
-    // User is logged out
+    // User is logged out - start animation
+    isUserLoggedIn = false;
     authButtons.classList.add('show');
     userWelcome.classList.remove('show');
-    welcomeBannerText.textContent = 'Welcome to Patholytica';
     welcomeSubtitle.textContent = 'A Medicinebank project';
+    
+    // Restart animation with random message
+    initWelcomeTextAnimation();
   }
 });
 
@@ -1207,74 +1266,138 @@ if (document.readyState === 'loading') {
   generateStories();
 }
 
-// Toggle search bar when search button is clicked
+// Multi-language Welcome Text - Random on page load
+const welcomeTranslations = [
+  { text: 'Welcome to Patholytica', lang: 'English' },
+  { text: 'Bienvenue sur Patholytica', lang: 'French' },
+  { text: 'Willkommen bei Patholytica', lang: 'German' },
+  { text: 'Bienvenido a Patholytica', lang: 'Spanish' },
+  { text: 'Benvenuto su Patholytica', lang: 'Italian' },
+  { text: 'Bem-vindo ao Patholytica', lang: 'Portuguese' },
+  { text: 'Welkom bij Patholytica', lang: 'Dutch' },
+  { text: 'Välkommen till Patholytica', lang: 'Swedish' },
+  { text: 'Velkommen til Patholytica', lang: 'Norwegian' },
+  { text: 'Velkommen til Patholytica', lang: 'Danish' },
+  { text: 'Tervetuloa Patholyticaan', lang: 'Finnish' },
+  { text: 'أهلاً بك في Patholytica', lang: 'Arabic' },
+  { text: 'Patholyticaへようこそ', lang: 'Japanese' },
+  { text: 'Patholytica에 오신 것을 환영합니다', lang: 'Korean' },
+  { text: '欢迎来到 Patholytica', lang: 'Chinese (Simplified)' },
+  { text: '歡迎來到 Patholytica', lang: 'Chinese (Traditional)' },
+  { text: 'Добро пожаловать в Patholytica', lang: 'Russian' },
+  { text: 'Hoş geldiniz Patholytica', lang: 'Turkish' },
+  { text: 'ברוכים הבאים ל-Patholytica', lang: 'Hebrew' },
+  { text: 'स्वागत है Patholytica में', lang: 'Hindi' },
+  { text: 'Selamat datang di Patholytica', lang: 'Indonesian' },
+  { text: 'ยินดีต้อนรับสู่ Patholytica', lang: 'Thai' },
+  { text: 'Chào mừng đến với Patholytica', lang: 'Vietnamese' },
+  { text: 'Witamy w Patholytica', lang: 'Polish' },
+  { text: 'Vítejte v Patholytica', lang: 'Czech' },
+  { text: 'Üdvözöljük a Patholyticában', lang: 'Hungarian' },
+  { text: 'Bun venit la Patholytica', lang: 'Romanian' },
+  { text: 'Καλώς ήρθατε στο Patholytica', lang: 'Greek' },
+];
+
+let currentTranslationIndex = 0;
+let isAnimating = false;
+
+function createWelcomeTextElement(text) {
+  const element = document.createElement('span');
+  element.className = 'welcome-text-item';
+  element.textContent = text;
+  return element;
+}
+
+// Initialize welcome text with random message on page load
+function initWelcomeTextAnimation() {
+  // Don't start animation if user is logged in
+  if (isUserLoggedIn) return;
+  
+  const wrapper = document.getElementById('welcomeTextWrapper');
+  if (!wrapper) return;
+  
+  // Select random translation
+  const randomIndex = Math.floor(Math.random() * welcomeTranslations.length);
+  const randomTranslation = welcomeTranslations[randomIndex];
+  
+  // Clear wrapper and add random welcome message
+  wrapper.innerHTML = '';
+  const element = createWelcomeTextElement(randomTranslation.text);
+  element.classList.add('active');
+  wrapper.appendChild(element);
+  
+  // Set current index for potential future use
+  currentTranslationIndex = randomIndex;
+}
+
+// Initialize on page load (only if user is not logged in)
+// The auth state change handler will manage this
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    // Wait a bit for auth to initialize, then start animation if needed
+    setTimeout(() => {
+      if (!isUserLoggedIn) {
+        initWelcomeTextAnimation();
+      }
+    }, 500);
+  });
+} else {
+  setTimeout(() => {
+    if (!isUserLoggedIn) {
+      initWelcomeTextAnimation();
+    }
+  }, 500);
+}
+
+// Toggle search bar function
 function toggleSearch() {
   const searchContainer = document.getElementById('searchContainer');
-  const searchBackdrop = document.getElementById('searchBackdrop');
-  const searchButton = document.getElementById('searchButton');
-  const searchIcon = document.getElementById('searchIcon');
   const searchInput = document.getElementById('searchInput');
   
   if (searchContainer.classList.contains('active')) {
-    // Close search
+    // Hide search bar
     searchContainer.classList.remove('active');
-    searchBackdrop.classList.remove('active');
-    searchButton.classList.remove('active');
-    searchIcon.className = 'fas fa-search';
-    if (searchInput) {
-      searchInput.value = '';
-      searchInput.blur();
-      // Clear search results
-      handleSearch({ target: { value: '' } });
-    }
+    searchInput.value = '';
+    // Reset search results
+    const articles = document.querySelectorAll('.article-item');
+    articles.forEach(article => {
+      article.style.display = '';
+    });
+    document.getElementById('articleCount').textContent = articles.length;
   } else {
-    // Open search
+    // Show search bar
     searchContainer.classList.add('active');
-    searchBackdrop.classList.add('active');
-    searchButton.classList.add('active');
-    searchIcon.className = 'fas fa-times';
-    if (searchInput) {
-      setTimeout(() => {
-        searchInput.focus();
-      }, 300);
-    }
+    // Focus on input after animation
+    setTimeout(() => {
+      searchInput.focus();
+    }, 100);
   }
 }
-
-// Close search when clicking backdrop or outside
-document.addEventListener('click', function(event) {
-  const searchContainer = document.getElementById('searchContainer');
-  const searchBackdrop = document.getElementById('searchBackdrop');
-  const searchButton = document.getElementById('searchButton');
-  
-  if (searchContainer && searchContainer.classList.contains('active')) {
-    if (searchBackdrop.contains(event.target) || 
-        (!searchContainer.contains(event.target) && !searchButton.contains(event.target))) {
-      toggleSearch();
-    }
-  }
-});
-
-// Close search on Escape key
-document.addEventListener('keydown', function(event) {
-  if (event.key === 'Escape') {
-    const searchContainer = document.getElementById('searchContainer');
-    if (searchContainer && searchContainer.classList.contains('active')) {
-      toggleSearch();
-    }
-  }
-});
 
 // Scroll to top function
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// Debounce function for performance
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
 // Scroll behavior for back to top button
 let lastScrollTop = 0;
 const backToTop = document.getElementById('backToTop');
+let ticking = false;
 
-window.addEventListener('scroll', function() {
+function handleScroll() {
   const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
   
   // Show/hide back to top button
@@ -1285,10 +1408,18 @@ window.addEventListener('scroll', function() {
   }
   
   lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+  ticking = false;
+}
+
+window.addEventListener('scroll', function() {
+  if (!ticking) {
+    window.requestAnimationFrame(handleScroll);
+    ticking = true;
+  }
 }, { passive: true });
 
-// Search functionality
-function handleSearch(event) {
+// Search functionality with debouncing
+function performSearch(event) {
   const searchTerm = event.target.value.toLowerCase();
   const articles = document.querySelectorAll('.article-item');
   let visibleCount = 0;
@@ -1308,6 +1439,18 @@ function handleSearch(event) {
   // Update article count
   document.getElementById('articleCount').textContent = searchTerm ? visibleCount : articles.length;
 }
+
+const handleSearch = debounce(performSearch, 150);
+
+// Initialize search handler
+document.addEventListener('DOMContentLoaded', function() {
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', function(event) {
+      handleSearch(event);
+    });
+  }
+});
 
 // Function to update theme color meta tag for iOS status bar
 function updateThemeColor(isLight) {
