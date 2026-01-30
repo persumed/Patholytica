@@ -478,10 +478,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Initialize Supabase
+// Initialize Supabase with CORRECT key from your working example
 const supabase = window.supabase.createClient(
   "https://vduqewqyvszfquntmark.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkdXFld3F5dnN6ZnF1bnRtYXJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc3MTQ2OTYsImV4cCI6MjA1MzI5MDY5Nn0.7DGHaWrxS-AOwV7HCLl1Ie3WQC_UD1tMPGl61jFRdCo"
+  "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
 );
 
 // Load articles from Supabase
@@ -489,20 +489,19 @@ async function loadArticles() {
   const articleList = document.getElementById('articleList');
   
   try {
+    console.log('Fetching articles...');
+    
+    // Fetch articles
     const { data: articles, error } = await supabase
       .from('articles')
-      .select(`
-        *,
-        users:user_id (
-          email,
-          display_name
-        )
-      `)
+      .select('*')
       .order('created_at', { ascending: false });
+
+    console.log('Articles response:', { articles, error });
 
     if (error) {
       console.error('Error fetching articles:', error);
-      articleList.innerHTML = '<li class="error-state">Error loading articles. Please try again later.</li>';
+      articleList.innerHTML = '<li class="error-state">Error loading articles: ' + error.message + '</li>';
       return;
     }
 
@@ -510,6 +509,25 @@ async function loadArticles() {
       articleList.innerHTML = '<li class="loading-state">No articles found.</li>';
       document.getElementById('articleCount').textContent = '0';
       return;
+    }
+
+    // Fetch user data separately
+    const userIds = [...new Set(articles.map(a => a.user_id))];
+    console.log('Fetching users:', userIds);
+    
+    const { data: users, error: usersError } = await supabase
+      .from('users')
+      .select('user_id, username')
+      .in('user_id', userIds);
+
+    console.log('Users response:', { users, usersError });
+
+    // Create a user lookup map
+    const userMap = {};
+    if (users) {
+      users.forEach(user => {
+        userMap[user.user_id] = user;
+      });
     }
 
     // Clear loading state
@@ -521,8 +539,9 @@ async function loadArticles() {
       li.className = 'article-item';
       li.onclick = () => openArticle(article.id);
       
-      // Get author name - use display_name if available, otherwise email
-      const authorName = article.users?.display_name || article.users?.email || 'Unknown Author';
+      // Get author username and format with @
+      const user = userMap[article.user_id];
+      const authorName = user?.username ? `@${user.username}` : 'Unknown Author';
       
       // Format date
       const date = new Date(article.created_at);
@@ -557,7 +576,7 @@ async function loadArticles() {
     
   } catch (err) {
     console.error('Unexpected error:', err);
-    articleList.innerHTML = '<li class="error-state">An unexpected error occurred.</li>';
+    articleList.innerHTML = '<li class="error-state">An unexpected error occurred: ' + err.message + '</li>';
   }
 }
 
