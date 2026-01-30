@@ -602,7 +602,7 @@ window.publishArticle = async function() {
           {
             firebase_uid: currentUser.uid,
             email: currentUser.email,
-            display_name: currentUser.displayName || currentUser.email?.split('@')[0]
+            full_name: currentUser.displayName || currentUser.email?.split('@')[0]
           }
         ])
         .select('firebase_uid')
