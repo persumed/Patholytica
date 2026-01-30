@@ -6,9 +6,6 @@
 <meta name="theme-color" content="#0f0f0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="description" content="Patholytica - A Medicinebank project for academic sharing">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://ui-avatars.com">
 <title>Patholytica — Library</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -75,9 +72,6 @@ background-repeat: no-repeat;
 opacity: 0.3;
 pointer-events: none;
 transition: opacity 0.5s ease;
-image-rendering: -webkit-optimize-contrast;
-image-rendering: crisp-edges;
-will-change: opacity;
 }
 
 /* Background always darkened - dark overlay */
@@ -225,137 +219,100 @@ background: var(--hover-bg);
 width: 16px;
 }
 
-/* Floating Search Bar - Below Header */
-.search-container {
+/* Search Backdrop Overlay */
+.search-backdrop {
 position: fixed;
-top: calc(65px + env(safe-area-inset-top) + 100px);
-left: 50%;
-transform: translateX(-50%);
-z-index: 35;
-width: 90%;
-max-width: 600px;
-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-will-change: transform, opacity;
-}
-
-.search-container.hidden {
-transform: translateX(-50%) translateY(-80px);
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.5);
+backdrop-filter: blur(4px);
+z-index: 45;
 opacity: 0;
 pointer-events: none;
+transition: opacity 0.3s ease;
 }
 
-.search-container.compact {
-width: 60px;
-max-width: 60px;
-left: auto;
-right: 24px;
-transform: translateX(0);
+.search-backdrop.active {
+opacity: 1;
+pointer-events: auto;
+}
+
+body.light-theme .search-backdrop {
+background: rgba(0, 0, 0, 0.3);
+}
+
+/* Hidden Search Bar - Shown when search button is clicked */
+.search-container {
+position: fixed;
+top: calc(65px + env(safe-area-inset-top) + 16px);
+left: 50%;
+transform: translateX(-50%) translateY(-100px);
+z-index: 50;
+width: 90%;
+max-width: 600px;
+opacity: 0;
+pointer-events: none;
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-container.active {
+transform: translateX(-50%) translateY(0);
+opacity: 1;
+pointer-events: auto;
 }
 
 .search-wrapper {
 position: relative;
 width: 100%;
-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 border-radius: 28px;
-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-overflow: hidden;
-background: rgba(15, 15, 15, 0.85);
-backdrop-filter: blur(20px);
-}
-
-.search-container.compact .search-wrapper {
-border-radius: 50%;
-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-width: 60px;
-height: 60px;
-display: flex;
-align-items: center;
-justify-content: center;
+background: var(--bg-color);
+border: 1px solid var(--border-color);
 }
 
 .search-input {
 width: 100%;
-padding: 14px 50px 14px 20px;
+padding: 16px 60px 16px 24px;
 border-radius: 28px;
-border: 1px solid rgba(255, 255, 255, 0.15);
-background: rgba(15, 15, 15, 0.85);
-backdrop-filter: blur(20px);
-color: #fff;
-font-size: 15px;
+border: 2px solid var(--border-color);
+background: var(--bg-color);
+color: var(--text-primary);
+font-size: 16px;
 font-family: "Roboto", Arial, sans-serif;
 outline: none;
-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-opacity: 1;
-}
-
-.search-container.compact .search-input {
-padding: 14px;
-border-radius: 50%;
-opacity: 0;
-width: 60px;
-height: 60px;
-pointer-events: none;
+transition: all 0.3s ease;
 }
 
 body.light-theme .search-input {
-background: rgba(255, 255, 255, 0.92);
-border: 1px solid rgba(0, 0, 0, 0.08);
-color: #0f0f0f;
-box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-}
-
-body.light-theme .search-wrapper {
-background: rgba(255, 255, 255, 0.92);
-}
-
-body.light-theme .search-container.compact .search-wrapper {
-background: rgba(255, 255, 255, 0.92);
-border: 1px solid rgba(0, 0, 0, 0.08);
+background: var(--bg-color);
+border: 2px solid var(--border-color);
+color: var(--text-primary);
 }
 
 .search-input::placeholder {
-color: rgba(255, 255, 255, 0.5);
-}
-
-body.light-theme .search-input::placeholder {
-color: rgba(0, 0, 0, 0.4);
+color: var(--text-secondary);
 }
 
 .search-input:focus {
 border-color: var(--accent);
-background: rgba(15, 15, 15, 0.95);
-box-shadow: 0 4px 24px rgba(62, 166, 255, 0.2);
+box-shadow: 0 0 0 4px rgba(62, 166, 255, 0.1);
 }
 
 body.light-theme .search-input:focus {
-background: rgba(255, 255, 255, 0.98);
-box-shadow: 0 4px 24px rgba(6, 95, 212, 0.15);
+box-shadow: 0 0 0 4px rgba(6, 95, 212, 0.1);
 }
 
 .search-icon {
 position: absolute;
-right: 20px;
+right: 24px;
 top: 50%;
 transform: translateY(-50%);
-color: rgba(255, 255, 255, 0.5);
-font-size: 18px;
-pointer-events: none;
-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.search-container.compact .search-icon {
-right: 50%;
-transform: translate(50%, -50%);
+color: var(--text-secondary);
 font-size: 20px;
-color: rgba(255, 255, 255, 0.8);
-}
-
-body.light-theme .search-icon {
-color: rgba(0, 0, 0, 0.4);
-}
-
-body.light-theme .search-container.compact .search-icon {
-color: rgba(0, 0, 0, 0.6);
+pointer-events: none;
+transition: color 0.3s ease;
 }
 
 .search-input:focus + .search-icon {
@@ -364,22 +321,37 @@ color: var(--accent);
 
 /* Stories Preview Section */
 .stories-container {
-position: fixed;
-top: calc(65px + env(safe-area-inset-top));
-left: 0;
-right: 0;
-z-index: 30;
+position: relative;
+width: 100%;
+max-width: 900px;
+margin: 40px auto 0;
+padding: 0 24px;
+display: flex;
+align-items: flex-start;
+gap: 20px;
+}
+
+.stories-panel {
 background: var(--bg-color);
-border-bottom: 1px solid var(--border-color);
-padding: 16px 0;
+border-radius: 20px;
+padding: 14px 0;
+flex: 1;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1);
+border: 1px solid var(--border-color);
 overflow-x: auto;
 overflow-y: hidden;
 -webkit-overflow-scrolling: touch;
 scrollbar-width: none;
+position: relative;
+backdrop-filter: blur(10px);
 }
 
-.stories-container::-webkit-scrollbar {
+.stories-panel::-webkit-scrollbar {
 display: none;
+}
+
+body.light-theme .stories-panel {
+box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .stories-wrapper {
@@ -465,21 +437,72 @@ body.light-theme .story-item.new .story-avatar-wrapper {
 background: var(--border-color);
 }
 
+/* Creative Floating Search Button */
+.search-button {
+width: 56px;
+height: 56px;
+border-radius: 50%;
+background: linear-gradient(135deg, var(--accent) 0%, #667eea 100%);
+border: none;
+color: white;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 22px;
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+box-shadow: 0 6px 24px rgba(62, 166, 255, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+flex-shrink: 0;
+position: sticky;
+top: calc(65px + env(safe-area-inset-top) + 20px);
+z-index: 10;
+}
+
+.search-button:hover {
+transform: translateY(-2px) scale(1.08);
+box-shadow: 0 8px 32px rgba(62, 166, 255, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+background: linear-gradient(135deg, #4facfe 0%, #667eea 100%);
+}
+
+.search-button:active {
+transform: translateY(0) scale(1);
+box-shadow: 0 4px 16px rgba(62, 166, 255, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.search-button.active {
+background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+box-shadow: 0 6px 24px rgba(255, 107, 107, 0.4);
+}
+
+.search-button.active:hover {
+background: linear-gradient(135deg, #ff5252 0%, #e53935 100%);
+box-shadow: 0 8px 32px rgba(255, 107, 107, 0.5);
+}
+
+body.light-theme .search-button {
+background: linear-gradient(135deg, var(--accent) 0%, #065fd4 100%);
+box-shadow: 0 4px 16px rgba(6, 95, 212, 0.3);
+}
+
+body.light-theme .search-button:hover {
+background: linear-gradient(135deg, #065fd4 0%, #004ba0 100%);
+box-shadow: 0 6px 24px rgba(6, 95, 212, 0.4);
+}
+
 /* Page wrapper to control layout */
 .page-wrapper {
 position: relative;
 width: 100%;
-padding-top: calc(65px + env(safe-area-inset-top) + 100px);
+padding-top: calc(65px + env(safe-area-inset-top));
 }
 
 /* Beautiful Welcome Banner - MORE BACKGROUND VISIBLE */
 .welcome-banner {
 display: block;
-padding: 180px 24px 160px;
+padding: 220px 24px 40px;
 text-align: center;
 width: 100%;
 position: relative;
-will-change: transform;
 }
 
 /* Welcome text always white - regardless of theme */
@@ -492,43 +515,6 @@ margin: 0 0 16px 0;
 line-height: 1.2;
 letter-spacing: -1px;
 text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-position: relative;
-min-height: 1.2em;
-display: block;
-width: 100%;
-text-align: center;
-}
-
-.welcome-banner-text-wrapper {
-position: relative;
-display: inline-block;
-width: auto;
-min-height: 1.2em;
-max-width: 90%;
-}
-
-.welcome-text-item {
-position: absolute;
-top: 0;
-left: 50%;
-transform: translateX(-50%) translateY(20px);
-width: auto;
-opacity: 0;
-transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-pointer-events: none;
-white-space: nowrap;
-will-change: opacity, transform;
-}
-
-.welcome-text-item.active {
-opacity: 1;
-transform: translateX(-50%) translateY(0);
-pointer-events: auto;
-}
-
-.welcome-text-item.fade-out {
-opacity: 0;
-transform: translateX(-50%) translateY(-20px);
 }
 
 .welcome-subtitle {
@@ -555,7 +541,6 @@ max-width: 900px;
 width: 100%;
 margin: 0 auto;
 padding: 24px 24px 80px;
-contain: layout style paint;
 }
 
 /* Compact Article List - Full Width Container */
@@ -563,7 +548,6 @@ contain: layout style paint;
 list-style: none;
 margin: 0;
 padding: 0;
-contain: layout;
 }
 
 .article-item {
@@ -571,8 +555,6 @@ padding: 24px 0;
 border-bottom: 1px solid var(--border-color);
 cursor: pointer;
 transition: background 0.2s ease;
-content-visibility: auto;
-contain-intrinsic-size: 200px;
 }
 
 .article-item:hover {
@@ -657,7 +639,6 @@ transform: translateY(20px);
 transition: all 0.3s ease;
 z-index: 100;
 box-shadow: 0 4px 15px rgba(62, 166, 255, 0.4);
-will-change: transform, opacity;
 }
 
 .back-to-top.visible {
@@ -671,8 +652,29 @@ box-shadow: 0 6px 20px rgba(62, 166, 255, 0.5);
 }
 
 @media (max-width: 768px) {
+.search-container {
+width: calc(100% - 32px);
+top: calc(65px + env(safe-area-inset-top) + 12px);
+}
+
+.search-input {
+padding: 14px 50px 14px 20px;
+font-size: 15px;
+}
+
 .stories-container {
+padding: 0 16px;
+gap: 12px;
+margin-top: 24px;
+flex-direction: column;
+align-items: stretch;
+position: relative;
+}
+
+.stories-panel {
+border-radius: 16px;
 padding: 12px 0;
+width: 100%;
 }
 
 .stories-wrapper {
@@ -694,49 +696,23 @@ font-size: 11px;
 max-width: 60px;
 }
 
-.page-wrapper {
-padding-top: calc(65px + env(safe-area-inset-top) + 90px);
-}
-
-.search-container {
-width: calc(100% - 32px);
-top: calc(65px + env(safe-area-inset-top) + 90px);
-}
-
-.search-container.compact {
-width: 50px;
-max-width: 50px;
-left: auto;
+.search-button {
+width: 52px;
+height: 52px;
+font-size: 20px;
+position: absolute;
+top: -8px;
 right: 16px;
-transform: translateX(0);
-}
-
-.search-container.compact .search-wrapper {
-width: 50px;
-height: 50px;
-}
-
-.search-container.compact .search-input {
-width: 50px;
-height: 50px;
-}
-
-.search-input {
-padding: 12px 45px 12px 16px;
-font-size: 14px;
+margin: 0;
 }
 
 .list-container {
 padding: 16px 16px 80px;
 }
 .welcome-banner {
-padding: 140px 16px 120px;
+padding: 160px 16px 40px;
 }
 .welcome-banner-text {
-font-size: 42px;
-}
-
-.welcome-text-item {
 font-size: 42px;
 }
 .welcome-subtitle {
@@ -821,15 +797,10 @@ right: 20px;
   </div>
 </div>
 
-<!-- Stories Preview Section -->
-<div class="stories-container" id="storiesContainer">
-  <div class="stories-wrapper" id="storiesWrapper">
-    <!-- Stories will be dynamically generated -->
-  </div>
-</div>
+<!-- Search Backdrop Overlay -->
+<div class="search-backdrop" id="searchBackdrop"></div>
 
-<!-- Floating Search Bar Below Header -->
-
+<!-- Floating Search Bar (Hidden by default) -->
 <div class="search-container" id="searchContainer">
   <div class="search-wrapper">
     <input 
@@ -837,6 +808,7 @@ right: 20px;
       class="search-input" 
       id="searchInput" 
       placeholder="Search articles..."
+      onkeyup="handleSearch(event)"
     >
     <i class="fas fa-search search-icon"></i>
   </div>
@@ -845,10 +817,20 @@ right: 20px;
 <div class="page-wrapper">
   <!-- Beautiful Welcome Banner (always shown) -->
   <div class="welcome-banner" id="welcomeBanner">
-    <h1 class="welcome-banner-text" id="welcomeBannerText">
-      <span class="welcome-banner-text-wrapper" id="welcomeTextWrapper"></span>
-    </h1>
+    <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome to Patholytica</h1>
     <p class="welcome-subtitle" id="welcomeSubtitle">A Medicinebank project</p>
+  </div>
+
+  <!-- Stories Panel with Creative Search Button -->
+  <div class="stories-container" id="storiesContainer">
+    <div class="stories-panel">
+      <div class="stories-wrapper" id="storiesWrapper">
+        <!-- Stories will be dynamically generated -->
+      </div>
+    </div>
+    <button class="search-button" id="searchButton" onclick="toggleSearch()" title="Search articles">
+      <i class="fas fa-search" id="searchIcon"></i>
+    </button>
   </div>
 
   <!-- Full Width Content Container -->
@@ -1074,42 +1056,15 @@ const supabase = window.supabase.createClient(
   "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
 );
 
-// Global variable to control animation
-let welcomeAnimationInterval = null;
-let isUserLoggedIn = false;
-
-// Function to stop welcome text animation
-function stopWelcomeAnimation() {
-  if (welcomeAnimationInterval) {
-    clearInterval(welcomeAnimationInterval);
-    welcomeAnimationInterval = null;
-  }
-}
-
-// Function to update welcome text (for logged in users)
-function updateWelcomeText(text) {
-  const wrapper = document.getElementById('welcomeTextWrapper');
-  if (!wrapper) return;
-  
-  // Clear existing content
-  wrapper.innerHTML = '';
-  
-  // Create new element with the text
-  const element = createWelcomeTextElement(text);
-  element.classList.add('active');
-  wrapper.appendChild(element);
-}
-
 // Check authentication state
 onAuthStateChanged(auth, async (user) => {
   const authButtons = document.getElementById('authButtons');
   const userWelcome = document.getElementById('userWelcome');
+  const welcomeBannerText = document.getElementById('welcomeBannerText');
   const welcomeSubtitle = document.getElementById('welcomeSubtitle');
   
   if (user) {
-    // User is logged in - stop animation and show personalized message
-    isUserLoggedIn = true;
-    stopWelcomeAnimation();
+    // User is logged in
     authButtons.classList.remove('show');
     userWelcome.classList.add('show');
     
@@ -1124,30 +1079,27 @@ onAuthStateChanged(auth, async (user) => {
       if (data && data.full_name) {
         // Extract first name from full name
         const firstName = data.full_name.split(' ')[0];
-        updateWelcomeText(`Welcome, ${firstName}`);
+        welcomeBannerText.textContent = `Welcome, ${firstName}`;
         welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
       } else {
         // Fallback to email username or display name
         const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-        updateWelcomeText(`Welcome, ${firstName}`);
+        welcomeBannerText.textContent = `Welcome, ${firstName}`;
         welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
       // Fallback
       const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-      updateWelcomeText(`Welcome, ${firstName}`);
+      welcomeBannerText.textContent = `Welcome, ${firstName}`;
       welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
     }
   } else {
-    // User is logged out - start animation
-    isUserLoggedIn = false;
+    // User is logged out
     authButtons.classList.add('show');
     userWelcome.classList.remove('show');
+    welcomeBannerText.textContent = 'Welcome to Patholytica';
     welcomeSubtitle.textContent = 'A Medicinebank project';
-    
-    // Restart animation
-    initWelcomeTextAnimation();
   }
 });
 
@@ -1255,189 +1207,75 @@ if (document.readyState === 'loading') {
   generateStories();
 }
 
-// Multi-language Welcome Text Animation (Apple Style)
-const welcomeTranslations = [
-  { text: 'Welcome to Patholytica', lang: 'English' },
-  { text: 'Bienvenue sur Patholytica', lang: 'French' },
-  { text: 'Willkommen bei Patholytica', lang: 'German' },
-  { text: 'Bienvenido a Patholytica', lang: 'Spanish' },
-  { text: 'Benvenuto su Patholytica', lang: 'Italian' },
-  { text: 'Bem-vindo ao Patholytica', lang: 'Portuguese' },
-  { text: 'Welkom bij Patholytica', lang: 'Dutch' },
-  { text: 'Välkommen till Patholytica', lang: 'Swedish' },
-  { text: 'Velkommen til Patholytica', lang: 'Norwegian' },
-  { text: 'Velkommen til Patholytica', lang: 'Danish' },
-  { text: 'Tervetuloa Patholyticaan', lang: 'Finnish' },
-  { text: 'أهلاً بك في Patholytica', lang: 'Arabic' },
-  { text: 'Patholyticaへようこそ', lang: 'Japanese' },
-  { text: 'Patholytica에 오신 것을 환영합니다', lang: 'Korean' },
-  { text: '欢迎来到 Patholytica', lang: 'Chinese (Simplified)' },
-  { text: '歡迎來到 Patholytica', lang: 'Chinese (Traditional)' },
-  { text: 'Добро пожаловать в Patholytica', lang: 'Russian' },
-  { text: 'Hoş geldiniz Patholytica', lang: 'Turkish' },
-  { text: 'ברוכים הבאים ל-Patholytica', lang: 'Hebrew' },
-  { text: 'स्वागत है Patholytica में', lang: 'Hindi' },
-  { text: 'Selamat datang di Patholytica', lang: 'Indonesian' },
-  { text: 'ยินดีต้อนรับสู่ Patholytica', lang: 'Thai' },
-  { text: 'Chào mừng đến với Patholytica', lang: 'Vietnamese' },
-  { text: 'Witamy w Patholytica', lang: 'Polish' },
-  { text: 'Vítejte v Patholytica', lang: 'Czech' },
-  { text: 'Üdvözöljük a Patholyticában', lang: 'Hungarian' },
-  { text: 'Bun venit la Patholytica', lang: 'Romanian' },
-  { text: 'Καλώς ήρθατε στο Patholytica', lang: 'Greek' },
-];
-
-let currentTranslationIndex = 0;
-let isAnimating = false;
-
-function createWelcomeTextElement(text) {
-  const element = document.createElement('span');
-  element.className = 'welcome-text-item';
-  element.textContent = text;
-  return element;
-}
-
-function animateWelcomeText() {
-  const wrapper = document.getElementById('welcomeTextWrapper');
-  if (!wrapper || isAnimating) return;
+// Toggle search bar when search button is clicked
+function toggleSearch() {
+  const searchContainer = document.getElementById('searchContainer');
+  const searchBackdrop = document.getElementById('searchBackdrop');
+  const searchButton = document.getElementById('searchButton');
+  const searchIcon = document.getElementById('searchIcon');
+  const searchInput = document.getElementById('searchInput');
   
-  isAnimating = true;
-  const currentElement = wrapper.querySelector('.welcome-text-item.active');
-  const nextIndex = (currentTranslationIndex + 1) % welcomeTranslations.length;
-  const nextTranslation = welcomeTranslations[nextIndex];
-  
-  // Create new element
-  const newElement = createWelcomeTextElement(nextTranslation.text);
-  wrapper.appendChild(newElement);
-  
-  // Force reflow to ensure initial state
-  newElement.offsetHeight;
-  
-  // Start fade in animation
-  requestAnimationFrame(() => {
-    newElement.classList.add('active');
-  });
-  
-  // Fade out current element
-  if (currentElement) {
-    currentElement.classList.add('fade-out');
-    currentElement.classList.remove('active');
-    
-    // Remove old element after animation
-    setTimeout(() => {
-      if (currentElement.parentNode) {
-        currentElement.remove();
-      }
-    }, 1200);
+  if (searchContainer.classList.contains('active')) {
+    // Close search
+    searchContainer.classList.remove('active');
+    searchBackdrop.classList.remove('active');
+    searchButton.classList.remove('active');
+    searchIcon.className = 'fas fa-search';
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.blur();
+      // Clear search results
+      handleSearch({ target: { value: '' } });
+    }
+  } else {
+    // Open search
+    searchContainer.classList.add('active');
+    searchBackdrop.classList.add('active');
+    searchButton.classList.add('active');
+    searchIcon.className = 'fas fa-times';
+    if (searchInput) {
+      setTimeout(() => {
+        searchInput.focus();
+      }, 300);
+    }
   }
-  
-  // Update index
-  currentTranslationIndex = nextIndex;
-  
-  // Reset animation flag after transition completes
-  setTimeout(() => {
-    isAnimating = false;
-  }, 1200);
 }
 
-// Initialize welcome text animation
-function initWelcomeTextAnimation() {
-  // Don't start animation if user is logged in
-  if (isUserLoggedIn) return;
+// Close search when clicking backdrop or outside
+document.addEventListener('click', function(event) {
+  const searchContainer = document.getElementById('searchContainer');
+  const searchBackdrop = document.getElementById('searchBackdrop');
+  const searchButton = document.getElementById('searchButton');
   
-  const wrapper = document.getElementById('welcomeTextWrapper');
-  if (!wrapper) return;
-  
-  // Clear any existing interval
-  stopWelcomeAnimation();
-  
-  // Start with first translation
-  const firstTranslation = welcomeTranslations[0];
-  wrapper.innerHTML = '';
-  const firstElement = createWelcomeTextElement(firstTranslation.text);
-  firstElement.classList.add('active');
-  wrapper.appendChild(firstElement);
-  
-  // Reset index
-  currentTranslationIndex = 0;
-  
-  // Start cycling through translations
-  // Change text every 3 seconds (Apple-style timing)
-  welcomeAnimationInterval = setInterval(() => {
-    if (!isUserLoggedIn) {
-      animateWelcomeText();
+  if (searchContainer && searchContainer.classList.contains('active')) {
+    if (searchBackdrop.contains(event.target) || 
+        (!searchContainer.contains(event.target) && !searchButton.contains(event.target))) {
+      toggleSearch();
     }
-  }, 3000);
-}
+  }
+});
 
-// Initialize on page load (only if user is not logged in)
-// The auth state change handler will manage this
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    // Wait a bit for auth to initialize, then start animation if needed
-    setTimeout(() => {
-      if (!isUserLoggedIn) {
-        initWelcomeTextAnimation();
-      }
-    }, 500);
-  });
-} else {
-  setTimeout(() => {
-    if (!isUserLoggedIn) {
-      initWelcomeTextAnimation();
+// Close search on Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    const searchContainer = document.getElementById('searchContainer');
+    if (searchContainer && searchContainer.classList.contains('active')) {
+      toggleSearch();
     }
-  }, 500);
-}
+  }
+});
 
 // Scroll to top function
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Debounce function for performance
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
-
-// Scroll behavior for search bar and back to top button
+// Scroll behavior for back to top button
 let lastScrollTop = 0;
-const searchContainer = document.getElementById('searchContainer');
 const backToTop = document.getElementById('backToTop');
-const scrollThreshold = 50;
-let isCompact = false;
-let ticking = false;
 
-function handleScroll() {
+window.addEventListener('scroll', function() {
   const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-  
-  // Only show search bar when at the very top
-  if (currentScroll <= scrollThreshold) {
-    searchContainer.classList.remove('hidden');
-    searchContainer.classList.remove('compact');
-    isCompact = false;
-  } 
-  // Scrolling down - transform to compact circle and move right
-  else if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
-    if (!isCompact) {
-      searchContainer.classList.add('compact');
-      isCompact = true;
-      // After animation completes, hide it
-      setTimeout(() => {
-        if (isCompact && currentScroll > scrollThreshold) {
-          searchContainer.classList.add('hidden');
-        }
-      }, 400);
-    }
-  }
-  // Scrolling up but not at top - keep hidden (do nothing)
   
   // Show/hide back to top button
   if (currentScroll > 300) {
@@ -1447,18 +1285,10 @@ function handleScroll() {
   }
   
   lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-  ticking = false;
-}
-
-window.addEventListener('scroll', function() {
-  if (!ticking) {
-    window.requestAnimationFrame(handleScroll);
-    ticking = true;
-  }
 }, { passive: true });
 
-// Search functionality with debouncing
-function performSearch(event) {
+// Search functionality
+function handleSearch(event) {
   const searchTerm = event.target.value.toLowerCase();
   const articles = document.querySelectorAll('.article-item');
   let visibleCount = 0;
@@ -1478,18 +1308,6 @@ function performSearch(event) {
   // Update article count
   document.getElementById('articleCount').textContent = searchTerm ? visibleCount : articles.length;
 }
-
-const handleSearch = debounce(performSearch, 150);
-
-// Initialize search handler
-document.addEventListener('DOMContentLoaded', function() {
-  const searchInput = document.getElementById('searchInput');
-  if (searchInput) {
-    searchInput.addEventListener('input', function(event) {
-      handleSearch(event);
-    });
-  }
-});
 
 // Function to update theme color meta tag for iOS status bar
 function updateThemeColor(isLight) {
