@@ -511,6 +511,10 @@ async function loadArticles() {
       return;
     }
 
+    // DEBUG: Log the first article to see its structure
+    console.log('First article structure:', articles[0]);
+    console.log('First article firebase_user_id:', articles[0].firebase_user_id);
+
     // Get unique firebase_user_ids from articles
     const firebaseUserIds = [...new Set(articles.map(a => a.firebase_user_id).filter(Boolean))];
     console.log('Fetching users with firebase_uids:', firebaseUserIds);
@@ -522,14 +526,24 @@ async function loadArticles() {
       .in('firebase_uid', firebaseUserIds);
 
     console.log('Users response:', { users, error: usersError });
+    
+    // DEBUG: Log individual user data
+    if (users && users.length > 0) {
+      console.log('First user:', users[0]);
+      console.log('First user firebase_uid:', users[0].firebase_uid);
+      console.log('First user username:', users[0].username);
+    }
 
     // Create a user lookup map by firebase_uid
     const userMap = {};
     if (users) {
       users.forEach(user => {
         userMap[user.firebase_uid] = user;
+        console.log(`Added to userMap: ${user.firebase_uid} -> ${user.username}`);
       });
     }
+    
+    console.log('Complete userMap:', userMap);
 
     // Clear loading state
     articleList.innerHTML = '';
@@ -542,7 +556,10 @@ async function loadArticles() {
       
       // Get author username and format with @
       const user = userMap[article.firebase_user_id];
+      console.log(`Article "${article.title}" firebase_user_id: ${article.firebase_user_id}, Found user:`, user);
+      
       const authorName = user?.username ? `@${user.username}` : 'Unknown Author';
+      console.log(`Final author name for article "${article.title}": ${authorName}`);
       
       // Format date
       const date = new Date(article.created_at);
