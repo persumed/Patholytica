@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -11,22 +12,19 @@
   --bg-color: #0f0f0f;
   --text-primary: #fff;
   --text-secondary: #aaa;
-  --card-bg: #1f1f1f;
   --hover-bg: #2a2a2a;
   --border-color: #303030;
   --accent: #3ea6ff;
-  --accent-hover: #2d8ed6;
-  --like-color: #ff3b5c;
+  --accent-green: #2ecc71;
 }
 body.light-theme {
   --bg-color: #ffffff;
   --text-primary: #0f0f0f;
   --text-secondary: #606060;
-  --card-bg: #f9f9f9;
   --hover-bg: #f0f0f0;
   --border-color: #e5e5e5;
   --accent: #065fd4;
-  --accent-hover: #0448a3;
+  --accent-green: #27ae60;
 }
 * { box-sizing: border-box; }
 html, body { 
@@ -92,726 +90,519 @@ body.light-theme .logo-img {
 .icon-btn:hover {
   background: var(--hover-bg);
 }
+
+/* Search Bar Styles */
+.search-container {
+position: fixed;
+top: calc(65px + env(safe-area-inset-top));
+left: 0;
+right: 0;
+background: var(–bg-color);
+border-bottom: 1px solid var(–border-color);
+padding: 16px 24px;
+z-index: 35;
+display: none;
+animation: slideDown 0.3s ease;
+}
+
+.search-container.show {
+display: block;
+}
+
+@keyframes slideDown {
+from {
+opacity: 0;
+transform: translateY(-10px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.search-input-wrapper {
+display: flex;
+align-items: center;
+gap: 12px;
+max-width: 900px;
+margin: 0 auto;
+}
+
+.search-input {
+flex: 1;
+padding: 12px 16px;
+background: var(–hover-bg);
+border: 1px solid var(–border-color);
+border-radius: 24px;
+color: var(–text-primary);
+font-size: 16px;
+outline: none;
+transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+border-color: var(–accent);
+}
+
+.search-input::placeholder {
+color: var(–text-secondary);
+}
+
+.search-close-btn {
+background: transparent;
+border: none;
+color: var(–text-secondary);
+cursor: pointer;
+font-size: 14px;
+padding: 8px 16px;
+border-radius: 16px;
+transition: background 0.2s ease;
+}
+
+.search-close-btn:hover {
+background: var(–hover-bg);
+color: var(–text-primary);
+}
+
 .auth-buttons {
-  display: none;
-  gap: 12px;
+display: none;
+gap: 12px;
 }
 .auth-buttons.show {
-  display: flex;
+display: flex;
+}
+.btn-login, .btn-signup {
+padding: 8px 20px;
+border-radius: 20px;
+font-size: 14px;
+font-weight: 500;
+cursor: pointer;
+transition: all 0.2s ease;
+text-decoration: none;
+border: none;
 }
 .btn-login {
-  padding: 8px 20px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  border: 1px solid var(--border-color);
-  background: transparent;
-  color: var(--text-primary);
+background: transparent;
+color: var(–text-primary);
+border: 1px solid var(–border-color);
 }
 .btn-login:hover {
-  background: var(--hover-bg);
+background: var(–hover-bg);
+}
+.btn-signup {
+background: var(–accent);
+color: white;
+}
+.btn-signup:hover {
+opacity: 0.9;
+transform: translateY(-1px);
 }
 .user-welcome {
-  display: none;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: var(--text-primary);
+display: none;
+align-items: center;
+gap: 12px;
+font-size: 14px;
+color: var(–text-primary);
 }
 .user-welcome.show {
-  display: flex;
+display: flex;
 }
 .user-menu {
-  position: relative;
+position: relative;
 }
 .user-menu-dropdown {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background: var(--bg-color);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 8px 0;
-  min-width: 180px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: none;
-  z-index: 1000;
+position: absolute;
+top: 50px;
+right: 0;
+background: var(–bg-color);
+border: 1px solid var(–border-color);
+border-radius: 8px;
+padding: 8px 0;
+min-width: 180px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+display: none;
+z-index: 1000;
 }
 .user-menu-dropdown.show {
-  display: block;
+display: block;
 }
 .user-menu-item {
-  padding: 10px 16px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text-primary);
-  font-size: 14px;
+padding: 10px 16px;
+cursor: pointer;
+transition: background 0.2s ease;
+display: flex;
+align-items: center;
+gap: 10px;
+color: var(–text-primary);
+font-size: 14px;
 }
 .user-menu-item:hover {
-  background: var(--hover-bg);
+background: var(–hover-bg);
 }
 .user-menu-item i {
-  width: 16px;
+width: 16px;
 }
 
-/* Stories Section */
+/* Stories Preview Section */
 .stories-container {
-  position: fixed;
-  top: calc(65px + env(safe-area-inset-top));
-  left: 0;
-  right: 0;
-  z-index: 30;
-  background: var(--bg-color);
-  border-bottom: 1px solid var(--border-color);
-  padding: 16px 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+position: fixed;
+top: calc(65px + env(safe-area-inset-top));
+left: 0;
+right: 0;
+z-index: 30;
+background: var(–bg-color);
+border-bottom: 1px solid var(–border-color);
+padding: 16px 0;
+overflow-x: auto;
+overflow-y: hidden;
+-webkit-overflow-scrolling: touch;
+scrollbar-width: none;
 }
+
 .stories-container::-webkit-scrollbar {
-  display: none;
+display: none;
 }
+
 .stories-wrapper {
-  display: flex;
-  gap: 16px;
-  padding: 0 24px;
-  width: max-content;
+display: flex;
+gap: 16px;
+padding: 0 24px;
+width: max-content;
 }
+
 .story-item {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  width: 70px;
+flex-shrink: 0;
+display: flex;
+flex-direction: column;
+align-items: center;
+cursor: pointer;
+transition: transform 0.2s ease;
+width: 70px;
 }
+
 .story-item:hover {
-  transform: scale(1.05);
+transform: scale(1.05);
 }
+
 .story-avatar-wrapper {
-  position: relative;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  padding: 3px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease infinite;
+position: relative;
+width: 64px;
+height: 64px;
+border-radius: 50%;
+padding: 3px;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+background-size: 200% 200%;
+animation: gradientShift 3s ease infinite;
+will-change: background-position;
 }
+
 @keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+0%, 100% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
 }
+
 .story-avatar {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  background: var(--bg-color);
-  padding: 2px;
-  display: block;
+width: 100%;
+height: 100%;
+border-radius: 50%;
+object-fit: cover;
+background: var(–bg-color);
+padding: 2px;
+display: block;
 }
+
 .story-username {
-  margin-top: 6px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  text-align: center;
-  max-width: 70px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+margin-top: 6px;
+font-size: 12px;
+color: var(–text-secondary);
+text-align: center;
+max-width: 70px;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
 }
+
 .story-item.new .story-avatar-wrapper {
-  background: var(--border-color);
+background: var(–border-color);
 }
+
 .story-item.new .story-avatar-wrapper::after {
-  content: '+';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 24px;
-  color: var(--text-primary);
-  font-weight: 300;
-  z-index: 1;
+content: ‘+’;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+font-size: 24px;
+color: var(–text-primary);
+font-weight: 300;
+z-index: 1;
 }
 
-/* Feed Container */
+body.light-theme .story-avatar-wrapper {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+}
+
+body.light-theme .story-item.new .story-avatar-wrapper {
+background: var(–border-color);
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+position: fixed;
+top: calc(65px + env(safe-area-inset-top) + 100px);
+left: 0;
+right: 0;
+background: var(–bg-color);
+border-bottom: 1px solid var(–border-color);
+z-index: 25;
+display: none;
+}
+
+.nav-tabs.show {
+display: block;
+}
+
+.nav-tabs-wrapper {
+max-width: 900px;
+margin: 0 auto;
+display: flex;
+gap: 0;
+padding: 0 24px;
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+scrollbar-width: none;
+}
+
+.nav-tabs-wrapper::-webkit-scrollbar {
+display: none;
+}
+
+.nav-tab {
+padding: 16px 24px;
+background: transparent;
+border: none;
+color: var(–text-secondary);
+cursor: pointer;
+font-size: 14px;
+font-weight: 500;
+white-space: nowrap;
+position: relative;
+transition: color 0.2s ease;
+}
+
+.nav-tab:hover {
+color: var(–text-primary);
+}
+
+.nav-tab.active {
+color: var(–text-primary);
+}
+
+.nav-tab.active::after {
+content: ‘’;
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+height: 2px;
+background: var(–accent);
+}
+
 .list-container {
-  max-width: 680px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 24px 16px 80px;
-  padding-top: calc(65px + env(safe-area-inset-top) + 100px);
+max-width: 900px;
+width: 100%;
+margin: 0 auto;
+padding: 24px 24px 80px;
+padding-top: calc(65px + env(safe-area-inset-top) + 100px);
 }
 
-.welcome-banner {
-  display: none;
-  padding: 40px 24px;
-  text-align: center;
-  margin-bottom: 24px;
-}
-.welcome-banner.show {
-  display: block;
-}
-.welcome-banner-text {
-  font-family: Arial, sans-serif;
-  font-size: 48px;
-  font-weight: bold;
-  color: var(--text-primary);
-  margin: 0;
-  line-height: 1.2;
+.list-container.with-tabs {
+padding-top: calc(65px + env(safe-area-inset-top) + 100px + 60px);
 }
 
-/* Post Cards */
+/* Category Section */
+.category-section {
+margin-bottom: 48px;
+display: none;
+}
+
+.category-section.active {
+display: block;
+}
+
+.category-title {
+font-family: ‘Times New Roman’, Times, serif;
+font-size: 32px;
+font-weight: bold;
+margin: 0 0 24px 0;
+color: var(–text-primary);
+padding-bottom: 12px;
+border-bottom: 2px solid var(–border-color);
+}
+
 .article-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+list-style: none;
+margin: 0;
+padding: 0;
 }
 .article-item {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 0.3s ease;
+padding: 24px 0;
+border-bottom: 1px solid var(–border-color);
+cursor: pointer;
+transition: background 0.2s ease;
 }
 .article-item:hover {
-  border-color: var(--accent);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Post Header */
-.post-header {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  gap: 12px;
-}
-.post-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-.post-avatar:hover {
-  transform: scale(1.05);
-}
-.post-author-info {
-  flex: 1;
-  cursor: pointer;
-}
-.post-author-name {
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--text-primary);
-  margin: 0 0 2px 0;
-}
-.post-author-info:hover .post-author-name {
-  color: var(--accent);
-}
-.post-date {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin: 0;
-}
-.post-options-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  transition: background 0.2s ease;
-}
-.post-options-btn:hover {
-  background: var(--hover-bg);
-}
-
-/* Post Title */
-.post-caption {
-  padding: 0 16px 12px;
+background: var(–hover-bg);
+margin: 0 -12px;
+padding: 24px 12px;
 }
 .article-title {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 8px 0;
-  line-height: 1.4;
-  color: var(--text-primary);
-  word-wrap: break-word;
+font-family: ‘Times New Roman’, Times, serif;
+font-size: 42px;
+font-weight: bold;
+margin: 0 0 8px 0;
+line-height: 1.2;
+color: var(–text-primary);
+word-wrap: break-word;
 }
-.post-description {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.article-item:hover .article-title {
+color: var(–accent);
 }
-
-/* Media Embeds */
-.post-media {
-  position: relative;
-  width: 100%;
-  cursor: pointer;
+.article-meta {
+font-size: 14px;
+color: var(–text-secondary);
+display: flex;
+align-items: center;
+gap: 8px;
+flex-wrap: wrap;
 }
-.post-media.image {
-  background: #000;
-}
-.post-image {
-  width: 100%;
-  height: auto;
-  max-height: 500px;
-  object-fit: cover;
-  display: block;
+.meta-dot {
+width: 3px;
+height: 3px;
+background: var(–text-secondary);
+border-radius: 50%;
 }
 
-/* Image Carousel */
-.image-carousel {
-  position: relative;
-  overflow: hidden;
-}
-.carousel-track {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  padding: 4px 0;
-  scrollbar-width: none;
-}
-.carousel-track::-webkit-scrollbar {
-  display: none;
-}
-.carousel-track img {
-  scroll-snap-align: start;
-  min-width: 90%;
-  max-width: 90%;
-  height: auto;
-  max-height: 450px;
-  object-fit: cover;
-  border-radius: 0;
-}
-
-/* Audio Player */
-.custom-audio-player {
-  background: var(--card-bg);
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.play-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: none;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-.play-btn:hover {
-  background: var(--accent-hover);
-  transform: scale(1.05);
-}
-.audio-info {
-  flex: 1;
-  min-width: 0;
-}
-.audio-title {
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.waveform-container {
-  position: relative;
-  height: 40px;
-  background: var(--hover-bg);
-  border-radius: 4px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  overflow: hidden;
-}
-.waveform-progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: var(--accent);
-  opacity: 0.3;
-  transition: width 0.1s linear;
-}
-.waveform-bars {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 0 4px;
-}
-.waveform-bar {
-  width: 2px;
-  background: var(--text-secondary);
-  border-radius: 2px;
-  opacity: 0.6;
-}
-.audio-time {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-/* PDF Viewer */
-.pdf-viewer {
-  background: var(--card-bg);
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-.pdf-viewer:hover {
-  background: var(--hover-bg);
-}
-.pdf-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  background: #ff3b30;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  color: white;
-  flex-shrink: 0;
-}
-.pdf-info {
-  flex: 1;
-  min-width: 0;
-}
-.pdf-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0 0 6px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.pdf-meta {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin: 0;
-}
-.pdf-download-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: none;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-.pdf-download-btn:hover {
-  transform: scale(1.05);
-}
-
-/* Post Stats */
-.post-stats {
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 13px;
-  color: var(--text-secondary);
-  border-top: 1px solid var(--border-color);
-}
-.post-stats-left,
-.post-stats-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.stat-item {
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-.stat-item:hover {
-  color: var(--text-primary);
-}
-
-/* Post Actions */
-.article-actions {
-  display: flex;
-  align-items: center;
-  padding: 8px 8px;
-  gap: 4px;
-  border-top: 1px solid var(--border-color);
-}
-.action-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: transparent;
-  border: none;
-  border-radius: 6px;
-  color: var(--text-secondary);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: inherit;
-}
-.action-btn:hover {
-  background: var(--hover-bg);
-  color: var(--text-primary);
-}
-.action-btn i {
-  font-size: 18px;
-}
-.action-btn.liked {
-  color: var(--like-color);
-}
-.action-btn.liked i {
-  animation: likeAnimation 0.4s ease;
-}
-@keyframes likeAnimation {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-}
-.action-btn.bookmarked {
-  color: #ffd700;
-}
-
-/* Comments Section */
-.post-comments {
-  padding: 12px 16px;
-  border-top: 1px solid var(--border-color);
-}
-.comment-item {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-.comment-item:last-child {
-  margin-bottom: 0;
-}
-.comment-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-  cursor: pointer;
-}
-.comment-content {
-  flex: 1;
-  min-width: 0;
-}
-.comment-author {
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--text-primary);
-  margin-right: 6px;
-  cursor: pointer;
-}
-.comment-author:hover {
-  text-decoration: underline;
-}
-.comment-text {
-  font-size: 14px;
-  color: var(--text-primary);
-  line-height: 1.4;
-  word-wrap: break-word;
-}
-.comment-meta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 4px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-.comment-time {
-  cursor: pointer;
-}
-.comment-like,
-.comment-reply {
-  cursor: pointer;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-.comment-like:hover,
-.comment-reply:hover {
-  color: var(--text-primary);
-}
-.view-more-comments {
-  display: block;
-  width: 100%;
-  padding: 8px;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  text-align: left;
-  transition: color 0.2s ease;
-  font-family: inherit;
-}
-.view-more-comments:hover {
-  color: var(--text-primary);
-}
-
-/* Comment Input */
-.comment-input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-top: 1px solid var(--border-color);
-}
-.comment-input-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-.comment-input {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  background: var(--bg-color);
-  color: var(--text-primary);
-  font-size: 14px;
-  font-family: inherit;
-  outline: none;
-  transition: all 0.2s ease;
-}
-.comment-input:focus {
-  border-color: var(--accent);
-}
-.comment-submit {
-  padding: 6px 16px;
-  border-radius: 20px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: inherit;
-}
-.comment-submit:hover {
-  opacity: 0.9;
-}
-.comment-submit:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.article-category-badge {
+display: inline-block;
+padding: 4px 12px;
+background: var(–hover-bg);
+color: var(–accent);
+border-radius: 12px;
+font-size: 12px;
+font-weight: 500;
+margin-left: 8px;
 }
 
 .footer {
-  background: var(--bg-color);
-  border-top: 1px solid var(--border-color);
-  padding: 24px;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.6;
+background: var(–bg-color);
+border-top: 1px solid var(–border-color);
+padding: 24px;
+text-align: center;
+color: var(–text-secondary);
+font-size: 14px;
+line-height: 1.6;
 }
 .footer-stats {
-  margin-bottom: 8px;
+margin-bottom: 8px;
 }
 .article-count {
-  color: var(--accent);
-  font-weight: 600;
+color: var(–accent-green);
+font-weight: 600;
+}
+.footer-tagline {
+margin-bottom: 8px;
+}
+.footer-location {
+font-size: 13px;
+color: var(–text-secondary);
+opacity: 0.8;
+}
+@media (max-width: 768px) {
+.search-container {
+padding: 12px 16px;
 }
 
-@media (max-width: 768px) {
-  .stories-container {
-    padding: 12px 0;
-  }
-  .stories-wrapper {
-    padding: 0 16px;
-    gap: 12px;
-  }
-  .story-item {
-    width: 60px;
-  }
-  .story-avatar-wrapper {
-    width: 56px;
-    height: 56px;
-  }
-  .story-username {
-    font-size: 11px;
-    max-width: 60px;
-  }
-  .list-container {
-    padding: 16px 12px 80px;
-    padding-top: calc(65px + env(safe-area-inset-top) + 90px);
-  }
-  .welcome-banner {
-    padding: 32px 16px;
-    margin-bottom: 16px;
-  }
-  .welcome-banner-text {
-    font-size: 32px;
-  }
-  .article-title {
-    font-size: 18px;
-  }
-  .footer {
-    padding: 20px 16px;
-    font-size: 13px;
-  }
+.search-input {
+font-size: 14px;
+padding: 10px 14px;
+}
+
+.stories-container {
+padding: 12px 0;
+}
+
+.stories-wrapper {
+padding: 0 16px;
+gap: 12px;
+}
+
+.story-item {
+width: 60px;
+}
+
+.story-avatar-wrapper {
+width: 56px;
+height: 56px;
+}
+
+.story-username {
+font-size: 11px;
+max-width: 60px;
+}
+
+.nav-tabs-wrapper {
+padding: 0 16px;
+}
+
+.nav-tab {
+padding: 14px 20px;
+font-size: 13px;
+}
+
+.list-container {
+padding: 16px 16px 80px;
+padding-top: calc(65px + env(safe-area-inset-top) + 90px);
+}
+
+.list-container.with-tabs {
+padding-top: calc(65px + env(safe-area-inset-top) + 90px + 55px);
+}
+
+.category-title {
+font-size: 24px;
+margin-bottom: 20px;
+}
+
+.article-title {
+font-size: 32px;
+}
+.article-meta {
+font-size: 13px;
+}
+.footer {
+padding: 20px 16px;
+font-size: 13px;
+}
+.auth-buttons {
+gap: 8px;
+}
+.btn-login, .btn-signup {
+padding: 6px 16px;
+font-size: 13px;
+}
+}
+
+/* Hide articles when not in ‘all’ view */
+.main-article-list {
+display: block;
+}
+
+.main-article-list.hidden {
+display: none;
 }
 </style>
+
 </head>
 <body>
 
@@ -819,64 +610,311 @@ body.light-theme .logo-img {
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
-      <button class="icon-btn" onclick="searchArticles()" title="Search">
+      <button class="icon-btn" onclick="toggleSearch()" title="Search">
         <i class="fas fa-search"></i>
       </button>
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
-      <div class="auth-buttons" id="authButtons">
-        <a href="login.html" class="btn-login">Log In</a>
-      </div>
-      <div class="user-welcome" id="userWelcome">
-        <div class="user-menu">
-          <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
-            <i class="fas fa-user"></i>
-          </button>
-          <div class="user-menu-dropdown" id="userMenuDropdown">
-            <div class="user-menu-item" onclick="window.location.href='profile.html'">
-              <i class="fas fa-user"></i>
-              <span>Profile</span>
-            </div>
-            <div class="user-menu-item" onclick="window.location.href='settings.html'">
-              <i class="fas fa-cog"></i>
-              <span>Settings</span>
-            </div>
-            <div class="user-menu-item" onclick="logOut()">
-              <i class="fas fa-sign-out-alt"></i>
-              <span>Log Out</span>
-            </div>
-          </div>
+
+  <!-- Auth buttons (shown when logged out) -->
+
+  <div class="auth-buttons" id="authButtons">
+    <a href="login.html" class="btn-login">Log In</a>
+  </div>
+
+  <!-- User menu (shown when logged in) -->
+
+  <div class="user-welcome" id="userWelcome">
+    <button class="icon-btn" onclick="showLibraries()" title="Libraries">
+      <i class="fas fa-layer-group"></i>
+    </button>
+    <div class="user-menu">
+      <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
+        <i class="fas fa-user"></i>
+      </button>
+      <div class="user-menu-dropdown" id="userMenuDropdown">
+        <div class="user-menu-item" onclick="window.location.href='profile.html'">
+          <i class="fas fa-user"></i>
+          <span>Profile</span>
+        </div>
+        <div class="user-menu-item" onclick="window.location.href='settings.html'">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </div>
+        <div class="user-menu-item" onclick="logOut()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Log Out</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="stories-container" id="storiesContainer">
-  <div class="stories-wrapper" id="storiesWrapper"></div>
+  </div>
 </div>
 
-<div class="list-container">
-  <div class="welcome-banner" id="welcomeBanner">
-    <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome</h1>
+<!-- Search Bar -->
+
+<div class="search-container" id="searchContainer">
+  <div class="search-input-wrapper">
+    <input 
+      type="text" 
+      class="search-input" 
+      id="searchInput" 
+      placeholder="Search articles..."
+      onkeyup="handleSearch(event)"
+    >
+    <button class="search-close-btn" onclick="toggleSearch()">Cancel</button>
   </div>
-  <ul class="article-list" id="articleList"></ul>
+</div>
+
+<!-- Stories Preview Section -->
+
+<div class="stories-container" id="storiesContainer">
+  <div class="stories-wrapper" id="storiesWrapper">
+    <!-- Stories will be dynamically generated -->
+  </div>
+</div>
+
+<!-- Navigation Tabs -->
+
+<div class="nav-tabs" id="navTabs">
+  <div class="nav-tabs-wrapper">
+    <button class="nav-tab active" onclick="switchTab('all')">All Articles</button>
+    <button class="nav-tab" onclick="switchTab('cardiology')">Cardiology</button>
+    <button class="nav-tab" onclick="switchTab('neurology')">Neurology</button>
+    <button class="nav-tab" onclick="switchTab('oncology')">Oncology</button>
+    <button class="nav-tab" onclick="switchTab('immunology')">Immunology</button>
+    <button class="nav-tab" onclick="switchTab('genetics')">Genetics</button>
+  </div>
+</div>
+
+<div class="list-container" id="listContainer">
+
+  <!-- Main Article List (All Articles) -->
+
+  <ul class="article-list main-article-list" id="mainArticleList">
+    <li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+      <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
+      <div class="article-meta">
+        <span>Dr. Sarah Mitchell</span>
+        <div class="meta-dot"></div>
+        <span>Mar 15, 2024</span>
+        <div class="meta-dot"></div>
+        <span>12 min read</span>
+      </div>
+    </li>
+
+```
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="neurology">
+  <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
+  <div class="article-meta">
+    <span>Dr. James Chen</span>
+    <div class="meta-dot"></div>
+    <span>Mar 12, 2024</span>
+    <div class="meta-dot"></div>
+    <span>8 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="oncology">
+  <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
+  <div class="article-meta">
+    <span>Dr. Emily Rodriguez</span>
+    <div class="meta-dot"></div>
+    <span>Mar 10, 2024</span>
+    <div class="meta-dot"></div>
+    <span>15 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="immunology">
+  <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
+  <div class="article-meta">
+    <span>Dr. Robert Kim</span>
+    <div class="meta-dot"></div>
+    <span>Mar 8, 2024</span>
+    <div class="meta-dot"></div>
+    <span>10 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="genetics">
+  <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
+  <div class="article-meta">
+    <span>Dr. Lisa Zhang</span>
+    <div class="meta-dot"></div>
+    <span>Mar 5, 2024</span>
+    <div class="meta-dot"></div>
+    <span>14 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+  <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
+  <div class="article-meta">
+    <span>Dr. Robert Kim</span>
+    <div class="meta-dot"></div>
+    <span>Mar 8, 2024</span>
+    <div class="meta-dot"></div>
+    <span>10 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+  <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
+  <div class="article-meta">
+    <span>Dr. Lisa Zhang</span>
+    <div class="meta-dot"></div>
+    <span>Mar 5, 2024</span>
+    <div class="meta-dot"></div>
+    <span>14 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+  <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
+  <div class="article-meta">
+    <span>Dr. Michael Johnson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 3, 2024</span>
+    <div class="meta-dot"></div>
+    <span>11 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+  <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
+  <div class="article-meta">
+    <span>Dr. Michael Johnson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 14, 2024</span>
+    <div class="meta-dot"></div>
+    <span>18 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+  <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
+  <div class="article-meta">
+    <span>Dr. Anna Williams</span>
+    <div class="meta-dot"></div>
+    <span>Mar 11, 2024</span>
+    <div class="meta-dot"></div>
+    <span>16 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="oncology">
+  <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
+  <div class="article-meta">
+    <span>Dr. David Park</span>
+    <div class="meta-dot"></div>
+    <span>Mar 9, 2024</span>
+    <div class="meta-dot"></div>
+    <span>20 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="neurology">
+  <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
+  <div class="article-meta">
+    <span>Dr. Rachel Green</span>
+    <div class="meta-dot"></div>
+    <span>Mar 7, 2024</span>
+    <div class="meta-dot"></div>
+    <span>13 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="genetics">
+  <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
+  <div class="article-meta">
+    <span>Dr. Thomas Anderson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 7, 2024</span>
+    <div class="meta-dot"></div>
+    <span>11 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="immunology">
+  <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
+  <div class="article-meta">
+    <span>Dr. Rachel Green</span>
+    <div class="meta-dot"></div>
+    <span>Mar 4, 2024</span>
+    <div class="meta-dot"></div>
+    <span>13 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="immunology">
+  <h2 class="article-title">The Role of Microbiome in Human Health</h2>
+  <div class="article-meta">
+    <span>Dr. Jennifer Lee</span>
+    <div class="meta-dot"></div>
+    <span>Mar 1, 2024</span>
+    <div class="meta-dot"></div>
+    <span>9 min read</span>
+  </div>
+</li>
+```
+
+  </ul>
+
+  <!-- Category Sections (hidden by default) -->
+
+  <div class="category-section" id="category-cardiology">
+    <h2 class="category-title">Cardiology</h2>
+    <ul class="article-list" id="cardiology-articles"></ul>
+  </div>
+
+  <div class="category-section" id="category-neurology">
+    <h2 class="category-title">Neurology</h2>
+    <ul class="article-list" id="neurology-articles"></ul>
+  </div>
+
+  <div class="category-section" id="category-oncology">
+    <h2 class="category-title">Oncology</h2>
+    <ul class="article-list" id="oncology-articles"></ul>
+  </div>
+
+  <div class="category-section" id="category-immunology">
+    <h2 class="category-title">Immunology</h2>
+    <ul class="article-list" id="immunology-articles"></ul>
+  </div>
+
+  <div class="category-section" id="category-genetics">
+    <h2 class="category-title">Genetics</h2>
+    <ul class="article-list" id="genetics-articles"></ul>
+  </div>
+
 </div>
 
 <footer class="footer">
   <div class="footer-stats">
-    <span class="article-count" id="articleCount">5</span> posts
+    <span class="article-count" id="articleCount">15</span> articles accessible
   </div>
   <div class="footer-tagline">
     Patholytica is a Medicinebank project aiming to unify academic sharing
   </div>
+  <div class="footer-location" id="userLocation">
+    Loading location...
+  </div>
 </footer>
 
 <script type="module">
+// Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { 
+  getAuth, 
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
   authDomain: "patholytica.firebaseapp.com",
@@ -887,53 +925,38 @@ const firebaseConfig = {
   appId: "1:738430635282:web:8451ef380447c7611137cb"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+// Initialize Supabase
 const supabase = window.supabase.createClient(
   "https://vduqewqyvszfquntmark.supabase.co",
   "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
 );
 
+// Check authentication state
 onAuthStateChanged(auth, async (user) => {
   const authButtons = document.getElementById('authButtons');
   const userWelcome = document.getElementById('userWelcome');
-  const welcomeBanner = document.getElementById('welcomeBanner');
-  const welcomeBannerText = document.getElementById('welcomeBannerText');
   
   if (user) {
+    // User is logged in - show user menu
     authButtons.classList.remove('show');
     userWelcome.classList.add('show');
-    welcomeBanner.classList.add('show');
-    
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('full_name')
-        .eq('email', user.email)
-        .single();
-      
-      if (data && data.full_name) {
-        const firstName = data.full_name.split(' ')[0];
-        welcomeBannerText.textContent = `Welcome, ${firstName}`;
-      } else {
-        const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-        welcomeBannerText.textContent = `Welcome, ${firstName}`;
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-      welcomeBannerText.textContent = `Welcome, ${firstName}`;
-    }
   } else {
+    // User is logged out - show auth buttons
     authButtons.classList.add('show');
     userWelcome.classList.remove('show');
-    welcomeBanner.classList.remove('show');
   }
 });
 
+// Log out function
 window.logOut = async function() {
   try {
     await signOut(auth);
+    console.log("User logged out");
+    // Reload page to update UI
     window.location.reload();
   } catch (error) {
     console.error("Error logging out:", error);
@@ -943,95 +966,27 @@ window.logOut = async function() {
 </script>
 
 <script>
-const postsData = [
-  {
-    id: 1,
-    author: 'Dr. Sarah Mitchell',
-    authorAvatar: 'https://ui-avatars.com/api/?name=Sarah+Mitchell&background=667eea&color=fff&size=128',
-    date: 'Mar 15, 2024',
-    title: 'Understanding Cardiovascular Pathology',
-    description: 'A comprehensive review of current cardiovascular pathology research and clinical applications.',
-    mediaType: 'image',
-    mediaUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80',
-    likes: 234,
-    comments: 45,
-    shares: 12
-  },
-  {
-    id: 2,
-    author: 'Dr. James Chen',
-    authorAvatar: 'https://ui-avatars.com/api/?name=James+Chen&background=764ba2&color=fff&size=128',
-    date: 'Mar 12, 2024',
-    title: 'Advances in Neurological Imaging',
-    description: 'Latest developments in neuroimaging technology.',
-    mediaType: 'audio',
-    audioTitle: 'Neuroimaging Discussion',
-    audioDuration: '15:32',
-    likes: 189,
-    comments: 32,
-    shares: 8
-  },
-  {
-    id: 3,
-    author: 'Dr. Emily Rodriguez',
-    authorAvatar: 'https://ui-avatars.com/api/?name=Emily+Rodriguez&background=f093fb&color=fff&size=128',
-    date: 'Mar 10, 2024',
-    title: 'Molecular Mechanisms of Cancer',
-    description: 'Research paper on cellular pathways in oncology.',
-    mediaType: 'pdf',
-    pdfTitle: 'Cancer_Research_2024.pdf',
-    pdfPages: 24,
-    pdfSize: '2.4 MB',
-    likes: 412,
-    comments: 67,
-    shares: 34
-  },
-  {
-    id: 4,
-    author: 'Dr. Robert Kim',
-    authorAvatar: 'https://ui-avatars.com/api/?name=Robert+Kim&background=4facfe&color=fff&size=128',
-    date: 'Mar 8, 2024',
-    title: 'Atherosclerosis Development',
-    description: 'Progressive stages of atherosclerotic plaque formation.',
-    mediaType: 'carousel',
-    carouselImages: [
-      'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80',
-      'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80',
-      'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&q=80'
-    ],
-    likes: 298,
-    comments: 54,
-    shares: 19
-  },
-  {
-    id: 5,
-    author: 'Dr. Lisa Zhang',
-    authorAvatar: 'https://ui-avatars.com/api/?name=Lisa+Zhang&background=00f2fe&color=fff&size=128',
-    date: 'Mar 5, 2024',
-    title: 'Genetic Markers in Medicine',
-    description: 'How genetic profiling is revolutionizing treatment.',
-    mediaType: 'image',
-    mediaUrl: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=800&q=80',
-    likes: 267,
-    comments: 41,
-    shares: 15
-  }
-];
-
+// Generate Stories Preview
 function generateStories() {
   const storiesWrapper = document.getElementById('storiesWrapper');
+  if (!storiesWrapper) return;
+  
+  // Sample user data - in production, this would come from your API
   const stories = [
-    { username: 'Your Story', isNew: true, avatar: '' },
+    { username: 'Your Story', isNew: true, avatar: 'https://ui-avatars.com/api/?name=You&background=3ea6ff&color=fff&size=128' },
     { username: 'Dr. Sarah', avatar: 'https://ui-avatars.com/api/?name=Sarah+Mitchell&background=667eea&color=fff&size=128' },
     { username: 'Dr. James', avatar: 'https://ui-avatars.com/api/?name=James+Chen&background=764ba2&color=fff&size=128' },
     { username: 'Dr. Emily', avatar: 'https://ui-avatars.com/api/?name=Emily+Rodriguez&background=f093fb&color=fff&size=128' },
     { username: 'Dr. Robert', avatar: 'https://ui-avatars.com/api/?name=Robert+Kim&background=4facfe&color=fff&size=128' },
     { username: 'Dr. Lisa', avatar: 'https://ui-avatars.com/api/?name=Lisa+Zhang&background=00f2fe&color=fff&size=128' },
+    { username: 'Dr. Michael', avatar: 'https://ui-avatars.com/api/?name=Michael+Johnson&background=667eea&color=fff&size=128' },
+    { username: 'Dr. Anna', avatar: 'https://ui-avatars.com/api/?name=Anna+Williams&background=764ba2&color=fff&size=128' },
   ];
   
-  stories.forEach(story => {
+  stories.forEach((story, index) => {
     const storyItem = document.createElement('div');
     storyItem.className = `story-item ${story.isNew ? 'new' : ''}`;
+    storyItem.setAttribute('data-index', index);
     
     const avatarWrapper = document.createElement('div');
     avatarWrapper.className = 'story-avatar-wrapper';
@@ -1039,7 +994,13 @@ function generateStories() {
     if (story.isNew) {
       avatarWrapper.innerHTML = '<div class="story-avatar"></div>';
     } else {
-      avatarWrapper.innerHTML = `<img src="${story.avatar}" alt="${story.username}" class="story-avatar" loading="lazy">`;
+      const avatar = document.createElement('img');
+      avatar.className = 'story-avatar';
+      avatar.src = story.avatar;
+      avatar.alt = story.username;
+      avatar.loading = 'lazy';
+      avatar.decoding = 'async';
+      avatarWrapper.appendChild(avatar);
     }
     
     const username = document.createElement('div');
@@ -1048,283 +1009,130 @@ function generateStories() {
     
     storyItem.appendChild(avatarWrapper);
     storyItem.appendChild(username);
-    storyItem.addEventListener('click', () => console.log('Story clicked:', story.username));
+    
+    storyItem.addEventListener('click', () => {
+      // Handle story click - could open story viewer
+      console.log('Story clicked:', story.username);
+    });
+    
     storiesWrapper.appendChild(storyItem);
   });
 }
 
-function generatePosts() {
-  const articleList = document.getElementById('articleList');
+// Initialize stories on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', generateStories);
+} else {
+  generateStories();
+}
+
+// Toggle search bar
+function toggleSearch() {
+  const searchContainer = document.getElementById('searchContainer');
+  const searchInput = document.getElementById('searchInput');
   
-  postsData.forEach(post => {
-    const li = document.createElement('li');
-    li.className = 'article-item';
-    li.setAttribute('data-post-id', post.id);
+  searchContainer.classList.toggle('show');
+  
+  if (searchContainer.classList.contains('show')) {
+    searchInput.focus();
+  } else {
+    searchInput.value = '';
+    // Reset article visibility
+    showAllArticles();
+  }
+}
+
+// Handle search
+function handleSearch(event) {
+  const searchTerm = event.target.value.toLowerCase();
+  const articles = document.querySelectorAll('.article-item');
+  
+  articles.forEach(article => {
+    const title = article.querySelector('.article-title').textContent.toLowerCase();
+    const meta = article.querySelector('.article-meta').textContent.toLowerCase();
     
-    let mediaHTML = '';
-    
-    if (post.mediaType === 'image') {
-      mediaHTML = `
-        <div class="post-media image" onclick="openMedia(${post.id})">
-          <img src="${post.mediaUrl}" alt="${post.title}" class="post-image" loading="lazy">
-        </div>
-      `;
-    } else if (post.mediaType === 'carousel') {
-      mediaHTML = `
-        <div class="post-media">
-          <div class="image-carousel">
-            <div class="carousel-track">
-              ${post.carouselImages.map(img => `<img src="${img}" alt="Slide" loading="lazy">`).join('')}
-            </div>
-          </div>
-        </div>
-      `;
-    } else if (post.mediaType === 'audio') {
-      mediaHTML = `
-        <div class="post-media">
-          <div class="custom-audio-player">
-            <button class="play-btn" onclick="toggleAudio(this, ${post.id})">
-              <i class="fas fa-play"></i>
-            </button>
-            <div class="audio-info">
-              <div class="audio-title">${post.audioTitle}</div>
-              <div class="waveform-container" onclick="seekAudio(event, this)">
-                <div class="waveform-progress"></div>
-                <div class="waveform-bars">
-                  ${Array(20).fill(0).map(() => `<div class="waveform-bar" style="height: ${Math.random() * 60 + 20}%"></div>`).join('')}
-                </div>
-              </div>
-              <div class="audio-time">
-                <span class="current-time">0:00</span>
-                <span class="duration">${post.audioDuration}</span>
-              </div>
-            </div>
-            <audio style="display: none;"></audio>
-          </div>
-        </div>
-      `;
-    } else if (post.mediaType === 'pdf') {
-      mediaHTML = `
-        <div class="post-media">
-          <div class="pdf-viewer" onclick="openPDF(${post.id})">
-            <div class="pdf-icon">
-              <i class="fas fa-file-pdf"></i>
-            </div>
-            <div class="pdf-info">
-              <p class="pdf-title">${post.pdfTitle}</p>
-              <p class="pdf-meta">${post.pdfPages} pages • ${post.pdfSize}</p>
-            </div>
-            <button class="pdf-download-btn" onclick="downloadPDF(${post.id}); event.stopPropagation();">
-              <i class="fas fa-download"></i>
-            </button>
-          </div>
-        </div>
-      `;
+    if (title.includes(searchTerm) || meta.includes(searchTerm)) {
+      article.style.display = '';
+    } else {
+      article.style.display = 'none';
     }
-    
-    li.innerHTML = `
-      <div class="post-header">
-        <img src="${post.authorAvatar}" alt="${post.author}" class="post-avatar">
-        <div class="post-author-info">
-          <p class="post-author-name">${post.author}</p>
-          <p class="post-date">${post.date}</p>
-        </div>
-        <button class="post-options-btn" onclick="showPostOptions(${post.id})">
-          <i class="fas fa-ellipsis-h"></i>
-        </button>
-      </div>
-      
-      <div class="post-caption">
-        <h2 class="article-title">${post.title}</h2>
-        <p class="post-description">${post.description}</p>
-      </div>
-      
-      ${mediaHTML}
-      
-      <div class="post-stats">
-        <div class="post-stats-left">
-          <span class="stat-item" onclick="showLikes(${post.id})">
-            <i class="fas fa-heart" style="color: var(--like-color); margin-right: 4px;"></i>
-            ${post.likes}
-          </span>
-        </div>
-        <div class="post-stats-right">
-          <span class="stat-item" onclick="focusComments(${post.id})">${post.comments} comments</span>
-          <span class="stat-item">${post.shares} shares</span>
-        </div>
-      </div>
-      
-      <div class="article-actions">
-        <button class="action-btn" onclick="toggleLike(${post.id})">
-          <i class="far fa-heart"></i>
-          <span>Like</span>
-        </button>
-        <button class="action-btn" onclick="focusComments(${post.id})">
-          <i class="far fa-comment"></i>
-          <span>Comment</span>
-        </button>
-        <button class="action-btn" onclick="sharePost(${post.id})">
-          <i class="far fa-share-square"></i>
-          <span>Share</span>
-        </button>
-        <button class="action-btn" onclick="toggleBookmark(${post.id})">
-          <i class="far fa-bookmark"></i>
-          <span>Save</span>
-        </button>
-      </div>
-      
-      <div class="post-comments" id="comments-${post.id}">
-        <div class="comment-item">
-          <img src="https://ui-avatars.com/api/?name=John+Doe&background=random&size=64" alt="John Doe" class="comment-avatar">
-          <div class="comment-content">
-            <div class="comment-text">
-              <span class="comment-author">John Doe</span>
-              Great insights! Looking forward to reading more.
-            </div>
-            <div class="comment-meta">
-              <span class="comment-time">2h</span>
-              <span class="comment-like">Like</span>
-              <span class="comment-reply">Reply</span>
-            </div>
-          </div>
-        </div>
-        <button class="view-more-comments" onclick="loadMoreComments(${post.id})">
-          View more comments...
-        </button>
-      </div>
-      
-      <div class="comment-input-wrapper">
-        <img src="https://ui-avatars.com/api/?name=You&background=3ea6ff&color=fff&size=64" alt="You" class="comment-input-avatar">
-        <input type="text" class="comment-input" placeholder="Write a comment..." id="comment-input-${post.id}">
-        <button class="comment-submit" onclick="submitComment(${post.id})" disabled>Post</button>
-      </div>
-    `;
-    
-    articleList.appendChild(li);
-    
-    setTimeout(() => {
-      const input = li.querySelector(`#comment-input-${post.id}`);
-      const submitBtn = li.querySelector('.comment-submit');
-      if (input && submitBtn) {
-        input.addEventListener('input', (e) => {
-          submitBtn.disabled = e.target.value.trim() === '';
-        });
-        input.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter' && e.target.value.trim() !== '') {
-            submitComment(post.id);
-          }
-        });
-      }
-    }, 0);
   });
 }
 
-window.toggleLike = function(postId) {
-  const btn = event.currentTarget;
-  const icon = btn.querySelector('i');
-  const isLiked = btn.classList.contains('liked');
+// Show all articles
+function showAllArticles() {
+  const articles = document.querySelectorAll('.article-item');
+  articles.forEach(article => {
+    article.style.display = '';
+  });
+}
+
+// Show libraries view
+function showLibraries() {
+  const navTabs = document.getElementById('navTabs');
+  const listContainer = document.getElementById('listContainer');
   
-  if (isLiked) {
-    btn.classList.remove('liked');
-    icon.className = 'far fa-heart';
+  navTabs.classList.add('show');
+  listContainer.classList.add('with-tabs');
+  
+  // Organize articles by category
+  organizeArticlesByCategory();
+  
+  // Switch to 'all' tab by default
+  switchTab('all');
+}
+
+// Organize articles by category
+function organizeArticlesByCategory() {
+  const mainArticles = document.querySelectorAll('#mainArticleList .article-item');
+  
+  // Clear category sections
+  const categories = ['cardiology', 'neurology', 'oncology', 'immunology', 'genetics'];
+  categories.forEach(cat => {
+    const categoryList = document.getElementById(`${cat}-articles`);
+    if (categoryList) {
+      categoryList.innerHTML = '';
+    }
+  });
+  
+  // Clone articles to their respective categories
+  mainArticles.forEach(article => {
+    const category = article.getAttribute('data-category');
+    if (category) {
+      const categoryList = document.getElementById(`${category}-articles`);
+      if (categoryList) {
+        const clone = article.cloneNode(true);
+        categoryList.appendChild(clone);
+      }
+    }
+  });
+}
+
+// Switch tabs
+function switchTab(tabName) {
+  // Update active tab
+  const tabs = document.querySelectorAll('.nav-tab');
+  tabs.forEach(tab => tab.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  // Show/hide content
+  const mainArticleList = document.getElementById('mainArticleList');
+  const categorySections = document.querySelectorAll('.category-section');
+  
+  if (tabName === 'all') {
+    mainArticleList.classList.remove('hidden');
+    categorySections.forEach(section => section.classList.remove('active'));
   } else {
-    btn.classList.add('liked');
-    icon.className = 'fas fa-heart';
+    mainArticleList.classList.add('hidden');
+    categorySections.forEach(section => {
+      if (section.id === `category-${tabName}`) {
+        section.classList.add('active');
+      } else {
+        section.classList.remove('active');
+      }
+    });
   }
-};
-
-window.toggleBookmark = function(postId) {
-  const btn = event.currentTarget;
-  const icon = btn.querySelector('i');
-  const isBookmarked = btn.classList.contains('bookmarked');
-  
-  if (isBookmarked) {
-    btn.classList.remove('bookmarked');
-    icon.className = 'far fa-bookmark';
-  } else {
-    btn.classList.add('bookmarked');
-    icon.className = 'fas fa-bookmark';
-  }
-};
-
-window.focusComments = function(postId) {
-  const input = document.getElementById(`comment-input-${postId}`);
-  if (input) {
-    input.focus();
-    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-};
-
-window.submitComment = function(postId) {
-  const input = document.getElementById(`comment-input-${postId}`);
-  if (!input || !input.value.trim()) return;
-  
-  const commentsSection = document.getElementById(`comments-${postId}`);
-  const commentHTML = `
-    <div class="comment-item">
-      <img src="https://ui-avatars.com/api/?name=You&background=3ea6ff&color=fff&size=64" alt="You" class="comment-avatar">
-      <div class="comment-content">
-        <div class="comment-text">
-          <span class="comment-author">You</span>
-          ${input.value}
-        </div>
-        <div class="comment-meta">
-          <span class="comment-time">Just now</span>
-          <span class="comment-like">Like</span>
-          <span class="comment-reply">Reply</span>
-        </div>
-      </div>
-    </div>
-  `;
-  
-  const viewMoreBtn = commentsSection.querySelector('.view-more-comments');
-  viewMoreBtn.insertAdjacentHTML('beforebegin', commentHTML);
-  input.value = '';
-  
-  const submitBtn = input.nextElementSibling;
-  if (submitBtn) submitBtn.disabled = true;
-};
-
-window.sharePost = function(postId) {
-  alert(`Sharing post ${postId}...`);
-};
-
-window.showPostOptions = function(postId) {
-  alert(`Options for post ${postId}`);
-};
-
-window.showLikes = function(postId) {
-  alert(`Showing who liked post ${postId}`);
-};
-
-window.loadMoreComments = function(postId) {
-  alert(`Loading more comments for post ${postId}`);
-};
-
-window.openMedia = function(postId) {
-  console.log('Opening media for post:', postId);
-};
-
-window.toggleAudio = function(btn, postId) {
-  const icon = btn.querySelector('i');
-  if (icon.classList.contains('fa-play')) {
-    icon.className = 'fas fa-pause';
-  } else {
-    icon.className = 'fas fa-play';
-  }
-};
-
-window.openPDF = function(postId) {
-  console.log('Opening PDF for post:', postId);
-};
-
-window.downloadPDF = function(postId) {
-  console.log('Downloading PDF for post:', postId);
-};
-
-window.seekAudio = function(event, container) {
-  console.log('Seeking audio');
-};
+}
 
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
@@ -1335,11 +1143,8 @@ if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
 }
 
-function searchArticles() {
-  const searchQuery = prompt('Search posts:');
-  if (searchQuery && searchQuery.trim()) {
-    alert(`Searching for: "${searchQuery}"`);
-  }
+function openArticle(url) {
+  window.location.href = 'https://' + url;
 }
 
 function toggleUserMenu() {
@@ -1347,23 +1152,67 @@ function toggleUserMenu() {
   dropdown.classList.toggle('show');
 }
 
+// Close dropdown when clicking outside
 document.addEventListener('click', function(event) {
   const userMenu = document.querySelector('.user-menu');
   const dropdown = document.getElementById('userMenuDropdown');
+  
   if (userMenu && !userMenu.contains(event.target)) {
     dropdown.classList.remove('show');
   }
 });
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    generateStories();
-    generatePosts();
-  });
+// Close search when clicking outside
+document.addEventListener('click', function(event) {
+  const searchContainer = document.getElementById('searchContainer');
+  const searchBtn = event.target.closest('[onclick="toggleSearch()"]');
+  
+  if (searchContainer.classList.contains('show') && 
+      !searchContainer.contains(event.target) && 
+      !searchBtn) {
+    toggleSearch();
+  }
+});
+
+// Count articles and update footer
+const articleCount = document.querySelectorAll('.article-item').length;
+document.getElementById('articleCount').textContent = articleCount;
+
+// Get user location
+if ("geolocation" in navigator) {
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
+        .then(response => response.json())
+        .then(data => {
+          const city = data.address.city || data.address.town || data.address.village || '';
+          const state = data.address.state || '';
+          const country = data.address.country || '';
+          
+          let locationText = [city, state, country].filter(Boolean).join(', ');
+          document.getElementById('userLocation').textContent = locationText || 'Location unavailable';
+        })
+        .catch(() => {
+          document.getElementById('userLocation').textContent = 'Location unavailable';
+        });
+    },
+    function() {
+      document.getElementById('userLocation').textContent = 'Location access denied';
+    }
+  );
 } else {
-  generateStories();
-  generatePosts();
+  document.getElementById('userLocation').textContent = 'Geolocation not supported';
 }
+
+// Make functions globally available
+window.toggleSearch = toggleSearch;
+window.handleSearch = handleSearch;
+window.showLibraries = showLibraries;
+window.switchTab = switchTab;
+window.toggleTheme = toggleTheme;
+window.openArticle = openArticle;
+window.toggleUserMenu = toggleUserMenu;
 </script>
+
 </body>
 </html>
