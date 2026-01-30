@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -90,519 +89,448 @@ body.light-theme .logo-img {
 .icon-btn:hover {
   background: var(--hover-bg);
 }
-
-/* Search Bar Styles */
-.search-container {
-position: fixed;
-top: calc(65px + env(safe-area-inset-top));
-left: 0;
-right: 0;
-background: var(–bg-color);
-border-bottom: 1px solid var(–border-color);
-padding: 16px 24px;
-z-index: 35;
-display: none;
-animation: slideDown 0.3s ease;
-}
-
-.search-container.show {
-display: block;
-}
-
-@keyframes slideDown {
-from {
-opacity: 0;
-transform: translateY(-10px);
-}
-to {
-opacity: 1;
-transform: translateY(0);
-}
-}
-
-.search-input-wrapper {
-display: flex;
-align-items: center;
-gap: 12px;
-max-width: 900px;
-margin: 0 auto;
-}
-
-.search-input {
-flex: 1;
-padding: 12px 16px;
-background: var(–hover-bg);
-border: 1px solid var(–border-color);
-border-radius: 24px;
-color: var(–text-primary);
-font-size: 16px;
-outline: none;
-transition: border-color 0.2s ease;
-}
-
-.search-input:focus {
-border-color: var(–accent);
-}
-
-.search-input::placeholder {
-color: var(–text-secondary);
-}
-
-.search-close-btn {
-background: transparent;
-border: none;
-color: var(–text-secondary);
-cursor: pointer;
-font-size: 14px;
-padding: 8px 16px;
-border-radius: 16px;
-transition: background 0.2s ease;
-}
-
-.search-close-btn:hover {
-background: var(–hover-bg);
-color: var(–text-primary);
-}
-
 .auth-buttons {
-display: none;
-gap: 12px;
+  display: none;
+  gap: 12px;
 }
 .auth-buttons.show {
-display: flex;
+  display: flex;
 }
 .btn-login, .btn-signup {
-padding: 8px 20px;
-border-radius: 20px;
-font-size: 14px;
-font-weight: 500;
-cursor: pointer;
-transition: all 0.2s ease;
-text-decoration: none;
-border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: none;
 }
 .btn-login {
-background: transparent;
-color: var(–text-primary);
-border: 1px solid var(–border-color);
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 .btn-login:hover {
-background: var(–hover-bg);
+  background: var(--hover-bg);
 }
 .btn-signup {
-background: var(–accent);
-color: white;
+  background: var(--accent);
+  color: white;
 }
 .btn-signup:hover {
-opacity: 0.9;
-transform: translateY(-1px);
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 .user-welcome {
-display: none;
-align-items: center;
-gap: 12px;
-font-size: 14px;
-color: var(–text-primary);
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-primary);
 }
 .user-welcome.show {
-display: flex;
+  display: flex;
 }
 .user-menu {
-position: relative;
+  position: relative;
 }
 .user-menu-dropdown {
-position: absolute;
-top: 50px;
-right: 0;
-background: var(–bg-color);
-border: 1px solid var(–border-color);
-border-radius: 8px;
-padding: 8px 0;
-min-width: 180px;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-display: none;
-z-index: 1000;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none;
+  z-index: 1000;
 }
 .user-menu-dropdown.show {
-display: block;
+  display: block;
 }
 .user-menu-item {
-padding: 10px 16px;
-cursor: pointer;
-transition: background 0.2s ease;
-display: flex;
-align-items: center;
-gap: 10px;
-color: var(–text-primary);
-font-size: 14px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+  font-size: 14px;
 }
 .user-menu-item:hover {
-background: var(–hover-bg);
+  background: var(--hover-bg);
 }
 .user-menu-item i {
-width: 16px;
+  width: 16px;
+}
+
+/* Search Bar */
+.search-bar-container {
+  position: fixed;
+  top: calc(65px + env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  background: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 24px;
+  z-index: 35;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+.search-bar-container.show {
+  transform: translateY(0);
+}
+.search-bar-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.search-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--hover-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  color: var(--text-primary);
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.search-input:focus {
+  border-color: var(--accent);
+}
+.search-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-close-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Libraries Section */
+.libraries-container {
+  position: fixed;
+  top: calc(65px + env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-color);
+  z-index: 35;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  padding: 24px;
+}
+.libraries-container.show {
+  transform: translateY(0);
+}
+.libraries-header {
+  max-width: 900px;
+  margin: 0 auto 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.libraries-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0;
+}
+.libraries-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 28px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.libraries-close-btn:hover {
+  color: var(--text-primary);
+}
+.categories-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding-bottom: 40px;
+}
+.category-card {
+  background: var(--hover-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent);
+}
+.category-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+.category-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.category-count {
+  font-size: 14px;
+  color: var(--text-secondary);
 }
 
 /* Stories Preview Section */
 .stories-container {
-position: fixed;
-top: calc(65px + env(safe-area-inset-top));
-left: 0;
-right: 0;
-z-index: 30;
-background: var(–bg-color);
-border-bottom: 1px solid var(–border-color);
-padding: 16px 0;
-overflow-x: auto;
-overflow-y: hidden;
--webkit-overflow-scrolling: touch;
-scrollbar-width: none;
+  position: fixed;
+  top: calc(65px + env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  z-index: 30;
+  background: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 
 .stories-container::-webkit-scrollbar {
-display: none;
+  display: none;
 }
 
 .stories-wrapper {
-display: flex;
-gap: 16px;
-padding: 0 24px;
-width: max-content;
+  display: flex;
+  gap: 16px;
+  padding: 0 24px;
+  width: max-content;
 }
 
 .story-item {
-flex-shrink: 0;
-display: flex;
-flex-direction: column;
-align-items: center;
-cursor: pointer;
-transition: transform 0.2s ease;
-width: 70px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 70px;
 }
 
 .story-item:hover {
-transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .story-avatar-wrapper {
-position: relative;
-width: 64px;
-height: 64px;
-border-radius: 50%;
-padding: 3px;
-background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
-background-size: 200% 200%;
-animation: gradientShift 3s ease infinite;
-will-change: background-position;
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+  will-change: background-position;
 }
 
 @keyframes gradientShift {
-0%, 100% { background-position: 0% 50%; }
-50% { background-position: 100% 50%; }
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .story-avatar {
-width: 100%;
-height: 100%;
-border-radius: 50%;
-object-fit: cover;
-background: var(–bg-color);
-padding: 2px;
-display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-color);
+  padding: 2px;
+  display: block;
 }
 
 .story-username {
-margin-top: 6px;
-font-size: 12px;
-color: var(–text-secondary);
-text-align: center;
-max-width: 70px;
-overflow: hidden;
-text-overflow: ellipsis;
-white-space: nowrap;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .story-item.new .story-avatar-wrapper {
-background: var(–border-color);
+  background: var(--border-color);
 }
 
 .story-item.new .story-avatar-wrapper::after {
-content: ‘+’;
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-font-size: 24px;
-color: var(–text-primary);
-font-weight: 300;
-z-index: 1;
+  content: '+';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: var(--text-primary);
+  font-weight: 300;
+  z-index: 1;
 }
 
 body.light-theme .story-avatar-wrapper {
-background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
 }
 
 body.light-theme .story-item.new .story-avatar-wrapper {
-background: var(–border-color);
-}
-
-/* Navigation Tabs */
-.nav-tabs {
-position: fixed;
-top: calc(65px + env(safe-area-inset-top) + 100px);
-left: 0;
-right: 0;
-background: var(–bg-color);
-border-bottom: 1px solid var(–border-color);
-z-index: 25;
-display: none;
-}
-
-.nav-tabs.show {
-display: block;
-}
-
-.nav-tabs-wrapper {
-max-width: 900px;
-margin: 0 auto;
-display: flex;
-gap: 0;
-padding: 0 24px;
-overflow-x: auto;
--webkit-overflow-scrolling: touch;
-scrollbar-width: none;
-}
-
-.nav-tabs-wrapper::-webkit-scrollbar {
-display: none;
-}
-
-.nav-tab {
-padding: 16px 24px;
-background: transparent;
-border: none;
-color: var(–text-secondary);
-cursor: pointer;
-font-size: 14px;
-font-weight: 500;
-white-space: nowrap;
-position: relative;
-transition: color 0.2s ease;
-}
-
-.nav-tab:hover {
-color: var(–text-primary);
-}
-
-.nav-tab.active {
-color: var(–text-primary);
-}
-
-.nav-tab.active::after {
-content: ‘’;
-position: absolute;
-bottom: 0;
-left: 0;
-right: 0;
-height: 2px;
-background: var(–accent);
+  background: var(--border-color);
 }
 
 .list-container {
-max-width: 900px;
-width: 100%;
-margin: 0 auto;
-padding: 24px 24px 80px;
-padding-top: calc(65px + env(safe-area-inset-top) + 100px);
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 24px 80px;
+  padding-top: calc(65px + env(safe-area-inset-top) + 100px);
 }
-
-.list-container.with-tabs {
-padding-top: calc(65px + env(safe-area-inset-top) + 100px + 60px);
-}
-
-/* Category Section */
-.category-section {
-margin-bottom: 48px;
-display: none;
-}
-
-.category-section.active {
-display: block;
-}
-
-.category-title {
-font-family: ‘Times New Roman’, Times, serif;
-font-size: 32px;
-font-weight: bold;
-margin: 0 0 24px 0;
-color: var(–text-primary);
-padding-bottom: 12px;
-border-bottom: 2px solid var(–border-color);
-}
-
 .article-list {
-list-style: none;
-margin: 0;
-padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 .article-item {
-padding: 24px 0;
-border-bottom: 1px solid var(–border-color);
-cursor: pointer;
-transition: background 0.2s ease;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.article-item.hidden {
+  display: none;
 }
 .article-item:hover {
-background: var(–hover-bg);
-margin: 0 -12px;
-padding: 24px 12px;
+  background: var(--hover-bg);
+  margin: 0 -12px;
+  padding: 24px 12px;
 }
 .article-title {
-font-family: ‘Times New Roman’, Times, serif;
-font-size: 42px;
-font-weight: bold;
-margin: 0 0 8px 0;
-line-height: 1.2;
-color: var(–text-primary);
-word-wrap: break-word;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 42px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+  color: var(--text-primary);
+  word-wrap: break-word;
 }
 .article-item:hover .article-title {
-color: var(–accent);
+  color: var(--accent);
 }
 .article-meta {
-font-size: 14px;
-color: var(–text-secondary);
-display: flex;
-align-items: center;
-gap: 8px;
-flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .meta-dot {
-width: 3px;
-height: 3px;
-background: var(–text-secondary);
-border-radius: 50%;
+  width: 3px;
+  height: 3px;
+  background: var(--text-secondary);
+  border-radius: 50%;
 }
-
-.article-category-badge {
-display: inline-block;
-padding: 4px 12px;
-background: var(–hover-bg);
-color: var(–accent);
-border-radius: 12px;
-font-size: 12px;
-font-weight: 500;
-margin-left: 8px;
-}
-
 .footer {
-background: var(–bg-color);
-border-top: 1px solid var(–border-color);
-padding: 24px;
-text-align: center;
-color: var(–text-secondary);
-font-size: 14px;
-line-height: 1.6;
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
 }
 .footer-stats {
-margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 .article-count {
-color: var(–accent-green);
-font-weight: 600;
+  color: var(--accent-green);
+  font-weight: 600;
 }
 .footer-tagline {
-margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 .footer-location {
-font-size: 13px;
-color: var(–text-secondary);
-opacity: 0.8;
+  font-size: 13px;
+  color: var(--text-secondary);
+  opacity: 0.8;
 }
 @media (max-width: 768px) {
-.search-container {
-padding: 12px 16px;
-}
+  .stories-container {
+    padding: 12px 0;
+  }
 
-.search-input {
-font-size: 14px;
-padding: 10px 14px;
-}
+  .stories-wrapper {
+    padding: 0 16px;
+    gap: 12px;
+  }
 
-.stories-container {
-padding: 12px 0;
-}
+  .story-item {
+    width: 60px;
+  }
 
-.stories-wrapper {
-padding: 0 16px;
-gap: 12px;
-}
+  .story-avatar-wrapper {
+    width: 56px;
+    height: 56px;
+  }
 
-.story-item {
-width: 60px;
-}
+  .story-username {
+    font-size: 11px;
+    max-width: 60px;
+  }
 
-.story-avatar-wrapper {
-width: 56px;
-height: 56px;
-}
-
-.story-username {
-font-size: 11px;
-max-width: 60px;
-}
-
-.nav-tabs-wrapper {
-padding: 0 16px;
-}
-
-.nav-tab {
-padding: 14px 20px;
-font-size: 13px;
-}
-
-.list-container {
-padding: 16px 16px 80px;
-padding-top: calc(65px + env(safe-area-inset-top) + 90px);
-}
-
-.list-container.with-tabs {
-padding-top: calc(65px + env(safe-area-inset-top) + 90px + 55px);
-}
-
-.category-title {
-font-size: 24px;
-margin-bottom: 20px;
-}
-
-.article-title {
-font-size: 32px;
-}
-.article-meta {
-font-size: 13px;
-}
-.footer {
-padding: 20px 16px;
-font-size: 13px;
-}
-.auth-buttons {
-gap: 8px;
-}
-.btn-login, .btn-signup {
-padding: 6px 16px;
-font-size: 13px;
-}
-}
-
-/* Hide articles when not in ‘all’ view */
-.main-article-list {
-display: block;
-}
-
-.main-article-list.hidden {
-display: none;
+  .list-container {
+    padding: 16px 16px 80px;
+    padding-top: calc(65px + env(safe-area-inset-top) + 90px);
+  }
+  .article-title {
+    font-size: 32px;
+  }
+  .article-meta {
+    font-size: 13px;
+  }
+  .footer {
+    padding: 20px 16px;
+    font-size: 13px;
+  }
+  .auth-buttons {
+    gap: 8px;
+  }
+  .btn-login, .btn-signup {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
+  .libraries-title {
+    font-size: 24px;
+  }
 }
 </style>
-
 </head>
 <body>
 
@@ -610,6 +538,9 @@ display: none;
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
+      <button class="icon-btn" onclick="toggleLibraries()" title="Libraries">
+        <i class="fas fa-th"></i>
+      </button>
       <button class="icon-btn" onclick="toggleSearch()" title="Search">
         <i class="fas fa-search"></i>
       </button>
@@ -618,17 +549,12 @@ display: none;
       </button>
 
   <!-- Auth buttons (shown when logged out) -->
-
   <div class="auth-buttons" id="authButtons">
     <a href="login.html" class="btn-login">Log In</a>
   </div>
-
+  
   <!-- User menu (shown when logged in) -->
-
   <div class="user-welcome" id="userWelcome">
-    <button class="icon-btn" onclick="showLibraries()" title="Libraries">
-      <i class="fas fa-layer-group"></i>
-    </button>
     <div class="user-menu">
       <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
         <i class="fas fa-user"></i>
@@ -655,47 +581,72 @@ display: none;
 </div>
 
 <!-- Search Bar -->
+<div class="search-bar-container" id="searchBarContainer">
+  <div class="search-bar-wrapper">
+    <input type="text" class="search-input" id="searchInput" placeholder="Search articles..." onkeyup="filterArticles()">
+    <button class="search-close-btn" onclick="toggleSearch()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+</div>
 
-<div class="search-container" id="searchContainer">
-  <div class="search-input-wrapper">
-    <input 
-      type="text" 
-      class="search-input" 
-      id="searchInput" 
-      placeholder="Search articles..."
-      onkeyup="handleSearch(event)"
-    >
-    <button class="search-close-btn" onclick="toggleSearch()">Cancel</button>
+<!-- Libraries Section -->
+<div class="libraries-container" id="librariesContainer">
+  <div class="libraries-header">
+    <h2 class="libraries-title">Libraries</h2>
+    <button class="libraries-close-btn" onclick="toggleLibraries()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="categories-grid">
+    <div class="category-card" onclick="filterByCategory('Cardiology')">
+      <div class="category-icon">❤️</div>
+      <div class="category-name">Cardiology</div>
+      <div class="category-count">4 articles</div>
+    </div>
+    <div class="category-card" onclick="filterByCategory('Neurology')">
+      <div class="category-icon">🧠</div>
+      <div class="category-name">Neurology</div>
+      <div class="category-count">1 article</div>
+    </div>
+    <div class="category-card" onclick="filterByCategory('Oncology')">
+      <div class="category-icon">🔬</div>
+      <div class="category-name">Oncology</div>
+      <div class="category-count">2 articles</div>
+    </div>
+    <div class="category-card" onclick="filterByCategory('Immunology')">
+      <div class="category-icon">🛡️</div>
+      <div class="category-name">Immunology</div>
+      <div class="category-count">2 articles</div>
+    </div>
+    <div class="category-card" onclick="filterByCategory('Genetics')">
+      <div class="category-icon">🧬</div>
+      <div class="category-name">Genetics</div>
+      <div class="category-count">2 articles</div>
+    </div>
+    <div class="category-card" onclick="filterByCategory('Clinical')">
+      <div class="category-icon">🏥</div>
+      <div class="category-name">Clinical Studies</div>
+      <div class="category-count">4 articles</div>
+    </div>
+    <div class="category-card" onclick="filterByCategory('All')">
+      <div class="category-icon">📚</div>
+      <div class="category-name">All Articles</div>
+      <div class="category-count">15 articles</div>
+    </div>
   </div>
 </div>
 
 <!-- Stories Preview Section -->
-
 <div class="stories-container" id="storiesContainer">
   <div class="stories-wrapper" id="storiesWrapper">
     <!-- Stories will be dynamically generated -->
   </div>
 </div>
 
-<!-- Navigation Tabs -->
-
-<div class="nav-tabs" id="navTabs">
-  <div class="nav-tabs-wrapper">
-    <button class="nav-tab active" onclick="switchTab('all')">All Articles</button>
-    <button class="nav-tab" onclick="switchTab('cardiology')">Cardiology</button>
-    <button class="nav-tab" onclick="switchTab('neurology')">Neurology</button>
-    <button class="nav-tab" onclick="switchTab('oncology')">Oncology</button>
-    <button class="nav-tab" onclick="switchTab('immunology')">Immunology</button>
-    <button class="nav-tab" onclick="switchTab('genetics')">Genetics</button>
-  </div>
-</div>
-
-<div class="list-container" id="listContainer">
-
-  <!-- Main Article List (All Articles) -->
-
-  <ul class="article-list main-article-list" id="mainArticleList">
-    <li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+<div class="list-container">
+  <ul class="article-list">
+    <li class="article-item" data-category="Cardiology" onclick="openArticle('patholytica.com/library')">
       <h2 class="article-title">Understanding Cardiovascular Pathology: A Comprehensive Review</h2>
       <div class="article-meta">
         <span>Dr. Sarah Mitchell</span>
@@ -706,8 +657,7 @@ display: none;
       </div>
     </li>
 
-```
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="neurology">
+<li class="article-item" data-category="Neurology" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
   <div class="article-meta">
     <span>Dr. James Chen</span>
@@ -718,7 +668,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="oncology">
+<li class="article-item" data-category="Oncology" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
   <div class="article-meta">
     <span>Dr. Emily Rodriguez</span>
@@ -729,7 +679,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="immunology">
+<li class="article-item" data-category="Immunology" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
   <div class="article-meta">
     <span>Dr. Robert Kim</span>
@@ -740,7 +690,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="genetics">
+<li class="article-item" data-category="Genetics" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
   <div class="article-meta">
     <span>Dr. Lisa Zhang</span>
@@ -751,7 +701,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+<li class="article-item" data-category="Cardiology" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
   <div class="article-meta">
     <span>Dr. Robert Kim</span>
@@ -762,7 +712,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+<li class="article-item" data-category="Cardiology" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
   <div class="article-meta">
     <span>Dr. Lisa Zhang</span>
@@ -773,7 +723,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+<li class="article-item" data-category="Cardiology" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
   <div class="article-meta">
     <span>Dr. Michael Johnson</span>
@@ -784,7 +734,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+<li class="article-item" data-category="Clinical" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
   <div class="article-meta">
     <span>Dr. Michael Johnson</span>
@@ -795,7 +745,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="cardiology">
+<li class="article-item" data-category="Clinical" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
   <div class="article-meta">
     <span>Dr. Anna Williams</span>
@@ -806,7 +756,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="oncology">
+<li class="article-item" data-category="Clinical" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
   <div class="article-meta">
     <span>Dr. David Park</span>
@@ -817,7 +767,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="neurology">
+<li class="article-item" data-category="Clinical" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
   <div class="article-meta">
     <span>Dr. Rachel Green</span>
@@ -828,7 +778,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="genetics">
+<li class="article-item" data-category="Genetics" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
   <div class="article-meta">
     <span>Dr. Thomas Anderson</span>
@@ -839,7 +789,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="immunology">
+<li class="article-item" data-category="Immunology" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
   <div class="article-meta">
     <span>Dr. Rachel Green</span>
@@ -850,7 +800,7 @@ display: none;
   </div>
 </li>
 
-<li class="article-item" onclick="openArticle('patholytica.com/library')" data-category="immunology">
+<li class="article-item" data-category="Oncology" onclick="openArticle('patholytica.com/library')">
   <h2 class="article-title">The Role of Microbiome in Human Health</h2>
   <div class="article-meta">
     <span>Dr. Jennifer Lee</span>
@@ -860,37 +810,8 @@ display: none;
     <span>9 min read</span>
   </div>
 </li>
-```
 
   </ul>
-
-  <!-- Category Sections (hidden by default) -->
-
-  <div class="category-section" id="category-cardiology">
-    <h2 class="category-title">Cardiology</h2>
-    <ul class="article-list" id="cardiology-articles"></ul>
-  </div>
-
-  <div class="category-section" id="category-neurology">
-    <h2 class="category-title">Neurology</h2>
-    <ul class="article-list" id="neurology-articles"></ul>
-  </div>
-
-  <div class="category-section" id="category-oncology">
-    <h2 class="category-title">Oncology</h2>
-    <ul class="article-list" id="oncology-articles"></ul>
-  </div>
-
-  <div class="category-section" id="category-immunology">
-    <h2 class="category-title">Immunology</h2>
-    <ul class="article-list" id="immunology-articles"></ul>
-  </div>
-
-  <div class="category-section" id="category-genetics">
-    <h2 class="category-title">Genetics</h2>
-    <ul class="article-list" id="genetics-articles"></ul>
-  </div>
-
 </div>
 
 <footer class="footer">
@@ -941,11 +862,11 @@ onAuthStateChanged(auth, async (user) => {
   const userWelcome = document.getElementById('userWelcome');
   
   if (user) {
-    // User is logged in - show user menu
+    // User is logged in
     authButtons.classList.remove('show');
     userWelcome.classList.add('show');
   } else {
-    // User is logged out - show auth buttons
+    // User is logged out
     authButtons.classList.add('show');
     userWelcome.classList.remove('show');
   }
@@ -1026,114 +947,6 @@ if (document.readyState === 'loading') {
   generateStories();
 }
 
-// Toggle search bar
-function toggleSearch() {
-  const searchContainer = document.getElementById('searchContainer');
-  const searchInput = document.getElementById('searchInput');
-  
-  searchContainer.classList.toggle('show');
-  
-  if (searchContainer.classList.contains('show')) {
-    searchInput.focus();
-  } else {
-    searchInput.value = '';
-    // Reset article visibility
-    showAllArticles();
-  }
-}
-
-// Handle search
-function handleSearch(event) {
-  const searchTerm = event.target.value.toLowerCase();
-  const articles = document.querySelectorAll('.article-item');
-  
-  articles.forEach(article => {
-    const title = article.querySelector('.article-title').textContent.toLowerCase();
-    const meta = article.querySelector('.article-meta').textContent.toLowerCase();
-    
-    if (title.includes(searchTerm) || meta.includes(searchTerm)) {
-      article.style.display = '';
-    } else {
-      article.style.display = 'none';
-    }
-  });
-}
-
-// Show all articles
-function showAllArticles() {
-  const articles = document.querySelectorAll('.article-item');
-  articles.forEach(article => {
-    article.style.display = '';
-  });
-}
-
-// Show libraries view
-function showLibraries() {
-  const navTabs = document.getElementById('navTabs');
-  const listContainer = document.getElementById('listContainer');
-  
-  navTabs.classList.add('show');
-  listContainer.classList.add('with-tabs');
-  
-  // Organize articles by category
-  organizeArticlesByCategory();
-  
-  // Switch to 'all' tab by default
-  switchTab('all');
-}
-
-// Organize articles by category
-function organizeArticlesByCategory() {
-  const mainArticles = document.querySelectorAll('#mainArticleList .article-item');
-  
-  // Clear category sections
-  const categories = ['cardiology', 'neurology', 'oncology', 'immunology', 'genetics'];
-  categories.forEach(cat => {
-    const categoryList = document.getElementById(`${cat}-articles`);
-    if (categoryList) {
-      categoryList.innerHTML = '';
-    }
-  });
-  
-  // Clone articles to their respective categories
-  mainArticles.forEach(article => {
-    const category = article.getAttribute('data-category');
-    if (category) {
-      const categoryList = document.getElementById(`${category}-articles`);
-      if (categoryList) {
-        const clone = article.cloneNode(true);
-        categoryList.appendChild(clone);
-      }
-    }
-  });
-}
-
-// Switch tabs
-function switchTab(tabName) {
-  // Update active tab
-  const tabs = document.querySelectorAll('.nav-tab');
-  tabs.forEach(tab => tab.classList.remove('active'));
-  event.target.classList.add('active');
-  
-  // Show/hide content
-  const mainArticleList = document.getElementById('mainArticleList');
-  const categorySections = document.querySelectorAll('.category-section');
-  
-  if (tabName === 'all') {
-    mainArticleList.classList.remove('hidden');
-    categorySections.forEach(section => section.classList.remove('active'));
-  } else {
-    mainArticleList.classList.add('hidden');
-    categorySections.forEach(section => {
-      if (section.id === `category-${tabName}`) {
-        section.classList.add('active');
-      } else {
-        section.classList.remove('active');
-      }
-    });
-  }
-}
-
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
   localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
@@ -1145,6 +958,68 @@ if (localStorage.getItem("theme") === "light") {
 
 function openArticle(url) {
   window.location.href = 'https://' + url;
+}
+
+function toggleSearch() {
+  const searchBar = document.getElementById('searchBarContainer');
+  const searchInput = document.getElementById('searchInput');
+  const librariesContainer = document.getElementById('librariesContainer');
+  
+  // Close libraries if open
+  librariesContainer.classList.remove('show');
+  
+  searchBar.classList.toggle('show');
+  
+  if (searchBar.classList.contains('show')) {
+    setTimeout(() => searchInput.focus(), 300);
+  } else {
+    searchInput.value = '';
+    filterArticles(); // Reset filter
+  }
+}
+
+function toggleLibraries() {
+  const librariesContainer = document.getElementById('librariesContainer');
+  const searchBar = document.getElementById('searchBarContainer');
+  
+  // Close search if open
+  searchBar.classList.remove('show');
+  
+  librariesContainer.classList.toggle('show');
+}
+
+function filterArticles() {
+  const searchInput = document.getElementById('searchInput');
+  const searchTerm = searchInput.value.toLowerCase();
+  const articles = document.querySelectorAll('.article-item');
+  
+  articles.forEach(article => {
+    const title = article.querySelector('.article-title').textContent.toLowerCase();
+    const meta = article.querySelector('.article-meta').textContent.toLowerCase();
+    
+    if (title.includes(searchTerm) || meta.includes(searchTerm)) {
+      article.classList.remove('hidden');
+    } else {
+      article.classList.add('hidden');
+    }
+  });
+}
+
+function filterByCategory(category) {
+  const articles = document.querySelectorAll('.article-item');
+  
+  articles.forEach(article => {
+    const articleCategory = article.getAttribute('data-category');
+    
+    if (category === 'All' || articleCategory === category) {
+      article.classList.remove('hidden');
+    } else {
+      article.classList.add('hidden');
+    }
+  });
+  
+  // Close libraries panel after selection
+  toggleLibraries();
 }
 
 function toggleUserMenu() {
@@ -1162,15 +1037,18 @@ document.addEventListener('click', function(event) {
   }
 });
 
-// Close search when clicking outside
-document.addEventListener('click', function(event) {
-  const searchContainer = document.getElementById('searchContainer');
-  const searchBtn = event.target.closest('[onclick="toggleSearch()"]');
-  
-  if (searchContainer.classList.contains('show') && 
-      !searchContainer.contains(event.target) && 
-      !searchBtn) {
-    toggleSearch();
+// Close search and libraries with Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    const searchBar = document.getElementById('searchBarContainer');
+    const librariesContainer = document.getElementById('librariesContainer');
+    
+    if (searchBar.classList.contains('show')) {
+      toggleSearch();
+    }
+    if (librariesContainer.classList.contains('show')) {
+      toggleLibraries();
+    }
   }
 });
 
@@ -1203,15 +1081,6 @@ if ("geolocation" in navigator) {
 } else {
   document.getElementById('userLocation').textContent = 'Geolocation not supported';
 }
-
-// Make functions globally available
-window.toggleSearch = toggleSearch;
-window.handleSearch = handleSearch;
-window.showLibraries = showLibraries;
-window.switchTab = switchTab;
-window.toggleTheme = toggleTheme;
-window.openArticle = openArticle;
-window.toggleUserMenu = toggleUserMenu;
 </script>
 
 </body>
