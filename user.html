@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Patholytica — Library</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -48,642 +51,806 @@ body {
 
 /* ABSOLUTELY STATIC Fixed Background Image - NO SCROLL */
 .background-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: -1;
-  overflow: hidden;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100vh;
+z-index: -1;
+overflow: hidden;
 }
+
 .background-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  opacity: 0.3;
-  pointer-events: none;
-  transition: opacity 0.5s ease;
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-size: cover;
+background-position: center center;
+background-repeat: no-repeat;
+opacity: 0.3;
+pointer-events: none;
+transition: opacity 0.5s ease;
 }
+
 /* Background always darkened - dark overlay */
 .background-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.1);
-  pointer-events: none;
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.1);
+pointer-events: none;
 }
 
 .header-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: rgba(15, 15, 15, 0.95);
-  backdrop-filter: blur(10px);
-  padding-top: env(safe-area-inset-top);
-  border-bottom: 1px solid var(--border-color);
-  z-index: 40;
-  width: 100%;
-  transition: transform 0.3s ease;
-}
-body.light-theme .header-wrapper {
-  background: rgba(255, 255, 255, 0.95);
-}
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 24px;
-  max-width: 100%;
-  margin: 0 auto;
-}
-.logo-img {
-  height: 28px;
-  width: auto;
-  transition: filter 0.2s ease;
-  cursor: pointer;
-}
-body.light-theme .logo-img {
-  filter: invert(1);
-}
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.icon-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  transition: background 0.2s ease;
-}
-.icon-btn:hover {
-  background: var(--hover-bg);
-}
-.auth-buttons {
-  display: none;
-  gap: 12px;
-}
-.auth-buttons.show {
-  display: flex;
-}
-.btn-login, .btn-signup {
-  padding: 8px 20px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  border: none;
-}
-.btn-login {
-  background: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-}
-.btn-login:hover {
-  background: var(--hover-bg);
-}
-.btn-signup {
-  background: var(--accent);
-  color: white;
-}
-.btn-signup:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-.user-welcome {
-  display: none;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: var(--text-primary);
-}
-.user-welcome.show {
-  display: flex;
-}
-.welcome-text {
-  font-weight: 500;
-}
-.user-menu {
-  position: relative;
-}
-.user-menu-dropdown {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background: rgba(15, 15, 15, 0.98);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 8px 0;
-  min-width: 180px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: none;
-  z-index: 1000;
-}
-body.light-theme .user-menu-dropdown {
-  background: rgba(255, 255, 255, 0.98);
-}
-.user-menu-dropdown.show {
-  display: block;
-}
-.user-menu-item {
-  padding: 10px 16px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text-primary);
-  font-size: 14px;
-}
-.user-menu-item:hover {
-  background: var(--hover-bg);
-}
-.user-menu-item i {
-  width: 16px;
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+background: var(--bg-color);
+padding-top: env(safe-area-inset-top);
+border-bottom: 1px solid var(--border-color);
+z-index: 40;
+width: 100%;
 }
 
-/* Floating Search Bar - Below Header */
+.header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 12px 24px;
+max-width: 100%;
+margin: 0 auto;
+}
+.logo-img {
+height: 28px;
+width: auto;
+transition: filter 0.2s ease;
+cursor: pointer;
+}
+body.light-theme .logo-img {
+filter: invert(1);
+}
+.header-actions {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.icon-btn {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: transparent;
+border: none;
+color: var(--text-primary);
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 18px;
+transition: background 0.2s ease;
+}
+.icon-btn:hover {
+background: var(--hover-bg);
+}
+.auth-buttons {
+display: none;
+gap: 12px;
+}
+.auth-buttons.show {
+display: flex;
+}
+.btn-login, .btn-signup {
+padding: 8px 20px;
+border-radius: 20px;
+font-size: 14px;
+font-weight: 500;
+cursor: pointer;
+transition: all 0.2s ease;
+text-decoration: none;
+border: none;
+}
+.btn-login {
+background: transparent;
+color: var(--text-primary);
+border: 1px solid var(--border-color);
+}
+.btn-login:hover {
+background: var(--hover-bg);
+}
+.btn-signup {
+background: var(--accent);
+color: white;
+}
+.btn-signup:hover {
+opacity: 0.9;
+transform: translateY(-1px);
+}
+.user-welcome {
+display: none;
+align-items: center;
+gap: 12px;
+font-size: 14px;
+color: var(--text-primary);
+}
+.user-welcome.show {
+display: flex;
+}
+.welcome-text {
+font-weight: 500;
+}
+.user-menu {
+position: relative;
+}
+.user-menu-dropdown {
+position: absolute;
+top: 50px;
+right: 0;
+background: var(--bg-color);
+border: 1px solid var(--border-color);
+border-radius: 8px;
+padding: 8px 0;
+min-width: 180px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+display: none;
+z-index: 1000;
+}
+
+.user-menu-dropdown.show {
+display: block;
+}
+.user-menu-item {
+padding: 10px 16px;
+cursor: pointer;
+transition: background 0.2s ease;
+display: flex;
+align-items: center;
+gap: 10px;
+color: var(--text-primary);
+font-size: 14px;
+}
+.user-menu-item:hover {
+background: var(--hover-bg);
+}
+.user-menu-item i {
+width: 16px;
+}
+
+/* Search Backdrop Overlay */
+.search-backdrop {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.5);
+backdrop-filter: blur(4px);
+z-index: 45;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s ease;
+}
+
+.search-backdrop.active {
+opacity: 1;
+pointer-events: auto;
+}
+
+body.light-theme .search-backdrop {
+background: rgba(0, 0, 0, 0.3);
+}
+
+/* Hidden Search Bar - Shown when search button is clicked */
 .search-container {
-  position: fixed;
-  top: calc(65px + env(safe-area-inset-top) + 16px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 35;
-  width: 90%;
-  max-width: 600px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+position: fixed;
+top: calc(65px + env(safe-area-inset-top) + 16px);
+left: 50%;
+transform: translateX(-50%) translateY(-100px);
+z-index: 50;
+width: 90%;
+max-width: 600px;
+opacity: 0;
+pointer-events: none;
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.search-container.hidden {
-  transform: translateX(-50%) translateY(-80px);
-  opacity: 0;
-  pointer-events: none;
+
+.search-container.active {
+transform: translateX(-50%) translateY(0);
+opacity: 1;
+pointer-events: auto;
 }
+
 .search-wrapper {
-  position: relative;
-  width: 100%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border-radius: 28px;
+position: relative;
+width: 100%;
+box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+border-radius: 28px;
+background: var(--bg-color);
+border: 1px solid var(--border-color);
 }
+
 .search-input {
-  width: 100%;
-  padding: 14px 50px 14px 20px;
-  border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(15, 15, 15, 0.85);
-  backdrop-filter: blur(20px);
-  color: #fff;
-  font-size: 15px;
-  font-family: "Roboto", Arial, sans-serif;
-  outline: none;
-  transition: all 0.3s ease;
+width: 100%;
+padding: 16px 60px 16px 24px;
+border-radius: 28px;
+border: 2px solid var(--border-color);
+background: var(--bg-color);
+color: var(--text-primary);
+font-size: 16px;
+font-family: "Roboto", Arial, sans-serif;
+outline: none;
+transition: all 0.3s ease;
 }
+
 body.light-theme .search-input {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  color: #0f0f0f;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+background: var(--bg-color);
+border: 2px solid var(--border-color);
+color: var(--text-primary);
 }
+
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+color: var(--text-secondary);
 }
-body.light-theme .search-input::placeholder {
-  color: rgba(0, 0, 0, 0.4);
-}
+
 .search-input:focus {
-  border-color: var(--accent);
-  background: rgba(15, 15, 15, 0.95);
-  box-shadow: 0 4px 24px rgba(62, 166, 255, 0.2);
+border-color: var(--accent);
+box-shadow: 0 0 0 4px rgba(62, 166, 255, 0.1);
 }
+
 body.light-theme .search-input:focus {
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 4px 24px rgba(6, 95, 212, 0.15);
+box-shadow: 0 0 0 4px rgba(6, 95, 212, 0.1);
 }
+
 .search-icon {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 18px;
-  pointer-events: none;
-  transition: color 0.3s ease;
+position: absolute;
+right: 24px;
+top: 50%;
+transform: translateY(-50%);
+color: var(--text-secondary);
+font-size: 20px;
+pointer-events: none;
+transition: color 0.3s ease;
 }
-body.light-theme .search-icon {
-  color: rgba(0, 0, 0, 0.4);
-}
+
 .search-input:focus + .search-icon {
-  color: var(--accent);
+color: var(--accent);
+}
+
+/* Stories Preview Section - Full Width Box */
+.stories-container {
+position: relative;
+width: 100%;
+margin: 0;
+padding: 0;
+display: block;
+}
+
+.stories-panel {
+background: var(--bg-color);
+border-radius: 0;
+padding: 16px 0;
+width: 100%;
+box-shadow: none;
+border-top: 1px solid var(--border-color);
+border-bottom: 1px solid var(--border-color);
+overflow-x: auto;
+overflow-y: hidden;
+-webkit-overflow-scrolling: touch;
+scrollbar-width: none;
+position: relative;
+touch-action: pan-x;
+}
+
+.stories-panel::-webkit-scrollbar {
+display: none;
+}
+
+body.light-theme .stories-panel {
+box-shadow: none;
+}
+
+.stories-wrapper {
+display: flex;
+gap: 16px;
+padding: 0 24px;
+width: max-content;
+min-width: 100%;
+-webkit-overflow-scrolling: touch;
+}
+
+.story-item {
+flex-shrink: 0;
+display: flex;
+flex-direction: column;
+align-items: center;
+cursor: pointer;
+transition: transform 0.2s ease;
+width: 70px;
+}
+
+.story-item:hover {
+transform: scale(1.05);
+}
+
+.story-avatar-wrapper {
+position: relative;
+width: 64px;
+height: 64px;
+border-radius: 50%;
+padding: 3px;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+background-size: 200% 200%;
+animation: gradientShift 3s ease infinite;
+will-change: background-position;
+}
+
+@keyframes gradientShift {
+0%, 100% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+}
+
+.story-avatar {
+width: 100%;
+height: 100%;
+border-radius: 50%;
+object-fit: cover;
+background: var(--bg-color);
+padding: 2px;
+display: block;
+}
+
+.story-username {
+margin-top: 6px;
+font-size: 12px;
+color: var(--text-secondary);
+text-align: center;
+max-width: 70px;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+
+.story-item.new .story-avatar-wrapper {
+background: var(--border-color);
+}
+
+.story-item.new .story-avatar-wrapper::after {
+content: '+';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+font-size: 24px;
+color: var(--text-primary);
+font-weight: 300;
+z-index: 1;
+}
+
+body.light-theme .story-avatar-wrapper {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+}
+
+body.light-theme .story-item.new .story-avatar-wrapper {
+background: var(--border-color);
+}
+
+/* Search Button in Header */
+.header-search-btn {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: transparent;
+border: none;
+color: var(--text-primary);
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 18px;
+transition: all 0.2s ease;
+}
+
+.header-search-btn:hover {
+background: var(--hover-bg);
+color: var(--accent);
+}
+
+.header-search-btn.active {
+background: var(--hover-bg);
+color: var(--accent);
 }
 
 /* Page wrapper to control layout */
 .page-wrapper {
-  position: relative;
-  width: 100%;
+position: relative;
+width: 100%;
+padding-top: calc(65px + env(safe-area-inset-top));
 }
 
-/* HERO SECTION - Full viewport landing */
-.hero-section {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
-
-.hero-content {
-  text-align: center;
-  padding: 24px;
-}
-
-.hero-title {
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 72px;
-  font-weight: 300;
-  color: #ffffff;
-  margin: 0 0 16px 0;
-  line-height: 1.1;
-  letter-spacing: -2px;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-}
-
-.hero-subtitle {
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 22px;
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0;
-  letter-spacing: 1px;
-  font-style: italic;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-}
-
-/* Full Width Scroll Bar with Up Arrow */
-.scroll-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 20;
-}
-
-.scroll-bar:hover {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
-  height: 70px;
-}
-
-.scroll-bar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-}
-
-.scroll-arrow-up {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  color: rgba(255, 255, 255, 0.8);
-  transition: all 0.3s ease;
-}
-
-.scroll-bar:hover .scroll-arrow-up {
-  color: #ffffff;
-  transform: translateY(-3px);
-}
-
-.scroll-arrow-up i {
-  font-size: 20px;
-  animation: pulseUp 2s infinite;
-}
-
-.scroll-text {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  opacity: 0.7;
-}
-
-@keyframes pulseUp {
-  0%, 100% {
-    transform: translateY(0);
-    opacity: 0.8;
-  }
-  50% {
-    transform: translateY(-5px);
-    opacity: 1;
-  }
-}
-
-/* Content Container - Below hero, scrolls naturally */
-.content-container {
-  width: 100%;
-  background: var(--bg-color);
-  position: relative;
-  z-index: 20;
-}
-
-/* Welcome Banner inside content */
+/* Beautiful Welcome Banner - MORE BACKGROUND VISIBLE */
 .welcome-banner {
-  padding: 80px 24px 40px;
-  text-align: center;
-  width: 100%;
-  background: var(--bg-color);
+display: block;
+padding: 220px 24px 60px;
+text-align: center;
+width: 100%;
+position: relative;
 }
 
+/* Welcome text always white - regardless of theme */
 .welcome-banner-text {
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 48px;
-  font-weight: 300;
-  color: var(--text-primary);
-  margin: 0 0 12px 0;
-  line-height: 1.2;
-  letter-spacing: -1px;
+font-family: 'Georgia', 'Times New Roman', serif;
+font-size: 64px;
+font-weight: 300;
+color: #ffffff;
+margin: 0 0 16px 0;
+line-height: 1.2;
+letter-spacing: -1px;
+text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .welcome-subtitle {
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 18px;
-  font-weight: 300;
-  color: var(--text-secondary);
-  margin: 0;
-  letter-spacing: 0.5px;
-  font-style: italic;
+font-family: 'Georgia', 'Times New Roman', serif;
+font-size: 20px;
+font-weight: 300;
+color: rgba(255, 255, 255, 0.8);
+margin: 0;
+letter-spacing: 0.5px;
+font-style: italic;
+text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Content container - FULL WIDTH */
+.content-container {
+width: 100%;
+background: var(--bg-color);
+position: relative;
+z-index: 1;
+margin-top: 60px;
 }
 
 .list-container {
-  max-width: 900px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 24px 24px 80px;
+max-width: 900px;
+width: 100%;
+margin: 0 auto;
+padding: 24px 24px 80px;
 }
 
 /* Compact Article List - Full Width Container */
 .article-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+list-style: none;
+margin: 0;
+padding: 0;
 }
 
 .article-item {
-  padding: 24px 0;
-  border-bottom: 1px solid var(--border-color);
-  cursor: pointer;
-  transition: background 0.2s ease;
+padding: 24px 0;
+border-bottom: 1px solid var(--border-color);
+cursor: pointer;
+transition: background 0.2s ease;
 }
 
 .article-item:hover {
-  background: var(--hover-bg);
-  margin: 0 -12px;
-  padding: 24px 12px;
+background: var(--hover-bg);
+margin: 0 -12px;
+padding: 24px 12px;
 }
-
 .article-title {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 42px;
-  font-weight: bold;
-  margin: 0 0 8px 0;
-  line-height: 1.2;
-  color: var(--text-primary);
-  word-wrap: break-word;
+font-family: 'Times New Roman', Times, serif;
+font-size: 42px;
+font-weight: bold;
+margin: 0 0 8px 0;
+line-height: 1.2;
+color: var(--text-primary);
+word-wrap: break-word;
 }
-
 .article-item:hover .article-title {
-  color: var(--accent);
+color: var(--accent);
 }
-
 .article-meta {
-  font-size: 14px;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+font-size: 14px;
+color: var(--text-secondary);
+display: flex;
+align-items: center;
+gap: 8px;
+flex-wrap: wrap;
 }
-
 .meta-dot {
-  width: 3px;
-  height: 3px;
-  background: var(--text-secondary);
-  border-radius: 50%;
+width: 3px;
+height: 3px;
+background: var(--text-secondary);
+border-radius: 50%;
 }
 
 .footer {
-  background: var(--bg-color);
-  border-top: 1px solid var(--border-color);
-  padding: 24px;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.6;
-  position: relative;
-  z-index: 1;
-  width: 100%;
+background: var(--bg-color);
+border-top: 1px solid var(--border-color);
+padding: 24px;
+text-align: center;
+color: var(--text-secondary);
+font-size: 14px;
+line-height: 1.6;
+position: relative;
+z-index: 1;
+width: 100%;
 }
 
 .footer-stats {
-  margin-bottom: 8px;
+margin-bottom: 8px;
 }
-
 .article-count {
-  color: var(--accent-green);
-  font-weight: 600;
+color: var(--accent-green);
+font-weight: 600;
 }
-
 .footer-tagline {
-  margin-bottom: 8px;
+margin-bottom: 8px;
 }
-
 .footer-location {
-  font-size: 13px;
-  color: var(--text-secondary);
-  opacity: 0.8;
+font-size: 13px;
+color: var(--text-secondary);
+opacity: 0.8;
 }
 
 /* Back to top button */
 .back-to-top {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: white;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.3s ease;
-  z-index: 100;
-  box-shadow: 0 4px 15px rgba(62, 166, 255, 0.4);
+position: fixed;
+bottom: 30px;
+right: 30px;
+width: 50px;
+height: 50px;
+border-radius: 50%;
+background: var(--accent);
+color: white;
+border: none;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 18px;
+opacity: 0;
+transform: translateY(20px);
+transition: all 0.3s ease;
+z-index: 100;
+box-shadow: 0 4px 15px rgba(62, 166, 255, 0.4);
 }
 
 .back-to-top.visible {
-  opacity: 1;
-  transform: translateY(0);
+opacity: 1;
+transform: translateY(0);
 }
 
 .back-to-top:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(62, 166, 255, 0.5);
+transform: translateY(-3px);
+box-shadow: 0 6px 20px rgba(62, 166, 255, 0.5);
 }
 
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 48px;
-  }
-  
-  .hero-subtitle {
-    font-size: 18px;
-  }
-  
-  .scroll-bar {
-    height: 50px;
-  }
-  
-  .scroll-bar:hover {
-    height: 55px;
-  }
-  
-  .scroll-arrow-up i {
-    font-size: 16px;
-  }
-  
-  .scroll-text {
-    font-size: 10px;
-    letter-spacing: 2px;
-  }
-  
-  .search-container {
-    width: calc(100% - 32px);
-    top: calc(65px + env(safe-area-inset-top) + 12px);
-  }
-  .search-input {
-    padding: 12px 45px 12px 16px;
-    font-size: 14px;
-  }
-  .list-container {
-    padding: 16px 16px 80px;
-  }
-  .welcome-banner {
-    padding: 60px 16px 30px;
-  }
-  .welcome-banner-text {
-    font-size: 36px;
-  }
-  .welcome-subtitle {
-    font-size: 15px;
-  }
-  .article-title {
-    font-size: 32px;
-  }
-  .article-meta {
-    font-size: 13px;
-  }
-  .footer {
-    padding: 20px 16px;
-    font-size: 13px;
-  }
-  .auth-buttons {
-    gap: 8px;
-  }
-  .btn-login, .btn-signup {
-    padding: 6px 16px;
-    font-size: 13px;
-  }
-  .back-to-top {
-    width: 44px;
-    height: 44px;
-    font-size: 16px;
-    bottom: 20px;
-    right: 20px;
-  }
+/* Mobile Search */
+.search-container {
+width: calc(100% - 32px);
+top: calc(65px + env(safe-area-inset-top) + 12px);
+left: 50%;
+transform: translateX(-50%) translateY(-100px);
+}
+
+.search-container.active {
+transform: translateX(-50%) translateY(0);
+}
+
+.search-input {
+padding: 14px 50px 14px 20px;
+font-size: 16px;
+-webkit-appearance: none;
+}
+
+/* Mobile Stories - Full Width Box */
+.stories-container {
+padding: 0;
+margin: 0;
+width: 100%;
+}
+
+.stories-panel {
+padding: 12px 0;
+border-radius: 0;
+width: 100%;
+}
+
+.stories-wrapper {
+padding: 0 12px;
+gap: 12px;
+}
+
+.story-item {
+width: 60px;
+min-width: 60px;
+}
+
+.story-avatar-wrapper {
+width: 56px;
+height: 56px;
+}
+
+.story-username {
+font-size: 10px;
+max-width: 60px;
+margin-top: 6px;
+line-height: 1.2;
+}
+
+/* Mobile Content Spacing */
+.content-container {
+margin-top: 32px;
+}
+
+.list-container {
+padding: 16px 16px 80px;
+}
+
+.welcome-banner {
+padding: 140px 16px 32px;
+}
+
+.welcome-banner-text {
+font-size: 42px;
+}
+
+.welcome-subtitle {
+font-size: 16px;
+}
+
+.article-title {
+font-size: 32px;
+}
+
+.article-meta {
+font-size: 13px;
+}
+
+.footer {
+padding: 20px 16px;
+font-size: 13px;
+}
+.auth-buttons {
+gap: 8px;
+}
+
+@media (max-width: 768px) {
+.header-actions {
+gap: 8px;
+}
+
+.header-search-btn {
+width: 36px;
+height: 36px;
+font-size: 16px;
+}
+.btn-login, .btn-signup {
+padding: 6px 16px;
+font-size: 13px;
+}
+.back-to-top {
+width: 44px;
+height: 44px;
+font-size: 16px;
+bottom: 20px;
+right: 20px;
+}
+}
+
+/* Extra small phones */
+@media (max-width: 480px) {
+.stories-wrapper {
+padding: 0 8px;
+gap: 10px;
+}
+
+.story-item {
+width: 56px;
+min-width: 56px;
+}
+
+.story-avatar-wrapper {
+width: 52px;
+height: 52px;
+}
+
+.story-username {
+font-size: 9px;
+max-width: 56px;
+}
+
+.welcome-banner {
+padding: 120px 12px 24px;
+}
+
+.welcome-banner-text {
+font-size: 36px;
+}
+
+.content-container {
+margin-top: 24px;
+}
+
+.header {
+padding: 8px 12px;
+}
+
+.header-search-btn {
+width: 32px;
+height: 32px;
+font-size: 14px;
+}
+
+.icon-btn {
+width: 32px;
+height: 32px;
+font-size: 16px;
+}
 }
 </style>
+
 </head>
 <body>
 
 <!-- ABSOLUTELY STATIC BACKGROUND - SEPARATE WRAPPER -->
+
 <div class="background-wrapper">
   <div class="background-image" id="backgroundImage"></div>
   <div class="background-overlay"></div>
 </div>
 
-<div class="header-wrapper" id="headerWrapper">
+<div class="header-wrapper">
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
+      <button class="header-search-btn" id="headerSearchBtn" onclick="toggleSearch()" title="Search articles">
+        <i class="fas fa-search" id="headerSearchIcon"></i>
+      </button>
       <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
         <i class="fas fa-circle-half-stroke"></i>
       </button>
-      <!-- Auth buttons (shown when logged out) -->
-      <div class="auth-buttons" id="authButtons">
-        <a href="login.html" class="btn-login">Log In</a>
-      </div>
-      <!-- User menu (shown when logged in) -->
-      <div class="user-welcome" id="userWelcome">
-        <div class="user-menu">
-          <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
-            <i class="fas fa-user"></i>
-          </button>
-          <div class="user-menu-dropdown" id="userMenuDropdown">
-            <div class="user-menu-item" onclick="window.location.href='profile.html'">
-              <i class="fas fa-user"></i>
-              <span>Profile</span>
-            </div>
-            <div class="user-menu-item" onclick="window.location.href='settings.html'">
-              <i class="fas fa-cog"></i>
-              <span>Settings</span>
-            </div>
-            <div class="user-menu-item" onclick="logOut()">
-              <i class="fas fa-sign-out-alt"></i>
-              <span>Log Out</span>
-            </div>
-          </div>
+
+  <!-- Auth buttons (shown when logged out) -->
+
+  <div class="auth-buttons" id="authButtons">
+    <a href="login.html" class="btn-login">Log In</a>
+  </div>
+
+  <!-- User menu (shown when logged in) -->
+
+  <div class="user-welcome" id="userWelcome">
+    <div class="user-menu">
+      <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
+        <i class="fas fa-user"></i>
+      </button>
+      <div class="user-menu-dropdown" id="userMenuDropdown">
+        <div class="user-menu-item" onclick="window.location.href='profile.html'">
+          <i class="fas fa-user"></i>
+          <span>Profile</span>
+        </div>
+        <div class="user-menu-item" onclick="window.location.href='settings.html'">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </div>
+        <div class="user-menu-item" onclick="logOut()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Log Out</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Floating Search Bar Below Header -->
+  </div>
+</div>
+
+<!-- Search Backdrop Overlay -->
+<div class="search-backdrop" id="searchBackdrop"></div>
+
+<!-- Floating Search Bar (Hidden by default) -->
 <div class="search-container" id="searchContainer">
   <div class="search-wrapper">
     <input 
@@ -698,30 +865,24 @@ body.light-theme .search-icon {
 </div>
 
 <div class="page-wrapper">
-  <!-- HERO SECTION - Full screen landing -->
-  <div class="hero-section" id="heroSection">
-    <div class="hero-content">
-      <h1 class="hero-title" id="heroTitle">Patholytica</h1>
-      <p class="hero-subtitle" id="heroSubtitle">A Medicinebank project</p>
-    </div>
-    
-    <!-- Full Width Scroll Bar with Up Arrow -->
-    <div class="scroll-bar" id="scrollBar" onclick="scrollToContent()">
-      <div class="scroll-arrow-up">
-        <i class="fas fa-chevron-up"></i>
-        <span class="scroll-text">View Articles</span>
+  <!-- Beautiful Welcome Banner (always shown) -->
+  <div class="welcome-banner" id="welcomeBanner">
+    <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome to Patholytica</h1>
+    <p class="welcome-subtitle" id="welcomeSubtitle">A Medicinebank project</p>
+  </div>
+
+  <!-- Stories Panel - Full Width Box -->
+  <div class="stories-container" id="storiesContainer">
+    <div class="stories-panel">
+      <div class="stories-wrapper" id="storiesWrapper">
+        <!-- Stories will be dynamically generated -->
       </div>
     </div>
   </div>
 
-  <!-- Content Container - Below hero, scrolls naturally -->
-  <div class="content-container" id="contentContainer">
-    <!-- Welcome Banner inside content -->
-    <div class="welcome-banner" id="welcomeBanner">
-      <h1 class="welcome-banner-text" id="welcomeBannerText">Welcome to Patholytica</h1>
-      <p class="welcome-subtitle" id="welcomeSubtitle">A Medicinebank project</p>
-    </div>
-    
+  <!-- Full Width Content Container -->
+
+  <div class="content-container">
     <div class="list-container">
       <ul class="article-list" id="articleList">
         <li class="article-item" onclick="openArticle('patholytica.com/library')">
@@ -734,160 +895,176 @@ body.light-theme .search-icon {
             <span>12 min read</span>
           </div>
         </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
-          <div class="article-meta">
-            <span>Dr. James Chen</span>
-            <div class="meta-dot"></div>
-            <span>Mar 12, 2024</span>
-            <div class="meta-dot"></div>
-            <span>8 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
-          <div class="article-meta">
-            <span>Dr. Emily Rodriguez</span>
-            <div class="meta-dot"></div>
-            <span>Mar 10, 2024</span>
-            <div class="meta-dot"></div>
-            <span>15 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
-          <div class="article-meta">
-            <span>Dr. Robert Kim</span>
-            <div class="meta-dot"></div>
-            <span>Mar 8, 2024</span>
-            <div class="meta-dot"></div>
-            <span>10 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
-          <div class="article-meta">
-            <span>Dr. Lisa Zhang</span>
-            <div class="meta-dot"></div>
-            <span>Mar 5, 2024</span>
-            <div class="meta-dot"></div>
-            <span>14 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
-          <div class="article-meta">
-            <span>Dr. Robert Kim</span>
-            <div class="meta-dot"></div>
-            <span>Mar 8, 2024</span>
-            <div class="meta-dot"></div>
-            <span>10 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
-          <div class="article-meta">
-            <span>Dr. Lisa Zhang</span>
-            <div class="meta-dot"></div>
-            <span>Mar 5, 2024</span>
-            <div class="meta-dot"></div>
-            <span>14 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
-          <div class="article-meta">
-            <span>Dr. Michael Johnson</span>
-            <div class="meta-dot"></div>
-            <span>Mar 3, 2024</span>
-            <div class="meta-dot"></div>
-            <span>11 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
-          <div class="article-meta">
-            <span>Dr. Michael Johnson</span>
-            <div class="meta-dot"></div>
-            <span>Mar 14, 2024</span>
-            <div class="meta-dot"></div>
-            <span>18 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
-          <div class="article-meta">
-            <span>Dr. Anna Williams</span>
-            <div class="meta-dot"></div>
-            <span>Mar 11, 2024</span>
-            <div class="meta-dot"></div>
-            <span>16 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
-          <div class="article-meta">
-            <span>Dr. David Park</span>
-            <div class="meta-dot"></div>
-            <span>Mar 9, 2024</span>
-            <div class="meta-dot"></div>
-            <span>20 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
-          <div class="article-meta">
-            <span>Dr. Rachel Green</span>
-            <div class="meta-dot"></div>
-            <span>Mar 7, 2024</span>
-            <div class="meta-dot"></div>
-            <span>13 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
-          <div class="article-meta">
-            <span>Dr. Thomas Anderson</span>
-            <div class="meta-dot"></div>
-            <span>Mar 7, 2024</span>
-            <div class="meta-dot"></div>
-            <span>11 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
-          <div class="article-meta">
-            <span>Dr. Rachel Green</span>
-            <div class="meta-dot"></div>
-            <span>Mar 4, 2024</span>
-            <div class="meta-dot"></div>
-            <span>13 min read</span>
-          </div>
-        </li>
-        <li class="article-item" onclick="openArticle('patholytica.com/library')">
-          <h2 class="article-title">The Role of Microbiome in Human Health</h2>
-          <div class="article-meta">
-            <span>Dr. Jennifer Lee</span>
-            <div class="meta-dot"></div>
-            <span>Mar 1, 2024</span>
-            <div class="meta-dot"></div>
-            <span>9 min read</span>
-          </div>
-        </li>
-      </ul>
-    </div>
-    
-    <footer class="footer">
-      <div class="footer-stats">
-        <span class="article-count" id="articleCount">15</span> articles accessible
-      </div>
-      <div class="footer-tagline">
-        Patholytica is a Medicinebank project aiming to unify academic sharing
-      </div>
-      <div class="footer-location" id="userLocation">
-        Loading location...
-      </div>
-    </footer>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Advances in Neurological Imaging Techniques</h2>
+  <div class="article-meta">
+    <span>Dr. James Chen</span>
+    <div class="meta-dot"></div>
+    <span>Mar 12, 2024</span>
+    <div class="meta-dot"></div>
+    <span>8 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Molecular Mechanisms of Cancer Progression</h2>
+  <div class="article-meta">
+    <span>Dr. Emily Rodriguez</span>
+    <div class="meta-dot"></div>
+    <span>Mar 10, 2024</span>
+    <div class="meta-dot"></div>
+    <span>15 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Clinical Applications of Immunotherapy in Modern Medicine</h2>
+  <div class="article-meta">
+    <span>Dr. Robert Kim</span>
+    <div class="meta-dot"></div>
+    <span>Mar 8, 2024</span>
+    <div class="meta-dot"></div>
+    <span>10 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Genetic Markers in Personalized Medicine Approaches</h2>
+  <div class="article-meta">
+    <span>Dr. Lisa Zhang</span>
+    <div class="meta-dot"></div>
+    <span>Mar 5, 2024</span>
+    <div class="meta-dot"></div>
+    <span>14 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Hypertensive Heart Disease: Current Treatment Protocols</h2>
+  <div class="article-meta">
+    <span>Dr. Robert Kim</span>
+    <div class="meta-dot"></div>
+    <span>Mar 8, 2024</span>
+    <div class="meta-dot"></div>
+    <span>10 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Atherosclerosis and Inflammatory Biomarkers</h2>
+  <div class="article-meta">
+    <span>Dr. Lisa Zhang</span>
+    <div class="meta-dot"></div>
+    <span>Mar 5, 2024</span>
+    <div class="meta-dot"></div>
+    <span>14 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Cardiac Imaging Advances in Diagnostic Accuracy</h2>
+  <div class="article-meta">
+    <span>Dr. Michael Johnson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 3, 2024</span>
+    <div class="meta-dot"></div>
+    <span>11 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Systematic Review of Diabetes Management Strategies</h2>
+  <div class="article-meta">
+    <span>Dr. Michael Johnson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 14, 2024</span>
+    <div class="meta-dot"></div>
+    <span>18 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Meta-Analysis of Anticoagulation Therapies</h2>
+  <div class="article-meta">
+    <span>Dr. Anna Williams</span>
+    <div class="meta-dot"></div>
+    <span>Mar 11, 2024</span>
+    <div class="meta-dot"></div>
+    <span>16 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Clinical Outcomes in Surgical Interventions</h2>
+  <div class="article-meta">
+    <span>Dr. David Park</span>
+    <div class="meta-dot"></div>
+    <span>Mar 9, 2024</span>
+    <div class="meta-dot"></div>
+    <span>20 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Evidence-Based Approaches to Pain Management</h2>
+  <div class="article-meta">
+    <span>Dr. Rachel Green</span>
+    <div class="meta-dot"></div>
+    <span>Mar 7, 2024</span>
+    <div class="meta-dot"></div>
+    <span>13 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Breakthrough in Gene Therapy Applications</h2>
+  <div class="article-meta">
+    <span>Dr. Thomas Anderson</span>
+    <div class="meta-dot"></div>
+    <span>Mar 7, 2024</span>
+    <div class="meta-dot"></div>
+    <span>11 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">Immunotherapy Advances in Oncology</h2>
+  <div class="article-meta">
+    <span>Dr. Rachel Green</span>
+    <div class="meta-dot"></div>
+    <span>Mar 4, 2024</span>
+    <div class="meta-dot"></div>
+    <span>13 min read</span>
+  </div>
+</li>
+
+<li class="article-item" onclick="openArticle('patholytica.com/library')">
+  <h2 class="article-title">The Role of Microbiome in Human Health</h2>
+  <div class="article-meta">
+    <span>Dr. Jennifer Lee</span>
+    <div class="meta-dot"></div>
+    <span>Mar 1, 2024</span>
+    <div class="meta-dot"></div>
+    <span>9 min read</span>
+  </div>
+</li>
+
+  </ul>
+</div>
+
+<footer class="footer">
+  <div class="footer-stats">
+    <span class="article-count" id="articleCount">15</span> articles accessible
+  </div>
+  <div class="footer-tagline">
+    Patholytica is a Medicinebank project aiming to unify academic sharing
+  </div>
+  <div class="footer-location" id="userLocation">
+    Loading location...
+  </div>
+</footer>
+
   </div>
 </div>
 
@@ -930,8 +1107,6 @@ const supabase = window.supabase.createClient(
 onAuthStateChanged(auth, async (user) => {
   const authButtons = document.getElementById('authButtons');
   const userWelcome = document.getElementById('userWelcome');
-  const heroTitle = document.getElementById('heroTitle');
-  const heroSubtitle = document.getElementById('heroSubtitle');
   const welcomeBannerText = document.getElementById('welcomeBannerText');
   const welcomeSubtitle = document.getElementById('welcomeSubtitle');
   
@@ -951,15 +1126,11 @@ onAuthStateChanged(auth, async (user) => {
       if (data && data.full_name) {
         // Extract first name from full name
         const firstName = data.full_name.split(' ')[0];
-        heroTitle.textContent = `Welcome, ${firstName}`;
-        heroSubtitle.textContent = 'arnabna fe manwar anwar';
         welcomeBannerText.textContent = `Welcome, ${firstName}`;
         welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
       } else {
         // Fallback to email username or display name
         const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-        heroTitle.textContent = `Welcome, ${firstName}`;
-        heroSubtitle.textContent = 'arnabna fe manwar anwar';
         welcomeBannerText.textContent = `Welcome, ${firstName}`;
         welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
       }
@@ -967,8 +1138,6 @@ onAuthStateChanged(auth, async (user) => {
       console.error("Error fetching user data:", error);
       // Fallback
       const firstName = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-      heroTitle.textContent = `Welcome, ${firstName}`;
-      heroSubtitle.textContent = 'arnabna fe manwar anwar';
       welcomeBannerText.textContent = `Welcome, ${firstName}`;
       welcomeSubtitle.textContent = 'arnabna fe manwar anwar';
     }
@@ -976,8 +1145,6 @@ onAuthStateChanged(auth, async (user) => {
     // User is logged out
     authButtons.classList.add('show');
     userWelcome.classList.remove('show');
-    heroTitle.textContent = 'Patholytica';
-    heroSubtitle.textContent = 'A Medicinebank project';
     welcomeBannerText.textContent = 'Welcome to Patholytica';
     welcomeSubtitle.textContent = 'A Medicinebank project';
   }
@@ -1027,34 +1194,135 @@ function setRandomBackground() {
 // Call on page load
 setRandomBackground();
 
-// Scroll to content - natural scroll behavior
-function scrollToContent() {
-  const welcomeBanner = document.getElementById('welcomeBanner');
-  welcomeBanner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// Generate Stories Preview
+function generateStories() {
+  const storiesWrapper = document.getElementById('storiesWrapper');
+  if (!storiesWrapper) return;
+  
+  // Sample user data - in production, this would come from your API
+  const stories = [
+    { username: 'Your Story', isNew: true, avatar: 'https://ui-avatars.com/api/?name=You&background=3ea6ff&color=fff&size=128' },
+    { username: 'Dr. Sarah', avatar: 'https://ui-avatars.com/api/?name=Sarah+Mitchell&background=667eea&color=fff&size=128' },
+    { username: 'Dr. James', avatar: 'https://ui-avatars.com/api/?name=James+Chen&background=764ba2&color=fff&size=128' },
+    { username: 'Dr. Emily', avatar: 'https://ui-avatars.com/api/?name=Emily+Rodriguez&background=f093fb&color=fff&size=128' },
+    { username: 'Dr. Robert', avatar: 'https://ui-avatars.com/api/?name=Robert+Kim&background=4facfe&color=fff&size=128' },
+    { username: 'Dr. Lisa', avatar: 'https://ui-avatars.com/api/?name=Lisa+Zhang&background=00f2fe&color=fff&size=128' },
+    { username: 'Dr. Michael', avatar: 'https://ui-avatars.com/api/?name=Michael+Johnson&background=667eea&color=fff&size=128' },
+    { username: 'Dr. Anna', avatar: 'https://ui-avatars.com/api/?name=Anna+Williams&background=764ba2&color=fff&size=128' },
+  ];
+  
+  stories.forEach((story, index) => {
+    const storyItem = document.createElement('div');
+    storyItem.className = `story-item ${story.isNew ? 'new' : ''}`;
+    storyItem.setAttribute('data-index', index);
+    
+    const avatarWrapper = document.createElement('div');
+    avatarWrapper.className = 'story-avatar-wrapper';
+    
+    if (story.isNew) {
+      avatarWrapper.innerHTML = '<div class="story-avatar"></div>';
+    } else {
+      const avatar = document.createElement('img');
+      avatar.className = 'story-avatar';
+      avatar.src = story.avatar;
+      avatar.alt = story.username;
+      avatar.loading = 'lazy';
+      avatar.decoding = 'async';
+      avatarWrapper.appendChild(avatar);
+    }
+    
+    const username = document.createElement('div');
+    username.className = 'story-username';
+    username.textContent = story.username;
+    
+    storyItem.appendChild(avatarWrapper);
+    storyItem.appendChild(username);
+    
+    storyItem.addEventListener('click', () => {
+      // Handle story click - could open story viewer
+      console.log('Story clicked:', story.username);
+    });
+    
+    storiesWrapper.appendChild(storyItem);
+  });
 }
+
+// Initialize stories on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', generateStories);
+} else {
+  generateStories();
+}
+
+// Toggle search bar when search button is clicked
+function toggleSearch() {
+  const searchContainer = document.getElementById('searchContainer');
+  const searchBackdrop = document.getElementById('searchBackdrop');
+  const headerSearchBtn = document.getElementById('headerSearchBtn');
+  const headerSearchIcon = document.getElementById('headerSearchIcon');
+  const searchInput = document.getElementById('searchInput');
+  
+  if (searchContainer.classList.contains('active')) {
+    // Close search
+    searchContainer.classList.remove('active');
+    searchBackdrop.classList.remove('active');
+    if (headerSearchBtn) headerSearchBtn.classList.remove('active');
+    if (headerSearchIcon) headerSearchIcon.className = 'fas fa-search';
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.blur();
+      // Clear search results
+      handleSearch({ target: { value: '' } });
+    }
+  } else {
+    // Open search
+    searchContainer.classList.add('active');
+    searchBackdrop.classList.add('active');
+    if (headerSearchBtn) headerSearchBtn.classList.add('active');
+    if (headerSearchIcon) headerSearchIcon.className = 'fas fa-times';
+    if (searchInput) {
+      setTimeout(() => {
+        searchInput.focus();
+      }, 300);
+    }
+  }
+}
+
+// Close search when clicking backdrop or outside
+document.addEventListener('click', function(event) {
+  const searchContainer = document.getElementById('searchContainer');
+  const searchBackdrop = document.getElementById('searchBackdrop');
+  const headerSearchBtn = document.getElementById('headerSearchBtn');
+  
+  if (searchContainer && searchContainer.classList.contains('active')) {
+    if (searchBackdrop.contains(event.target) || 
+        (!searchContainer.contains(event.target) && !headerSearchBtn.contains(event.target))) {
+      toggleSearch();
+    }
+  }
+});
+
+// Close search on Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    const searchContainer = document.getElementById('searchContainer');
+    if (searchContainer && searchContainer.classList.contains('active')) {
+      toggleSearch();
+    }
+  }
+});
 
 // Scroll to top function
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Scroll behavior for search bar and back to top
+// Scroll behavior for back to top button
 let lastScrollTop = 0;
-const searchContainer = document.getElementById('searchContainer');
 const backToTop = document.getElementById('backToTop');
-const scrollThreshold = 50;
 
 window.addEventListener('scroll', function() {
   const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-  
-  // Scrolling down - hide search bar
-  if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
-    searchContainer.classList.add('hidden');
-  } 
-  // Scrolling up - show search bar
-  else if (currentScroll < lastScrollTop) {
-    searchContainer.classList.remove('hidden');
-  }
   
   // Show/hide back to top button
   if (currentScroll > 300) {
@@ -1064,7 +1332,7 @@ window.addEventListener('scroll', function() {
   }
   
   lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-}, false);
+}, { passive: true });
 
 // Search functionality
 function handleSearch(event) {
@@ -1088,13 +1356,32 @@ function handleSearch(event) {
   document.getElementById('articleCount').textContent = searchTerm ? visibleCount : articles.length;
 }
 
-function toggleTheme() {
-  document.body.classList.toggle('light-theme');
-  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
+// Function to update theme color meta tag for iOS status bar
+function updateThemeColor(isLight) {
+  let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  if (!metaThemeColor) {
+    metaThemeColor = document.createElement('meta');
+    metaThemeColor.name = 'theme-color';
+    document.head.appendChild(metaThemeColor);
+  }
+  metaThemeColor.content = isLight ? '#ffffff' : '#0f0f0f';
 }
 
+// Updated toggleTheme function with status bar color update
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-theme');
+  localStorage.setItem("theme", isLight ? "light" : "dark");
+  
+  // Update theme-color meta tag dynamically for status bar
+  updateThemeColor(isLight);
+}
+
+// Initialize theme on page load
 if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light-theme");
+  updateThemeColor(true);
+} else {
+  updateThemeColor(false);
 }
 
 function openArticle(url) {
@@ -1146,5 +1433,6 @@ if ("geolocation" in navigator) {
   document.getElementById('userLocation').textContent = 'Geolocation not supported';
 }
 </script>
+
 </body>
 </html>
