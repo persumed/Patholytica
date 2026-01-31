@@ -952,14 +952,17 @@
             
             if (!article) return;
 
-            if (liked[articleId]) {
+            const wasLiked = liked[articleId];
+            const originalCount = article.likes || 0;
+
+            if (wasLiked) {
                 liked[articleId] = false;
                 btn.classList.remove('liked');
-                article.likes = Math.max(0, (article.likes || 0) - 1);
+                article.likes = Math.max(0, originalCount - 1);
             } else {
                 liked[articleId] = true;
                 btn.classList.add('liked');
-                article.likes = (article.likes || 0) + 1;
+                article.likes = originalCount + 1;
             }
             
             countSpan.textContent = article.likes;
@@ -972,16 +975,14 @@
             } catch (error) {
                 console.error('Error updating like:', error);
                 // Revert on error
-                if (liked[articleId]) {
-                    liked[articleId] = false;
-                    btn.classList.remove('liked');
-                    article.likes = Math.max(0, article.likes - 1);
-                } else {
-                    liked[articleId] = true;
-                    btn.classList.add('liked');
-                    article.likes = article.likes + 1;
-                }
+                liked[articleId] = wasLiked;
+                article.likes = originalCount;
                 countSpan.textContent = article.likes;
+                if (wasLiked) {
+                    btn.classList.add('liked');
+                } else {
+                    btn.classList.remove('liked');
+                }
             }
         }
 
@@ -1017,19 +1018,23 @@
                 }
 
                 const userIds = [...new Set(comments.map(c => c.user_id).filter(id => id))];
-                let usersData = [];
+                let usersMap = {};
                 
                 if (userIds.length > 0) {
                     const { data: users } = await supabase
                         .from('users')
-                        .select('firebase_uid, username, full_name')
-                        .in('firebase_uid', userIds);
+                        .select('user_id, username, full_name')
+                        .in('user_id', userIds);
                     
-                    usersData = users || [];
+                    if (users) {
+                        users.forEach(user => {
+                            usersMap[user.user_id] = user;
+                        });
+                    }
                 }
 
                 commentsList.innerHTML = comments.map(comment => {
-                    const user = usersData?.find(u => u.firebase_uid === comment.user_id);
+                    const user = usersMap[comment.user_id];
                     const author = user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous');
                     
                     return `
@@ -1077,16 +1082,46 @@
             sendBtn.disabled = true;
 
             try {
-                // For demo purposes, using a random user ID
-                // In production, you'd use the actual authenticated user's ID
-                const userId = 'demo-user-' + Math.random().toString(36).substr(2, 9);
+                // Get or create a persistent demo user ID
+                let userId = localStorage.getItem('demo_user_id');
+                
+                if (!userId) {
+                    // Get the first available user
+                    const { data: users, error: userError } = await supabase
+                        .from('users')
+                        .select('user_id')
+                        .limit(1);
+                    
+                    if (users && users.length > 0) {
+                        userId = users[0].user_id;
+                        localStorage.setItem('demo_user_id', userId);
+                    } else {
+                        // Create a demo user if none exist
+                        const { data: newUser, error: createError } = await supabase
+                            .from('users')
+                            .insert([
+                                {
+                                    firebase_uid: 'demo-user-' + Date.now(),
+                                    username: 'demo_user',
+                                    email: 'demo@example.com',
+                                    full_name: 'Demo User'
+                                }
+                            ])
+                            .select('user_id');
+                        
+                        if (createError) throw createError;
+                        
+                        userId = newUser[0].user_id;
+                        localStorage.setItem('demo_user_id', userId);
+                    }
+                }
 
                 const { data, error } = await supabase
                     .from('comments')
                     .insert([
                         {
                             article_id: currentArticleId,
-                            user_id: userId,
+                            user_id: parseInt(userId),
                             comment_text: text
                         }
                     ])
