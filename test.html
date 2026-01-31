@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Media Scroller</title>
+    <title>Article Scroller - Patholytica</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -46,33 +48,143 @@
             display: none;
         }
 
-        .post {
+        .article-card {
             position: relative;
             height: 100vh;
             scroll-snap-align: start;
             scroll-snap-stop: always;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 24px 160px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
         }
 
-        .post-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .article-card:nth-child(2) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
 
-        .gradient-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, transparent 0%, transparent 60%, rgba(0,0,0,0.6) 100%);
-            pointer-events: none;
+        .article-card:nth-child(3) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .article-card:nth-child(4) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .article-card:nth-child(5) {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .article-card:nth-child(6) {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+
+        .article-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .author-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+
+        .article-date {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+        }
+
+        .article-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .article-content {
+            color: white;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-height: 45vh;
+            overflow-y: auto;
+        }
+
+        .article-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .article-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        .article-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 2px;
+        }
+
+        .content-paragraph {
+            margin-bottom: 16px;
+        }
+
+        .article-stats {
+            display: flex;
+            gap: 20px;
+            color: white;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .action-buttons {
             position: absolute;
             right: 16px;
-            bottom: 128px;
+            bottom: 140px;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 20px;
             z-index: 10;
         }
 
@@ -81,161 +193,36 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            background: none;
-            border: none;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: all 0.2s;
+            color: white;
+            font-size: 20px;
+            justify-content: center;
         }
 
         .action-btn:active {
             transform: scale(0.9);
         }
 
-        .action-btn svg {
-            width: 32px;
-            height: 32px;
-            stroke: white;
-            fill: none;
-            stroke-width: 2;
+        .action-btn.liked {
+            background: rgba(239, 68, 68, 0.5);
+            border-color: rgba(239, 68, 68, 0.8);
         }
 
-        .action-btn.liked svg {
-            fill: #ef4444;
-            stroke: #ef4444;
+        .action-btn.liked i {
+            color: #ef4444;
         }
 
-        .action-btn span {
-            color: white;
+        .action-count {
             font-size: 12px;
             font-weight: 600;
-        }
-
-        .post-info {
-            position: absolute;
-            bottom: 16px;
-            left: 16px;
-            right: 80px;
-            color: white;
-            z-index: 10;
-        }
-
-        .post-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .post-description {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .comments-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 20;
-            display: none;
-            flex-direction: column;
-        }
-
-        .comments-overlay.active {
-            display: flex;
-        }
-
-        .comments-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            border-bottom: 1px solid #374151;
-        }
-
-        .comments-header h3 {
-            color: white;
-            font-size: 18px;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 32px;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .comments-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-        }
-
-        .comment {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .comment-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
-            flex-shrink: 0;
-        }
-
-        .comment-content {
-            flex: 1;
-        }
-
-        .comment-username {
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .comment-text {
-            color: #d1d5db;
-            font-size: 14px;
-        }
-
-        .comment-input-area {
-            padding: 16px;
-            border-top: 1px solid #374151;
-            display: flex;
-            gap: 8px;
-        }
-
-        .comment-input {
-            flex: 1;
-            background: #1f2937;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 20px;
-            outline: none;
-            font-size: 14px;
-        }
-
-        .comment-input:focus {
-            outline: 2px solid #a855f7;
-        }
-
-        .post-comment-btn {
-            background: linear-gradient(135deg, #a855f7, #ec4899);
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .post-comment-btn:hover {
-            opacity: 0.9;
+            margin-top: -2px;
         }
 
         .scroll-indicators {
@@ -249,7 +236,7 @@
         }
 
         .indicator {
-            height: 4px;
+            height: 3px;
             border-radius: 2px;
             background: rgba(255, 255, 255, 0.5);
             transition: all 0.3s;
@@ -261,7 +248,60 @@
         }
 
         .indicator:not(.active) {
-            width: 4px;
+            width: 3px;
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+            gap: 16px;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .read-more-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .read-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .media-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 16px 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
@@ -269,124 +309,141 @@
     <div class="app-container">
         <div class="scroller-container">
             <div class="scroll-indicators" id="indicators"></div>
-            <div class="posts-wrapper" id="postsWrapper"></div>
+            <div class="posts-wrapper" id="postsWrapper">
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <div>Loading articles...</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        const posts = [
-            {
-                id: 1,
-                image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop',
-                title: 'Mountain Sunrise',
-                description: 'Woke up to this incredible view 🌄',
-                likes: 1234,
-                comments: ['Amazing shot! 😍', 'Where is this?', 'Goals!']
-            },
-            {
-                id: 2,
-                image: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400&h=600&fit=crop',
-                title: 'Coffee Time',
-                description: 'Perfect way to start the day ☕',
-                likes: 856,
-                comments: ['I need this right now', 'Best part of morning!']
-            },
-            {
-                id: 3,
-                image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=600&fit=crop',
-                title: 'Nature Vibes',
-                description: 'Sometimes you just need to disconnect 🌲',
-                likes: 2341,
-                comments: ['So peaceful', 'Taking me there', 'Nature therapy 💚']
-            },
-            {
-                id: 4,
-                image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=600&fit=crop',
-                title: 'Beach Day',
-                description: 'Living my best life 🏖️',
-                likes: 3421,
-                comments: ['Paradise!', 'Take me with you', 'Dream destination']
-            },
-            {
-                id: 5,
-                image: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=400&h=600&fit=crop',
-                title: 'City Lights',
-                description: 'Night walks hit different ✨',
-                likes: 1876,
-                comments: ['Stunning capture', 'Which city?', 'Night owl approved 🦉']
-            }
-        ];
+    <script type="module">
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(
+            "https://vduqewqyvszfquntmark.supabase.co",
+            "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
+        );
 
+        let articles = [];
         let liked = {};
         let currentIndex = 0;
 
-        function renderPosts() {
-            const wrapper = document.getElementById('postsWrapper');
-            const indicatorsDiv = document.getElementById('indicators');
+        async function loadArticles() {
+            try {
+                // Fetch articles
+                const { data: articlesData, error: articlesError } = await supabase
+                    .from('articles')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(20);
 
-            posts.forEach((post, index) => {
-                // Create post element
-                const postDiv = document.createElement('div');
-                postDiv.className = 'post';
-                postDiv.innerHTML = `
-                    <img src="${post.image}" alt="${post.title}" class="post-image">
-                    <div class="gradient-overlay"></div>
+                if (articlesError) throw articlesError;
+
+                // Fetch authors for all articles
+                const userIds = [...new Set(articlesData.map(a => a.firebase_user_id))];
+                const { data: usersData } = await supabase
+                    .from('users')
+                    .select('firebase_uid, username, full_name')
+                    .in('firebase_uid', userIds);
+
+                // Fetch media for all articles
+                const articleIds = articlesData.map(a => a.id);
+                const { data: mediaData } = await supabase
+                    .from('media')
+                    .select('*')
+                    .in('article_id', articleIds)
+                    .order('display_order', { ascending: true });
+
+                // Combine data
+                articles = articlesData.map(article => {
+                    const author = usersData?.find(u => u.firebase_uid === article.firebase_user_id);
+                    const media = mediaData?.filter(m => m.article_id === article.id) || [];
                     
-                    <div class="action-buttons">
-                        <button class="action-btn like-btn" data-id="${post.id}">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                            <span class="like-count">${post.likes}</span>
-                        </button>
-                        
-                        <button class="action-btn comment-btn" data-id="${post.id}">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                            </svg>
-                            <span>${post.comments.length}</span>
-                        </button>
-                        
-                        <button class="action-btn">
-                            <svg viewBox="0 0 24 24">
-                                <circle cx="18" cy="5" r="3"></circle>
-                                <circle cx="6" cy="12" r="3"></circle>
-                                <circle cx="18" cy="19" r="3"></circle>
-                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                            </svg>
-                            <span>Share</span>
-                        </button>
-                    </div>
-                    
-                    <div class="post-info">
-                        <div class="post-title">${post.title}</div>
-                        <div class="post-description">${post.description}</div>
-                    </div>
-                    
-                    <div class="comments-overlay" id="comments-${post.id}">
-                        <div class="comments-header">
-                            <h3>Comments</h3>
-                            <button class="close-btn" data-id="${post.id}">×</button>
-                        </div>
-                        <div class="comments-list" id="comments-list-${post.id}">
-                            ${post.comments.map((comment, idx) => `
-                                <div class="comment">
-                                    <div class="comment-avatar"></div>
-                                    <div class="comment-content">
-                                        <div class="comment-username">user${idx + 1}</div>
-                                        <div class="comment-text">${comment}</div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="comment-input-area">
-                            <input type="text" class="comment-input" placeholder="Add a comment..." id="input-${post.id}">
-                            <button class="post-comment-btn" data-id="${post.id}">Post</button>
-                        </div>
+                    return {
+                        ...article,
+                        author: author?.full_name || author?.username || 'Anonymous',
+                        media: media
+                    };
+                });
+
+                renderArticles();
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                document.getElementById('postsWrapper').innerHTML = `
+                    <div class="loading-container">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
+                        <div>Failed to load articles</div>
                     </div>
                 `;
-                wrapper.appendChild(postDiv);
+            }
+        }
+
+        function renderArticles() {
+            const wrapper = document.getElementById('postsWrapper');
+            const indicatorsDiv = document.getElementById('indicators');
+            
+            wrapper.innerHTML = '';
+            indicatorsDiv.innerHTML = '';
+
+            articles.forEach((article, index) => {
+                // Truncate content for preview
+                const contentPreview = article.content.substring(0, 500);
+                const needsReadMore = article.content.length > 500;
+
+                const articleDiv = document.createElement('div');
+                articleDiv.className = 'article-card';
+                articleDiv.innerHTML = `
+                    <div class="article-header">
+                        <div class="author-avatar">${article.author.charAt(0).toUpperCase()}</div>
+                        <div class="author-info">
+                            <div class="author-name">${article.author}</div>
+                            <div class="article-date">${formatDate(new Date(article.created_at))}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="article-title">${article.title}</div>
+                    
+                    ${article.media.length > 0 && article.media[0].type === 'image' ? 
+                        `<img src="${article.media[0].url}" class="media-preview" alt="Article image">` : ''}
+                    
+                    <div class="article-content">
+                        <div class="content-paragraph">${contentPreview}${needsReadMore ? '...' : ''}</div>
+                    </div>
+                    
+                    ${needsReadMore ? `
+                        <button class="read-more-btn" onclick="openFullArticle('${article.id}')">
+                            Read Full Article <i class="fas fa-arrow-right"></i>
+                        </button>
+                    ` : ''}
+                    
+                    <div class="article-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-eye"></i>
+                            <span>${article.views || 0}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-heart"></i>
+                            <span>${article.likes || 0}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn like-btn" data-id="${article.id}" onclick="toggleLike(event, '${article.id}')">
+                            <i class="fas fa-heart"></i>
+                            <span class="action-count">${article.likes || 0}</span>
+                        </button>
+                        
+                        <button class="action-btn" onclick="shareArticle('${article.id}', '${article.title}')">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        
+                        <button class="action-btn" onclick="openFullArticle('${article.id}')">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                `;
+                wrapper.appendChild(articleDiv);
 
                 // Create indicator
                 const indicator = document.createElement('div');
@@ -395,90 +452,74 @@
                 indicatorsDiv.appendChild(indicator);
             });
 
-            // Add event listeners
-            document.querySelectorAll('.like-btn').forEach(btn => {
-                btn.addEventListener('click', handleLike);
-            });
-
-            document.querySelectorAll('.comment-btn').forEach(btn => {
-                btn.addEventListener('click', openComments);
-            });
-
-            document.querySelectorAll('.close-btn').forEach(btn => {
-                btn.addEventListener('click', closeComments);
-            });
-
-            document.querySelectorAll('.post-comment-btn').forEach(btn => {
-                btn.addEventListener('click', addComment);
-            });
-
-            document.querySelectorAll('.comment-input').forEach(input => {
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        addComment(e);
-                    }
-                });
-            });
-
             wrapper.addEventListener('scroll', handleScroll);
         }
 
-        function handleLike(e) {
-            const postId = parseInt(e.currentTarget.dataset.id);
-            const post = posts.find(p => p.id === postId);
-            const btn = e.currentTarget;
-            const countSpan = btn.querySelector('.like-count');
+        function formatDate(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
 
-            if (liked[postId]) {
-                liked[postId] = false;
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        window.toggleLike = async function(event, articleId) {
+            event.stopPropagation();
+            
+            const btn = event.currentTarget;
+            const countSpan = btn.querySelector('.action-count');
+            const article = articles.find(a => a.id === articleId);
+            
+            if (!article) return;
+
+            if (liked[articleId]) {
+                liked[articleId] = false;
                 btn.classList.remove('liked');
-                post.likes--;
+                article.likes = Math.max(0, (article.likes || 0) - 1);
+                
+                // Update in database
+                await supabase
+                    .from('articles')
+                    .update({ likes: article.likes })
+                    .eq('id', articleId);
             } else {
-                liked[postId] = true;
+                liked[articleId] = true;
                 btn.classList.add('liked');
-                post.likes++;
+                article.likes = (article.likes || 0) + 1;
+                
+                // Update in database
+                await supabase
+                    .from('articles')
+                    .update({ likes: article.likes })
+                    .eq('id', articleId);
             }
-            countSpan.textContent = post.likes;
-        }
+            
+            countSpan.textContent = article.likes;
+        };
 
-        function openComments(e) {
-            const postId = e.currentTarget.dataset.id;
-            document.getElementById(`comments-${postId}`).classList.add('active');
-        }
-
-        function closeComments(e) {
-            const postId = e.currentTarget.dataset.id;
-            document.getElementById(`comments-${postId}`).classList.remove('active');
-        }
-
-        function addComment(e) {
-            const postId = parseInt(e.currentTarget.dataset.id);
-            const input = document.getElementById(`input-${postId}`);
-            const commentText = input.value.trim();
-
-            if (commentText) {
-                const post = posts.find(p => p.id === postId);
-                post.comments.push(commentText);
-
-                const commentsList = document.getElementById(`comments-list-${postId}`);
-                const newComment = document.createElement('div');
-                newComment.className = 'comment';
-                newComment.innerHTML = `
-                    <div class="comment-avatar"></div>
-                    <div class="comment-content">
-                        <div class="comment-username">user${post.comments.length}</div>
-                        <div class="comment-text">${commentText}</div>
-                    </div>
-                `;
-                commentsList.appendChild(newComment);
-
-                input.value = '';
-
-                // Update comment count
-                const commentBtn = document.querySelector(`.comment-btn[data-id="${postId}"] span`);
-                commentBtn.textContent = post.comments.length;
+        window.shareArticle = function(articleId, title) {
+            const url = `${window.location.origin}/article.html?id=${articleId}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: url
+                }).catch(err => console.log('Error sharing:', err));
+            } else {
+                navigator.clipboard.writeText(url);
+                alert('Link copied to clipboard!');
             }
-        }
+        };
+
+        window.openFullArticle = function(articleId) {
+            window.location.href = `article.html?id=${articleId}`;
+        };
 
         function handleScroll(e) {
             const container = e.target;
@@ -503,7 +544,7 @@
         }
 
         // Initialize
-        renderPosts();
+        loadArticles();
     </script>
 </body>
 </html>
