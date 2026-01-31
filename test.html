@@ -1,212 +1,509 @@
-import React, { useState } from 'react';
-import { Heart, MessageCircle, Share2 } from 'lucide-react';
-
-const VideoScroller = () => {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop',
-      title: 'Mountain Sunrise',
-      description: 'Woke up to this incredible view 🌄',
-      likes: 1234,
-      comments: ['Amazing shot! 😍', 'Where is this?', 'Goals!']
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400&h=600&fit=crop',
-      title: 'Coffee Time',
-      description: 'Perfect way to start the day ☕',
-      likes: 856,
-      comments: ['I need this right now', 'Best part of morning!']
-    },
-    {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=600&fit=crop',
-      title: 'Nature Vibes',
-      description: 'Sometimes you just need to disconnect 🌲',
-      likes: 2341,
-      comments: ['So peaceful', 'Taking me there', 'Nature therapy 💚']
-    },
-    {
-      id: 4,
-      image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=600&fit=crop',
-      title: 'Beach Day',
-      description: 'Living my best life 🏖️',
-      likes: 3421,
-      comments: ['Paradise!', 'Take me with you', 'Dream destination']
-    },
-    {
-      id: 5,
-      image: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=400&h=600&fit=crop',
-      title: 'City Lights',
-      description: 'Night walks hit different ✨',
-      likes: 1876,
-      comments: ['Stunning capture', 'Which city?', 'Night owl approved 🦉']
-    }
-  ]);
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [liked, setLiked] = useState({});
-  const [showComments, setShowComments] = useState({});
-  const [newComment, setNewComment] = useState({});
-
-  const currentPost = posts[currentIndex];
-
-  const handleLike = (postId) => {
-    setLiked(prev => {
-      const isLiked = !prev[postId];
-      setPosts(posts.map(post => 
-        post.id === postId 
-          ? { ...post, likes: post.likes + (isLiked ? 1 : -1) }
-          : post
-      ));
-      return { ...prev, [postId]: isLiked };
-    });
-  };
-
-  const handleScroll = (e) => {
-    const container = e.target;
-    const scrollPosition = container.scrollTop;
-    const itemHeight = container.clientHeight;
-    const newIndex = Math.round(scrollPosition / itemHeight);
-    setCurrentIndex(newIndex);
-  };
-
-  const toggleComments = (postId) => {
-    setShowComments(prev => ({ ...prev, [postId]: !prev[postId] }));
-  };
-
-  const addComment = (postId) => {
-    if (newComment[postId]?.trim()) {
-      setPosts(posts.map(post =>
-        post.id === postId
-          ? { ...post, comments: [...post.comments, newComment[postId]] }
-          : post
-      ));
-      setNewComment({ ...newComment, [postId]: '' });
-    }
-  };
-
-  return (
-    <div className="w-full h-screen bg-black flex items-center justify-center">
-      <div className="relative w-full max-w-md h-full bg-black overflow-hidden">
-        <div 
-          className="h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
-          onScroll={handleScroll}
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {posts.map((post) => (
-            <div key={post.id} className="relative h-screen snap-start flex-shrink-0">
-              {/* Image */}
-              <img 
-                src={post.image} 
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
-              
-              {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
-              
-              {/* Action buttons */}
-              <div className="absolute right-4 bottom-32 flex flex-col gap-6">
-                <button 
-                  onClick={() => handleLike(post.id)}
-                  className="flex flex-col items-center gap-1 transition-transform active:scale-90"
-                >
-                  <Heart 
-                    size={32} 
-                    className={`${liked[post.id] ? 'fill-red-500 text-red-500' : 'text-white'} transition-colors`}
-                  />
-                  <span className="text-white text-xs font-semibold">{post.likes}</span>
-                </button>
-                
-                <button 
-                  onClick={() => toggleComments(post.id)}
-                  className="flex flex-col items-center gap-1 transition-transform active:scale-90"
-                >
-                  <MessageCircle size={32} className="text-white" />
-                  <span className="text-white text-xs font-semibold">{post.comments.length}</span>
-                </button>
-                
-                <button className="flex flex-col items-center gap-1 transition-transform active:scale-90">
-                  <Share2 size={32} className="text-white" />
-                  <span className="text-white text-xs font-semibold">Share</span>
-                </button>
-              </div>
-              
-              {/* Title and description */}
-              <div className="absolute bottom-4 left-4 right-20 text-white">
-                <h3 className="text-lg font-bold mb-1">{post.title}</h3>
-                <p className="text-sm opacity-90">{post.description}</p>
-              </div>
-              
-              {/* Comments section */}
-              {showComments[post.id] && (
-                <div className="absolute inset-0 bg-black/95 flex flex-col">
-                  <div className="flex justify-between items-center p-4 border-b border-gray-700">
-                    <h3 className="text-white text-lg font-semibold">Comments</h3>
-                    <button 
-                      onClick={() => toggleComments(post.id)}
-                      className="text-white text-2xl"
-                    >
-                      ×
-                    </button>
-                  </div>
-                  
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {post.comments.map((comment, idx) => (
-                      <div key={idx} className="flex gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex-shrink-0" />
-                        <div className="flex-1">
-                          <p className="text-white text-sm font-semibold mb-1">user{idx + 1}</p>
-                          <p className="text-gray-300 text-sm">{comment}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="p-4 border-t border-gray-700 flex gap-2">
-                    <input
-                      type="text"
-                      value={newComment[post.id] || ''}
-                      onChange={(e) => setNewComment({ ...newComment, [post.id]: e.target.value })}
-                      onKeyPress={(e) => e.key === 'Enter' && addComment(post.id)}
-                      placeholder="Add a comment..."
-                      className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full outline-none focus:ring-2 focus:ring-purple-500"
-                    />
-                    <button
-                      onClick={() => addComment(post.id)}
-                      className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-full hover:opacity-90 transition-opacity"
-                    >
-                      Post
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-        
-        {/* Scroll indicator */}
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 flex gap-1">
-          {posts.map((_, idx) => (
-            <div 
-              key={idx}
-              className={`h-1 rounded-full transition-all ${
-                idx === currentIndex ? 'w-6 bg-white' : 'w-1 bg-white/50'
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-      
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Scroller</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      `}</style>
-    </div>
-  );
-};
 
-export default VideoScroller;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .app-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+
+        .scroller-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .posts-wrapper {
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+        }
+
+        .posts-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .post {
+            position: relative;
+            height: 100vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gradient-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 0%, transparent 60%, rgba(0,0,0,0.6) 100%);
+            pointer-events: none;
+        }
+
+        .action-buttons {
+            position: absolute;
+            right: 16px;
+            bottom: 128px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            z-index: 10;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.9);
+        }
+
+        .action-btn svg {
+            width: 32px;
+            height: 32px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .action-btn.liked svg {
+            fill: #ef4444;
+            stroke: #ef4444;
+        }
+
+        .action-btn span {
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .post-info {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            right: 80px;
+            color: white;
+            z-index: 10;
+        }
+
+        .post-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .post-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .comments-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 20;
+            display: none;
+            flex-direction: column;
+        }
+
+        .comments-overlay.active {
+            display: flex;
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #374151;
+        }
+
+        .comments-header h3 {
+            color: white;
+            font-size: 18px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .comments-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .comment {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-username {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .comment-text {
+            color: #d1d5db;
+            font-size: 14px;
+        }
+
+        .comment-input-area {
+            padding: 16px;
+            border-top: 1px solid #374151;
+            display: flex;
+            gap: 8px;
+        }
+
+        .comment-input {
+            flex: 1;
+            background: #1f2937;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .comment-input:focus {
+            outline: 2px solid #a855f7;
+        }
+
+        .post-comment-btn {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .post-comment-btn:hover {
+            opacity: 0.9;
+        }
+
+        .scroll-indicators {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 4px;
+            z-index: 10;
+        }
+
+        .indicator {
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s;
+        }
+
+        .indicator.active {
+            width: 24px;
+            background: white;
+        }
+
+        .indicator:not(.active) {
+            width: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="scroller-container">
+            <div class="scroll-indicators" id="indicators"></div>
+            <div class="posts-wrapper" id="postsWrapper"></div>
+        </div>
+    </div>
+
+    <script>
+        const posts = [
+            {
+                id: 1,
+                image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop',
+                title: 'Mountain Sunrise',
+                description: 'Woke up to this incredible view 🌄',
+                likes: 1234,
+                comments: ['Amazing shot! 😍', 'Where is this?', 'Goals!']
+            },
+            {
+                id: 2,
+                image: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400&h=600&fit=crop',
+                title: 'Coffee Time',
+                description: 'Perfect way to start the day ☕',
+                likes: 856,
+                comments: ['I need this right now', 'Best part of morning!']
+            },
+            {
+                id: 3,
+                image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=600&fit=crop',
+                title: 'Nature Vibes',
+                description: 'Sometimes you just need to disconnect 🌲',
+                likes: 2341,
+                comments: ['So peaceful', 'Taking me there', 'Nature therapy 💚']
+            },
+            {
+                id: 4,
+                image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=600&fit=crop',
+                title: 'Beach Day',
+                description: 'Living my best life 🏖️',
+                likes: 3421,
+                comments: ['Paradise!', 'Take me with you', 'Dream destination']
+            },
+            {
+                id: 5,
+                image: 'https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=400&h=600&fit=crop',
+                title: 'City Lights',
+                description: 'Night walks hit different ✨',
+                likes: 1876,
+                comments: ['Stunning capture', 'Which city?', 'Night owl approved 🦉']
+            }
+        ];
+
+        let liked = {};
+        let currentIndex = 0;
+
+        function renderPosts() {
+            const wrapper = document.getElementById('postsWrapper');
+            const indicatorsDiv = document.getElementById('indicators');
+
+            posts.forEach((post, index) => {
+                // Create post element
+                const postDiv = document.createElement('div');
+                postDiv.className = 'post';
+                postDiv.innerHTML = `
+                    <img src="${post.image}" alt="${post.title}" class="post-image">
+                    <div class="gradient-overlay"></div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn like-btn" data-id="${post.id}">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                            <span class="like-count">${post.likes}</span>
+                        </button>
+                        
+                        <button class="action-btn comment-btn" data-id="${post.id}">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                            </svg>
+                            <span>${post.comments.length}</span>
+                        </button>
+                        
+                        <button class="action-btn">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                    
+                    <div class="post-info">
+                        <div class="post-title">${post.title}</div>
+                        <div class="post-description">${post.description}</div>
+                    </div>
+                    
+                    <div class="comments-overlay" id="comments-${post.id}">
+                        <div class="comments-header">
+                            <h3>Comments</h3>
+                            <button class="close-btn" data-id="${post.id}">×</button>
+                        </div>
+                        <div class="comments-list" id="comments-list-${post.id}">
+                            ${post.comments.map((comment, idx) => `
+                                <div class="comment">
+                                    <div class="comment-avatar"></div>
+                                    <div class="comment-content">
+                                        <div class="comment-username">user${idx + 1}</div>
+                                        <div class="comment-text">${comment}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="comment-input-area">
+                            <input type="text" class="comment-input" placeholder="Add a comment..." id="input-${post.id}">
+                            <button class="post-comment-btn" data-id="${post.id}">Post</button>
+                        </div>
+                    </div>
+                `;
+                wrapper.appendChild(postDiv);
+
+                // Create indicator
+                const indicator = document.createElement('div');
+                indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+                indicator.dataset.index = index;
+                indicatorsDiv.appendChild(indicator);
+            });
+
+            // Add event listeners
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', handleLike);
+            });
+
+            document.querySelectorAll('.comment-btn').forEach(btn => {
+                btn.addEventListener('click', openComments);
+            });
+
+            document.querySelectorAll('.close-btn').forEach(btn => {
+                btn.addEventListener('click', closeComments);
+            });
+
+            document.querySelectorAll('.post-comment-btn').forEach(btn => {
+                btn.addEventListener('click', addComment);
+            });
+
+            document.querySelectorAll('.comment-input').forEach(input => {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        addComment(e);
+                    }
+                });
+            });
+
+            wrapper.addEventListener('scroll', handleScroll);
+        }
+
+        function handleLike(e) {
+            const postId = parseInt(e.currentTarget.dataset.id);
+            const post = posts.find(p => p.id === postId);
+            const btn = e.currentTarget;
+            const countSpan = btn.querySelector('.like-count');
+
+            if (liked[postId]) {
+                liked[postId] = false;
+                btn.classList.remove('liked');
+                post.likes--;
+            } else {
+                liked[postId] = true;
+                btn.classList.add('liked');
+                post.likes++;
+            }
+            countSpan.textContent = post.likes;
+        }
+
+        function openComments(e) {
+            const postId = e.currentTarget.dataset.id;
+            document.getElementById(`comments-${postId}`).classList.add('active');
+        }
+
+        function closeComments(e) {
+            const postId = e.currentTarget.dataset.id;
+            document.getElementById(`comments-${postId}`).classList.remove('active');
+        }
+
+        function addComment(e) {
+            const postId = parseInt(e.currentTarget.dataset.id);
+            const input = document.getElementById(`input-${postId}`);
+            const commentText = input.value.trim();
+
+            if (commentText) {
+                const post = posts.find(p => p.id === postId);
+                post.comments.push(commentText);
+
+                const commentsList = document.getElementById(`comments-list-${postId}`);
+                const newComment = document.createElement('div');
+                newComment.className = 'comment';
+                newComment.innerHTML = `
+                    <div class="comment-avatar"></div>
+                    <div class="comment-content">
+                        <div class="comment-username">user${post.comments.length}</div>
+                        <div class="comment-text">${commentText}</div>
+                    </div>
+                `;
+                commentsList.appendChild(newComment);
+
+                input.value = '';
+
+                // Update comment count
+                const commentBtn = document.querySelector(`.comment-btn[data-id="${postId}"] span`);
+                commentBtn.textContent = post.comments.length;
+            }
+        }
+
+        function handleScroll(e) {
+            const container = e.target;
+            const scrollPosition = container.scrollTop;
+            const itemHeight = container.clientHeight;
+            const newIndex = Math.round(scrollPosition / itemHeight);
+
+            if (newIndex !== currentIndex) {
+                currentIndex = newIndex;
+                updateIndicators();
+            }
+        }
+
+        function updateIndicators() {
+            document.querySelectorAll('.indicator').forEach((indicator, index) => {
+                if (index === currentIndex) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        // Initialize
+        renderPosts();
+    </script>
+</body>
+</html>
