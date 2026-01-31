@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#0f0f0f">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Article Scroller - Patholytica</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -45,6 +43,63 @@
             transition: background 0.2s ease, color 0.2s ease;
         }
 
+        .header-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-color);
+            padding-top: env(safe-area-inset-top);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 40;
+            width: 100%;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .logo-img {
+            height: 28px;
+            width: auto;
+            transition: filter 0.2s ease;
+            cursor: pointer;
+        }
+        
+        body.light-theme .logo-img {
+            filter: invert(1);
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: background 0.2s ease;
+        }
+        
+        .icon-btn:hover {
+            background: var(--hover-bg);
+        }
+
         .app-container {
             width: 100vw;
             height: 100vh;
@@ -61,6 +116,7 @@
             height: 100vh;
             background: var(--bg-color);
             overflow: hidden;
+            padding-top: 57px;
         }
 
         .posts-wrapper {
@@ -80,7 +136,7 @@
             scroll-snap-align: start;
             scroll-snap-stop: always;
             background: var(--bg-color);
-            padding: calc(20px + env(safe-area-inset-top)) 20px 70px;
+            padding: 20px 20px 100px;
             display: flex;
             flex-direction: column;
         }
@@ -90,7 +146,6 @@
             align-items: center;
             gap: 12px;
             margin-bottom: 20px;
-            margin-top: 3px;
         }
 
         .author-avatar {
@@ -137,7 +192,6 @@
             flex: 1;
             overflow-y: auto;
             padding-right: 60px;
-            padding-bottom: 20px;
         }
 
         .article-content::-webkit-scrollbar {
@@ -580,6 +634,17 @@
     </style>
 </head>
 <body>
+    <div class="header-wrapper">
+        <div class="header">
+            <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
+            <div class="header-actions">
+                <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+                    <i class="fas fa-circle-half-stroke"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <div class="scroller-container">
             <div class="posts-wrapper" id="postsWrapper">
@@ -649,38 +714,22 @@
         let offset = 0;
         const LIMIT = 10;
 
-        // Update theme color when theme changes
-        function updateThemeColor() {
-            const metaThemeColor = document.querySelector("meta[name=theme-color]");
-            const isDark = !document.body.classList.contains('light-theme');
-            metaThemeColor.setAttribute("content", isDark ? "#0f0f0f" : "#ffffff");
-        }
-
         // Get current logged-in user
         async function getCurrentUser() {
             try {
                 const { data: { session } } = await supabase.auth.getSession();
-                
                 if (!session) {
-                    console.log('No session found');
                     return null;
                 }
                 
-                console.log('Session user ID:', session.user.id);
-                
-                // Get user data from users table using firebase_uid
+                // Get user data from users table
                 const { data: userData, error } = await supabase
                     .from('users')
-                    .select('user_id, firebase_uid, username, full_name')
+                    .select('user_id, firebase_uid')
                     .eq('firebase_uid', session.user.id)
                     .single();
                 
-                if (error) {
-                    console.error('Error fetching user data:', error);
-                    return null;
-                }
-                
-                console.log('User data:', userData);
+                if (error) throw error;
                 return userData;
             } catch (error) {
                 console.error('Error getting current user:', error);
@@ -1120,13 +1169,10 @@
                 const currentUser = await getCurrentUser();
                 
                 if (!currentUser) {
-                    console.log('No user logged in, redirecting...');
                     // User not logged in - redirect to login
                     window.location.href = 'https://patholytica.com/login';
                     return;
                 }
-
-                console.log('Posting comment with user_id:', currentUser.user_id);
 
                 // Post comment with the logged-in user's ID
                 const { data, error } = await supabase
@@ -1140,12 +1186,7 @@
                     ])
                     .select();
 
-                if (error) {
-                    console.error('Insert error:', error);
-                    throw error;
-                }
-
-                console.log('Comment posted successfully:', data);
+                if (error) throw error;
 
                 input.value = '';
                 await loadComments(currentArticleId);
@@ -1195,13 +1236,11 @@
         function toggleTheme() {
             document.body.classList.toggle('light-theme');
             localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
-            updateThemeColor();
         }
 
         if (localStorage.getItem("theme") === "light") {
             document.body.classList.add("light-theme");
         }
-        updateThemeColor();
 
         window.toggleAudio = function(btn, audioId) {
             const player = btn.closest('.custom-audio-player');
