@@ -45,27 +45,9 @@ body {
     height: 100%;
 }
 
-.header-wrapper {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--bg-color);
-    padding-top: env(safe-area-inset-top);
-    z-index: 30;
-    width: 100%;
-    max-width: 450px;
-    height: 0.25px;
-}
-
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 4px 16px;
-    max-width: 100%;
-    margin: 0 auto;
-    height: 100%;
+/* Add theme-color meta tag styling to match footer */
+head {
+    display: none;
 }
 
 .icon-btn {
@@ -552,7 +534,7 @@ body {
     transform: translateX(-50%);
     width: 100%;
     max-width: 450px;
-    background: var(--card-bg);
+    background: #2a2a2a;
     border-top: 1px solid var(--border-color);
     padding: 8px 24px;
     padding-bottom: calc(8px + env(safe-area-inset-bottom));
@@ -624,15 +606,11 @@ body {
 }
 
 
-</style></head>
+</style>
+<meta name="theme-color" content="#2a2a2a">
+</head>
 <body>
-    <div class="header-wrapper">
-        <div class="header">
-            <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-                <i class="fas fa-circle-half-stroke"></i>
-            </button>
-        </div>
-    </div><div class="app-container">
+    <div class="app-container">
     <div class="scroller-container">
         <div class="posts-wrapper" id="postsWrapper">
             <div class="loading-container">
@@ -1267,15 +1245,6 @@ body {
 
     loadArticles(true);
 </script><script>
-    function toggleTheme() {
-        document.body.classList.toggle('light-theme');
-        localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
-    }
-
-    if (localStorage.getItem("theme") === "light") {
-        document.body.classList.add("light-theme");
-    }
-
     window.toggleAudio = function(btn, audioId) {
         const player = btn.closest('.custom-audio-player');
         const audio = document.getElementById(audioId);
