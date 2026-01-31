@@ -78,7 +78,7 @@
             scroll-snap-align: start;
             scroll-snap-stop: always;
             background: var(--bg-color);
-            padding: 80px 20px 100px;
+            padding: 20px 20px 100px;
             display: flex;
             flex-direction: column;
         }
@@ -86,19 +86,19 @@
         .article-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 16px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .author-avatar {
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: var(--accent);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 18px;
             font-weight: bold;
             color: white;
         }
@@ -110,20 +110,21 @@
         .author-name {
             color: var(--text-primary);
             font-weight: 600;
-            font-size: 15px;
+            font-size: 17px;
+            margin-bottom: 2px;
         }
 
         .article-date {
             color: var(--text-secondary);
-            font-size: 11px;
+            font-size: 12px;
         }
 
         .article-title {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 12px;
-            line-height: 1.3;
+            margin-bottom: 16px;
+            line-height: 1.2;
         }
 
         .article-content {
@@ -269,7 +270,7 @@
         .action-buttons {
             position: absolute;
             right: 16px;
-            bottom: 90px;
+            bottom: 140px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -643,6 +644,29 @@
         let hasMore = true;
         let offset = 0;
         const LIMIT = 10;
+
+        // Get current logged-in user
+        async function getCurrentUser() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    return null;
+                }
+                
+                // Get user data from users table
+                const { data: userData, error } = await supabase
+                    .from('users')
+                    .select('user_id, firebase_uid')
+                    .eq('firebase_uid', session.user.id)
+                    .single();
+                
+                if (error) throw error;
+                return userData;
+            } catch (error) {
+                console.error('Error getting current user:', error);
+                return null;
+            }
+        }
 
         async function loadArticles(isInitial = true) {
             if (isLoading || (!isInitial && !hasMore)) return;
@@ -1072,46 +1096,22 @@
             sendBtn.disabled = true;
 
             try {
-                // Get or create a persistent demo user ID
-                let userId = localStorage.getItem('demo_user_id');
+                // Get current logged-in user
+                const currentUser = await getCurrentUser();
                 
-                if (!userId) {
-                    // Get the first available user
-                    const { data: users, error: userError } = await supabase
-                        .from('users')
-                        .select('user_id')
-                        .limit(1);
-                    
-                    if (users && users.length > 0) {
-                        userId = users[0].user_id;
-                        localStorage.setItem('demo_user_id', userId);
-                    } else {
-                        // Create a demo user if none exist
-                        const { data: newUser, error: createError } = await supabase
-                            .from('users')
-                            .insert([
-                                {
-                                    firebase_uid: 'demo-user-' + Date.now(),
-                                    username: 'demo_user',
-                                    email: 'demo@example.com',
-                                    full_name: 'Demo User'
-                                }
-                            ])
-                            .select('user_id');
-                        
-                        if (createError) throw createError;
-                        
-                        userId = newUser[0].user_id;
-                        localStorage.setItem('demo_user_id', userId);
-                    }
+                if (!currentUser) {
+                    // User not logged in - redirect to login
+                    window.location.href = 'https://patholytica.com/login';
+                    return;
                 }
 
+                // Post comment with the logged-in user's ID
                 const { data, error } = await supabase
                     .from('comments')
                     .insert([
                         {
                             article_id: currentArticleId,
-                            user_id: parseInt(userId),
+                            user_id: currentUser.user_id,
                             comment_text: text
                         }
                     ])
