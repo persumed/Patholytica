@@ -1,5 +1,4 @@
 <!DOCTYPE html><html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -178,7 +177,7 @@ body.light-theme .logo-img {
 /* Floating Create Button */
 .fab-create {
   position: fixed;
-  bottom: 80px;
+  bottom: 24px;
   right: 24px;
   width: 56px;
   height: 56px;
@@ -214,148 +213,177 @@ body.light-theme .fab-create:hover {
 }
 
 .list-container {
-max-width: 900px;
-width: 100%;
-margin: 0 auto;
-padding: 24px 24px 100px;
-padding-top: calc(65px + env(safe-area-inset-top) + 24px);
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 24px 80px;
+  padding-top: calc(65px + env(safe-area-inset-top) + 24px);
 }
 .article-list {
-list-style: none;
-margin: 0;
-padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 .article-item {
-padding: 24px 0;
-border-bottom: 1px solid var(–border-color);
-cursor: pointer;
-transition: background 0.2s ease;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 .article-item:hover {
-background: var(–hover-bg);
-margin: 0 -12px;
-padding: 24px 12px;
+  background: var(--hover-bg);
+  margin: 0 -12px;
+  padding: 24px 12px;
 }
 .article-title {
-font-family: ‘Merriweather’, Georgia, serif;
-font-size: 38px;
-font-weight: 700;
-margin: 0 0 8px 0;
-line-height: 1.3;
-color: var(–text-primary);
-word-wrap: break-word;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 38px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+  color: var(--text-primary);
+  word-wrap: break-word;
 }
 .article-item:hover .article-title {
-color: var(–accent);
+  color: var(--accent);
 }
 .article-meta {
-font-size: 14px;
-color: var(–text-secondary);
-display: flex;
-align-items: center;
-gap: 8px;
-flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .meta-dot {
-width: 3px;
-height: 3px;
-background: var(–text-secondary);
-border-radius: 50%;
+  width: 3px;
+  height: 3px;
+  background: var(--text-secondary);
+  border-radius: 50%;
 }
 .loading-state {
-text-align: center;
-padding: 40px;
-color: var(–text-secondary);
-font-size: 16px;
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-size: 16px;
 }
 .error-state {
-text-align: center;
-padding: 40px;
-color: #ff4444;
-font-size: 16px;
+  text-align: center;
+  padding: 40px;
+  color: #ff4444;
+  font-size: 16px;
+}
+.footer {
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+.footer-stats {
+  margin-bottom: 8px;
+}
+.article-count {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+.footer-tagline {
+  margin-bottom: 8px;
+}
+.footer-location {
+  font-size: 13px;
+  color: var(--text-secondary);
+  opacity: 0.8;
 }
 
-/* Footer Bar - from first code */
+/* Footer Bar from first code */
 .footer-bar {
-position: fixed;
-bottom: 0;
-left: 50%;
-transform: translateX(-50%);
-width: 100%;
-max-width: 450px;
-background: var(–card-bg);
-border-top: 1px solid var(–border-color);
-padding: 8px 24px;
-padding-bottom: calc(8px + env(safe-area-inset-bottom));
-display: flex;
-justify-content: space-around;
-align-items: center;
-z-index: 100;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 450px;
+  background: var(--card-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 8px 24px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
 }
 
 .footer-btn {
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 2px;
-background: none;
-border: none;
-color: var(–text-secondary);
-cursor: pointer;
-transition: color 0.2s ease;
-padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 6px 12px;
 }
 
 .footer-btn:hover {
-color: var(–text-primary);
+  color: var(--text-primary);
 }
 
 .footer-btn.active {
-color: var(–accent);
+  color: var(--accent);
 }
 
 .footer-btn i {
-font-size: 20px;
+  font-size: 20px;
 }
 
 .footer-btn span {
-font-size: 10px;
-font-weight: 500;
+  font-size: 10px;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
-.fab-create {
-bottom: 70px;
-right: 20px;
-width: 52px;
-height: 52px;
-font-size: 22px;
-}
-.list-container {
-padding: 16px 16px 100px;
-padding-top: calc(65px + env(safe-area-inset-top) + 16px);
-}
-.article-title {
-font-size: 28px;
-}
-.article-meta {
-font-size: 13px;
-}
-.auth-buttons {
-gap: 8px;
-}
-.btn-login, .btn-signup {
-padding: 6px 16px;
-font-size: 13px;
-}
+  .fab-create {
+    bottom: 80px;
+    right: 20px;
+    width: 52px;
+    height: 52px;
+    font-size: 22px;
+  }
+  .list-container {
+    padding: 16px 16px 100px;
+    padding-top: calc(65px + env(safe-area-inset-top) + 16px);
+  }
+  .article-title {
+    font-size: 28px;
+  }
+  .article-meta {
+    font-size: 13px;
+  }
+  .footer {
+    padding: 20px 16px;
+    font-size: 13px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+  .auth-buttons {
+    gap: 8px;
+  }
+  .btn-login, .btn-signup {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
 }
 </style>
-
 </head>
 <body>
 <div class="header-wrapper">
   <div class="header">
-    <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo" onclick="window.location.href='index.html'">
+    <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
       <button class="icon-btn" onclick="searchArticles()" title="Search">
         <i class="fas fa-search"></i>
@@ -394,7 +422,6 @@ font-size: 13px;
 </div>
 
 <!-- Floating Create Button -->
-
 <button class="fab-create" id="fabCreateBtn" onclick="createArticle()" title="Create Article">
   <i class="fas fa-plus"></i>
 </button>
@@ -405,10 +432,21 @@ font-size: 13px;
   </ul>
 </div>
 
-<!-- Footer Button Panel -->
+<footer class="footer">
+  <div class="footer-stats">
+    <span class="article-count" id="articleCount">0</span> articles accessible
+  </div>
+  <div class="footer-tagline">
+    Patholytica is a Medicinebank project aiming to unify academic sharing
+  </div>
+  <div class="footer-location" id="userLocation">
+    Loading location...
+  </div>
+</footer>
 
+<!-- Footer Bar Navigation -->
 <div class="footer-bar">
-  <button class="footer-btn" onclick="window.location.href='index.html'">
+  <button class="footer-btn active" onclick="window.location.href='index.html'">
     <i class="fas fa-home"></i>
     <span>Home</span>
   </button>
@@ -420,9 +458,9 @@ font-size: 13px;
     <i class="fas fa-search"></i>
     <span>Explore</span>
   </button>
-  <button class="footer-btn active">
-    <i class="fas fa-book"></i>
-    <span>Library</span>
+  <button class="footer-btn" onclick="window.location.href='profile.html'">
+    <i class="fas fa-user"></i>
+    <span>Profile</span>
   </button>
 </div>
 
@@ -479,6 +517,7 @@ async function loadArticles() {
 
     if (!articles || articles.length === 0) {
       articleList.innerHTML = '<li class="loading-state">No articles found.</li>';
+      document.getElementById('articleCount').textContent = '0';
       return;
     }
 
@@ -553,6 +592,9 @@ async function loadArticles() {
       
       articleList.appendChild(li);
     });
+
+    // Update article count
+    document.getElementById('articleCount').textContent = articles.length;
     
   } catch (err) {
     console.error('Unexpected error:', err);
@@ -695,7 +737,32 @@ document.addEventListener('click', function(event) {
     dropdown.classList.remove('show');
   }
 });
-</script>
 
+// Get user location
+if ("geolocation" in navigator) {
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
+        .then(response => response.json())
+        .then(data => {
+          const city = data.address.city || data.address.town || data.address.village || '';
+          const state = data.address.state || '';
+          const country = data.address.country || '';
+          
+          let locationText = [city, state, country].filter(Boolean).join(', ');
+          document.getElementById('userLocation').textContent = locationText || 'Location unavailable';
+        })
+        .catch(() => {
+          document.getElementById('userLocation').textContent = 'Location unavailable';
+        });
+    },
+    function() {
+      document.getElementById('userLocation').textContent = 'Location access denied';
+    }
+  );
+} else {
+  document.getElementById('userLocation').textContent = 'Geolocation not supported';
+}
+</script>
 </body>
 </html>
