@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f0f0f">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Article Scroller - Patholytica</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -78,7 +80,7 @@
             scroll-snap-align: start;
             scroll-snap-stop: always;
             background: var(--bg-color);
-            padding: 20px 20px 100px;
+            padding: calc(20px + env(safe-area-inset-top)) 20px 70px;
             display: flex;
             flex-direction: column;
         }
@@ -88,6 +90,7 @@
             align-items: center;
             gap: 12px;
             margin-bottom: 20px;
+            margin-top: 3px;
         }
 
         .author-avatar {
@@ -134,6 +137,7 @@
             flex: 1;
             overflow-y: auto;
             padding-right: 60px;
+            padding-bottom: 20px;
         }
 
         .article-content::-webkit-scrollbar {
@@ -270,7 +274,7 @@
         .action-buttons {
             position: absolute;
             right: 16px;
-            bottom: 90px;
+            bottom: 140px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -644,6 +648,45 @@
         let hasMore = true;
         let offset = 0;
         const LIMIT = 10;
+
+        // Update theme color when theme changes
+        function updateThemeColor() {
+            const metaThemeColor = document.querySelector("meta[name=theme-color]");
+            const isDark = !document.body.classList.contains('light-theme');
+            metaThemeColor.setAttribute("content", isDark ? "#0f0f0f" : "#ffffff");
+        }
+
+        // Get current logged-in user
+        async function getCurrentUser() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (!session) {
+                    console.log('No session found');
+                    return null;
+                }
+                
+                console.log('Session user ID:', session.user.id);
+                
+                // Get user data from users table using firebase_uid
+                const { data: userData, error } = await supabase
+                    .from('users')
+                    .select('user_id, firebase_uid, username, full_name')
+                    .eq('firebase_uid', session.user.id)
+                    .single();
+                
+                if (error) {
+                    console.error('Error fetching user data:', error);
+                    return null;
+                }
+                
+                console.log('User data:', userData);
+                return userData;
+            } catch (error) {
+                console.error('Error getting current user:', error);
+                return null;
+            }
+        }
 
         async function loadArticles(isInitial = true) {
             if (isLoading || (!isInitial && !hasMore)) return;
@@ -1073,52 +1116,36 @@
             sendBtn.disabled = true;
 
             try {
-                // Get or create a persistent demo user ID
-                let userId = localStorage.getItem('demo_user_id');
+                // Get current logged-in user
+                const currentUser = await getCurrentUser();
                 
-                if (!userId) {
-                    // Get the first available user
-                    const { data: users, error: userError } = await supabase
-                        .from('users')
-                        .select('user_id')
-                        .limit(1);
-                    
-                    if (users && users.length > 0) {
-                        userId = users[0].user_id;
-                        localStorage.setItem('demo_user_id', userId);
-                    } else {
-                        // Create a demo user if none exist
-                        const { data: newUser, error: createError } = await supabase
-                            .from('users')
-                            .insert([
-                                {
-                                    firebase_uid: 'demo-user-' + Date.now(),
-                                    username: 'demo_user',
-                                    email: 'demo@example.com',
-                                    full_name: 'Demo User'
-                                }
-                            ])
-                            .select('user_id');
-                        
-                        if (createError) throw createError;
-                        
-                        userId = newUser[0].user_id;
-                        localStorage.setItem('demo_user_id', userId);
-                    }
+                if (!currentUser) {
+                    console.log('No user logged in, redirecting...');
+                    // User not logged in - redirect to login
+                    window.location.href = 'https://patholytica.com/login';
+                    return;
                 }
 
+                console.log('Posting comment with user_id:', currentUser.user_id);
+
+                // Post comment with the logged-in user's ID
                 const { data, error } = await supabase
                     .from('comments')
                     .insert([
                         {
                             article_id: currentArticleId,
-                            user_id: parseInt(userId),
+                            user_id: currentUser.user_id,
                             comment_text: text
                         }
                     ])
                     .select();
 
-                if (error) throw error;
+                if (error) {
+                    console.error('Insert error:', error);
+                    throw error;
+                }
+
+                console.log('Comment posted successfully:', data);
 
                 input.value = '';
                 await loadComments(currentArticleId);
@@ -1168,11 +1195,13 @@
         function toggleTheme() {
             document.body.classList.toggle('light-theme');
             localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
+            updateThemeColor();
         }
 
         if (localStorage.getItem("theme") === "light") {
             document.body.classList.add("light-theme");
         }
+        updateThemeColor();
 
         window.toggleAudio = function(btn, audioId) {
             const player = btn.closest('.custom-audio-player');
