@@ -319,7 +319,7 @@
     </div>
 
     <script type="module">
-        // Initialize Supabase
+        // Initialize Supabase with the CORRECT key from your working code
         const supabase = window.supabase.createClient(
             "https://vduqewqyvszfquntmark.supabase.co",
             "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
@@ -331,6 +331,8 @@
 
         async function loadArticles() {
             try {
+                console.log('Fetching articles...');
+                
                 // Fetch articles
                 const { data: articlesData, error: articlesError } = await supabase
                     .from('articles')
@@ -340,29 +342,53 @@
 
                 if (articlesError) throw articlesError;
 
-                // Fetch authors for all articles
-                const userIds = [...new Set(articlesData.map(a => a.firebase_user_id))];
-                const { data: usersData } = await supabase
-                    .from('users')
-                    .select('firebase_uid, username, full_name')
-                    .in('firebase_uid', userIds);
+                console.log('Articles loaded:', articlesData?.length || 0);
 
-                // Fetch media for all articles
+                if (!articlesData || articlesData.length === 0) {
+                    document.getElementById('postsWrapper').innerHTML = `
+                        <div class="loading-container">
+                            <i class="fas fa-inbox" style="font-size: 48px;"></i>
+                            <div>No articles found</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Fetch authors
+                const userIds = [...new Set(articlesData.map(a => a.firebase_user_id).filter(id => id))];
+                
+                let usersData = [];
+                if (userIds.length > 0) {
+                    const { data: users } = await supabase
+                        .from('users')
+                        .select('firebase_uid, username, full_name')
+                        .in('firebase_uid', userIds);
+                    
+                    usersData = users || [];
+                }
+
+                // Fetch media
                 const articleIds = articlesData.map(a => a.id);
-                const { data: mediaData } = await supabase
-                    .from('media')
-                    .select('*')
-                    .in('article_id', articleIds)
-                    .order('display_order', { ascending: true });
+                
+                let mediaData = [];
+                if (articleIds.length > 0) {
+                    const { data: media } = await supabase
+                        .from('media')
+                        .select('*')
+                        .in('article_id', articleIds)
+                        .order('display_order', { ascending: true });
+                    
+                    mediaData = media || [];
+                }
 
                 // Combine data
                 articles = articlesData.map(article => {
-                    const author = usersData?.find(u => u.firebase_uid === article.firebase_user_id);
+                    const user = usersData?.find(u => u.firebase_uid === article.firebase_user_id);
                     const media = mediaData?.filter(m => m.article_id === article.id) || [];
                     
                     return {
                         ...article,
-                        author: author?.full_name || author?.username || 'Anonymous',
+                        author: user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous'),
                         media: media
                     };
                 });
@@ -374,6 +400,9 @@
                     <div class="loading-container">
                         <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
                         <div>Failed to load articles</div>
+                        <button class="read-more-btn" onclick="location.reload()" style="margin-top: 16px;">
+                            <i class="fas fa-redo"></i> Retry
+                        </button>
                     </div>
                 `;
             }
@@ -387,9 +416,8 @@
             indicatorsDiv.innerHTML = '';
 
             articles.forEach((article, index) => {
-                // Truncate content for preview
-                const contentPreview = article.content.substring(0, 500);
-                const needsReadMore = article.content.length > 500;
+                const contentPreview = article.content ? article.content.substring(0, 500) : 'No content available';
+                const needsReadMore = article.content && article.content.length > 500;
 
                 const articleDiv = document.createElement('div');
                 articleDiv.className = 'article-card';
@@ -402,9 +430,9 @@
                         </div>
                     </div>
                     
-                    <div class="article-title">${article.title}</div>
+                    <div class="article-title">${article.title || 'Untitled'}</div>
                     
-                    ${article.media.length > 0 && article.media[0].type === 'image' ? 
+                    ${article.media && article.media.length > 0 && article.media[0].type === 'image' ? 
                         `<img src="${article.media[0].url}" class="media-preview" alt="Article image">` : ''}
                     
                     <div class="article-content">
@@ -445,7 +473,6 @@
                 `;
                 wrapper.appendChild(articleDiv);
 
-                // Create indicator
                 const indicator = document.createElement('div');
                 indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
                 indicator.dataset.index = index;
@@ -483,21 +510,27 @@
                 btn.classList.remove('liked');
                 article.likes = Math.max(0, (article.likes || 0) - 1);
                 
-                // Update in database
-                await supabase
-                    .from('articles')
-                    .update({ likes: article.likes })
-                    .eq('id', articleId);
+                try {
+                    await supabase
+                        .from('articles')
+                        .update({ likes: article.likes })
+                        .eq('id', articleId);
+                } catch (error) {
+                    console.error('Error updating like:', error);
+                }
             } else {
                 liked[articleId] = true;
                 btn.classList.add('liked');
                 article.likes = (article.likes || 0) + 1;
                 
-                // Update in database
-                await supabase
-                    .from('articles')
-                    .update({ likes: article.likes })
-                    .eq('id', articleId);
+                try {
+                    await supabase
+                        .from('articles')
+                        .update({ likes: article.likes })
+                        .eq('id', articleId);
+                } catch (error) {
+                    console.error('Error updating like:', error);
+                }
             }
             
             countSpan.textContent = article.likes;
