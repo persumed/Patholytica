@@ -2,11 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Article Scroller - Patholytica</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --text-primary: #fff;
+            --text-secondary: #aaa;
+            --card-bg: #1f1f1f;
+            --hover-bg: #2a2a2a;
+            --border-color: #303030;
+            --accent: #3ea6ff;
+            --accent-hover: #2d8ed6;
+        }
+        
+        body.light-theme {
+            --bg-color: #ffffff;
+            --text-primary: #0f0f0f;
+            --text-secondary: #606060;
+            --card-bg: #f9f9f9;
+            --hover-bg: #f0f0f0;
+            --border-color: #e5e5e5;
+            --accent: #065fd4;
+            --accent-hover: #0448a3;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,8 +37,67 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000;
+            background: var(--bg-color);
+            color: var(--text-primary);
             overflow: hidden;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .header-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-color);
+            padding-top: env(safe-area-inset-top);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 40;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .logo-img {
+            height: 28px;
+            width: auto;
+            transition: filter 0.2s ease;
+            cursor: pointer;
+        }
+
+        body.light-theme .logo-img {
+            filter: invert(1);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: background 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background: var(--hover-bg);
         }
 
         .app-container {
@@ -25,15 +106,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #000;
+            background: var(--bg-color);
+            padding-top: calc(60px + env(safe-area-inset-top));
         }
 
         .scroller-container {
             position: relative;
             width: 100%;
             max-width: 450px;
-            height: 100vh;
-            background: #000;
+            height: calc(100vh - 60px - env(safe-area-inset-top));
+            background: var(--bg-color);
             overflow: hidden;
         }
 
@@ -50,56 +132,40 @@
 
         .article-card {
             position: relative;
-            height: 100vh;
+            height: 100%;
             scroll-snap-align: start;
             scroll-snap-stop: always;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 60px 24px 160px;
+            background: var(--bg-color);
+            padding: 20px 20px 140px;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
         }
 
-        .article-card:nth-child(2) {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .article-card:nth-child(3) {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .article-card:nth-child(4) {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-
-        .article-card:nth-child(5) {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-        }
-
-        .article-card:nth-child(6) {
-            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        .gradient-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 0%, transparent 60%, rgba(0,0,0,0.6) 100%);
+            pointer-events: none;
         }
 
         .article-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
         .author-avatar {
-            width: 44px;
-            height: 44px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
+            background: var(--accent);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 14px;
             font-weight: bold;
             color: white;
-            border: 2px solid rgba(255, 255, 255, 0.5);
         }
 
         .author-info {
@@ -107,38 +173,31 @@
         }
 
         .author-name {
-            color: white;
+            color: var(--text-primary);
             font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 2px;
+            font-size: 13px;
         }
 
         .article-date {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 12px;
+            color: var(--text-secondary);
+            font-size: 11px;
         }
 
         .article-title {
-            font-size: 32px;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 20px;
-            line-height: 1.2;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.3;
         }
 
         .article-content {
-            color: white;
+            color: var(--text-primary);
             font-size: 16px;
             line-height: 1.6;
-            margin-bottom: 24px;
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            max-height: 45vh;
+            flex: 1;
             overflow-y: auto;
+            padding-right: 60px;
         }
 
         .article-content::-webkit-scrollbar {
@@ -146,36 +205,130 @@
         }
 
         .article-content::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
+            background: var(--border-color);
         }
 
         .article-content::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.4);
+            background: var(--text-secondary);
             border-radius: 2px;
         }
 
         .content-paragraph {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
-        .article-stats {
-            display: flex;
-            gap: 20px;
-            color: white;
-            font-size: 14px;
-            margin-top: auto;
+        .media-embed {
+            margin: 16px 0;
+            max-width: 100%;
         }
 
-        .stat-item {
+        .media-embed img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .media-caption {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .custom-audio-player {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            gap: 12px;
+            max-width: 100%;
+            border: 1px solid var(--border-color);
+        }
+
+        .play-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .play-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        .audio-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .audio-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-primary);
+        }
+
+        .waveform-container {
+            position: relative;
+            height: 32px;
+            background: var(--hover-bg);
+            border-radius: 4px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .waveform-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: var(--accent);
+            opacity: 0.3;
+            transition: width 0.1s linear;
+        }
+
+        .waveform-bars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 4px;
+        }
+
+        .waveform-bar {
+            width: 2px;
+            background: var(--text-secondary);
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+
+        .audio-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-secondary);
         }
 
         .action-buttons {
@@ -184,7 +337,7 @@
             bottom: 140px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
             z-index: 10;
         }
 
@@ -193,36 +346,33 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            width: 56px;
-            height: 56px;
+            background: none;
+            border: none;
             cursor: pointer;
-            transition: all 0.2s;
-            color: white;
-            font-size: 20px;
-            justify-content: center;
+            transition: transform 0.1s;
         }
 
         .action-btn:active {
             transform: scale(0.9);
         }
 
-        .action-btn.liked {
-            background: rgba(239, 68, 68, 0.5);
-            border-color: rgba(239, 68, 68, 0.8);
+        .action-btn svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--text-primary);
+            fill: none;
+            stroke-width: 2;
         }
 
-        .action-btn.liked i {
-            color: #ef4444;
+        .action-btn.liked svg {
+            fill: #ef4444;
+            stroke: #ef4444;
         }
 
-        .action-count {
+        .action-btn span {
+            color: var(--text-primary);
             font-size: 12px;
             font-weight: 600;
-            margin-top: -2px;
         }
 
         .scroll-indicators {
@@ -236,19 +386,19 @@
         }
 
         .indicator {
-            height: 3px;
+            height: 4px;
             border-radius: 2px;
-            background: rgba(255, 255, 255, 0.5);
+            background: var(--text-secondary);
             transition: all 0.3s;
         }
 
         .indicator.active {
             width: 24px;
-            background: white;
+            background: var(--text-primary);
         }
 
         .indicator:not(.active) {
-            width: 3px;
+            width: 4px;
         }
 
         .loading-container {
@@ -256,16 +406,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            color: white;
+            height: 100%;
+            color: var(--text-primary);
             gap: 16px;
         }
 
         .spinner {
             width: 48px;
             height: 48px;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top-color: white;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -273,39 +423,23 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
-        .read-more-btn {
-            background: white;
-            color: #667eea;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 24px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            margin-top: 16px;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .read-more-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .media-preview {
-            width: 100%;
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin: 16px 0;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
     </style>
 </head>
 <body>
+    <div class="header-wrapper">
+        <div class="header">
+            <img src="img_1896.png" class="logo-img" alt="Patholytica Logo" onclick="window.location.href='index.html'">
+            <div class="header-actions">
+                <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+                    <i class="fas fa-circle-half-stroke"></i>
+                </button>
+                <button class="icon-btn" onclick="window.location.href='index.html'" title="Home">
+                    <i class="fas fa-home"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <div class="scroller-container">
             <div class="scroll-indicators" id="indicators"></div>
@@ -319,7 +453,6 @@
     </div>
 
     <script type="module">
-        // Initialize Supabase with the CORRECT key from your working code
         const supabase = window.supabase.createClient(
             "https://vduqewqyvszfquntmark.supabase.co",
             "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
@@ -331,9 +464,6 @@
 
         async function loadArticles() {
             try {
-                console.log('Fetching articles...');
-                
-                // Fetch articles
                 const { data: articlesData, error: articlesError } = await supabase
                     .from('articles')
                     .select('*')
@@ -341,8 +471,6 @@
                     .limit(20);
 
                 if (articlesError) throw articlesError;
-
-                console.log('Articles loaded:', articlesData?.length || 0);
 
                 if (!articlesData || articlesData.length === 0) {
                     document.getElementById('postsWrapper').innerHTML = `
@@ -354,7 +482,6 @@
                     return;
                 }
 
-                // Fetch authors
                 const userIds = [...new Set(articlesData.map(a => a.firebase_user_id).filter(id => id))];
                 
                 let usersData = [];
@@ -367,29 +494,22 @@
                     usersData = users || [];
                 }
 
-                // Fetch media
+                // Fetch media for all articles
                 const articleIds = articlesData.map(a => a.id);
-                
-                let mediaData = [];
-                if (articleIds.length > 0) {
-                    const { data: media } = await supabase
-                        .from('media')
-                        .select('*')
-                        .in('article_id', articleIds)
-                        .order('display_order', { ascending: true });
-                    
-                    mediaData = media || [];
-                }
+                const { data: mediaData } = await supabase
+                    .from('media')
+                    .select('*')
+                    .in('article_id', articleIds)
+                    .order('display_order', { ascending: true });
 
-                // Combine data
                 articles = articlesData.map(article => {
                     const user = usersData?.find(u => u.firebase_uid === article.firebase_user_id);
-                    const media = mediaData?.filter(m => m.article_id === article.id) || [];
+                    const articleMedia = mediaData?.filter(m => m.article_id === article.id) || [];
                     
                     return {
                         ...article,
                         author: user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous'),
-                        media: media
+                        media: articleMedia
                     };
                 });
 
@@ -400,12 +520,62 @@
                     <div class="loading-container">
                         <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
                         <div>Failed to load articles</div>
-                        <button class="read-more-btn" onclick="location.reload()" style="margin-top: 16px;">
-                            <i class="fas fa-redo"></i> Retry
-                        </button>
                     </div>
                 `;
             }
+        }
+
+        function createMediaElement(mediaItem) {
+            const mediaDiv = document.createElement('div');
+            mediaDiv.className = 'media-embed';
+
+            if (mediaItem.type === 'image') {
+                mediaDiv.innerHTML = `
+                    <img src="${mediaItem.url}" alt="${mediaItem.caption || 'Article image'}">
+                    ${mediaItem.caption ? `<div class="media-caption">${mediaItem.caption}</div>` : ''}
+                `;
+            } else if (mediaItem.type === 'audio') {
+                const audioId = 'audio-' + Math.random().toString(36).substr(2, 9);
+                mediaDiv.innerHTML = `
+                    <div class="custom-audio-player">
+                        <button class="play-btn" onclick="toggleAudio(this, '${audioId}')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="audio-info">
+                            <div class="audio-title">${mediaItem.caption || 'Audio'}</div>
+                            <div class="waveform-container" onclick="seekAudio(event, this, '${audioId}')">
+                                <div class="waveform-progress"></div>
+                                <div class="waveform-bars">
+                                    ${Array(15).fill(0).map(() => `<div class="waveform-bar" style="height: ${Math.random() * 60 + 20}%"></div>`).join('')}
+                                </div>
+                            </div>
+                            <div class="audio-time">
+                                <span class="current-time">0:00</span>
+                                <span class="duration">0:00</span>
+                            </div>
+                        </div>
+                        <audio id="${audioId}" src="${mediaItem.url}" style="display: none;"></audio>
+                    </div>
+                    ${mediaItem.caption ? `<div class="media-caption">${mediaItem.caption}</div>` : ''}
+                `;
+
+                setTimeout(() => {
+                    const audio = document.getElementById(audioId);
+                    if (audio) {
+                        audio.addEventListener('loadedmetadata', function() {
+                            const duration = Math.floor(audio.duration);
+                            const mins = Math.floor(duration / 60);
+                            const secs = duration % 60;
+                            const durationSpan = audio.closest('.custom-audio-player').querySelector('.duration');
+                            if (durationSpan) {
+                                durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                            }
+                        });
+                    }
+                }, 100);
+            }
+
+            return mediaDiv;
         }
 
         function renderArticles() {
@@ -416,12 +586,41 @@
             indicatorsDiv.innerHTML = '';
 
             articles.forEach((article, index) => {
-                const contentPreview = article.content ? article.content.substring(0, 500) : 'No content available';
-                const needsReadMore = article.content && article.content.length > 500;
-
                 const articleDiv = document.createElement('div');
                 articleDiv.className = 'article-card';
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'article-content';
+                
+                // Split content into paragraphs
+                const paragraphs = (article.content || 'No content available').split('\n\n');
+                paragraphs.forEach((paragraph, pIndex) => {
+                    if (paragraph.trim()) {
+                        const p = document.createElement('div');
+                        p.className = 'content-paragraph';
+                        p.textContent = paragraph.trim();
+                        contentDiv.appendChild(p);
+
+                        // Insert media at appropriate positions
+                        if (article.media && article.media.length > 0) {
+                            const relatedMedia = article.media.filter(m => m.display_order === pIndex);
+                            relatedMedia.forEach(m => {
+                                contentDiv.appendChild(createMediaElement(m));
+                            });
+                        }
+                    }
+                });
+
+                // Append remaining media
+                if (article.media) {
+                    article.media.filter(m => m.display_order >= paragraphs.length).forEach(m => {
+                        contentDiv.appendChild(createMediaElement(m));
+                    });
+                }
+
                 articleDiv.innerHTML = `
+                    <div class="gradient-overlay"></div>
+                    
                     <div class="article-header">
                         <div class="author-avatar">${article.author.charAt(0).toUpperCase()}</div>
                         <div class="author-info">
@@ -432,51 +631,57 @@
                     
                     <div class="article-title">${article.title || 'Untitled'}</div>
                     
-                    ${article.media && article.media.length > 0 && article.media[0].type === 'image' ? 
-                        `<img src="${article.media[0].url}" class="media-preview" alt="Article image">` : ''}
-                    
-                    <div class="article-content">
-                        <div class="content-paragraph">${contentPreview}${needsReadMore ? '...' : ''}</div>
-                    </div>
-                    
-                    ${needsReadMore ? `
-                        <button class="read-more-btn" onclick="openFullArticle('${article.id}')">
-                            Read Full Article <i class="fas fa-arrow-right"></i>
-                        </button>
-                    ` : ''}
-                    
-                    <div class="article-stats">
-                        <div class="stat-item">
-                            <i class="fas fa-eye"></i>
-                            <span>${article.views || 0}</span>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-heart"></i>
-                            <span>${article.likes || 0}</span>
-                        </div>
-                    </div>
-                    
                     <div class="action-buttons">
-                        <button class="action-btn like-btn" data-id="${article.id}" onclick="toggleLike(event, '${article.id}')">
-                            <i class="fas fa-heart"></i>
-                            <span class="action-count">${article.likes || 0}</span>
+                        <button class="action-btn like-btn" data-id="${article.id}">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                            <span class="like-count">${article.likes || 0}</span>
                         </button>
                         
-                        <button class="action-btn" onclick="shareArticle('${article.id}', '${article.title}')">
-                            <i class="fas fa-share"></i>
+                        <button class="action-btn share-btn" data-id="${article.id}" data-title="${article.title}">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                            <span>Share</span>
                         </button>
-                        
-                        <button class="action-btn" onclick="openFullArticle('${article.id}')">
-                            <i class="fas fa-expand"></i>
+
+                        <button class="action-btn expand-btn" data-id="${article.id}">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <polyline points="9 21 3 21 3 15"></polyline>
+                                <line x1="21" y1="3" x2="14" y2="10"></line>
+                                <line x1="3" y1="21" x2="10" y2="14"></line>
+                            </svg>
+                            <span>Open</span>
                         </button>
                     </div>
                 `;
+                
+                articleDiv.querySelector('.article-title').insertAdjacentElement('afterend', contentDiv);
                 wrapper.appendChild(articleDiv);
 
                 const indicator = document.createElement('div');
                 indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
                 indicator.dataset.index = index;
                 indicatorsDiv.appendChild(indicator);
+            });
+
+            // Add event listeners
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', handleLike);
+            });
+
+            document.querySelectorAll('.share-btn').forEach(btn => {
+                btn.addEventListener('click', handleShare);
+            });
+
+            document.querySelectorAll('.expand-btn').forEach(btn => {
+                btn.addEventListener('click', handleExpand);
             });
 
             wrapper.addEventListener('scroll', handleScroll);
@@ -496,11 +701,10 @@
             return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         }
 
-        window.toggleLike = async function(event, articleId) {
-            event.stopPropagation();
-            
-            const btn = event.currentTarget;
-            const countSpan = btn.querySelector('.action-count');
+        async function handleLike(e) {
+            const articleId = e.currentTarget.dataset.id;
+            const btn = e.currentTarget;
+            const countSpan = btn.querySelector('.like-count');
             const article = articles.find(a => a.id === articleId);
             
             if (!article) return;
@@ -509,34 +713,27 @@
                 liked[articleId] = false;
                 btn.classList.remove('liked');
                 article.likes = Math.max(0, (article.likes || 0) - 1);
-                
-                try {
-                    await supabase
-                        .from('articles')
-                        .update({ likes: article.likes })
-                        .eq('id', articleId);
-                } catch (error) {
-                    console.error('Error updating like:', error);
-                }
             } else {
                 liked[articleId] = true;
                 btn.classList.add('liked');
                 article.likes = (article.likes || 0) + 1;
-                
-                try {
-                    await supabase
-                        .from('articles')
-                        .update({ likes: article.likes })
-                        .eq('id', articleId);
-                } catch (error) {
-                    console.error('Error updating like:', error);
-                }
             }
             
             countSpan.textContent = article.likes;
-        };
 
-        window.shareArticle = function(articleId, title) {
+            try {
+                await supabase
+                    .from('articles')
+                    .update({ likes: article.likes })
+                    .eq('id', articleId);
+            } catch (error) {
+                console.error('Error updating like:', error);
+            }
+        }
+
+        function handleShare(e) {
+            const articleId = e.currentTarget.dataset.id;
+            const title = e.currentTarget.dataset.title;
             const url = `${window.location.origin}/article.html?id=${articleId}`;
             
             if (navigator.share) {
@@ -548,11 +745,12 @@
                 navigator.clipboard.writeText(url);
                 alert('Link copied to clipboard!');
             }
-        };
+        }
 
-        window.openFullArticle = function(articleId) {
+        function handleExpand(e) {
+            const articleId = e.currentTarget.dataset.id;
             window.location.href = `article.html?id=${articleId}`;
-        };
+        }
 
         function handleScroll(e) {
             const container = e.target;
@@ -576,8 +774,54 @@
             });
         }
 
-        // Initialize
         loadArticles();
+    </script>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
+        }
+
+        if (localStorage.getItem("theme") === "light") {
+            document.body.classList.add("light-theme");
+        }
+
+        window.toggleAudio = function(btn, audioId) {
+            const player = btn.closest('.custom-audio-player');
+            const audio = document.getElementById(audioId);
+            const icon = btn.querySelector('i');
+            
+            if (audio.paused) {
+                audio.play();
+                icon.className = 'fas fa-pause';
+                
+                audio.ontimeupdate = function() {
+                    const progress = (audio.currentTime / audio.duration) * 100;
+                    player.querySelector('.waveform-progress').style.width = progress + '%';
+                    const currentMins = Math.floor(audio.currentTime / 60);
+                    const currentSecs = Math.floor(audio.currentTime % 60);
+                    player.querySelector('.current-time').textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
+                };
+                
+                audio.onended = function() {
+                    icon.className = 'fas fa-play';
+                    player.querySelector('.waveform-progress').style.width = '0%';
+                    player.querySelector('.current-time').textContent = '0:00';
+                };
+            } else {
+                audio.pause();
+                icon.className = 'fas fa-play';
+            }
+        };
+
+        window.seekAudio = function(event, container, audioId) {
+            const audio = document.getElementById(audioId);
+            const rect = container.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percentage = x / rect.width;
+            audio.currentTime = percentage * audio.duration;
+        };
     </script>
 </body>
 </html>
