@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, MessageCircle, Share2 } from 'lucide-react';
 
-const VideoScroller = () => {
+const hmm = () => {
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -209,4 +209,4 @@ const VideoScroller = () => {
   );
 };
 
-export default VideoScroller;
+export default hmm;
