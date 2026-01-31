@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <title>Article Scroller - Patholytica</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -40,37 +40,16 @@ body {
     color: var(--text-primary);
     overflow: hidden;
     transition: background 0.2s ease, color 0.2s ease;
-}
-
-.header-wrapper {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: transparent;
-    padding-top: env(safe-area-inset-top);
-    z-index: 40;
     width: 100%;
-    height: 44px;
-    pointer-events: none;
-}
-
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 4px 16px;
-    max-width: 100%;
-    margin: 0 auto;
     height: 100%;
-    pointer-events: none;
 }
 
 .icon-btn {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: var(--bg-color);
+    background: var(--hover-bg);
     border: none;
     color: var(--text-primary);
     cursor: pointer;
@@ -79,31 +58,29 @@ body {
     justify-content: center;
     font-size: 16px;
     transition: background 0.2s ease;
-    pointer-events: all;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .icon-btn:hover {
-    background: var(--hover-bg);
+    background: var(--border-color);
 }
 
 .app-container {
-    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 450px;
     height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: var(--bg-color);
 }
 
 .scroller-container {
     position: relative;
     width: 100%;
-    max-width: 450px;
     height: 100vh;
     background: var(--bg-color);
     overflow: hidden;
-    padding-top: 0;
 }
 
 .posts-wrapper {
@@ -626,13 +603,7 @@ body {
 
 </style></head>
 <body>
-    <div class="header-wrapper">
-        <div class="header">
-            <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-                <i class="fas fa-circle-half-stroke"></i>
-            </button>
-        </div>
-    </div><div class="app-container">
+    <div class="app-container">
     <div class="scroller-container">
         <div class="posts-wrapper" id="postsWrapper">
             <div class="loading-container">
@@ -1267,15 +1238,6 @@ body {
 
     loadArticles(true);
 </script><script>
-    function toggleTheme() {
-        document.body.classList.toggle('light-theme');
-        localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
-    }
-
-    if (localStorage.getItem("theme") === "light") {
-        document.body.classList.add("light-theme");
-    }
-
     window.toggleAudio = function(btn, audioId) {
         const player = btn.closest('.custom-audio-player');
         const audio = document.getElementById(audioId);
