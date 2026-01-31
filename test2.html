@@ -45,11 +45,6 @@ body {
     height: 100%;
 }
 
-/* Add theme-color meta tag styling to match footer */
-head {
-    display: none;
-}
-
 .icon-btn {
     width: 36px;
     height: 36px;
@@ -67,6 +62,36 @@ head {
 
 .icon-btn:hover {
     background: var(--border-color);
+}
+
+.theme-toggle-btn {
+    position: fixed;
+    right: 20px;
+    top: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--hover-bg);
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    z-index: 150;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle-btn:hover {
+    background: var(--accent);
+    transform: scale(1.1) rotate(20deg);
+    box-shadow: 0 4px 12px rgba(62, 166, 255, 0.3);
+}
+
+.theme-toggle-btn:active {
+    transform: scale(0.95) rotate(20deg);
 }
 
 .app-container {
@@ -534,7 +559,7 @@ head {
     transform: translateX(-50%);
     width: 100%;
     max-width: 450px;
-    background: #2a2a2a;
+    background: var(--card-bg);
     border-top: 1px solid var(--border-color);
     padding: 8px 24px;
     padding-bottom: calc(8px + env(safe-area-inset-bottom));
@@ -606,10 +631,12 @@ head {
 }
 
 
-</style>
-<meta name="theme-color" content="#2a2a2a">
-</head>
+</style></head>
 <body>
+    <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+    </button>
+
     <div class="app-container">
     <div class="scroller-container">
         <div class="posts-wrapper" id="postsWrapper">
@@ -656,7 +683,38 @@ head {
         <i class="fas fa-user"></i>
         <span>Profile</span>
     </button>
-</div><script type="module">
+</div>
+
+<script>
+    // Theme toggle function
+    function toggleTheme() {
+        const body = document.body;
+        const themeIcon = document.querySelector('#themeToggle i');
+        
+        body.classList.toggle('light-theme');
+        
+        if (body.classList.contains('light-theme')) {
+            themeIcon.className = 'fas fa-sun';
+            localStorage.setItem('theme', 'light');
+        } else {
+            themeIcon.className = 'fas fa-moon';
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+
+    // Load saved theme preference
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('theme');
+        const themeIcon = document.querySelector('#themeToggle i');
+        
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+            themeIcon.className = 'fas fa-sun';
+        }
+    });
+</script>
+
+<script type="module">
     // Import Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { 
