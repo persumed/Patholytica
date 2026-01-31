@@ -78,16 +78,9 @@
             scroll-snap-align: start;
             scroll-snap-stop: always;
             background: var(--bg-color);
-            padding: 20px 20px 100px;
+            padding: 80px 20px 100px;
             display: flex;
             flex-direction: column;
-        }
-
-        .gradient-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, transparent 0%, transparent 60%, rgba(0,0,0,0.6) 100%);
-            pointer-events: none;
         }
 
         .article-header {
@@ -117,7 +110,7 @@
         .author-name {
             color: var(--text-primary);
             font-weight: 600;
-            font-size: 13px;
+            font-size: 15px;
         }
 
         .article-date {
@@ -126,7 +119,7 @@
         }
 
         .article-title {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 12px;
@@ -276,7 +269,7 @@
         .action-buttons {
             position: absolute;
             right: 16px;
-            bottom: 180px;
+            bottom: 90px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -332,7 +325,6 @@
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
         }
 
         .comments-panel.active {
@@ -836,8 +828,6 @@
                 }
 
                 articleDiv.innerHTML = `
-                    <div class="gradient-overlay"></div>
-                    
                     <div class="article-header">
                         <div class="author-avatar">${article.author.charAt(0).toUpperCase()}</div>
                         <div class="author-info">
