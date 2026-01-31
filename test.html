@@ -1,1277 +1,943 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>Article Scroller - Patholytica</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        :root {
-            --bg-color: #0f0f0f;
-            --text-primary: #fff;
-            --text-secondary: #aaa;
-            --card-bg: #1f1f1f;
-            --hover-bg: #2a2a2a;
-            --border-color: #303030;
-            --accent: #3ea6ff;
-            --accent-hover: #2d8ed6;
-        }
-
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Patholytica — Library</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg-color: #0f0f0f;
+  --text-primary: #fff;
+  --text-secondary: #aaa;
+  --card-bg: #1f1f1f;
+  --hover-bg: #2a2a2a;
+  --border-color: #303030;
+  --accent: #3ea6ff;
+  --accent-hover: #2d8ed6;
+  --accent-green: #2ecc71;
+}
 body.light-theme {
-    --bg-color: #ffffff;
-    --text-primary: #0f0f0f;
-    --text-secondary: #606060;
-    --card-bg: #f9f9f9;
-    --hover-bg: #f0f0f0;
-    --border-color: #e5e5e5;
-    --accent: #065fd4;
-    --accent-hover: #0448a3;
+  --bg-color: #ffffff;
+  --text-primary: #0f0f0f;
+  --text-secondary: #606060;
+  --card-bg: #f9f9f9;
+  --hover-bg: #f0f0f0;
+  --border-color: #e5e5e5;
+  --accent: #065fd4;
+  --accent-hover: #0448a3;
+  --accent-green: #27ae60;
 }
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* { box-sizing: border-box; }
+html, body { 
+  margin: 0; 
+  padding: 0; 
+  min-height: 100%; 
+  font-family: "Roboto", Arial, sans-serif;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
-
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg-color);
-    color: var(--text-primary);
-    overflow: hidden;
-    transition: background 0.2s ease, color 0.2s ease;
-    position: fixed;
-    width: 100%;
-    height: 100%;
+  background: var(--bg-color);
+  color: var(--text-primary);
+  transition: background 0.2s ease, color 0.2s ease;
 }
-
+.header-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-color);
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 40;
+  width: 100%;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.logo-img {
+  height: 28px;
+  width: auto;
+  transition: filter 0.2s ease;
+  cursor: pointer;
+}
+body.light-theme .logo-img {
+  filter: invert(1);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 .icon-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--hover-bg);
-    border: none;
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    transition: background 0.2s ease;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: background 0.2s ease;
 }
-
 .icon-btn:hover {
-    background: var(--border-color);
+  background: var(--hover-bg);
+}
+.auth-buttons {
+  display: none;
+  gap: 12px;
+}
+.auth-buttons.show {
+  display: flex;
+}
+.btn-login, .btn-signup {
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: none;
+}
+.btn-login {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+.btn-login:hover {
+  background: var(--hover-bg);
+}
+.btn-signup {
+  background: var(--accent);
+  color: white;
+}
+.btn-signup:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.user-welcome {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+.user-welcome.show {
+  display: flex;
+}
+.welcome-text {
+  font-weight: 500;
+}
+.user-menu {
+  position: relative;
+}
+.user-menu-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none;
+  z-index: 1000;
+}
+.user-menu-dropdown.show {
+  display: block;
+}
+.user-menu-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+.user-menu-item:hover {
+  background: var(--hover-bg);
+}
+.user-menu-item i {
+  width: 16px;
+}
+/* Floating Create Button */
+.fab-create {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 12px rgba(62, 166, 255, 0.4);
+  transition: all 0.3s ease;
+  z-index: 50;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.fab-create.show {
+  display: flex;
+}
+.fab-create:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(62, 166, 255, 0.5);
+}
+.fab-create:active {
+  transform: scale(0.95);
+}
+body.light-theme .fab-create {
+  box-shadow: 0 4px 12px rgba(6, 95, 212, 0.3);
+}
+body.light-theme .fab-create:hover {
+  box-shadow: 0 6px 16px rgba(6, 95, 212, 0.4);
+}
+/* Stories Preview Section */
+.stories-container {
+  position: fixed;
+  top: calc(65px + env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  z-index: 30;
+  background: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.stories-container::-webkit-scrollbar {
+  display: none;
+}
+.stories-wrapper {
+  display: flex;
+  gap: 16px;
+  padding: 0 24px;
+  width: max-content;
+}
+.story-item {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 70px;
+}
+.story-item:hover {
+  transform: scale(1.05);
+}
+.story-avatar-wrapper {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+  will-change: background-position;
+}
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.story-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-color);
+  padding: 2px;
+  display: block;
+}
+.story-username {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.story-item.new .story-avatar-wrapper {
+  background: var(--border-color);
+}
+.story-item.new .story-avatar-wrapper::after {
+  content: '+';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: var(--text-primary);
+  font-weight: 300;
+  z-index: 1;
+}
+body.light-theme .story-avatar-wrapper {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+}
+body.light-theme .story-item.new .story-avatar-wrapper {
+  background: var(--border-color);
 }
 
-.app-container {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 450px;
-    height: 100vh;
-    background: var(--bg-color);
+.list-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 24px 80px;
+  padding-top: calc(65px + env(safe-area-inset-top) + 100px);
 }
-
-.scroller-container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    background: var(--bg-color);
-    overflow: hidden;
+.article-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-
-.posts-wrapper {
-    height: 100%;
-    overflow-y: scroll;
-    scroll-snap-type: y mandatory;
-    scrollbar-width: none;
+.article-item {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
-
-.posts-wrapper::-webkit-scrollbar {
-    display: none;
+.article-item:hover {
+  background: var(--hover-bg);
+  margin: 0 -12px;
+  padding: 24px 12px;
 }
-
-.article-card {
-    position: relative;
-    height: 100vh;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    background: var(--bg-color);
-    padding: 8px 20px 100px;
-    padding-top: 4px;
-    display: flex;
-    flex-direction: column;
-}
-
-.article-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 50;
-}
-
-.author-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-}
-
-.author-info {
-    flex: 1;
-}
-
-.author-name {
-    color: var(--text-primary);
-    font-weight: 600;
-    font-size: 17px;
-    margin-bottom: 2px;
-}
-
-.article-date {
-    color: var(--text-secondary);
-    font-size: 12px;
-}
-
 .article-title {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 16px;
-    line-height: 1.2;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 38px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+  color: var(--text-primary);
+  word-wrap: break-word;
+}
+.article-item:hover .article-title {
+  color: var(--accent);
+}
+.article-meta {
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.meta-dot {
+  width: 3px;
+  height: 3px;
+  background: var(--text-secondary);
+  border-radius: 50%;
+}
+.loading-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+.error-state {
+  text-align: center;
+  padding: 40px;
+  color: #ff4444;
+  font-size: 16px;
+}
+.footer {
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+.footer-stats {
+  margin-bottom: 8px;
+}
+.article-count {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+.footer-tagline {
+  margin-bottom: 8px;
+}
+.footer-location {
+  font-size: 13px;
+  color: var(--text-secondary);
+  opacity: 0.8;
 }
 
-.article-content {
-    color: var(--text-primary);
-    font-size: 16px;
-    line-height: 1.6;
-    flex: 1;
-    overflow-y: auto;
-    padding-right: 60px;
-}
-
-.article-content::-webkit-scrollbar {
-    width: 4px;
-}
-
-.article-content::-webkit-scrollbar-track {
-    background: var(--border-color);
-}
-
-.article-content::-webkit-scrollbar-thumb {
-    background: var(--text-secondary);
-    border-radius: 2px;
-}
-
-.content-paragraph {
-    margin-bottom: 14px;
-}
-
-.media-embed {
-    margin: 16px 0;
-    max-width: 100%;
-}
-
-.media-embed img {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    display: block;
-}
-
-.media-caption {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-top: 6px;
-    font-style: italic;
-}
-
-.custom-audio-player {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    max-width: 100%;
-    border: 1px solid var(--border-color);
-}
-
-.play-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: none;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-}
-
-.play-btn:hover {
-    background: var(--accent-hover);
-    transform: scale(1.05);
-}
-
-.audio-info {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-}
-
-.audio-title {
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 8px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--text-primary);
-}
-
-.waveform-container {
-    position: relative;
-    height: 32px;
-    background: var(--hover-bg);
-    border-radius: 4px;
-    margin-bottom: 6px;
-    cursor: pointer;
-    overflow: hidden;
-}
-
-.waveform-progress {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background: var(--accent);
-    opacity: 0.3;
-    transition: width 0.1s linear;
-}
-
-.waveform-bars {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding: 0 4px;
-}
-
-.waveform-bar {
-    width: 2px;
-    background: var(--text-secondary);
-    border-radius: 2px;
-    opacity: 0.6;
-}
-
-.audio-time {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--text-secondary);
-}
-
-.action-buttons {
-    position: absolute;
-    right: 16px;
-    bottom: 143px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    z-index: 10;
-}
-
-.action-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.1s;
-}
-
-.action-btn:active {
-    transform: scale(0.9);
-}
-
-.action-btn svg {
-    width: 28px;
-    height: 28px;
-    stroke: var(--text-primary);
-    fill: none;
-    stroke-width: 2;
-}
-
-.action-btn.liked svg {
-    fill: #ef4444;
-    stroke: #ef4444;
-}
-
-.action-btn span {
-    color: var(--text-primary);
-    font-size: 11px;
-    font-weight: 600;
-}
-
-/* Comments Panel */
-.comments-panel {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%) translateY(100%);
-    width: 100%;
-    max-width: 450px;
-    height: 70vh;
-    background: var(--card-bg);
-    border-radius: 16px 16px 0 0;
-    z-index: 200;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-}
-
-.comments-panel.active {
-    transform: translateX(-50%) translateY(0);
-}
-
-.comments-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.comments-header h3 {
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.close-comments {
-    background: none;
-    border: none;
-    color: var(--text-primary);
-    font-size: 24px;
-    cursor: pointer;
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.comments-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px 20px;
-}
-
-.comment-item {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.comment-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-    color: white;
-    flex-shrink: 0;
-}
-
-.comment-content {
-    flex: 1;
-}
-
-.comment-author {
-    font-weight: 600;
-    font-size: 13px;
-    margin-bottom: 4px;
-}
-
-.comment-text {
-    font-size: 14px;
-    line-height: 1.4;
-    margin-bottom: 6px;
-}
-
-.comment-time {
-    font-size: 11px;
-    color: var(--text-secondary);
-}
-
-.comment-input-wrapper {
-    padding: 12px 20px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
-    border-top: 1px solid var(--border-color);
-    background: var(--bg-color);
-}
-
-.comment-input-container {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.comment-input {
-    flex: 1;
-    background: var(--hover-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    padding: 10px 16px;
-    color: var(--text-primary);
-    font-size: 14px;
-    outline: none;
-}
-
-.comment-input:focus {
-    border-color: var(--accent);
-}
-
-.send-comment-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: none;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    transition: all 0.2s ease;
-}
-
-.send-comment-btn:hover {
-    background: var(--accent-hover);
-}
-
-.send-comment-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.no-comments {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: var(--text-secondary);
-    gap: 12px;
-}
-
-.no-comments i {
-    font-size: 48px;
-    opacity: 0.5;
-}
-
-.loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: var(--text-primary);
-    gap: 16px;
-}
-
-.spinner {
-    width: 48px;
-    height: 48px;
-    border: 4px solid var(--border-color);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
+/* Footer Bar from first code */
 .footer-bar {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 450px;
-    background: var(--card-bg);
-    border-top: 1px solid var(--border-color);
-    padding: 8px 24px;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom));
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 100;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 450px;
+  background: var(--card-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 8px 24px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
 }
 
 .footer-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: color 0.2s ease;
-    padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 6px 12px;
 }
 
 .footer-btn:hover {
-    color: var(--text-primary);
+  color: var(--text-primary);
 }
 
 .footer-btn.active {
-    color: var(--accent);
+  color: var(--accent);
 }
 
 .footer-btn i {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 .footer-btn span {
-    font-size: 10px;
-    font-weight: 500;
+  font-size: 10px;
+  font-weight: 500;
 }
 
-.loading-more {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    color: var(--text-secondary);
-    font-size: 14px;
+@media (max-width: 768px) {
+  .fab-create {
+    bottom: 80px;
+    right: 20px;
+    width: 52px;
+    height: 52px;
+    font-size: 22px;
+  }
+  .stories-container {
+    padding: 12px 0;
+  }
+  .stories-wrapper {
+    padding: 0 16px;
+    gap: 12px;
+  }
+  .story-item {
+    width: 60px;
+  }
+  .story-avatar-wrapper {
+    width: 56px;
+    height: 56px;
+  }
+  .story-username {
+    font-size: 11px;
+    max-width: 60px;
+  }
+  .list-container {
+    padding: 16px 16px 100px;
+    padding-top: calc(65px + env(safe-area-inset-top) + 90px);
+  }
+  .article-title {
+    font-size: 28px;
+  }
+  .article-meta {
+    font-size: 13px;
+  }
+  .footer {
+    padding: 20px 16px;
+    font-size: 13px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+  .auth-buttons {
+    gap: 8px;
+  }
+  .btn-login, .btn-signup {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
 }
-
-.loading-more .spinner {
-    width: 24px;
-    height: 24px;
-    border-width: 3px;
-    margin-right: 8px;
-}
-
-.comments-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 199;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.comments-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-}
-
-
-</style></head>
+</style>
+</head>
 <body>
-    <div class="app-container">
-    <div class="scroller-container">
-        <div class="posts-wrapper" id="postsWrapper">
-            <div class="loading-container">
-                <div class="spinner"></div>
-                <div>Loading articles...</div>
-            </div>
-        </div>
-    </div>
-</div><div class="comments-overlay" id="commentsOverlay" onclick="closeComments()"></div><div class="comments-panel" id="commentsPanel">
-    <div class="comments-header">
-        <h3>Comments</h3>
-        <button class="close-comments" onclick="closeComments()">×</button>
-    </div>
-    <div class="comments-list" id="commentsList">
-        <div class="no-comments">
-            <i class="fas fa-comments"></i>
-            <div>No comments yet</div>
-            <div style="font-size: 12px;">Be the first to comment!</div>
-        </div>
-    </div>
-    <div class="comment-input-wrapper">
-        <div class="comment-input-container">
-            <input type="text" class="comment-input" id="commentInput" placeholder="Add a comment...">
-            <button class="send-comment-btn" id="sendCommentBtn" onclick="sendComment()">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-    </div>
-</div><div class="footer-bar">
-    <button class="footer-btn" onclick="window.location.href='index.html'">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
-    </button>
-    <button class="footer-btn active">
-        <i class="fas fa-scroll"></i>
-        <span>Feed</span>
-    </button>
-    <button class="footer-btn" onclick="window.location.href='explore.html'">
+<div class="header-wrapper">
+  <div class="header">
+    <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
+    <div class="header-actions">
+      <button class="icon-btn" onclick="searchArticles()" title="Search">
         <i class="fas fa-search"></i>
-        <span>Explore</span>
-    </button>
-    <button class="footer-btn" onclick="window.location.href='profile.html'">
-        <i class="fas fa-user"></i>
-        <span>Profile</span>
-    </button>
-</div><script type="module">
-    // Import Firebase modules
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { 
-        getAuth, 
-        onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+      </button>
+      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fas fa-circle-half-stroke"></i>
+      </button>
+      <!-- Auth buttons (shown when logged out) -->
+      <div class="auth-buttons" id="authButtons">
+        <a href="login.html" class="btn-login">Log In</a>
+      </div>
+      <!-- User menu (shown when logged in) -->
+      <div class="user-welcome" id="userWelcome">
+        <div class="user-menu">
+          <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
+            <i class="fas fa-user"></i>
+          </button>
+          <div class="user-menu-dropdown" id="userMenuDropdown">
+            <div class="user-menu-item" onclick="window.location.href='profile.html'">
+              <i class="fas fa-user"></i>
+              <span>Profile</span>
+            </div>
+            <div class="user-menu-item" onclick="window.location.href='settings.html'">
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </div>
+            <div class="user-menu-item" onclick="logOut()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Log Out</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    // Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
-        authDomain: "patholytica.firebaseapp.com",
-        databaseURL: "https://patholytica-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "patholytica",
-        storageBucket: "patholytica.firebasestorage.app",
-        messagingSenderId: "738430635282",
-        appId: "1:738430635282:web:8451ef380447c7611137cb"
-    };
+<!-- Floating Create Button -->
+<button class="fab-create" id="fabCreateBtn" onclick="createArticle()" title="Create Article">
+  <i class="fas fa-plus"></i>
+</button>
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+<!-- Stories Preview Section -->
+<div class="stories-container" id="storiesContainer">
+  <div class="stories-wrapper" id="storiesWrapper">
+    <!-- Stories will be dynamically generated -->
+  </div>
+</div>
 
-    const supabase = window.supabase.createClient(
-        "https://vduqewqyvszfquntmark.supabase.co",
-        "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
-    );
+<div class="list-container">
+  <ul class="article-list" id="articleList">
+    <li class="loading-state">Loading articles...</li>
+  </ul>
+</div>
 
-    let articles = [];
-    let liked = {};
-    let currentArticleId = null;
-    let currentIndex = 0;
-    let isLoading = false;
-    let hasMore = true;
-    let offset = 0;
-    const LIMIT = 10;
-    let currentUser = null;
+<footer class="footer">
+  <div class="footer-stats">
+    <span class="article-count" id="articleCount">0</span> articles accessible
+  </div>
+  <div class="footer-tagline">
+    Patholytica is a Medicinebank project aiming to unify academic sharing
+  </div>
+  <div class="footer-location" id="userLocation">
+    Loading location...
+  </div>
+</footer>
 
-    // Get current logged-in user from Firebase and Supabase
-    async function getCurrentUser() {
-        try {
-            const firebaseUser = auth.currentUser;
-            if (!firebaseUser) {
-                console.log('No Firebase user logged in');
-                return null;
-            }
-            
-            console.log('Firebase user ID:', firebaseUser.uid);
-            
-            // Get user data from Supabase users table using firebase_uid
-            const { data: userData, error } = await supabase
-                .from('users')
-                .select('user_id, firebase_uid, username')
-                .eq('firebase_uid', firebaseUser.uid)
-                .single();
-            
-            if (error) {
-                console.error('Error fetching user from Supabase:', error);
-                return null;
-            }
-            
-            console.log('Supabase user data:', userData);
-            return userData;
-        } catch (error) {
-            console.error('Error getting current user:', error);
-            return null;
-        }
+<!-- Footer Bar Navigation -->
+<div class="footer-bar">
+  <button class="footer-btn active" onclick="window.location.href='index.html'">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </button>
+  <button class="footer-btn" onclick="window.location.href='https://patholytica.com/dailyfeed'">
+    <i class="fas fa-scroll"></i>
+    <span>Feed</span>
+  </button>
+  <button class="footer-btn" onclick="window.location.href='explore.html'">
+    <i class="fas fa-search"></i>
+    <span>Explore</span>
+  </button>
+  <button class="footer-btn" onclick="window.location.href='profile.html'">
+    <i class="fas fa-user"></i>
+    <span>Profile</span>
+  </button>
+</div>
+
+<script type="module">
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+  getAuth, 
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
+  authDomain: "patholytica.firebaseapp.com",
+  databaseURL: "https://patholytica-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "patholytica",
+  storageBucket: "patholytica.firebasestorage.app",
+  messagingSenderId: "738430635282",
+  appId: "1:738430635282:web:8451ef380447c7611137cb"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Initialize Supabase with CORRECT key from your working example
+const supabase = window.supabase.createClient(
+  "https://vduqewqyvszfquntmark.supabase.co",
+  "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
+);
+
+// Load articles from Supabase
+async function loadArticles() {
+  const articleList = document.getElementById('articleList');
+  
+  try {
+    console.log('Fetching articles...');
+    
+    // Fetch articles first
+    const { data: articles, error: articlesError } = await supabase
+      .from('articles')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    console.log('Articles response:', { articles, error: articlesError });
+
+    if (articlesError) {
+      console.error('Error fetching articles:', articlesError);
+      articleList.innerHTML = '<li class="error-state">Error loading articles: ' + articlesError.message + '</li>';
+      return;
     }
 
-    // Listen for auth state changes
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            console.log('User logged in:', user.uid);
-            currentUser = await getCurrentUser();
-            console.log('Current user set to:', currentUser);
-        } else {
-            console.log('User logged out');
-            currentUser = null;
-        }
+    if (!articles || articles.length === 0) {
+      articleList.innerHTML = '<li class="loading-state">No articles found.</li>';
+      document.getElementById('articleCount').textContent = '0';
+      return;
+    }
+
+    // DEBUG: Log the first article to see its structure
+    console.log('First article structure:', articles[0]);
+    console.log('First article firebase_user_id:', articles[0].firebase_user_id);
+
+    // Get unique firebase_user_ids from articles
+    const firebaseUserIds = [...new Set(articles.map(a => a.firebase_user_id).filter(Boolean))];
+    console.log('Fetching users with firebase_uids:', firebaseUserIds);
+    
+    // Fetch users by firebase_uid
+    const { data: users, error: usersError } = await supabase
+      .from('users')
+      .select('firebase_uid, username')
+      .in('firebase_uid', firebaseUserIds);
+
+    console.log('Users response:', { users, error: usersError });
+    
+    // DEBUG: Log individual user data
+    if (users && users.length > 0) {
+      console.log('First user:', users[0]);
+      console.log('First user firebase_uid:', users[0].firebase_uid);
+      console.log('First user username:', users[0].username);
+    }
+
+    // Create a user lookup map by firebase_uid
+    const userMap = {};
+    if (users) {
+      users.forEach(user => {
+        userMap[user.firebase_uid] = user;
+        console.log(`Added to userMap: ${user.firebase_uid} -> ${user.username}`);
+      });
+    }
+    
+    console.log('Complete userMap:', userMap);
+
+    // Clear loading state
+    articleList.innerHTML = '';
+
+    // Create article items
+    articles.forEach(article => {
+      const li = document.createElement('li');
+      li.className = 'article-item';
+      li.onclick = () => openArticle(article.id);
+      
+      // Get author username and format with @
+      const user = userMap[article.firebase_user_id];
+      console.log(`Article "${article.title}" firebase_user_id: ${article.firebase_user_id}, Found user:`, user);
+      
+      const authorName = user?.username ? `@${user.username}` : 'Unknown Author';
+      console.log(`Final author name for article "${article.title}": ${authorName}`);
+      
+      // Format date
+      const date = new Date(article.created_at);
+      const formattedDate = date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+      
+      li.innerHTML = `
+        <h2 class="article-title">${article.title}</h2>
+        <div class="article-meta">
+          <span>${authorName}</span>
+          <div class="meta-dot"></div>
+          <span>${formattedDate}</span>
+          <div class="meta-dot"></div>
+          <span>${article.views || 0} views</span>
+        </div>
+      `;
+      
+      articleList.appendChild(li);
     });
 
-    async function loadArticles(isInitial = true) {
-        if (isLoading || (!isInitial && !hasMore)) return;
-        
-        isLoading = true;
+    // Update article count
+    document.getElementById('articleCount').textContent = articles.length;
+    
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    articleList.innerHTML = '<li class="error-state">An unexpected error occurred: ' + err.message + '</li>';
+  }
+}
 
-        try {
-            const { data: articlesData, error: articlesError } = await supabase
-                .from('articles')
-                .select('*')
-                .order('created_at', { ascending: false })
-                .range(offset, offset + LIMIT - 1);
+// Check authentication state
+onAuthStateChanged(auth, async (user) => {
+  const authButtons = document.getElementById('authButtons');
+  const userWelcome = document.getElementById('userWelcome');
+  const fabCreateBtn = document.getElementById('fabCreateBtn');
+  
+  if (user) {
+    // User is logged in
+    authButtons.classList.remove('show');
+    userWelcome.classList.add('show');
+    if (fabCreateBtn) fabCreateBtn.classList.add('show');
+  } else {
+    // User is logged out
+    authButtons.classList.add('show');
+    userWelcome.classList.remove('show');
+    if (fabCreateBtn) fabCreateBtn.classList.remove('show');
+  }
+});
 
-            if (articlesError) throw articlesError;
+// Log out function
+window.logOut = async function() {
+  try {
+    await signOut(auth);
+    console.log("User logged out");
+    // Reload page to update UI
+    window.location.reload();
+  } catch (error) {
+    console.error("Error logging out:", error);
+    alert("Error logging out. Please try again.");
+  }
+};
 
-            if (!articlesData || articlesData.length === 0) {
-                if (isInitial) {
-                    document.getElementById('postsWrapper').innerHTML = `
-                        <div class="loading-container">
-                            <i class="fas fa-inbox" style="font-size: 48px;"></i>
-                            <div>No articles found</div>
-                        </div>
-                    `;
-                }
-                hasMore = false;
-                isLoading = false;
-                return;
-            }
+// Load articles on page load
+loadArticles();
+</script>
 
-            if (articlesData.length < LIMIT) {
-                hasMore = false;
-            }
-
-            offset += articlesData.length;
-
-            const userIds = [...new Set(articlesData.map(a => a.firebase_user_id).filter(id => id))];
-            
-            let usersData = [];
-            if (userIds.length > 0) {
-                const { data: users } = await supabase
-                    .from('users')
-                    .select('firebase_uid, username, full_name')
-                    .in('firebase_uid', userIds);
-                
-                usersData = users || [];
-            }
-
-            // Fetch media for all articles
-            const articleIds = articlesData.map(a => a.id);
-            const { data: mediaData } = await supabase
-                .from('media')
-                .select('*')
-                .in('article_id', articleIds)
-                .order('display_order', { ascending: true });
-
-            const newArticles = articlesData.map(article => {
-                const user = usersData?.find(u => u.firebase_uid === article.firebase_user_id);
-                const articleMedia = mediaData?.filter(m => m.article_id === article.id) || [];
-                
-                return {
-                    ...article,
-                    author: user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous'),
-                    media: articleMedia
-                };
-            });
-
-            articles = [...articles, ...newArticles];
-            renderArticles(isInitial);
-            isLoading = false;
-
-        } catch (error) {
-            console.error('Error loading articles:', error);
-            if (isInitial) {
-                document.getElementById('postsWrapper').innerHTML = `
-                    <div class="loading-container">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
-                        <div>Failed to load articles</div>
-                    </div>
-                `;
-            }
-            isLoading = false;
-        }
+<script>
+// Generate Stories Preview
+function generateStories() {
+  const storiesWrapper = document.getElementById('storiesWrapper');
+  if (!storiesWrapper) return;
+  
+  // Sample user data - in production, this would come from your API
+  const stories = [
+    { username: 'Your Story', isNew: true, avatar: 'https://ui-avatars.com/api/?name=You&background=3ea6ff&color=fff&size=128' },
+    { username: 'Dr. Sarah', avatar: 'https://ui-avatars.com/api/?name=Sarah+Mitchell&background=667eea&color=fff&size=128' },
+    { username: 'Dr. James', avatar: 'https://ui-avatars.com/api/?name=James+Chen&background=764ba2&color=fff&size=128' },
+    { username: 'Dr. Emily', avatar: 'https://ui-avatars.com/api/?name=Emily+Rodriguez&background=f093fb&color=fff&size=128' },
+    { username: 'Dr. Robert', avatar: 'https://ui-avatars.com/api/?name=Robert+Kim&background=4facfe&color=fff&size=128' },
+    { username: 'Dr. Lisa', avatar: 'https://ui-avatars.com/api/?name=Lisa+Zhang&background=00f2fe&color=fff&size=128' },
+    { username: 'Dr. Michael', avatar: 'https://ui-avatars.com/api/?name=Michael+Johnson&background=667eea&color=fff&size=128' },
+    { username: 'Dr. Anna', avatar: 'https://ui-avatars.com/api/?name=Anna+Williams&background=764ba2&color=fff&size=128' },
+  ];
+  
+  stories.forEach((story, index) => {
+    const storyItem = document.createElement('div');
+    storyItem.className = `story-item ${story.isNew ? 'new' : ''}`;
+    storyItem.setAttribute('data-index', index);
+    
+    const avatarWrapper = document.createElement('div');
+    avatarWrapper.className = 'story-avatar-wrapper';
+    
+    if (story.isNew) {
+      avatarWrapper.innerHTML = '<div class="story-avatar"></div>';
+    } else {
+      const avatar = document.createElement('img');
+      avatar.className = 'story-avatar';
+      avatar.src = story.avatar;
+      avatar.alt = story.username;
+      avatar.loading = 'lazy';
+      avatar.decoding = 'async';
+      avatarWrapper.appendChild(avatar);
     }
-
-    function createMediaElement(mediaItem) {
-        const mediaDiv = document.createElement('div');
-        mediaDiv.className = 'media-embed';
-
-        if (mediaItem.type === 'image') {
-            mediaDiv.innerHTML = `
-                <img src="${mediaItem.url}" alt="${mediaItem.caption || 'Article image'}">
-                ${mediaItem.caption ? `<div class="media-caption">${mediaItem.caption}</div>` : ''}
-            `;
-        } else if (mediaItem.type === 'audio') {
-            const audioId = 'audio-' + Math.random().toString(36).substr(2, 9);
-            mediaDiv.innerHTML = `
-                <div class="custom-audio-player">
-                    <button class="play-btn" onclick="toggleAudio(this, '${audioId}')">
-                        <i class="fas fa-play"></i>
-                    </button>
-                    <div class="audio-info">
-                        <div class="audio-title">${mediaItem.caption || 'Audio'}</div>
-                        <div class="waveform-container" onclick="seekAudio(event, this, '${audioId}')">
-                            <div class="waveform-progress"></div>
-                            <div class="waveform-bars">
-                                ${Array(15).fill(0).map(() => `<div class="waveform-bar" style="height: ${Math.random() * 60 + 20}%"></div>`).join('')}
-                            </div>
-                        </div>
-                        <div class="audio-time">
-                            <span class="current-time">0:00</span>
-                            <span class="duration">0:00</span>
-                        </div>
-                    </div>
-                    <audio id="${audioId}" src="${mediaItem.url}" style="display: none;"></audio>
-                </div>
-                ${mediaItem.caption ? `<div class="media-caption">${mediaItem.caption}</div>` : ''}
-            `;
-
-            setTimeout(() => {
-                const audio = document.getElementById(audioId);
-                if (audio) {
-                    audio.addEventListener('loadedmetadata', function() {
-                        const duration = Math.floor(audio.duration);
-                        const mins = Math.floor(duration / 60);
-                        const secs = duration % 60;
-                        const durationSpan = audio.closest('.custom-audio-player').querySelector('.duration');
-                        if (durationSpan) {
-                            durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-                        }
-                    });
-                }
-            }, 100);
-        }
-
-        return mediaDiv;
-    }
-
-    function renderArticles(isInitial = true) {
-        const wrapper = document.getElementById('postsWrapper');
-        
-        if (isInitial) {
-            wrapper.innerHTML = '';
-        } else {
-            const loadingMore = wrapper.querySelector('.loading-more');
-            if (loadingMore) {
-                loadingMore.remove();
-            }
-        }
-
-        const startIndex = isInitial ? 0 : articles.length - LIMIT;
-        const endIndex = articles.length;
-
-        for (let index = startIndex; index < endIndex; index++) {
-            const article = articles[index];
-            const articleDiv = document.createElement('div');
-            articleDiv.className = 'article-card';
-            articleDiv.dataset.index = index;
-            
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'article-content';
-            
-            const paragraphs = (article.content || 'No content available').split('\n\n');
-            paragraphs.forEach((paragraph, pIndex) => {
-                if (paragraph.trim()) {
-                    const p = document.createElement('div');
-                    p.className = 'content-paragraph';
-                    p.textContent = paragraph.trim();
-                    contentDiv.appendChild(p);
-
-                    if (article.media && article.media.length > 0) {
-                        const relatedMedia = article.media.filter(m => m.display_order === pIndex);
-                        relatedMedia.forEach(m => {
-                            contentDiv.appendChild(createMediaElement(m));
-                        });
-                    }
-                }
-            });
-
-            if (article.media) {
-                article.media.filter(m => m.display_order >= paragraphs.length).forEach(m => {
-                    contentDiv.appendChild(createMediaElement(m));
-                });
-            }
-
-            articleDiv.innerHTML = `
-                <div class="article-header">
-                    <div class="author-avatar">${article.author.charAt(0).toUpperCase()}</div>
-                    <div class="author-info">
-                        <div class="author-name">${article.author}</div>
-                        <div class="article-date">${formatDate(new Date(article.created_at))}</div>
-                    </div>
-                </div>
-                
-                <div class="article-title">${article.title || 'Untitled'}</div>
-                
-                <div class="action-buttons">
-                    <button class="action-btn like-btn" data-id="${article.id}">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                        </svg>
-                        <span class="like-count">${article.likes || 0}</span>
-                    </button>
-                    
-                    <button class="action-btn comment-btn" data-id="${article.id}">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                        <span class="comment-count">0</span>
-                    </button>
-
-                    <button class="action-btn expand-btn" data-id="${article.id}">
-                        <svg viewBox="0 0 24 24">
-                            <polyline points="15 3 21 3 21 9"></polyline>
-                            <polyline points="9 21 3 21 3 15"></polyline>
-                            <line x1="21" y1="3" x2="14" y2="10"></line>
-                            <line x1="3" y1="21" x2="10" y2="14"></line>
-                        </svg>
-                        <span>Open</span>
-                    </button>
-                </div>
-            `;
-            
-            articleDiv.querySelector('.article-title').insertAdjacentElement('afterend', contentDiv);
-            wrapper.appendChild(articleDiv);
-        }
-
-        if (hasMore) {
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'article-card loading-more';
-            loadingDiv.innerHTML = `
-                <div class="spinner"></div>
-                <span>Loading more...</span>
-            `;
-            wrapper.appendChild(loadingDiv);
-        }
-
-        document.querySelectorAll('.like-btn').forEach(btn => {
-            btn.addEventListener('click', handleLike);
-        });
-
-        document.querySelectorAll('.comment-btn').forEach(btn => {
-            btn.addEventListener('click', handleComments);
-        });
-
-        document.querySelectorAll('.expand-btn').forEach(btn => {
-            btn.addEventListener('click', handleExpand);
-        });
-
-        if (isInitial) {
-            wrapper.addEventListener('scroll', handleScroll);
-            loadCommentCounts();
-        }
-    }
-
-    async function loadCommentCounts() {
-        try {
-            const { data: comments, error } = await supabase
-                .from('comments')
-                .select('article_id');
-
-            if (error) throw error;
-
-            const counts = {};
-            comments.forEach(comment => {
-                counts[comment.article_id] = (counts[comment.article_id] || 0) + 1;
-            });
-
-            document.querySelectorAll('.comment-btn').forEach(btn => {
-                const articleId = btn.dataset.id;
-                const countSpan = btn.querySelector('.comment-count');
-                countSpan.textContent = counts[articleId] || 0;
-            });
-        } catch (error) {
-            console.error('Error loading comment counts:', error);
-        }
-    }
-
-    function formatDate(date) {
-        const now = new Date();
-        const diffMs = now - date;
-        const diffMins = Math.floor(diffMs / 60000);
-        const diffHours = Math.floor(diffMs / 3600000);
-        const diffDays = Math.floor(diffMs / 86400000);
-
-        if (diffMins < 60) return `${diffMins}m ago`;
-        if (diffHours < 24) return `${diffHours}h ago`;
-        if (diffDays < 7) return `${diffDays}d ago`;
-        
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    }
-
-    async function handleLike(e) {
-        const articleId = e.currentTarget.dataset.id;
-        const btn = e.currentTarget;
-        const countSpan = btn.querySelector('.like-count');
-        const article = articles.find(a => a.id === articleId);
-        
-        if (!article) return;
-
-        const wasLiked = liked[articleId];
-        const originalCount = article.likes || 0;
-
-        if (wasLiked) {
-            liked[articleId] = false;
-            btn.classList.remove('liked');
-            article.likes = Math.max(0, originalCount - 1);
-        } else {
-            liked[articleId] = true;
-            btn.classList.add('liked');
-            article.likes = originalCount + 1;
-        }
-        
-        countSpan.textContent = article.likes;
-
-        try {
-            await supabase
-                .from('articles')
-                .update({ likes: article.likes })
-                .eq('id', articleId);
-        } catch (error) {
-            console.error('Error updating like:', error);
-            // Revert on error
-            liked[articleId] = wasLiked;
-            article.likes = originalCount;
-            countSpan.textContent = article.likes;
-            if (wasLiked) {
-                btn.classList.add('liked');
-            } else {
-                btn.classList.remove('liked');
-            }
-        }
-    }
-
-    async function handleComments(e) {
-        const articleId = e.currentTarget.dataset.id;
-        currentArticleId = articleId;
-        await loadComments(articleId);
-        openComments();
-    }
-
-    async function loadComments(articleId) {
-        const commentsList = document.getElementById('commentsList');
-        commentsList.innerHTML = '<div class="loading-container"><div class="spinner" style="width: 32px; height: 32px; border-width: 3px;"></div></div>';
-
-        try {
-            const { data: comments, error } = await supabase
-                .from('comments')
-                .select('*')
-                .eq('article_id', articleId)
-                .order('created_at', { ascending: true });
-
-            if (error) throw error;
-
-            if (!comments || comments.length === 0) {
-                commentsList.innerHTML = `
-                    <div class="no-comments">
-                        <i class="fas fa-comments"></i>
-                        <div>No comments yet</div>
-                        <div style="font-size: 12px;">Be the first to comment!</div>
-                    </div>
-                `;
-                return;
-            }
-
-            const userIds = [...new Set(comments.map(c => c.user_id).filter(id => id))];
-            let usersMap = {};
-            
-            if (userIds.length > 0) {
-                const { data: users } = await supabase
-                    .from('users')
-                    .select('user_id, username, full_name')
-                    .in('user_id', userIds);
-                
-                if (users) {
-                    users.forEach(user => {
-                        usersMap[user.user_id] = user;
-                    });
-                }
-            }
-
-            commentsList.innerHTML = comments.map(comment => {
-                const user = usersMap[comment.user_id];
-                const author = user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous');
-                
-                return `
-                    <div class="comment-item">
-                        <div class="comment-avatar">${author.charAt(0).toUpperCase()}</div>
-                        <div class="comment-content">
-                            <div class="comment-author">${author}</div>
-                            <div class="comment-text">${comment.comment_text}</div>
-                            <div class="comment-time">${formatDate(new Date(comment.created_at))}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-        } catch (error) {
-            console.error('Error loading comments:', error);
-            commentsList.innerHTML = `
-                <div class="no-comments">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <div>Failed to load comments</div>
-                </div>
-            `;
-        }
-    }
-
-    window.openComments = function() {
-        document.getElementById('commentsPanel').classList.add('active');
-        document.getElementById('commentsOverlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    window.closeComments = function() {
-        document.getElementById('commentsPanel').classList.remove('active');
-        document.getElementById('commentsOverlay').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    window.sendComment = async function() {
-        const input = document.getElementById('commentInput');
-        const text = input.value.trim();
-        
-        if (!text || !currentArticleId) {
-            console.log('No text or article ID');
-            return;
-        }
-
-        const sendBtn = document.getElementById('sendCommentBtn');
-        sendBtn.disabled = true;
-
-        try {
-            // Refresh current user data
-            if (!currentUser) {
-                currentUser = await getCurrentUser();
-            }
-            
-            console.log('Attempting to post comment with user:', currentUser);
-            
-            if (!currentUser) {
-                console.log('No user logged in - redirecting to login');
-                window.location.href = 'https://patholytica.com/login';
-                return;
-            }
-
-            console.log('Posting comment with user_id:', currentUser.user_id);
-
-            // Post comment with the logged-in user's ID
-            const { data, error } = await supabase
-                .from('comments')
-                .insert([
-                    {
-                        article_id: currentArticleId,
-                        user_id: currentUser.user_id,
-                        comment_text: text
-                    }
-                ])
-                .select();
-
-            if (error) {
-                console.error('Supabase insert error:', error);
-                throw error;
-            }
-
-            console.log('Comment posted successfully:', data);
-
-            input.value = '';
-            await loadComments(currentArticleId);
-            
-            // Update comment count
-            const commentBtn = document.querySelector(`.comment-btn[data-id="${currentArticleId}"]`);
-            if (commentBtn) {
-                const countSpan = commentBtn.querySelector('.comment-count');
-                countSpan.textContent = parseInt(countSpan.textContent) + 1;
-            }
-
-        } catch (error) {
-            console.error('Error posting comment:', error);
-            alert('Failed to post comment. Please try again.');
-        } finally {
-            sendBtn.disabled = false;
-        }
-    }
-
-    // Enable send button on Enter key
-    document.getElementById('commentInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            window.sendComment();
-        }
+    
+    const username = document.createElement('div');
+    username.className = 'story-username';
+    username.textContent = story.username;
+    
+    storyItem.appendChild(avatarWrapper);
+    storyItem.appendChild(username);
+    
+    storyItem.addEventListener('click', () => {
+      // Handle story click - could open story viewer
+      console.log('Story clicked:', story.username);
     });
+    
+    storiesWrapper.appendChild(storyItem);
+  });
+}
 
-    function handleExpand(e) {
-        const articleId = e.currentTarget.dataset.id;
-        window.location.href = `article.html?id=${articleId}`;
-    }
+// Initialize stories on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', generateStories);
+} else {
+  generateStories();
+}
 
-    function handleScroll(e) {
-        const container = e.target;
-        const scrollPosition = container.scrollTop;
-        const scrollHeight = container.scrollHeight;
-        const clientHeight = container.clientHeight;
+function toggleTheme() {
+  document.body.classList.toggle('light-theme');
+  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
+}
 
-        if (scrollPosition + clientHeight >= scrollHeight * 0.8 && hasMore && !isLoading) {
-            loadArticles(false);
-        }
-    }
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light-theme");
+}
 
-    loadArticles(true);
-</script><script>
-    window.toggleAudio = function(btn, audioId) {
-        const player = btn.closest('.custom-audio-player');
-        const audio = document.getElementById(audioId);
-        const icon = btn.querySelector('i');
-        
-        if (audio.paused) {
-            audio.play();
-            icon.className = 'fas fa-pause';
-            
-            audio.ontimeupdate = function() {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                player.querySelector('.waveform-progress').style.width = progress + '%';
-                const currentMins = Math.floor(audio.currentTime / 60);
-                const currentSecs = Math.floor(audio.currentTime % 60);
-                player.querySelector('.current-time').textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
-            };
-            
-            audio.onended = function() {
-                icon.className = 'fas fa-play';
-                player.querySelector('.waveform-progress').style.width = '0%';
-                player.querySelector('.current-time').textContent = '0:00';
-            };
-        } else {
-            audio.pause();
-            icon.className = 'fas fa-play';
-        }
+function openArticle(articleId) {
+  // Navigate to article detail page
+  window.location.href = `article.html?id=${articleId}`;
+}
+
+function createArticle() {
+  window.location.href = 'https://patholytica.com/create';
+}
+
+function searchArticles() {
+  // Toggle search bar visibility
+  let searchBar = document.getElementById('searchBar');
+  
+  if (!searchBar) {
+    // Create search bar if it doesn't exist
+    searchBar = document.createElement('div');
+    searchBar.id = 'searchBar';
+    searchBar.style.cssText = `
+      position: fixed;
+      top: calc(65px + env(safe-area-inset-top));
+      left: 0;
+      right: 0;
+      background: var(--bg-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 24px;
+      z-index: 35;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    `;
+    
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Search articles...';
+    input.style.cssText = `
+      flex: 1;
+      padding: 10px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      background: var(--bg-color);
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+    `;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    closeBtn.style.cssText = `
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 18px;
+    `;
+    closeBtn.onclick = () => {
+      searchBar.style.display = 'none';
     };
+    
+    searchBar.appendChild(input);
+    searchBar.appendChild(closeBtn);
+    document.body.insertBefore(searchBar, document.querySelector('.stories-container'));
+    
+    input.focus();
+  } else {
+    // Toggle visibility
+    searchBar.style.display = searchBar.style.display === 'none' ? 'flex' : 'none';
+    if (searchBar.style.display === 'flex') {
+      searchBar.querySelector('input').focus();
+    }
+  }
+}
 
-    window.seekAudio = function(event, container, audioId) {
-        const audio = document.getElementById(audioId);
-        const rect = container.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const percentage = x / rect.width;
-        audio.currentTime = percentage * audio.duration;
-    };
-</script></body>
+function toggleUserMenu() {
+  const dropdown = document.getElementById('userMenuDropdown');
+  dropdown.classList.toggle('show');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+  const userMenu = document.querySelector('.user-menu');
+  const dropdown = document.getElementById('userMenuDropdown');
+  
+  if (userMenu && !userMenu.contains(event.target)) {
+    dropdown.classList.remove('show');
+  }
+});
+
+// Get user location
+if ("geolocation" in navigator) {
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
+        .then(response => response.json())
+        .then(data => {
+          const city = data.address.city || data.address.town || data.address.village || '';
+          const state = data.address.state || '';
+          const country = data.address.country || '';
+          
+          let locationText = [city, state, country].filter(Boolean).join(', ');
+          document.getElementById('userLocation').textContent = locationText || 'Location unavailable';
+        })
+        .catch(() => {
+          document.getElementById('userLocation').textContent = 'Location unavailable';
+        });
+    },
+    function() {
+      document.getElementById('userLocation').textContent = 'Location access denied';
+    }
+  );
+} else {
+  document.getElementById('userLocation').textContent = 'Geolocation not supported';
+}
+</script>
+</body>
 </html>
