@@ -2,11 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Article Scroller - Patholytica</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --text-primary: #fff;
+            --text-secondary: #aaa;
+            --card-bg: #1f1f1f;
+            --hover-bg: #2a2a2a;
+            --border-color: #303030;
+            --accent: #3ea6ff;
+            --accent-hover: #2d8ed6;
+        }
+        
+        body.light-theme {
+            --bg-color: #ffffff;
+            --text-primary: #0f0f0f;
+            --text-secondary: #606060;
+            --card-bg: #f9f9f9;
+            --hover-bg: #f0f0f0;
+            --border-color: #e5e5e5;
+            --accent: #065fd4;
+            --accent-hover: #0448a3;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,8 +37,10 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000;
+            background: var(--bg-color);
+            color: var(--text-primary);
             overflow: hidden;
+            transition: background 0.2s ease, color 0.2s ease;
         }
 
         .app-container {
@@ -25,7 +49,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #000;
+            background: var(--bg-color);
         }
 
         .scroller-container {
@@ -33,7 +57,7 @@
             width: 100%;
             max-width: 450px;
             height: 100vh;
-            background: #000;
+            background: var(--bg-color);
             overflow: hidden;
         }
 
@@ -53,8 +77,8 @@
             height: 100vh;
             scroll-snap-align: start;
             scroll-snap-stop: always;
-            background: #000;
-            padding: 60px 20px 140px;
+            background: var(--bg-color);
+            padding: 20px 20px 100px;
             display: flex;
             flex-direction: column;
         }
@@ -77,7 +101,7 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: #333;
+            background: var(--accent);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -91,26 +115,26 @@
         }
 
         .author-name {
-            color: white;
+            color: var(--text-primary);
             font-weight: 600;
             font-size: 13px;
         }
 
         .article-date {
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-secondary);
             font-size: 11px;
         }
 
         .article-title {
             font-size: 20px;
             font-weight: 700;
-            color: white;
+            color: var(--text-primary);
             margin-bottom: 12px;
             line-height: 1.3;
         }
 
         .article-content {
-            color: rgba(255, 255, 255, 0.95);
+            color: var(--text-primary);
             font-size: 16px;
             line-height: 1.6;
             flex: 1;
@@ -123,11 +147,11 @@
         }
 
         .article-content::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--border-color);
         }
 
         .article-content::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
+            background: var(--text-secondary);
             border-radius: 2px;
         }
 
@@ -135,10 +159,124 @@
             margin-bottom: 14px;
         }
 
+        .media-embed {
+            margin: 16px 0;
+            max-width: 100%;
+        }
+
+        .media-embed img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .media-caption {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .custom-audio-player {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 100%;
+            border: 1px solid var(--border-color);
+        }
+
+        .play-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .play-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        .audio-info {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .audio-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-primary);
+        }
+
+        .waveform-container {
+            position: relative;
+            height: 32px;
+            background: var(--hover-bg);
+            border-radius: 4px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .waveform-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: var(--accent);
+            opacity: 0.3;
+            transition: width 0.1s linear;
+        }
+
+        .waveform-bars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 4px;
+        }
+
+        .waveform-bar {
+            width: 2px;
+            background: var(--text-secondary);
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+
+        .audio-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
         .action-buttons {
             position: absolute;
             right: 16px;
-            bottom: 140px;
+            bottom: 90px;
             display: flex;
             flex-direction: column;
             gap: 24px;
@@ -163,7 +301,7 @@
         .action-btn svg {
             width: 32px;
             height: 32px;
-            stroke: white;
+            stroke: var(--text-primary);
             fill: none;
             stroke-width: 2;
         }
@@ -174,35 +312,9 @@
         }
 
         .action-btn span {
-            color: white;
+            color: var(--text-primary);
             font-size: 12px;
             font-weight: 600;
-        }
-
-        .scroll-indicators {
-            position: absolute;
-            top: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 4px;
-            z-index: 10;
-        }
-
-        .indicator {
-            height: 4px;
-            border-radius: 2px;
-            background: rgba(255, 255, 255, 0.5);
-            transition: all 0.3s;
-        }
-
-        .indicator.active {
-            width: 24px;
-            background: white;
-        }
-
-        .indicator:not(.active) {
-            width: 4px;
         }
 
         .loading-container {
@@ -210,16 +322,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            color: white;
+            height: 100%;
+            color: var(--text-primary);
             gap: 16px;
         }
 
         .spinner {
             width: 48px;
             height: 48px;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top-color: white;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -227,12 +339,71 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        .footer-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 12px 24px;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .footer-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            padding: 8px 16px;
+        }
+
+        .footer-btn:hover,
+        .footer-btn.active {
+            color: var(--text-primary);
+        }
+
+        .footer-btn i {
+            font-size: 24px;
+        }
+
+        .footer-btn span {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .loading-more {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .loading-more .spinner {
+            width: 24px;
+            height: 24px;
+            border-width: 3px;
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
     <div class="app-container">
         <div class="scroller-container">
-            <div class="scroll-indicators" id="indicators"></div>
             <div class="posts-wrapper" id="postsWrapper">
                 <div class="loading-container">
                     <div class="spinner"></div>
@@ -240,6 +411,21 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="footer-bar">
+        <button class="footer-btn active" onclick="window.location.href='index.html'">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </button>
+        <button class="footer-btn" onclick="window.location.href='explore.html'">
+            <i class="fas fa-search"></i>
+            <span>Explore</span>
+        </button>
+        <button class="footer-btn" onclick="window.location.href='profile.html'">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </button>
     </div>
 
     <script type="module">
@@ -251,26 +437,44 @@
         let articles = [];
         let liked = {};
         let currentIndex = 0;
+        let isLoading = false;
+        let hasMore = true;
+        let offset = 0;
+        const LIMIT = 10;
 
-        async function loadArticles() {
+        async function loadArticles(isInitial = true) {
+            if (isLoading || (!isInitial && !hasMore)) return;
+            
+            isLoading = true;
+
             try {
                 const { data: articlesData, error: articlesError } = await supabase
                     .from('articles')
                     .select('*')
                     .order('created_at', { ascending: false })
-                    .limit(20);
+                    .range(offset, offset + LIMIT - 1);
 
                 if (articlesError) throw articlesError;
 
                 if (!articlesData || articlesData.length === 0) {
-                    document.getElementById('postsWrapper').innerHTML = `
-                        <div class="loading-container">
-                            <i class="fas fa-inbox" style="font-size: 48px;"></i>
-                            <div>No articles found</div>
-                        </div>
-                    `;
+                    if (isInitial) {
+                        document.getElementById('postsWrapper').innerHTML = `
+                            <div class="loading-container">
+                                <i class="fas fa-inbox" style="font-size: 48px;"></i>
+                                <div>No articles found</div>
+                            </div>
+                        `;
+                    }
+                    hasMore = false;
+                    isLoading = false;
                     return;
                 }
+
+                if (articlesData.length < LIMIT) {
+                    hasMore = false;
+                }
+
+                offset += articlesData.length;
 
                 const userIds = [...new Set(articlesData.map(a => a.firebase_user_id).filter(id => id))];
                 
@@ -284,37 +488,147 @@
                     usersData = users || [];
                 }
 
-                articles = articlesData.map(article => {
+                // Fetch media for all articles
+                const articleIds = articlesData.map(a => a.id);
+                const { data: mediaData } = await supabase
+                    .from('media')
+                    .select('*')
+                    .in('article_id', articleIds)
+                    .order('display_order', { ascending: true });
+
+                const newArticles = articlesData.map(article => {
                     const user = usersData?.find(u => u.firebase_uid === article.firebase_user_id);
+                    const articleMedia = mediaData?.filter(m => m.article_id === article.id) || [];
                     
                     return {
                         ...article,
-                        author: user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous')
+                        author: user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous'),
+                        media: articleMedia
                     };
                 });
 
-                renderArticles();
+                articles = [...articles, ...newArticles];
+                renderArticles(isInitial);
+                isLoading = false;
+
             } catch (error) {
                 console.error('Error loading articles:', error);
-                document.getElementById('postsWrapper').innerHTML = `
-                    <div class="loading-container">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
-                        <div>Failed to load articles</div>
-                    </div>
-                `;
+                if (isInitial) {
+                    document.getElementById('postsWrapper').innerHTML = `
+                        <div class="loading-container">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
+                            <div>Failed to load articles</div>
+                        </div>
+                    `;
+                }
+                isLoading = false;
             }
         }
 
-        function renderArticles() {
-            const wrapper = document.getElementById('postsWrapper');
-            const indicatorsDiv = document.getElementById('indicators');
-            
-            wrapper.innerHTML = '';
-            indicatorsDiv.innerHTML = '';
+        function createMediaElement(mediaItem) {
+            const mediaDiv = document.createElement('div');
+            mediaDiv.className = 'media-embed';
 
-            articles.forEach((article, index) => {
+            if (mediaItem.type === 'image') {
+                mediaDiv.innerHTML = `
+                    <img src="${mediaItem.url}" alt="${mediaItem.caption || 'Article image'}">
+                    ${mediaItem.caption ? `<div class="media-caption">${mediaItem.caption}</div>` : ''}
+                `;
+            } else if (mediaItem.type === 'audio') {
+                const audioId = 'audio-' + Math.random().toString(36).substr(2, 9);
+                mediaDiv.innerHTML = `
+                    <div class="custom-audio-player">
+                        <button class="play-btn" onclick="toggleAudio(this, '${audioId}')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="audio-info">
+                            <div class="audio-title">${mediaItem.caption || 'Audio'}</div>
+                            <div class="waveform-container" onclick="seekAudio(event, this, '${audioId}')">
+                                <div class="waveform-progress"></div>
+                                <div class="waveform-bars">
+                                    ${Array(15).fill(0).map(() => `<div class="waveform-bar" style="height: ${Math.random() * 60 + 20}%"></div>`).join('')}
+                                </div>
+                            </div>
+                            <div class="audio-time">
+                                <span class="current-time">0:00</span>
+                                <span class="duration">0:00</span>
+                            </div>
+                        </div>
+                        <audio id="${audioId}" src="${mediaItem.url}" style="display: none;"></audio>
+                    </div>
+                    ${mediaItem.caption ? `<div class="media-caption">${mediaItem.caption}</div>` : ''}
+                `;
+
+                setTimeout(() => {
+                    const audio = document.getElementById(audioId);
+                    if (audio) {
+                        audio.addEventListener('loadedmetadata', function() {
+                            const duration = Math.floor(audio.duration);
+                            const mins = Math.floor(duration / 60);
+                            const secs = duration % 60;
+                            const durationSpan = audio.closest('.custom-audio-player').querySelector('.duration');
+                            if (durationSpan) {
+                                durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                            }
+                        });
+                    }
+                }, 100);
+            }
+
+            return mediaDiv;
+        }
+
+        function renderArticles(isInitial = true) {
+            const wrapper = document.getElementById('postsWrapper');
+            
+            if (isInitial) {
+                wrapper.innerHTML = '';
+            } else {
+                // Remove loading indicator if exists
+                const loadingMore = wrapper.querySelector('.loading-more');
+                if (loadingMore) {
+                    loadingMore.remove();
+                }
+            }
+
+            const startIndex = isInitial ? 0 : articles.length - LIMIT;
+            const endIndex = articles.length;
+
+            for (let index = startIndex; index < endIndex; index++) {
+                const article = articles[index];
                 const articleDiv = document.createElement('div');
                 articleDiv.className = 'article-card';
+                articleDiv.dataset.index = index;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'article-content';
+                
+                // Split content into paragraphs
+                const paragraphs = (article.content || 'No content available').split('\n\n');
+                paragraphs.forEach((paragraph, pIndex) => {
+                    if (paragraph.trim()) {
+                        const p = document.createElement('div');
+                        p.className = 'content-paragraph';
+                        p.textContent = paragraph.trim();
+                        contentDiv.appendChild(p);
+
+                        // Insert media at appropriate positions
+                        if (article.media && article.media.length > 0) {
+                            const relatedMedia = article.media.filter(m => m.display_order === pIndex);
+                            relatedMedia.forEach(m => {
+                                contentDiv.appendChild(createMediaElement(m));
+                            });
+                        }
+                    }
+                });
+
+                // Append remaining media
+                if (article.media) {
+                    article.media.filter(m => m.display_order >= paragraphs.length).forEach(m => {
+                        contentDiv.appendChild(createMediaElement(m));
+                    });
+                }
+
                 articleDiv.innerHTML = `
                     <div class="gradient-overlay"></div>
                     
@@ -327,10 +641,6 @@
                     </div>
                     
                     <div class="article-title">${article.title || 'Untitled'}</div>
-                    
-                    <div class="article-content">
-                        <div class="content-paragraph">${article.content || 'No content available'}</div>
-                    </div>
                     
                     <div class="action-buttons">
                         <button class="action-btn like-btn" data-id="${article.id}">
@@ -362,13 +672,21 @@
                         </button>
                     </div>
                 `;
+                
+                articleDiv.querySelector('.article-title').insertAdjacentElement('afterend', contentDiv);
                 wrapper.appendChild(articleDiv);
+            }
 
-                const indicator = document.createElement('div');
-                indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
-                indicator.dataset.index = index;
-                indicatorsDiv.appendChild(indicator);
-            });
+            // Add loading indicator if there are more articles
+            if (hasMore) {
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'article-card loading-more';
+                loadingDiv.innerHTML = `
+                    <div class="spinner"></div>
+                    <span>Loading more...</span>
+                `;
+                wrapper.appendChild(loadingDiv);
+            }
 
             // Add event listeners
             document.querySelectorAll('.like-btn').forEach(btn => {
@@ -383,7 +701,9 @@
                 btn.addEventListener('click', handleExpand);
             });
 
-            wrapper.addEventListener('scroll', handleScroll);
+            if (isInitial) {
+                wrapper.addEventListener('scroll', handleScroll);
+            }
         }
 
         function formatDate(date) {
@@ -441,8 +761,11 @@
                     url: url
                 }).catch(err => console.log('Error sharing:', err));
             } else {
-                navigator.clipboard.writeText(url);
-                alert('Link copied to clipboard!');
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Link copied to clipboard!');
+                }).catch(err => {
+                    console.error('Error copying to clipboard:', err);
+                });
             }
         }
 
@@ -454,26 +777,63 @@
         function handleScroll(e) {
             const container = e.target;
             const scrollPosition = container.scrollTop;
-            const itemHeight = container.clientHeight;
-            const newIndex = Math.round(scrollPosition / itemHeight);
+            const scrollHeight = container.scrollHeight;
+            const clientHeight = container.clientHeight;
 
-            if (newIndex !== currentIndex) {
-                currentIndex = newIndex;
-                updateIndicators();
+            // Load more when near bottom (80% scrolled)
+            if (scrollPosition + clientHeight >= scrollHeight * 0.8 && hasMore && !isLoading) {
+                loadArticles(false);
             }
         }
 
-        function updateIndicators() {
-            document.querySelectorAll('.indicator').forEach((indicator, index) => {
-                if (index === currentIndex) {
-                    indicator.classList.add('active');
-                } else {
-                    indicator.classList.remove('active');
-                }
-            });
+        loadArticles(true);
+    </script>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
         }
 
-        loadArticles();
+        if (localStorage.getItem("theme") === "light") {
+            document.body.classList.add("light-theme");
+        }
+
+        window.toggleAudio = function(btn, audioId) {
+            const player = btn.closest('.custom-audio-player');
+            const audio = document.getElementById(audioId);
+            const icon = btn.querySelector('i');
+            
+            if (audio.paused) {
+                audio.play();
+                icon.className = 'fas fa-pause';
+                
+                audio.ontimeupdate = function() {
+                    const progress = (audio.currentTime / audio.duration) * 100;
+                    player.querySelector('.waveform-progress').style.width = progress + '%';
+                    const currentMins = Math.floor(audio.currentTime / 60);
+                    const currentSecs = Math.floor(audio.currentTime % 60);
+                    player.querySelector('.current-time').textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
+                };
+                
+                audio.onended = function() {
+                    icon.className = 'fas fa-play';
+                    player.querySelector('.waveform-progress').style.width = '0%';
+                    player.querySelector('.current-time').textContent = '0:00';
+                };
+            } else {
+                audio.pause();
+                icon.className = 'fas fa-play';
+            }
+        };
+
+        window.seekAudio = function(event, container, audioId) {
+            const audio = document.getElementById(audioId);
+            const rect = container.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percentage = x / rect.width;
+            audio.currentTime = percentage * audio.duration;
+        };
     </script>
 </body>
 </html>
