@@ -2,7 +2,9 @@
 <html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>Article Scroller - Patholyica</title>
+    <meta name="theme-color" content="#0f0f0f">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Article Scroller - Patholytica</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -15,6 +17,7 @@
             --border-color: #303030;
             --accent: #3ea6ff;
             --accent-hover: #2d8ed6;
+            --theme-color: #0f0f0f;
         }
 
 body.light-theme {
@@ -26,6 +29,7 @@ body.light-theme {
     --border-color: #e5e5e5;
     --accent: #065fd4;
     --accent-hover: #0448a3;
+    --theme-color: #ffffff;
 }
 
 * {
@@ -45,30 +49,10 @@ body {
     height: 100%;
 }
 
-.header-wrapper {
+.theme-toggle-btn {
     position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--bg-color);
-    padding-top: env(safe-area-inset-top);
-    z-index: 30;
-    width: 100%;
-    max-width: 450px;
-    height: 0.25px;
-}
-
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 4px 16px;
-    max-width: 100%;
-    margin: 0 auto;
-    height: 100%;
-}
-
-.icon-btn {
+    top: calc(env(safe-area-inset-top) + 8px);
+    right: 16px;
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -81,9 +65,10 @@ body {
     justify-content: center;
     font-size: 16px;
     transition: background 0.2s ease;
+    z-index: 1000;
 }
 
-.icon-btn:hover {
+.theme-toggle-btn:hover {
     background: var(--border-color);
 }
 
@@ -626,13 +611,11 @@ body {
 
 </style></head>
 <body>
-    <div class="header-wrapper">
-        <div class="header">
-            <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-                <i class="fas fa-circle-half-stroke"></i>
-            </button>
-        </div>
-    </div><div class="app-container">
+    <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fas fa-circle-half-stroke"></i>
+    </button>
+    
+    <div class="app-container">
     <div class="scroller-container">
         <div class="posts-wrapper" id="postsWrapper">
             <div class="loading-container">
@@ -1269,11 +1252,22 @@ body {
 </script><script>
     function toggleTheme() {
         document.body.classList.toggle('light-theme');
-        localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem("theme", isLight ? "light" : "dark");
+        
+        // Update meta theme-color for iOS status bar
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.setAttribute('content', isLight ? '#ffffff' : '#0f0f0f');
+        }
     }
 
     if (localStorage.getItem("theme") === "light") {
         document.body.classList.add("light-theme");
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.setAttribute('content', '#ffffff');
+        }
     }
 
     window.toggleAudio = function(btn, audioId) {
