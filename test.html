@@ -43,63 +43,6 @@
             transition: background 0.2s ease, color 0.2s ease;
         }
 
-        .header-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: var(--bg-color);
-            padding-top: env(safe-area-inset-top);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 40;
-            width: 100%;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 24px;
-            max-width: 100%;
-            margin: 0 auto;
-        }
-
-        .logo-img {
-            height: 28px;
-            width: auto;
-            transition: filter 0.2s ease;
-            cursor: pointer;
-        }
-
-        body.light-theme .logo-img {
-            filter: invert(1);
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .icon-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: background 0.2s ease;
-        }
-
-        .icon-btn:hover {
-            background: var(--hover-bg);
-        }
-
         .app-container {
             width: 100vw;
             height: 100vh;
@@ -107,14 +50,13 @@
             align-items: center;
             justify-content: center;
             background: var(--bg-color);
-            padding-top: calc(60px + env(safe-area-inset-top));
         }
 
         .scroller-container {
             position: relative;
             width: 100%;
             max-width: 450px;
-            height: calc(100vh - 60px - env(safe-area-inset-top));
+            height: 100vh;
             background: var(--bg-color);
             overflow: hidden;
         }
@@ -132,11 +74,11 @@
 
         .article-card {
             position: relative;
-            height: 100%;
+            height: 100vh;
             scroll-snap-align: start;
             scroll-snap-stop: always;
             background: var(--bg-color);
-            padding: 20px 20px 140px;
+            padding: 20px 20px 100px;
             display: flex;
             flex-direction: column;
         }
@@ -334,10 +276,10 @@
         .action-buttons {
             position: absolute;
             right: 16px;
-            bottom: 140px;
+            bottom: 90px;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 20px;
             z-index: 10;
         }
 
@@ -345,7 +287,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             background: none;
             border: none;
             cursor: pointer;
@@ -357,8 +299,8 @@
         }
 
         .action-btn svg {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             stroke: var(--text-primary);
             fill: none;
             stroke-width: 2;
@@ -371,34 +313,8 @@
 
         .action-btn span {
             color: var(--text-primary);
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-        }
-
-        .scroll-indicators {
-            position: absolute;
-            top: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 4px;
-            z-index: 10;
-        }
-
-        .indicator {
-            height: 4px;
-            border-radius: 2px;
-            background: var(--text-secondary);
-            transition: all 0.3s;
-        }
-
-        .indicator.active {
-            width: 24px;
-            background: var(--text-primary);
-        }
-
-        .indicator:not(.active) {
-            width: 4px;
         }
 
         .loading-container {
@@ -423,26 +339,74 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        .footer-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 8px 24px;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .footer-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            padding: 6px 12px;
+        }
+
+        .footer-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-btn.active {
+            color: var(--accent);
+        }
+
+        .footer-btn i {
+            font-size: 20px;
+        }
+
+        .footer-btn span {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .loading-more {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .loading-more .spinner {
+            width: 24px;
+            height: 24px;
+            border-width: 3px;
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
-    <div class="header-wrapper">
-        <div class="header">
-            <img src="IMG_1896.png" class="logo-img" alt="Patholytica Logo" onclick="window.location.href='index.html'">
-            <div class="header-actions">
-                <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-                    <i class="fas fa-circle-half-stroke"></i>
-                </button>
-                <button class="icon-btn" onclick="window.location.href='index.html'" title="Home">
-                    <i class="fas fa-home"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <div class="app-container">
         <div class="scroller-container">
-            <div class="scroll-indicators" id="indicators"></div>
             <div class="posts-wrapper" id="postsWrapper">
                 <div class="loading-container">
                     <div class="spinner"></div>
@@ -450,6 +414,25 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="footer-bar">
+        <button class="footer-btn" onclick="window.location.href='index.html'">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </button>
+        <button class="footer-btn active">
+            <i class="fas fa-scroll"></i>
+            <span>Feed</span>
+        </button>
+        <button class="footer-btn" onclick="window.location.href='explore.html'">
+            <i class="fas fa-search"></i>
+            <span>Explore</span>
+        </button>
+        <button class="footer-btn" onclick="window.location.href='profile.html'">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </button>
     </div>
 
     <script type="module">
@@ -461,26 +444,44 @@
         let articles = [];
         let liked = {};
         let currentIndex = 0;
+        let isLoading = false;
+        let hasMore = true;
+        let offset = 0;
+        const LIMIT = 10;
 
-        async function loadArticles() {
+        async function loadArticles(isInitial = true) {
+            if (isLoading || (!isInitial && !hasMore)) return;
+            
+            isLoading = true;
+
             try {
                 const { data: articlesData, error: articlesError } = await supabase
                     .from('articles')
                     .select('*')
                     .order('created_at', { ascending: false })
-                    .limit(20);
+                    .range(offset, offset + LIMIT - 1);
 
                 if (articlesError) throw articlesError;
 
                 if (!articlesData || articlesData.length === 0) {
-                    document.getElementById('postsWrapper').innerHTML = `
-                        <div class="loading-container">
-                            <i class="fas fa-inbox" style="font-size: 48px;"></i>
-                            <div>No articles found</div>
-                        </div>
-                    `;
+                    if (isInitial) {
+                        document.getElementById('postsWrapper').innerHTML = `
+                            <div class="loading-container">
+                                <i class="fas fa-inbox" style="font-size: 48px;"></i>
+                                <div>No articles found</div>
+                            </div>
+                        `;
+                    }
+                    hasMore = false;
+                    isLoading = false;
                     return;
                 }
+
+                if (articlesData.length < LIMIT) {
+                    hasMore = false;
+                }
+
+                offset += articlesData.length;
 
                 const userIds = [...new Set(articlesData.map(a => a.firebase_user_id).filter(id => id))];
                 
@@ -502,7 +503,7 @@
                     .in('article_id', articleIds)
                     .order('display_order', { ascending: true });
 
-                articles = articlesData.map(article => {
+                const newArticles = articlesData.map(article => {
                     const user = usersData?.find(u => u.firebase_uid === article.firebase_user_id);
                     const articleMedia = mediaData?.filter(m => m.article_id === article.id) || [];
                     
@@ -513,15 +514,21 @@
                     };
                 });
 
-                renderArticles();
+                articles = [...articles, ...newArticles];
+                renderArticles(isInitial);
+                isLoading = false;
+
             } catch (error) {
                 console.error('Error loading articles:', error);
-                document.getElementById('postsWrapper').innerHTML = `
-                    <div class="loading-container">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
-                        <div>Failed to load articles</div>
-                    </div>
-                `;
+                if (isInitial) {
+                    document.getElementById('postsWrapper').innerHTML = `
+                        <div class="loading-container">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
+                            <div>Failed to load articles</div>
+                        </div>
+                    `;
+                }
+                isLoading = false;
             }
         }
 
@@ -578,16 +585,27 @@
             return mediaDiv;
         }
 
-        function renderArticles() {
+        function renderArticles(isInitial = true) {
             const wrapper = document.getElementById('postsWrapper');
-            const indicatorsDiv = document.getElementById('indicators');
             
-            wrapper.innerHTML = '';
-            indicatorsDiv.innerHTML = '';
+            if (isInitial) {
+                wrapper.innerHTML = '';
+            } else {
+                // Remove loading indicator if exists
+                const loadingMore = wrapper.querySelector('.loading-more');
+                if (loadingMore) {
+                    loadingMore.remove();
+                }
+            }
 
-            articles.forEach((article, index) => {
+            const startIndex = isInitial ? 0 : articles.length - LIMIT;
+            const endIndex = articles.length;
+
+            for (let index = startIndex; index < endIndex; index++) {
+                const article = articles[index];
                 const articleDiv = document.createElement('div');
                 articleDiv.className = 'article-card';
+                articleDiv.dataset.index = index;
                 
                 const contentDiv = document.createElement('div');
                 contentDiv.className = 'article-content';
@@ -664,12 +682,18 @@
                 
                 articleDiv.querySelector('.article-title').insertAdjacentElement('afterend', contentDiv);
                 wrapper.appendChild(articleDiv);
+            }
 
-                const indicator = document.createElement('div');
-                indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
-                indicator.dataset.index = index;
-                indicatorsDiv.appendChild(indicator);
-            });
+            // Add loading indicator if there are more articles
+            if (hasMore) {
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'article-card loading-more';
+                loadingDiv.innerHTML = `
+                    <div class="spinner"></div>
+                    <span>Loading more...</span>
+                `;
+                wrapper.appendChild(loadingDiv);
+            }
 
             // Add event listeners
             document.querySelectorAll('.like-btn').forEach(btn => {
@@ -684,7 +708,9 @@
                 btn.addEventListener('click', handleExpand);
             });
 
-            wrapper.addEventListener('scroll', handleScroll);
+            if (isInitial) {
+                wrapper.addEventListener('scroll', handleScroll);
+            }
         }
 
         function formatDate(date) {
@@ -742,8 +768,11 @@
                     url: url
                 }).catch(err => console.log('Error sharing:', err));
             } else {
-                navigator.clipboard.writeText(url);
-                alert('Link copied to clipboard!');
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Link copied to clipboard!');
+                }).catch(err => {
+                    console.error('Error copying to clipboard:', err);
+                });
             }
         }
 
@@ -755,26 +784,16 @@
         function handleScroll(e) {
             const container = e.target;
             const scrollPosition = container.scrollTop;
-            const itemHeight = container.clientHeight;
-            const newIndex = Math.round(scrollPosition / itemHeight);
+            const scrollHeight = container.scrollHeight;
+            const clientHeight = container.clientHeight;
 
-            if (newIndex !== currentIndex) {
-                currentIndex = newIndex;
-                updateIndicators();
+            // Load more when near bottom (80% scrolled)
+            if (scrollPosition + clientHeight >= scrollHeight * 0.8 && hasMore && !isLoading) {
+                loadArticles(false);
             }
         }
 
-        function updateIndicators() {
-            document.querySelectorAll('.indicator').forEach((indicator, index) => {
-                if (index === currentIndex) {
-                    indicator.classList.add('active');
-                } else {
-                    indicator.classList.remove('active');
-                }
-            });
-        }
-
-        loadArticles();
+        loadArticles(true);
     </script>
 
     <script>
