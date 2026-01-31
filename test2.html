@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Article Scroller - Patholytica</title>
@@ -50,15 +51,36 @@ body {
     padding-top: env(safe-area-inset-top);
     z-index: 40;
     width: 100%;
+    height: 44px;
 }
 
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 4px 24px;
+    justify-content: flex-end;
+    padding: 4px 16px;
     max-width: 100%;
     margin: 0 auto;
+    height: 100%;
+}
+
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: background 0.2s ease;
+}
+
+.icon-btn:hover {
+    background: var(--hover-bg);
 }
 
 .app-container {
@@ -77,7 +99,7 @@ body {
     height: 100vh;
     background: var(--bg-color);
     overflow: hidden;
-    padding-top: 20px;
+    padding-top: 44px;
 }
 
 .posts-wrapper {
@@ -97,7 +119,8 @@ body {
     scroll-snap-align: start;
     scroll-snap-stop: always;
     background: var(--bg-color);
-    padding: 20px 20px 100px;
+    padding: 8px 20px 100px;
+    padding-top: 4px;
     display: flex;
     flex-direction: column;
 }
@@ -107,6 +130,7 @@ body {
     align-items: center;
     gap: 12px;
     margin-bottom: 20px;
+    flex-shrink: 0;
 }
 
 .author-avatar {
@@ -598,6 +622,9 @@ body {
 <body>
     <div class="header-wrapper">
         <div class="header">
+            <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+                <i class="fas fa-circle-half-stroke"></i>
+            </button>
         </div>
     </div><div class="app-container">
     <div class="scroller-container">
@@ -646,6 +673,28 @@ body {
         <span>Profile</span>
     </button>
 </div><script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+        getAuth, 
+        onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
+        authDomain: "patholytica.firebaseapp.com",
+        databaseURL: "https://patholytica-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "patholytica",
+        storageBucket: "patholytica.firebasestorage.app",
+        messagingSenderId: "738430635282",
+        appId: "1:738430635282:web:8451ef380447c7611137cb"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
     const supabase = window.supabase.createClient(
         "https://vduqewqyvszfquntmark.supabase.co",
         "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
@@ -659,29 +708,50 @@ body {
     let hasMore = true;
     let offset = 0;
     const LIMIT = 10;
+    let currentUser = null;
 
-    // Get current logged-in user
+    // Get current logged-in user from Firebase and Supabase
     async function getCurrentUser() {
         try {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
+            const firebaseUser = auth.currentUser;
+            if (!firebaseUser) {
+                console.log('No Firebase user logged in');
                 return null;
             }
             
-            // Get user data from users table
+            console.log('Firebase user ID:', firebaseUser.uid);
+            
+            // Get user data from Supabase users table using firebase_uid
             const { data: userData, error } = await supabase
                 .from('users')
-                .select('user_id, firebase_uid')
-                .eq('firebase_uid', session.user.id)
+                .select('user_id, firebase_uid, username')
+                .eq('firebase_uid', firebaseUser.uid)
                 .single();
             
-            if (error) throw error;
+            if (error) {
+                console.error('Error fetching user from Supabase:', error);
+                return null;
+            }
+            
+            console.log('Supabase user data:', userData);
             return userData;
         } catch (error) {
             console.error('Error getting current user:', error);
             return null;
         }
     }
+
+    // Listen for auth state changes
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            console.log('User logged in:', user.uid);
+            currentUser = await getCurrentUser();
+            console.log('Current user set to:', currentUser);
+        } else {
+            console.log('User logged out');
+            currentUser = null;
+        }
+    });
 
     async function loadArticles(isInitial = true) {
         if (isLoading || (!isInitial && !hasMore)) return;
@@ -1105,20 +1175,29 @@ body {
         const input = document.getElementById('commentInput');
         const text = input.value.trim();
         
-        if (!text || !currentArticleId) return;
+        if (!text || !currentArticleId) {
+            console.log('No text or article ID');
+            return;
+        }
 
         const sendBtn = document.getElementById('sendCommentBtn');
         sendBtn.disabled = true;
 
         try {
-            // Get current logged-in user
-            const currentUser = await getCurrentUser();
+            // Refresh current user data
+            if (!currentUser) {
+                currentUser = await getCurrentUser();
+            }
+            
+            console.log('Attempting to post comment with user:', currentUser);
             
             if (!currentUser) {
-                // User not logged in - redirect to login
+                console.log('No user logged in - redirecting to login');
                 window.location.href = 'https://patholytica.com/login';
                 return;
             }
+
+            console.log('Posting comment with user_id:', currentUser.user_id);
 
             // Post comment with the logged-in user's ID
             const { data, error } = await supabase
@@ -1132,7 +1211,12 @@ body {
                 ])
                 .select();
 
-            if (error) throw error;
+            if (error) {
+                console.error('Supabase insert error:', error);
+                throw error;
+            }
+
+            console.log('Comment posted successfully:', data);
 
             input.value = '';
             await loadComments(currentArticleId);
