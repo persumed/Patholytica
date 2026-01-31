@@ -1,1 +1,622 @@
-thanks
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Scroller - Patholytica</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .app-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+
+        .scroller-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .posts-wrapper {
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+        }
+
+        .posts-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .article-card {
+            position: relative;
+            height: 100vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 24px 160px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .article-card:nth-child(2) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .article-card:nth-child(3) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .article-card:nth-child(4) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .article-card:nth-child(5) {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .article-card:nth-child(6) {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+
+        .article-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .author-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+
+        .article-date {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+        }
+
+        .article-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .article-content {
+            color: white;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-height: 45vh;
+            overflow-y: auto;
+        }
+
+        .article-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .article-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        .article-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 2px;
+        }
+
+        .content-paragraph {
+            margin-bottom: 16px;
+        }
+
+        .article-stats {
+            display: flex;
+            gap: 20px;
+            color: white;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-buttons {
+            position: absolute;
+            right: 16px;
+            bottom: 140px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            font-size: 20px;
+            justify-content: center;
+        }
+
+        .action-btn:active {
+            transform: scale(0.9);
+        }
+
+        .action-btn.liked {
+            background: rgba(239, 68, 68, 0.5);
+            border-color: rgba(239, 68, 68, 0.8);
+        }
+
+        .action-btn.liked i {
+            color: #ef4444;
+        }
+
+        .action-count {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: -2px;
+        }
+
+        .scroll-indicators {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 4px;
+            z-index: 10;
+        }
+
+        .indicator {
+            height: 3px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s;
+        }
+
+        .indicator.active {
+            width: 24px;
+            background: white;
+        }
+
+        .indicator:not(.active) {
+            width: 3px;
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+            gap: 16px;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .read-more-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .read-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .media-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 16px 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .error-details {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 12px;
+            font-family: monospace;
+            max-width: 90%;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="scroller-container">
+            <div class="scroll-indicators" id="indicators"></div>
+            <div class="posts-wrapper" id="postsWrapper">
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <div>Loading articles...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Initialize Supabase with correct key format
+        const SUPABASE_URL = "https://vduqewqyvszfquntmark.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkdXFld3F5dnN6ZnF1bnRtYXJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxNzUyODIsImV4cCI6MjA1MTc1MTI4Mn0.Y3GwR8yE2HnUm8K2TxVlJ6qNJ6z7fW_iAUEWARI";
+        
+        let supabase;
+        
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log('Supabase initialized successfully');
+        } catch (error) {
+            console.error('Supabase initialization error:', error);
+        }
+
+        let articles = [];
+        let liked = {};
+        let currentIndex = 0;
+
+        async function loadArticles() {
+            try {
+                console.log('Starting to load articles...');
+                
+                // Fetch articles
+                const { data: articlesData, error: articlesError } = await supabase
+                    .from('articles')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+
+                if (articlesError) {
+                    console.error('Articles error:', articlesError);
+                    throw articlesError;
+                }
+
+                console.log('Articles loaded:', articlesData?.length || 0);
+
+                if (!articlesData || articlesData.length === 0) {
+                    document.getElementById('postsWrapper').innerHTML = `
+                        <div class="loading-container">
+                            <i class="fas fa-inbox" style="font-size: 48px;"></i>
+                            <div>No articles found</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Fetch authors for all articles
+                const userIds = [...new Set(articlesData.map(a => a.firebase_user_id).filter(id => id))];
+                console.log('Fetching authors for user IDs:', userIds.length);
+                
+                let usersData = [];
+                if (userIds.length > 0) {
+                    const { data: users, error: usersError } = await supabase
+                        .from('users')
+                        .select('firebase_uid, username, full_name')
+                        .in('firebase_uid', userIds);
+                    
+                    if (usersError) {
+                        console.warn('Users fetch error:', usersError);
+                    } else {
+                        usersData = users || [];
+                        console.log('Authors loaded:', usersData.length);
+                    }
+                }
+
+                // Fetch media for all articles
+                const articleIds = articlesData.map(a => a.id);
+                console.log('Fetching media for articles:', articleIds.length);
+                
+                let mediaData = [];
+                if (articleIds.length > 0) {
+                    const { data: media, error: mediaError } = await supabase
+                        .from('media')
+                        .select('*')
+                        .in('article_id', articleIds)
+                        .order('display_order', { ascending: true });
+                    
+                    if (mediaError) {
+                        console.warn('Media fetch error:', mediaError);
+                    } else {
+                        mediaData = media || [];
+                        console.log('Media loaded:', mediaData.length);
+                    }
+                }
+
+                // Combine data
+                articles = articlesData.map(article => {
+                    const author = usersData?.find(u => u.firebase_uid === article.firebase_user_id);
+                    const media = mediaData?.filter(m => m.article_id === article.id) || [];
+                    
+                    return {
+                        ...article,
+                        author: author?.full_name || author?.username || 'Anonymous',
+                        media: media
+                    };
+                });
+
+                console.log('Final articles prepared:', articles.length);
+                renderArticles();
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                document.getElementById('postsWrapper').innerHTML = `
+                    <div class="loading-container">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
+                        <div>Failed to load articles</div>
+                        <div class="error-details">${error.message || 'Unknown error'}</div>
+                        <button class="read-more-btn" onclick="location.reload()" style="margin-top: 16px;">
+                            <i class="fas fa-redo"></i> Retry
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function renderArticles() {
+            const wrapper = document.getElementById('postsWrapper');
+            const indicatorsDiv = document.getElementById('indicators');
+            
+            wrapper.innerHTML = '';
+            indicatorsDiv.innerHTML = '';
+
+            articles.forEach((article, index) => {
+                // Truncate content for preview
+                const contentPreview = article.content ? article.content.substring(0, 500) : 'No content available';
+                const needsReadMore = article.content && article.content.length > 500;
+
+                const articleDiv = document.createElement('div');
+                articleDiv.className = 'article-card';
+                articleDiv.innerHTML = `
+                    <div class="article-header">
+                        <div class="author-avatar">${article.author.charAt(0).toUpperCase()}</div>
+                        <div class="author-info">
+                            <div class="author-name">${article.author}</div>
+                            <div class="article-date">${formatDate(new Date(article.created_at))}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="article-title">${article.title || 'Untitled'}</div>
+                    
+                    ${article.media && article.media.length > 0 && article.media[0].type === 'image' ? 
+                        `<img src="${article.media[0].url}" class="media-preview" alt="Article image">` : ''}
+                    
+                    <div class="article-content">
+                        <div class="content-paragraph">${contentPreview}${needsReadMore ? '...' : ''}</div>
+                    </div>
+                    
+                    ${needsReadMore ? `
+                        <button class="read-more-btn" onclick="openFullArticle('${article.id}')">
+                            Read Full Article <i class="fas fa-arrow-right"></i>
+                        </button>
+                    ` : ''}
+                    
+                    <div class="article-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-eye"></i>
+                            <span>${article.views || 0}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-heart"></i>
+                            <span>${article.likes || 0}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn like-btn" data-id="${article.id}" onclick="toggleLike(event, '${article.id}')">
+                            <i class="fas fa-heart"></i>
+                            <span class="action-count">${article.likes || 0}</span>
+                        </button>
+                        
+                        <button class="action-btn" onclick="shareArticle('${article.id}', '${article.title}')">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        
+                        <button class="action-btn" onclick="openFullArticle('${article.id}')">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                `;
+                wrapper.appendChild(articleDiv);
+
+                // Create indicator
+                const indicator = document.createElement('div');
+                indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+                indicator.dataset.index = index;
+                indicatorsDiv.appendChild(indicator);
+            });
+
+            wrapper.addEventListener('scroll', handleScroll);
+        }
+
+        function formatDate(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        window.toggleLike = async function(event, articleId) {
+            event.stopPropagation();
+            
+            const btn = event.currentTarget;
+            const countSpan = btn.querySelector('.action-count');
+            const article = articles.find(a => a.id === articleId);
+            
+            if (!article) return;
+
+            if (liked[articleId]) {
+                liked[articleId] = false;
+                btn.classList.remove('liked');
+                article.likes = Math.max(0, (article.likes || 0) - 1);
+                
+                // Update in database
+                try {
+                    await supabase
+                        .from('articles')
+                        .update({ likes: article.likes })
+                        .eq('id', articleId);
+                } catch (error) {
+                    console.error('Error updating like:', error);
+                }
+            } else {
+                liked[articleId] = true;
+                btn.classList.add('liked');
+                article.likes = (article.likes || 0) + 1;
+                
+                // Update in database
+                try {
+                    await supabase
+                        .from('articles')
+                        .update({ likes: article.likes })
+                        .eq('id', articleId);
+                } catch (error) {
+                    console.error('Error updating like:', error);
+                }
+            }
+            
+            countSpan.textContent = article.likes;
+        };
+
+        window.shareArticle = function(articleId, title) {
+            const url = `${window.location.origin}/article.html?id=${articleId}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: url
+                }).catch(err => console.log('Error sharing:', err));
+            } else {
+                navigator.clipboard.writeText(url);
+                alert('Link copied to clipboard!');
+            }
+        };
+
+        window.openFullArticle = function(articleId) {
+            window.location.href = `article.html?id=${articleId}`;
+        };
+
+        function handleScroll(e) {
+            const container = e.target;
+            const scrollPosition = container.scrollTop;
+            const itemHeight = container.clientHeight;
+            const newIndex = Math.round(scrollPosition / itemHeight);
+
+            if (newIndex !== currentIndex) {
+                currentIndex = newIndex;
+                updateIndicators();
+            }
+        }
+
+        function updateIndicators() {
+            document.querySelectorAll('.indicator').forEach((indicator, index) => {
+                if (index === currentIndex) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        // Initialize
+        loadArticles();
+    </script>
+</body>
+</html>
