@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -8,7 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
-  --bg-color: #0f0f0f;
+  --bg-color: #1f1f1f;
   --text-primary: #fff;
   --text-secondary: #aaa;
   --card-bg: #1f1f1f;
@@ -18,17 +19,7 @@
   --accent-hover: #2d8ed6;
   --accent-green: #2ecc71;
 }
-body.light-theme {
-  --bg-color: #ffffff;
-  --text-primary: #0f0f0f;
-  --text-secondary: #606060;
-  --card-bg: #f9f9f9;
-  --hover-bg: #f0f0f0;
-  --border-color: #e5e5e5;
-  --accent: #065fd4;
-  --accent-hover: #0448a3;
-  --accent-green: #27ae60;
-}
+
 * { box-sizing: border-box; }
 html, body { 
   margin: 0; 
@@ -65,11 +56,7 @@ body {
 .logo-img {
   height: 28px;
   width: auto;
-  transition: filter 0.2s ease;
   cursor: pointer;
-}
-body.light-theme .logo-img {
-  filter: invert(1);
 }
 .header-actions {
   display: flex;
@@ -138,42 +125,13 @@ body.light-theme .logo-img {
 }
 .welcome-text {
   font-weight: 500;
-}
-.user-menu {
-  position: relative;
-}
-.user-menu-dropdown {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background: var(--bg-color);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 8px 0;
-  min-width: 180px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: none;
-  z-index: 1000;
-}
-.user-menu-dropdown.show {
-  display: block;
-}
-.user-menu-item {
-  padding: 10px 16px;
   cursor: pointer;
-  transition: background 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text-primary);
-  font-size: 14px;
+  transition: color 0.2s ease;
 }
-.user-menu-item:hover {
-  background: var(--hover-bg);
+.welcome-text:hover {
+  color: var(--accent);
 }
-.user-menu-item i {
-  width: 16px;
-}
+
 /* Floating Create Button */
 .fab-create {
   position: fixed;
@@ -204,12 +162,6 @@ body.light-theme .logo-img {
 }
 .fab-create:active {
   transform: scale(0.95);
-}
-body.light-theme .fab-create {
-  box-shadow: 0 4px 12px rgba(6, 95, 212, 0.3);
-}
-body.light-theme .fab-create:hover {
-  box-shadow: 0 6px 16px rgba(6, 95, 212, 0.4);
 }
 
 .list-container {
@@ -281,7 +233,7 @@ body.light-theme .fab-create:hover {
   color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.6;
-  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
 }
 .footer-stats {
   margin-bottom: 8px;
@@ -299,7 +251,7 @@ body.light-theme .fab-create:hover {
   opacity: 0.8;
 }
 
-/* Footer Bar from first code */
+/* Footer Bar Navigation */
 .footer-bar {
   position: fixed;
   bottom: 0;
@@ -377,6 +329,22 @@ body.light-theme .fab-create:hover {
     padding: 6px 16px;
     font-size: 13px;
   }
+  .footer-bar {
+    padding: 8px 16px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  }
+  
+  .footer-btn {
+    padding: 6px 8px;
+  }
+  
+  .footer-btn i {
+    font-size: 18px;
+  }
+  
+  .footer-btn span {
+    font-size: 9px;
+  }
 }
 </style>
 </head>
@@ -385,34 +353,13 @@ body.light-theme .fab-create:hover {
   <div class="header">
     <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
     <div class="header-actions">
-      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-        <i class="fas fa-circle-half-stroke"></i>
-      </button>
       <!-- Auth buttons (shown when logged out) -->
       <div class="auth-buttons" id="authButtons">
         <a href="login.html" class="btn-login">Log In</a>
       </div>
-      <!-- User menu (shown when logged in) -->
+      <!-- User welcome (shown when logged in) -->
       <div class="user-welcome" id="userWelcome">
-        <div class="user-menu">
-          <button class="icon-btn" onclick="toggleUserMenu()" title="User menu">
-            <i class="fas fa-user"></i>
-          </button>
-          <div class="user-menu-dropdown" id="userMenuDropdown">
-            <div class="user-menu-item" onclick="window.location.href='profile.html'">
-              <i class="fas fa-user"></i>
-              <span>Profile</span>
-            </div>
-            <div class="user-menu-item" onclick="window.location.href='settings.html'">
-              <i class="fas fa-cog"></i>
-              <span>Settings</span>
-            </div>
-            <div class="user-menu-item" onclick="logOut()">
-              <i class="fas fa-sign-out-alt"></i>
-              <span>Log Out</span>
-            </div>
-          </div>
-        </div>
+        <span class="welcome-text" id="welcomeText" onclick="logOut()">Welcome</span>
       </div>
     </div>
   </div>
@@ -485,7 +432,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Initialize Supabase with CORRECT key from your working example
+// Initialize Supabase
 const supabase = window.supabase.createClient(
   "https://vduqewqyvszfquntmark.supabase.co",
   "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
@@ -518,10 +465,6 @@ async function loadArticles() {
       return;
     }
 
-    // DEBUG: Log the first article to see its structure
-    console.log('First article structure:', articles[0]);
-    console.log('First article firebase_user_id:', articles[0].firebase_user_id);
-
     // Get unique firebase_user_ids from articles
     const firebaseUserIds = [...new Set(articles.map(a => a.firebase_user_id).filter(Boolean))];
     console.log('Fetching users with firebase_uids:', firebaseUserIds);
@@ -533,24 +476,14 @@ async function loadArticles() {
       .in('firebase_uid', firebaseUserIds);
 
     console.log('Users response:', { users, error: usersError });
-    
-    // DEBUG: Log individual user data
-    if (users && users.length > 0) {
-      console.log('First user:', users[0]);
-      console.log('First user firebase_uid:', users[0].firebase_uid);
-      console.log('First user username:', users[0].username);
-    }
 
     // Create a user lookup map by firebase_uid
     const userMap = {};
     if (users) {
       users.forEach(user => {
         userMap[user.firebase_uid] = user;
-        console.log(`Added to userMap: ${user.firebase_uid} -> ${user.username}`);
       });
     }
-    
-    console.log('Complete userMap:', userMap);
 
     // Clear loading state
     articleList.innerHTML = '';
@@ -563,10 +496,7 @@ async function loadArticles() {
       
       // Get author username and format with @
       const user = userMap[article.firebase_user_id];
-      console.log(`Article "${article.title}" firebase_user_id: ${article.firebase_user_id}, Found user:`, user);
-      
       const authorName = user?.username ? `@${user.username}` : 'Unknown Author';
-      console.log(`Final author name for article "${article.title}": ${authorName}`);
       
       // Format date
       const date = new Date(article.created_at);
@@ -599,25 +529,6 @@ async function loadArticles() {
   }
 }
 
-// Check authentication state
-onAuthStateChanged(auth, async (user) => {
-  const authButtons = document.getElementById('authButtons');
-  const userWelcome = document.getElementById('userWelcome');
-  const fabCreateBtn = document.getElementById('fabCreateBtn');
-  
-  if (user) {
-    // User is logged in
-    authButtons.classList.remove('show');
-    userWelcome.classList.add('show');
-    if (fabCreateBtn) fabCreateBtn.classList.add('show');
-  } else {
-    // User is logged out
-    authButtons.classList.add('show');
-    userWelcome.classList.remove('show');
-    if (fabCreateBtn) fabCreateBtn.classList.remove('show');
-  }
-});
-
 // Log out function
 window.logOut = async function() {
   try {
@@ -631,20 +542,45 @@ window.logOut = async function() {
   }
 };
 
+// Check authentication state
+onAuthStateChanged(auth, async (user) => {
+  const authButtons = document.getElementById('authButtons');
+  const userWelcome = document.getElementById('userWelcome');
+  const fabCreateBtn = document.getElementById('fabCreateBtn');
+  
+  if (user) {
+    // User is logged in
+    authButtons.classList.remove('show');
+    userWelcome.classList.add('show');
+    if (fabCreateBtn) fabCreateBtn.classList.add('show');
+    
+    // Update welcome text with username if available
+    try {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('username')
+        .eq('firebase_uid', user.uid)
+        .single();
+      
+      if (userData && userData.username) {
+        document.getElementById('welcomeText').textContent = `@${userData.username}`;
+      }
+    } catch (error) {
+      console.error('Error fetching username:', error);
+    }
+  } else {
+    // User is logged out
+    authButtons.classList.add('show');
+    userWelcome.classList.remove('show');
+    if (fabCreateBtn) fabCreateBtn.classList.remove('show');
+  }
+});
+
 // Load articles on page load
 loadArticles();
 </script>
 
 <script>
-function toggleTheme() {
-  document.body.classList.toggle('light-theme');
-  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
-}
-
-if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light-theme");
-}
-
 function openArticle(articleId) {
   // Navigate to article detail page
   window.location.href = `article.html?id=${articleId}`;
@@ -719,21 +655,6 @@ function searchArticles() {
     }
   }
 }
-
-function toggleUserMenu() {
-  const dropdown = document.getElementById('userMenuDropdown');
-  dropdown.classList.toggle('show');
-}
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function(event) {
-  const userMenu = document.querySelector('.user-menu');
-  const dropdown = document.getElementById('userMenuDropdown');
-  
-  if (userMenu && !userMenu.contains(event.target)) {
-    dropdown.classList.remove('show');
-  }
-});
 
 // Get user location
 if ("geolocation" in navigator) {
