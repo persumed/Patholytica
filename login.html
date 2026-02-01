@@ -385,53 +385,87 @@ const supabase = window.supabase.createClient(
 // Store user data in Supabase
 async function createUserInSupabase(firebaseUser, fullName = null, username = null) {
   try {
-    // Extract user data
+    // First, check if user exists by firebase_uid
+    const { data: existingUserByUid, error: uidCheckError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('firebase_uid', firebaseUser.uid)
+      .maybeSingle(); // Use maybeSingle() instead of single() to avoid throwing on no results
+
+    if (existingUserByUid) {
+      console.log("User already exists in Supabase (by firebase_uid):", existingUserByUid);
+      // Update the last login
+      const { data: updated } = await supabase
+        .from('users')
+        .update({ updated_at: new Date().toISOString() })
+        .eq('firebase_uid', firebaseUser.uid)
+        .select();
+      return existingUserByUid;
+    }
+
+    // Also check by email in case firebase_uid wasn't saved before
+    const { data: existingUserByEmail, error: emailCheckError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', firebaseUser.email)
+      .maybeSingle();
+
+    if (existingUserByEmail) {
+      console.log("User exists but missing firebase_uid, updating...");
+      // Update the existing record with firebase_uid
+      const { data: updated, error: updateError } = await supabase
+        .from('users')
+        .update({ 
+          firebase_uid: firebaseUser.uid,
+          updated_at: new Date().toISOString()
+        })
+        .eq('email', firebaseUser.email)
+        .select();
+
+      if (updateError) {
+        console.error("Error updating firebase_uid:", updateError);
+        throw updateError;
+      }
+      
+      console.log("Updated existing user with firebase_uid:", updated);
+      return updated[0];
+    }
+
+    // User doesn't exist, create new user
     const userData = {
+      firebase_uid: firebaseUser.uid,
       email: firebaseUser.email,
-      username: username || firebaseUser.email.split('@')[0], // Default username from email
+      username: username || firebaseUser.email.split('@')[0],
       full_name: fullName || firebaseUser.displayName || null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
 
-    // Check if user already exists
-    const { data: existingUser, error: checkError } = await supabase
-      .from('users')
-      .select('user_id')
-      .eq('email', firebaseUser.email)
-      .single();
-
-    if (existingUser) {
-      console.log("User already exists in Supabase");
-      return existingUser;
-    }
-
-    // Insert new user
     const { data, error } = await supabase
       .from('users')
       .insert([userData])
       .select();
 
     if (error) {
-      console.error("Supabase error:", error);
+      console.error("Supabase insert error:", error);
       throw error;
     }
 
-    console.log("User created in Supabase:", data);
-    return data;
+    console.log("New user created in Supabase:", data);
+    return data[0];
   } catch (error) {
-    console.error("Error creating user in Supabase:", error);
+    console.error("Error in createUserInSupabase:", error);
     throw error;
   }
 }
 
 // Update user data in Supabase
-async function updateUserInSupabase(email) {
+async function updateUserInSupabase(firebaseUid) {
   try {
     const { data, error } = await supabase
       .from('users')
       .update({ updated_at: new Date().toISOString() })
-      .eq('email', email)
+      .eq('firebase_uid', firebaseUid)
       .select();
 
     if (error) throw error;
@@ -455,6 +489,7 @@ window.signInWithGoogle = async function() {
       window.location.href = "index.html";
     }, 1000);
   } catch (error) {
+    console.error("Google sign-in error:", error);
     showError(getErrorMessage(error.code));
   }
 };
@@ -542,7 +577,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
       console.log("Sign-in successful:", result.user);
       
       // Update last login in Supabase
-      await updateUserInSupabase(email);
+      await updateUserInSupabase(result.user.uid);
       
       showSuccess("Signed in successfully!");
       setTimeout(() => {
@@ -550,6 +585,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
       }, 1000);
     }
   } catch (error) {
+    console.error("Form submission error:", error);
     showError(getErrorMessage(error.code));
     submitBtn.disabled = false;
     submitBtn.querySelector('span').textContent = isSignUp ? "Sign Up" : "Sign In";
