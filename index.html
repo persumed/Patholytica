@@ -359,7 +359,7 @@ body {
       </div>
       <!-- User welcome (shown when logged in) -->
       <div class="user-welcome" id="userWelcome">
-        <span class="welcome-text" id="welcomeText" onclick="logOut()">Welcome</span>
+        <span class="welcome-text" id="welcomeText">Welcome</span>
       </div>
     </div>
   </div>
@@ -546,6 +546,7 @@ window.logOut = async function() {
 onAuthStateChanged(auth, async (user) => {
   const authButtons = document.getElementById('authButtons');
   const userWelcome = document.getElementById('userWelcome');
+  const welcomeText = document.getElementById('welcomeText');
   const fabCreateBtn = document.getElementById('fabCreateBtn');
   
   if (user) {
@@ -553,6 +554,10 @@ onAuthStateChanged(auth, async (user) => {
     authButtons.classList.remove('show');
     userWelcome.classList.add('show');
     if (fabCreateBtn) fabCreateBtn.classList.add('show');
+    
+    // Add click event to username for logout
+    welcomeText.onclick = window.logOut;
+    welcomeText.style.cursor = 'pointer';
     
     // Update welcome text with username if available
     try {
@@ -563,7 +568,7 @@ onAuthStateChanged(auth, async (user) => {
         .single();
       
       if (userData && userData.username) {
-        document.getElementById('welcomeText').textContent = `@${userData.username}`;
+        welcomeText.textContent = `@${userData.username}`;
       }
     } catch (error) {
       console.error('Error fetching username:', error);
