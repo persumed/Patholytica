@@ -125,6 +125,11 @@ body {
 }
 .welcome-text {
   font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.welcome-text:hover {
+  color: var(--accent);
 }
 
 /* Floating Create Button */
@@ -524,10 +529,24 @@ async function loadArticles() {
   }
 }
 
+// Log out function
+window.logOut = async function() {
+  try {
+    await signOut(auth);
+    console.log("User logged out");
+    // Reload page to update UI
+    window.location.reload();
+  } catch (error) {
+    console.error("Error logging out:", error);
+    alert("Error logging out. Please try again.");
+  }
+};
+
 // Check authentication state
 onAuthStateChanged(auth, async (user) => {
   const authButtons = document.getElementById('authButtons');
   const userWelcome = document.getElementById('userWelcome');
+  const welcomeText = document.getElementById('welcomeText');
   const fabCreateBtn = document.getElementById('fabCreateBtn');
   
   if (user) {
@@ -535,6 +554,10 @@ onAuthStateChanged(auth, async (user) => {
     authButtons.classList.remove('show');
     userWelcome.classList.add('show');
     if (fabCreateBtn) fabCreateBtn.classList.add('show');
+    
+    // Add click event to username for logout
+    welcomeText.onclick = window.logOut;
+    welcomeText.style.cursor = 'pointer';
     
     // Update welcome text with username if available
     try {
@@ -545,7 +568,7 @@ onAuthStateChanged(auth, async (user) => {
         .single();
       
       if (userData && userData.username) {
-        document.getElementById('welcomeText').textContent = `@${userData.username}`;
+        welcomeText.textContent = `@${userData.username}`;
       }
     } catch (error) {
       console.error('Error fetching username:', error);
