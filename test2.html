@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg-color: #0f0f0f;
+            --bg-color: #1f1f1f;
             --text-primary: #fff;
             --text-secondary: #aaa;
             --card-bg: #1f1f1f;
@@ -18,7 +18,7 @@
         }
 
 body.light-theme {
-    --bg-color: #ffffff;
+    --bg-color: #f9f9f9;
     --text-primary: #0f0f0f;
     --text-secondary: #606060;
     --card-bg: #f9f9f9;
@@ -562,6 +562,7 @@ body {
     to { transform: rotate(360deg); }
 }
 
+/* Footer Bar from library code */
 .footer-bar {
     position: fixed;
     bottom: 0;
@@ -625,6 +626,25 @@ body {
     margin-right: 8px;
 }
 
+@media (max-width: 768px) {
+    .footer-bar {
+        padding: 8px 16px;
+        padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    }
+    
+    .footer-btn {
+        padding: 6px 8px;
+    }
+    
+    .footer-btn i {
+        font-size: 18px;
+    }
+    
+    .footer-btn span {
+        font-size: 9px;
+    }
+}
+
 </style></head>
 <body>
     <div class="app-container">
@@ -662,12 +682,13 @@ body {
     </div>
 </div>
 
+<!-- Footer Bar Navigation -->
 <div class="footer-bar">
     <button class="footer-btn" onclick="window.location.href='index.html'">
         <i class="fas fa-home"></i>
         <span>Home</span>
     </button>
-    <button class="footer-btn active">
+    <button class="footer-btn active" onclick="window.location.href='https://patholytica.com/dailyfeed'">
         <i class="fas fa-scroll"></i>
         <span>Feed</span>
     </button>
@@ -718,8 +739,9 @@ body {
     let offset = 0;
     const LIMIT = 10;
     let currentUser = null;
+    let authInitialized = false;
 
-    // Get current logged-in user from Firebase and Supabase
+    // Get or create user in Supabase from Firebase user
     async function getCurrentUser() {
         try {
             const firebaseUser = auth.currentUser;
@@ -728,24 +750,62 @@ body {
                 return null;
             }
             
-            console.log('Firebase user ID:', firebaseUser.uid);
+            console.log('Firebase user:', firebaseUser.uid, firebaseUser.email);
             
-            // Get user data from Supabase users table using firebase_uid
-            const { data: userData, error } = await supabase
+            // First try to get existing user
+            const { data: existingUser, error: fetchError } = await supabase
                 .from('users')
-                .select('user_id, firebase_uid, username')
+                .select('user_id, firebase_uid, username, email')
                 .eq('firebase_uid', firebaseUser.uid)
-                .single();
+                .maybeSingle(); // Use maybeSingle instead of single to avoid error on 0 rows
             
-            if (error) {
-                console.error('Error fetching user from Supabase:', error);
+            if (existingUser) {
+                console.log('Found existing user:', existingUser);
+                return existingUser;
+            }
+
+            // If user doesn't exist, create one
+            console.log('User not found in Supabase, creating new user...');
+            
+            const newUserData = {
+                firebase_uid: firebaseUser.uid,
+                email: firebaseUser.email,
+                username: firebaseUser.email ? firebaseUser.email.split('@')[0] : `user_${firebaseUser.uid.substring(0, 8)}`,
+                full_name: firebaseUser.displayName || null,
+                created_at: new Date().toISOString()
+            };
+
+            const { data: newUser, error: createError } = await supabase
+                .from('users')
+                .insert([newUserData])
+                .select()
+                .single();
+
+            if (createError) {
+                console.error('Error creating user in Supabase:', createError);
+                
+                // If insert failed due to duplicate, try fetching again
+                if (createError.code === '23505') { // Unique violation
+                    const { data: retryUser } = await supabase
+                        .from('users')
+                        .select('user_id, firebase_uid, username, email')
+                        .eq('firebase_uid', firebaseUser.uid)
+                        .single();
+                    
+                    if (retryUser) {
+                        console.log('Found user on retry:', retryUser);
+                        return retryUser;
+                    }
+                }
+                
                 return null;
             }
+
+            console.log('Created new user:', newUser);
+            return newUser;
             
-            console.log('Supabase user data:', userData);
-            return userData;
         } catch (error) {
-            console.error('Error getting current user:', error);
+            console.error('Error in getCurrentUser:', error);
             return null;
         }
     }
@@ -760,6 +820,7 @@ body {
             console.log('User logged out');
             currentUser = null;
         }
+        authInitialized = true;
     });
 
     async function loadArticles(isInitial = true) {
@@ -1193,16 +1254,30 @@ body {
         sendBtn.disabled = true;
 
         try {
-            // Refresh current user data
-            if (!currentUser) {
-                currentUser = await getCurrentUser();
+            // Wait for auth to initialize if not already
+            let waitCount = 0;
+            while (!authInitialized && waitCount < 50) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                waitCount++;
             }
+
+            // Check if user is logged in via Firebase
+            const firebaseUser = auth.currentUser;
             
-            console.log('Attempting to post comment with user:', currentUser);
+            if (!firebaseUser) {
+                console.log('No Firebase user - redirecting to login');
+                alert('Please log in to comment');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Get or create user in Supabase
+            currentUser = await getCurrentUser();
             
-            if (!currentUser) {
-                console.log('No user logged in - redirecting to login');
-                window.location.href = 'https://patholytica.com/login';
+            // Double check after getting user
+            if (!currentUser || !currentUser.user_id) {
+                console.log('Could not get or create user in Supabase');
+                alert('Unable to verify user. Please try logging out and back in.');
                 return;
             }
 
