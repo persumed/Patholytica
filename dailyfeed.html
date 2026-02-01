@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg-color: #0f0f0f;
+            --bg-color: #1f1f1f;
             --text-primary: #fff;
             --text-secondary: #aaa;
             --card-bg: #1f1f1f;
@@ -18,7 +18,7 @@
         }
 
 body.light-theme {
-    --bg-color: #ffffff;
+    --bg-color: #f9f9f9;
     --text-primary: #0f0f0f;
     --text-secondary: #606060;
     --card-bg: #f9f9f9;
@@ -337,25 +337,46 @@ body {
     font-weight: 600;
 }
 
-/* Comments Panel */
-.comments-panel {
+/* Comments Popup */
+.comments-overlay {
     position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%) translateY(100%);
-    width: 100%;
-    max-width: 450px;
-    height: 70vh;
-    background: var(--card-bg);
-    border-radius: 16px 16px 0 0;
-    z-index: 200;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 199;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
-.comments-panel.active {
-    transform: translateX(-50%) translateY(0);
+.comments-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.comments-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: calc(100% - 40px);
+    max-width: 500px;
+    height: 70vh;
+    max-height: 600px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.comments-popup.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translate(-50%, -50%) scale(1);
 }
 
 .comments-header {
@@ -383,12 +404,31 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.close-comments:hover {
+    background: var(--hover-bg);
 }
 
 .comments-list {
     flex: 1;
     overflow-y: auto;
     padding: 16px 20px;
+}
+
+.comments-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.comments-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
 }
 
 .comment-item {
@@ -434,9 +474,9 @@ body {
 
 .comment-input-wrapper {
     padding: 12px 20px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
     border-top: 1px solid var(--border-color);
     background: var(--bg-color);
+    border-radius: 0 0 16px 16px;
 }
 
 .comment-input-container {
@@ -522,6 +562,7 @@ body {
     to { transform: rotate(360deg); }
 }
 
+/* Footer Bar from library code */
 .footer-bar {
     position: fixed;
     bottom: 0;
@@ -585,21 +626,24 @@ body {
     margin-right: 8px;
 }
 
-.comments-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 199;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
+@media (max-width: 768px) {
+    .footer-bar {
+        padding: 8px 16px;
+        padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    }
+    
+    .footer-btn {
+        padding: 6px 8px;
+    }
+    
+    .footer-btn i {
+        font-size: 18px;
+    }
+    
+    .footer-btn span {
+        font-size: 9px;
+    }
 }
-
-.comments-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-}
-
 
 </style></head>
 <body>
@@ -612,7 +656,11 @@ body {
             </div>
         </div>
     </div>
-</div><div class="comments-overlay" id="commentsOverlay" onclick="closeComments()"></div><div class="comments-panel" id="commentsPanel">
+</div>
+
+<div class="comments-overlay" id="commentsOverlay" onclick="closeComments()"></div>
+
+<div class="comments-popup" id="commentsPopup">
     <div class="comments-header">
         <h3>Comments</h3>
         <button class="close-comments" onclick="closeComments()">×</button>
@@ -632,12 +680,15 @@ body {
             </button>
         </div>
     </div>
-</div><div class="footer-bar">
+</div>
+
+<!-- Footer Bar Navigation -->
+<div class="footer-bar">
     <button class="footer-btn" onclick="window.location.href='index.html'">
         <i class="fas fa-home"></i>
         <span>Home</span>
     </button>
-    <button class="footer-btn active">
+    <button class="footer-btn active" onclick="window.location.href='https://patholytica.com/dailyfeed'">
         <i class="fas fa-scroll"></i>
         <span>Feed</span>
     </button>
@@ -649,7 +700,9 @@ body {
         <i class="fas fa-user"></i>
         <span>Profile</span>
     </button>
-</div><script type="module">
+</div>
+
+<script type="module">
     // Import Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { 
@@ -1137,13 +1190,13 @@ body {
     }
 
     window.openComments = function() {
-        document.getElementById('commentsPanel').classList.add('active');
+        document.getElementById('commentsPopup').classList.add('active');
         document.getElementById('commentsOverlay').classList.add('active');
         document.body.style.overflow = 'hidden';
     }
 
     window.closeComments = function() {
-        document.getElementById('commentsPanel').classList.remove('active');
+        document.getElementById('commentsPopup').classList.remove('active');
         document.getElementById('commentsOverlay').classList.remove('active');
         document.body.style.overflow = '';
     }
@@ -1237,7 +1290,9 @@ body {
     }
 
     loadArticles(true);
-</script><script>
+</script>
+
+<script>
     window.toggleAudio = function(btn, audioId) {
         const player = btn.closest('.custom-audio-player');
         const audio = document.getElementById(audioId);
@@ -1273,5 +1328,6 @@ body {
         const percentage = x / rect.width;
         audio.currentTime = percentage * audio.duration;
     };
-</script></body>
+</script>
+</body>
 </html>
