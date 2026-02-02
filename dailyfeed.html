@@ -127,6 +127,14 @@ body {
     font-size: 18px;
     font-weight: bold;
     color: white;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .author-info {
@@ -449,6 +457,13 @@ body {
     font-weight: bold;
     color: white;
     flex-shrink: 0;
+    overflow: hidden;
+}
+
+.comment-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .comment-content {
@@ -731,7 +746,7 @@ body {
     );
 
     let articles = [];
-    let userLikes = new Set(); // Track which articles user has liked
+    let userLikes = new Set();
     let currentArticleId = null;
     let currentIndex = 0;
     let isLoading = false;
@@ -741,8 +756,8 @@ body {
     let currentUser = null;
     
     // View tracking
-    let viewTimers = {}; // Track view timers for each article
-    let viewedArticles = new Set(); // Track which articles have been counted
+    let viewTimers = {};
+    let viewedArticles = new Set();
 
     // Get current logged-in user from Firebase and Supabase
     async function getCurrentUser() {
@@ -755,7 +770,6 @@ body {
             
             console.log('Firebase user ID:', firebaseUser.uid);
             
-            // Get user data from Supabase users table using firebase_uid
             const { data: userData, error } = await supabase
                 .from('users')
                 .select('user_id, firebase_uid, username')
@@ -775,14 +789,12 @@ body {
         }
     }
 
-    // Listen for auth state changes
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             console.log('User logged in:', user.uid);
             currentUser = await getCurrentUser();
             console.log('Current user set to:', currentUser);
             
-            // Load user's likes
             if (currentUser) {
                 await loadUserLikes();
             }
@@ -793,7 +805,6 @@ body {
         }
     });
 
-    // Load user's existing likes
     async function loadUserLikes() {
         if (!currentUser) return;
         
@@ -810,14 +821,12 @@ body {
                 userLikes.add(like.article_id);
             });
             
-            // Update UI for already loaded articles
             updateLikeButtons();
         } catch (error) {
             console.error('Error loading user likes:', error);
         }
     }
 
-    // Update like button states based on userLikes
     function updateLikeButtons() {
         document.querySelectorAll('.like-btn').forEach(btn => {
             const articleId = btn.dataset.id;
@@ -869,13 +878,12 @@ body {
             if (userIds.length > 0) {
                 const { data: users } = await supabase
                     .from('users')
-                    .select('firebase_uid, username, full_name')
+                    .select('firebase_uid, username, full_name, pfp')
                     .in('firebase_uid', userIds);
                 
                 usersData = users || [];
             }
 
-            // Fetch media for all articles
             const articleIds = articlesData.map(a => a.id);
             const { data: mediaData } = await supabase
                 .from('media')
@@ -890,6 +898,8 @@ body {
                 return {
                     ...article,
                     author: user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous'),
+                    authorPfp: user?.pfp || null,
+                    authorUsername: user?.username || null,
                     media: articleMedia
                 };
             });
@@ -965,6 +975,31 @@ body {
         return mediaDiv;
     }
 
+    function getAvatarContent(article) {
+        // If user has a profile picture, use it
+        if (article.authorPfp) {
+            return `<img src="${article.authorPfp}" alt="${article.author}">`;
+        }
+        
+        // Otherwise, show the first letter of username (letter after @)
+        let letter = 'A'; // Default
+        
+        if (article.authorUsername) {
+            // Get first character of username (after the @)
+            letter = article.authorUsername.charAt(0).toUpperCase();
+        } else if (article.author) {
+            // Fallback: get first letter after @ symbol if it exists
+            const atIndex = article.author.indexOf('@');
+            if (atIndex !== -1 && article.author.length > atIndex + 1) {
+                letter = article.author.charAt(atIndex + 1).toUpperCase();
+            } else {
+                letter = article.author.charAt(0).toUpperCase();
+            }
+        }
+        
+        return letter;
+    }
+
     function renderArticles(isInitial = true) {
         const wrapper = document.getElementById('postsWrapper');
         
@@ -1014,10 +1049,11 @@ body {
             }
 
             const isLiked = userLikes.has(article.id);
+            const avatarContent = getAvatarContent(article);
 
             articleDiv.innerHTML = `
                 <div class="article-header">
-                    <div class="author-avatar">${article.author.charAt(0).toUpperCase()}</div>
+                    <div class="author-avatar">${avatarContent}</div>
                     <div class="author-info">
                         <div class="author-name">${article.author}</div>
                         <div class="article-date">${formatDate(new Date(article.created_at))}</div>
@@ -1086,7 +1122,6 @@ body {
         }
     }
 
-    // Setup Intersection Observer for view tracking
     function setupIntersectionObserver() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1094,18 +1129,15 @@ body {
                 const articleId = articleCard.dataset.articleId;
                 
                 if (entry.isIntersecting && entry.intersectionRatio >= 0.75) {
-                    // User is viewing this article
                     startViewTimer(articleId);
                 } else {
-                    // User scrolled away from this article
                     clearViewTimer(articleId);
                 }
             });
         }, {
-            threshold: [0.75] // Trigger when 75% of article is visible
+            threshold: [0.75]
         });
 
-        // Observe all article cards
         document.querySelectorAll('.article-card').forEach(card => {
             if (card.dataset.articleId) {
                 observer.observe(card);
@@ -1113,19 +1145,16 @@ body {
         });
     }
 
-    // Start timer to increment view after 5 seconds
     function startViewTimer(articleId) {
-        // Don't start timer if already viewed or timer already running
         if (viewedArticles.has(articleId) || viewTimers[articleId]) {
             return;
         }
 
         viewTimers[articleId] = setTimeout(async () => {
             await incrementView(articleId);
-        }, 5000); // 5 seconds
+        }, 5000);
     }
 
-    // Clear view timer if user scrolls away
     function clearViewTimer(articleId) {
         if (viewTimers[articleId]) {
             clearTimeout(viewTimers[articleId]);
@@ -1133,15 +1162,12 @@ body {
         }
     }
 
-    // Increment view count in database
     async function incrementView(articleId) {
         if (viewedArticles.has(articleId)) return;
         
         try {
-            // Mark as viewed to prevent duplicate increments
             viewedArticles.add(articleId);
             
-            // Get current views
             const { data: article, error: fetchError } = await supabase
                 .from('articles')
                 .select('views')
@@ -1152,7 +1178,6 @@ body {
             
             const newViews = (article.views || 0) + 1;
             
-            // Update views in database
             const { error: updateError } = await supabase
                 .from('articles')
                 .update({ views: newViews })
@@ -1160,7 +1185,6 @@ body {
             
             if (updateError) throw updateError;
             
-            // Update local article data
             const articleIndex = articles.findIndex(a => a.id === articleId);
             if (articleIndex !== -1) {
                 articles[articleIndex].views = newViews;
@@ -1169,7 +1193,6 @@ body {
             console.log(`View counted for article ${articleId}, new total: ${newViews}`);
         } catch (error) {
             console.error('Error incrementing view:', error);
-            // Remove from viewed set on error so it can be retried
             viewedArticles.delete(articleId);
         }
     }
@@ -1219,7 +1242,6 @@ body {
         
         if (!article) return;
 
-        // Check if user is logged in
         if (!currentUser) {
             alert('Please log in to like articles');
             window.location.href = 'https://patholytica.com/login';
@@ -1229,7 +1251,6 @@ body {
         const wasLiked = userLikes.has(articleId);
         const originalCount = article.likes || 0;
 
-        // Optimistic UI update
         if (wasLiked) {
             userLikes.delete(articleId);
             btn.classList.remove('liked');
@@ -1244,7 +1265,6 @@ body {
 
         try {
             if (wasLiked) {
-                // Remove like from database
                 const { error: deleteError } = await supabase
                     .from('likes')
                     .delete()
@@ -1253,7 +1273,6 @@ body {
                 
                 if (deleteError) throw deleteError;
             } else {
-                // Add like to database
                 const { error: insertError } = await supabase
                     .from('likes')
                     .insert([{
@@ -1264,7 +1283,6 @@ body {
                 if (insertError) throw insertError;
             }
 
-            // Update like count in articles table
             await supabase
                 .from('articles')
                 .update({ likes: article.likes })
@@ -1272,7 +1290,6 @@ body {
 
         } catch (error) {
             console.error('Error updating like:', error);
-            // Revert on error
             if (wasLiked) {
                 userLikes.add(articleId);
                 btn.classList.add('liked');
@@ -1323,7 +1340,7 @@ body {
             if (userIds.length > 0) {
                 const { data: users } = await supabase
                     .from('users')
-                    .select('user_id, username, full_name')
+                    .select('user_id, username, full_name, pfp')
                     .in('user_id', userIds);
                 
                 if (users) {
@@ -1337,9 +1354,28 @@ body {
                 const user = usersMap[comment.user_id];
                 const author = user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous');
                 
+                // Get avatar content for comment
+                let avatarContent;
+                if (user?.pfp) {
+                    avatarContent = `<img src="${user.pfp}" alt="${author}">`;
+                } else {
+                    let letter = 'A';
+                    if (user?.username) {
+                        letter = user.username.charAt(0).toUpperCase();
+                    } else if (author) {
+                        const atIndex = author.indexOf('@');
+                        if (atIndex !== -1 && author.length > atIndex + 1) {
+                            letter = author.charAt(atIndex + 1).toUpperCase();
+                        } else {
+                            letter = author.charAt(0).toUpperCase();
+                        }
+                    }
+                    avatarContent = letter;
+                }
+                
                 return `
                     <div class="comment-item">
-                        <div class="comment-avatar">${author.charAt(0).toUpperCase()}</div>
+                        <div class="comment-avatar">${avatarContent}</div>
                         <div class="comment-content">
                             <div class="comment-author">${author}</div>
                             <div class="comment-text">${comment.comment_text}</div>
@@ -1385,7 +1421,6 @@ body {
         sendBtn.disabled = true;
 
         try {
-            // Refresh current user data
             if (!currentUser) {
                 currentUser = await getCurrentUser();
             }
@@ -1400,7 +1435,6 @@ body {
 
             console.log('Posting comment with user_id:', currentUser.user_id);
 
-            // Post comment with the logged-in user's ID
             const { data, error } = await supabase
                 .from('comments')
                 .insert([
@@ -1422,7 +1456,6 @@ body {
             input.value = '';
             await loadComments(currentArticleId);
             
-            // Update comment count
             const commentBtn = document.querySelector(`.comment-btn[data-id="${currentArticleId}"]`);
             if (commentBtn) {
                 const countSpan = commentBtn.querySelector('.comment-count');
@@ -1437,7 +1470,6 @@ body {
         }
     }
 
-    // Enable send button on Enter key
     document.getElementById('commentInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             window.sendComment();
