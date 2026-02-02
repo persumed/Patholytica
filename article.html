@@ -342,6 +342,7 @@
         .suggested-articles {
             margin-top: 40px;
             padding-top: 20px;
+            padding-bottom: 2px;
             border-top: 2px solid var(--border-color);
         }
 
@@ -376,12 +377,20 @@
             background: var(--border-color);
             flex-shrink: 0;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .suggested-thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .suggested-thumbnail i {
+            font-size: 32px;
+            color: var(--text-secondary);
         }
 
         .suggested-info {
@@ -943,7 +952,7 @@
 
         const supabase = window.supabase.createClient(
             "https://vduqewqyvszfquntmark.supabase.co",
-            "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkdXFld3F5dnN6ZnF1bnRtYXJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2MTg3MjgsImV4cCI6MjA4NTE5NDcyOH0.V2JellFmUGgYhKfW-D4CBdcBHyPztOlcgLCBdhnXj7c"
         );
 
         let currentUser = null;
@@ -1056,9 +1065,10 @@
 
         async function loadSuggestedArticles(firebaseUserId, currentArticleId) {
             try {
+                // Fetch articles with media data
                 const { data: articles, error } = await supabase
                     .from('articles')
-                    .select('id, title, created_at, views, likes')
+                    .select('id, title, created_at, views, likes, media(url)')
                     .eq('firebase_user_id', firebaseUserId)
                     .neq('id', currentArticleId)
                     .order('created_at', { ascending: false })
@@ -1072,10 +1082,20 @@
                     
                     suggestedList.innerHTML = articles.map(article => {
                         const timeAgo = formatDate(new Date(article.created_at));
+                        const articleImage = article.media && article.media.length > 0 ? article.media[0].url : null;
+                        
+                        let thumbnailContent;
+                        if (articleImage) {
+                            thumbnailContent = `<img src="${articleImage}" alt="${article.title || 'Article'}">`;
+                        } else {
+                            const initial = article.title ? article.title[0].toUpperCase() : 'A';
+                            thumbnailContent = `<i class="fas fa-file-alt"></i>`;
+                        }
+                        
                         return `
                             <div class="suggested-article" onclick="window.location.href='article.html?id=${article.id}'">
                                 <div class="suggested-thumbnail">
-                                    <i class="fas fa-file-alt" style="font-size: 32px; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; height: 100%;"></i>
+                                    ${thumbnailContent}
                                 </div>
                                 <div class="suggested-info">
                                     <div class="suggested-title">${article.title || 'Untitled'}</div>
