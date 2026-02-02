@@ -173,10 +173,13 @@
             opacity: 0.5;
         }
 
+        .content-item {
+            margin-bottom: 14px;
+        }
+
         .content-line {
             font-size: 16px;
             line-height: 1.6;
-            margin-bottom: 14px;
             position: relative;
             display: flex;
             align-items: flex-start;
@@ -537,12 +540,16 @@
     <div class="editor-wrapper" id="editorContainer">
         <textarea class="article-title-input" id="articleTitle" placeholder="Article Title" rows="1" oninput="autoResizeTitle(this)"></textarea>
         
-        <div class="content-line" data-line="1">
-            <div class="content-editable" contenteditable="true"></div>
-            <div class="line-actions">
-                <button class="line-btn" onclick="deleteLine(this)" title="Delete line">
-                    <i class="fas fa-trash"></i>
-                </button>
+        <div id="contentItems">
+            <div class="content-item">
+                <div class="content-line" data-line="1">
+                    <div class="content-editable" contenteditable="true"></div>
+                    <div class="line-actions">
+                        <button class="line-btn" onclick="deleteLine(this)" title="Delete line">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -583,6 +590,203 @@
     <span id="notificationText"></span>
 </div>
 
+<script>
+// Global variables - declared before any functions
+let lineCounter = 1;
+
+function goBack() {
+    if (document.referrer && document.referrer.includes(window.location.host)) {
+        window.history.back();
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('light-theme');
+    localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
+}
+
+if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-theme");
+}
+
+function autoResizeTitle(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+}
+
+function addNewParagraph() {
+    lineCounter++;
+    const contentItem = document.createElement('div');
+    contentItem.className = 'content-item';
+    contentItem.innerHTML = `
+        <div class="content-line" data-line="${lineCounter}">
+            <div class="content-editable" contenteditable="true"></div>
+            <div class="line-actions">
+                <button class="line-btn" onclick="deleteLine(this)" title="Delete line">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    document.getElementById('contentItems').appendChild(contentItem);
+    const editable = contentItem.querySelector('.content-editable');
+    editable.focus();
+}
+
+function deleteLine(btn) {
+    const contentItem = btn.closest('.content-item');
+    const allItems = document.querySelectorAll('.content-item .content-line');
+    
+    if (allItems.length > 1) {
+        contentItem.remove();
+    } else {
+        showNotification('Cannot delete the last line', 'error');
+    }
+}
+
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const contentItem = document.createElement('div');
+        contentItem.className = 'content-item';
+        contentItem.innerHTML = `
+            <div class="media-embed">
+                <button class="remove-media-btn" onclick="removeMedia(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+                <img src="${e.target.result}" alt="Uploaded image">
+                <div class="media-caption" contenteditable="true"></div>
+            </div>
+        `;
+        document.getElementById('contentItems').appendChild(contentItem);
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+}
+
+function handleAudioUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const audioId = 'audio-' + Math.random().toString(36).substr(2, 9);
+        const contentItem = document.createElement('div');
+        contentItem.className = 'content-item';
+        contentItem.innerHTML = `
+            <div class="media-embed">
+                <button class="remove-media-btn" onclick="removeMedia(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="custom-audio-player">
+                    <button class="play-btn" onclick="toggleAudio(this, '${audioId}')">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <div class="audio-info">
+                        <div class="audio-title">${file.name}</div>
+                        <div class="waveform-container" onclick="seekAudio(event, this, '${audioId}')">
+                            <div class="waveform-progress"></div>
+                            <div class="waveform-bars">
+                                ${Array(15).fill(0).map(() => `<div class="waveform-bar" style="height: ${Math.random() * 60 + 20}%"></div>`).join('')}
+                            </div>
+                        </div>
+                        <div class="audio-time">
+                            <span class="current-time">0:00</span>
+                            <span class="duration">0:00</span>
+                        </div>
+                    </div>
+                    <audio id="${audioId}" src="${e.target.result}" style="display: none;"></audio>
+                </div>
+                <div class="media-caption" contenteditable="true"></div>
+            </div>
+        `;
+        document.getElementById('contentItems').appendChild(contentItem);
+        
+        setTimeout(() => {
+            const audio = document.getElementById(audioId);
+            if (audio) {
+                audio.addEventListener('loadedmetadata', function() {
+                    const duration = Math.floor(audio.duration);
+                    const mins = Math.floor(duration / 60);
+                    const secs = duration % 60;
+                    const durationSpan = audio.closest('.custom-audio-player').querySelector('.duration');
+                    if (durationSpan) {
+                        durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                    }
+                });
+            }
+        }, 100);
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+}
+
+function removeMedia(btn) {
+    const contentItem = btn.closest('.content-item');
+    contentItem.remove();
+}
+
+function toggleAudio(btn, audioId) {
+    const player = btn.closest('.custom-audio-player');
+    const audio = document.getElementById(audioId);
+    const icon = btn.querySelector('i');
+    
+    if (audio.paused) {
+        audio.play();
+        icon.className = 'fas fa-pause';
+        
+        audio.ontimeupdate = function() {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            player.querySelector('.waveform-progress').style.width = progress + '%';
+            const currentMins = Math.floor(audio.currentTime / 60);
+            const currentSecs = Math.floor(audio.currentTime % 60);
+            player.querySelector('.current-time').textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
+        };
+        
+        audio.onended = function() {
+            icon.className = 'fas fa-play';
+            player.querySelector('.waveform-progress').style.width = '0%';
+            player.querySelector('.current-time').textContent = '0:00';
+        };
+    } else {
+        audio.pause();
+        icon.className = 'fas fa-play';
+    }
+}
+
+function seekAudio(event, container, audioId) {
+    const audio = document.getElementById(audioId);
+    const rect = container.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const percentage = x / rect.width;
+    audio.currentTime = percentage * audio.duration;
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    const notificationText = document.getElementById('notificationText');
+    const icon = notification.querySelector('i');
+    
+    notificationText.textContent = message;
+    notification.className = `notification ${type} show`;
+    
+    if (type === 'success') {
+        icon.className = 'fas fa-check-circle';
+    } else {
+        icon.className = 'fas fa-exclamation-circle';
+    }
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 4000);
+}
+</script>
+
 <script type="module">
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -610,7 +814,6 @@ const supabase = window.supabase.createClient(
 );
 
 let currentUser = null;
-let lineCounter = 1;
 
 // Check authentication
 onAuthStateChanged(auth, (user) => {
@@ -793,197 +996,6 @@ window.publishArticle = async function() {
         publishBtn.disabled = false;
         publishBtn.textContent = 'Publish';
     }
-};
-
-function showNotification(message, type = 'success') {
-    const notification = document.getElementById('notification');
-    const notificationText = document.getElementById('notificationText');
-    const icon = notification.querySelector('i');
-    
-    notificationText.textContent = message;
-    notification.className = `notification ${type} show`;
-    
-    if (type === 'success') {
-        icon.className = 'fas fa-check-circle';
-    } else {
-        icon.className = 'fas fa-exclamation-circle';
-    }
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 4000);
-}
-
-window.showNotification = showNotification;
-</script>
-
-<script>
-function goBack() {
-    if (document.referrer && document.referrer.includes(window.location.host)) {
-        window.history.back();
-    } else {
-        window.location.href = 'index.html';
-    }
-}
-
-function toggleTheme() {
-    document.body.classList.toggle('light-theme');
-    localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
-}
-
-if (localStorage.getItem("theme") === "light") {
-    document.body.classList.add("light-theme");
-}
-
-function autoResizeTitle(textarea) {
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
-}
-
-function addNewParagraph() {
-    lineCounter++;
-    const newLine = document.createElement('div');
-    newLine.className = 'content-line';
-    newLine.setAttribute('data-line', lineCounter);
-    newLine.innerHTML = `
-        <div class="content-editable" contenteditable="true"></div>
-        <div class="line-actions">
-            <button class="line-btn" onclick="deleteLine(this)" title="Delete line">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-    `;
-    document.getElementById('editorContainer').appendChild(newLine);
-    const editable = newLine.querySelector('.content-editable');
-    editable.focus();
-}
-
-function deleteLine(btn) {
-    const line = btn.closest('.content-line');
-    const allLines = document.querySelectorAll('.content-line');
-    
-    if (allLines.length > 1) {
-        line.remove();
-    } else {
-        showNotification('Cannot delete the last line', 'error');
-    }
-}
-
-function handleImageUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const mediaEmbed = document.createElement('div');
-        mediaEmbed.className = 'media-embed';
-        mediaEmbed.innerHTML = `
-            <button class="remove-media-btn" onclick="removeMedia(this)">
-                <i class="fas fa-times"></i>
-            </button>
-            <img src="${e.target.result}" alt="Uploaded image">
-            <div class="media-caption" contenteditable="true"></div>
-        `;
-        document.getElementById('editorContainer').appendChild(mediaEmbed);
-    };
-    reader.readAsDataURL(file);
-    event.target.value = '';
-}
-
-function handleAudioUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const audioId = 'audio-' + Math.random().toString(36).substr(2, 9);
-        const mediaEmbed = document.createElement('div');
-        mediaEmbed.className = 'media-embed';
-        mediaEmbed.innerHTML = `
-            <button class="remove-media-btn" onclick="removeMedia(this)">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="custom-audio-player">
-                <button class="play-btn" onclick="toggleAudio(this, '${audioId}')">
-                    <i class="fas fa-play"></i>
-                </button>
-                <div class="audio-info">
-                    <div class="audio-title">${file.name}</div>
-                    <div class="waveform-container" onclick="seekAudio(event, this, '${audioId}')">
-                        <div class="waveform-progress"></div>
-                        <div class="waveform-bars">
-                            ${Array(15).fill(0).map(() => `<div class="waveform-bar" style="height: ${Math.random() * 60 + 20}%"></div>`).join('')}
-                        </div>
-                    </div>
-                    <div class="audio-time">
-                        <span class="current-time">0:00</span>
-                        <span class="duration">0:00</span>
-                    </div>
-                </div>
-                <audio id="${audioId}" src="${e.target.result}" style="display: none;"></audio>
-            </div>
-            <div class="media-caption" contenteditable="true"></div>
-        `;
-        document.getElementById('editorContainer').appendChild(mediaEmbed);
-        
-        setTimeout(() => {
-            const audio = document.getElementById(audioId);
-            if (audio) {
-                audio.addEventListener('loadedmetadata', function() {
-                    const duration = Math.floor(audio.duration);
-                    const mins = Math.floor(duration / 60);
-                    const secs = duration % 60;
-                    const durationSpan = audio.closest('.custom-audio-player').querySelector('.duration');
-                    if (durationSpan) {
-                        durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-                    }
-                });
-            }
-        }, 100);
-    };
-    reader.readAsDataURL(file);
-    event.target.value = '';
-}
-
-function removeMedia(btn) {
-    const mediaEmbed = btn.closest('.media-embed');
-    mediaEmbed.remove();
-}
-
-window.toggleAudio = function(btn, audioId) {
-    const player = btn.closest('.custom-audio-player');
-    const audio = document.getElementById(audioId);
-    const icon = btn.querySelector('i');
-    
-    if (audio.paused) {
-        audio.play();
-        icon.className = 'fas fa-pause';
-        
-        audio.ontimeupdate = function() {
-            const progress = (audio.currentTime / audio.duration) * 100;
-            player.querySelector('.waveform-progress').style.width = progress + '%';
-            const currentMins = Math.floor(audio.currentTime / 60);
-            const currentSecs = Math.floor(audio.currentTime % 60);
-            player.querySelector('.current-time').textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
-        };
-        
-        audio.onended = function() {
-            icon.className = 'fas fa-play';
-            player.querySelector('.waveform-progress').style.width = '0%';
-            player.querySelector('.current-time').textContent = '0:00';
-        };
-    } else {
-        audio.pause();
-        icon.className = 'fas fa-play';
-    }
-};
-
-window.seekAudio = function(event, container, audioId) {
-    const audio = document.getElementById(audioId);
-    const rect = container.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const percentage = x / rect.width;
-    audio.currentTime = percentage * audio.duration;
 };
 </script>
 
