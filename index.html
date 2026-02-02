@@ -655,31 +655,6 @@ function searchArticles() {
   }
 }
 
-// Get user location
-if ("geolocation" in navigator) {
-  navigator.geolocation.getCurrentPosition(
-    function(position) {
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
-        .then(response => response.json())
-        .then(data => {
-          const city = data.address.city || data.address.town || data.address.village || '';
-          const state = data.address.state || '';
-          const country = data.address.country || '';
-          
-          let locationText = [city, state, country].filter(Boolean).join(', ');
-          document.getElementById('userLocation').textContent = locationText || 'Location unavailable';
-        })
-        .catch(() => {
-          document.getElementById('userLocation').textContent = 'Location unavailable';
-        });
-    },
-    function() {
-      document.getElementById('userLocation').textContent = 'Location access denied';
-    }
-  );
-} else {
-  document.getElementById('userLocation').textContent = 'Geolocation not supported';
-}
 </script>
 </body>
 </html>
