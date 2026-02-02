@@ -731,7 +731,7 @@ body {
     );
 
     let articles = [];
-    let liked = {};
+    let userLikes = new Set(); // Track which articles user has liked
     let currentArticleId = null;
     let currentIndex = 0;
     let isLoading = false;
@@ -739,6 +739,10 @@ body {
     let offset = 0;
     const LIMIT = 10;
     let currentUser = null;
+    
+    // View tracking
+    let viewTimers = {}; // Track view timers for each article
+    let viewedArticles = new Set(); // Track which articles have been counted
 
     // Get current logged-in user from Firebase and Supabase
     async function getCurrentUser() {
@@ -777,11 +781,53 @@ body {
             console.log('User logged in:', user.uid);
             currentUser = await getCurrentUser();
             console.log('Current user set to:', currentUser);
+            
+            // Load user's likes
+            if (currentUser) {
+                await loadUserLikes();
+            }
         } else {
             console.log('User logged out');
             currentUser = null;
+            userLikes.clear();
         }
     });
+
+    // Load user's existing likes
+    async function loadUserLikes() {
+        if (!currentUser) return;
+        
+        try {
+            const { data: likes, error } = await supabase
+                .from('likes')
+                .select('article_id')
+                .eq('user_id', currentUser.user_id);
+            
+            if (error) throw error;
+            
+            userLikes.clear();
+            likes.forEach(like => {
+                userLikes.add(like.article_id);
+            });
+            
+            // Update UI for already loaded articles
+            updateLikeButtons();
+        } catch (error) {
+            console.error('Error loading user likes:', error);
+        }
+    }
+
+    // Update like button states based on userLikes
+    function updateLikeButtons() {
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            const articleId = btn.dataset.id;
+            if (userLikes.has(articleId)) {
+                btn.classList.add('liked');
+            } else {
+                btn.classList.remove('liked');
+            }
+        });
+    }
 
     async function loadArticles(isInitial = true) {
         if (isLoading || (!isInitial && !hasMore)) return;
@@ -939,6 +985,7 @@ body {
             const articleDiv = document.createElement('div');
             articleDiv.className = 'article-card';
             articleDiv.dataset.index = index;
+            articleDiv.dataset.articleId = article.id;
             
             const contentDiv = document.createElement('div');
             contentDiv.className = 'article-content';
@@ -966,6 +1013,8 @@ body {
                 });
             }
 
+            const isLiked = userLikes.has(article.id);
+
             articleDiv.innerHTML = `
                 <div class="article-header">
                     <div class="author-avatar">${article.author.charAt(0).toUpperCase()}</div>
@@ -978,7 +1027,7 @@ body {
                 <div class="article-title">${article.title || 'Untitled'}</div>
                 
                 <div class="action-buttons">
-                    <button class="action-btn like-btn" data-id="${article.id}">
+                    <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" data-id="${article.id}">
                         <svg viewBox="0 0 24 24">
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                         </svg>
@@ -1033,6 +1082,95 @@ body {
         if (isInitial) {
             wrapper.addEventListener('scroll', handleScroll);
             loadCommentCounts();
+            setupIntersectionObserver();
+        }
+    }
+
+    // Setup Intersection Observer for view tracking
+    function setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const articleCard = entry.target;
+                const articleId = articleCard.dataset.articleId;
+                
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.75) {
+                    // User is viewing this article
+                    startViewTimer(articleId);
+                } else {
+                    // User scrolled away from this article
+                    clearViewTimer(articleId);
+                }
+            });
+        }, {
+            threshold: [0.75] // Trigger when 75% of article is visible
+        });
+
+        // Observe all article cards
+        document.querySelectorAll('.article-card').forEach(card => {
+            if (card.dataset.articleId) {
+                observer.observe(card);
+            }
+        });
+    }
+
+    // Start timer to increment view after 5 seconds
+    function startViewTimer(articleId) {
+        // Don't start timer if already viewed or timer already running
+        if (viewedArticles.has(articleId) || viewTimers[articleId]) {
+            return;
+        }
+
+        viewTimers[articleId] = setTimeout(async () => {
+            await incrementView(articleId);
+        }, 5000); // 5 seconds
+    }
+
+    // Clear view timer if user scrolls away
+    function clearViewTimer(articleId) {
+        if (viewTimers[articleId]) {
+            clearTimeout(viewTimers[articleId]);
+            delete viewTimers[articleId];
+        }
+    }
+
+    // Increment view count in database
+    async function incrementView(articleId) {
+        if (viewedArticles.has(articleId)) return;
+        
+        try {
+            // Mark as viewed to prevent duplicate increments
+            viewedArticles.add(articleId);
+            
+            // Get current views
+            const { data: article, error: fetchError } = await supabase
+                .from('articles')
+                .select('views')
+                .eq('id', articleId)
+                .single();
+            
+            if (fetchError) throw fetchError;
+            
+            const newViews = (article.views || 0) + 1;
+            
+            // Update views in database
+            const { error: updateError } = await supabase
+                .from('articles')
+                .update({ views: newViews })
+                .eq('id', articleId);
+            
+            if (updateError) throw updateError;
+            
+            // Update local article data
+            const articleIndex = articles.findIndex(a => a.id === articleId);
+            if (articleIndex !== -1) {
+                articles[articleIndex].views = newViews;
+            }
+            
+            console.log(`View counted for article ${articleId}, new total: ${newViews}`);
+        } catch (error) {
+            console.error('Error incrementing view:', error);
+            // Remove from viewed set on error so it can be retried
+            viewedArticles.delete(articleId);
         }
     }
 
@@ -1081,15 +1219,23 @@ body {
         
         if (!article) return;
 
-        const wasLiked = liked[articleId];
+        // Check if user is logged in
+        if (!currentUser) {
+            alert('Please log in to like articles');
+            window.location.href = 'https://patholytica.com/login';
+            return;
+        }
+
+        const wasLiked = userLikes.has(articleId);
         const originalCount = article.likes || 0;
 
+        // Optimistic UI update
         if (wasLiked) {
-            liked[articleId] = false;
+            userLikes.delete(articleId);
             btn.classList.remove('liked');
             article.likes = Math.max(0, originalCount - 1);
         } else {
-            liked[articleId] = true;
+            userLikes.add(articleId);
             btn.classList.add('liked');
             article.likes = originalCount + 1;
         }
@@ -1097,21 +1243,46 @@ body {
         countSpan.textContent = article.likes;
 
         try {
+            if (wasLiked) {
+                // Remove like from database
+                const { error: deleteError } = await supabase
+                    .from('likes')
+                    .delete()
+                    .eq('article_id', articleId)
+                    .eq('user_id', currentUser.user_id);
+                
+                if (deleteError) throw deleteError;
+            } else {
+                // Add like to database
+                const { error: insertError } = await supabase
+                    .from('likes')
+                    .insert([{
+                        article_id: articleId,
+                        user_id: currentUser.user_id
+                    }]);
+                
+                if (insertError) throw insertError;
+            }
+
+            // Update like count in articles table
             await supabase
                 .from('articles')
                 .update({ likes: article.likes })
                 .eq('id', articleId);
+
         } catch (error) {
             console.error('Error updating like:', error);
             // Revert on error
-            liked[articleId] = wasLiked;
-            article.likes = originalCount;
-            countSpan.textContent = article.likes;
             if (wasLiked) {
+                userLikes.add(articleId);
                 btn.classList.add('liked');
             } else {
+                userLikes.delete(articleId);
                 btn.classList.remove('liked');
             }
+            article.likes = originalCount;
+            countSpan.textContent = article.likes;
+            alert('Failed to update like. Please try again.');
         }
     }
 
