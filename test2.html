@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Patholytica — Profile</title>
+<title>Patholytica — Explore</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -18,13 +18,14 @@
   --accent: #3ea6ff;
   --accent-hover: #2d8ed6;
   --accent-green: #2ecc71;
+  --accent-purple: #9b59b6;
+  --accent-orange: #e67e22;
 }
-
 * { box-sizing: border-box; }
-html, body { 
-  margin: 0; 
-  padding: 0; 
-  min-height: 100%; 
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
   font-family: "Roboto", Arial, sans-serif;
   overflow-x: hidden;
   max-width: 100vw;
@@ -131,463 +132,288 @@ body {
 .welcome-text:hover {
   color: var(--accent);
 }
-
-/* Profile Container */
-.profile-container {
+/* Search Container */
+.search-container {
+  position: fixed;
+  top: calc(53px + env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  background: var(--bg-color);
+  padding: 16px 24px;
+  z-index: 35;
+  border-bottom: 1px solid var(--border-color);
+}
+.search-bar {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-icon {
+  position: absolute;
+  left: 16px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  padding: 12px 48px 12px 48px;
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.search-input:focus {
+  border-color: var(--accent);
+}
+.clear-search {
+  position: absolute;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: background 0.2s ease;
+}
+.clear-search.show {
+  display: flex;
+}
+.clear-search:hover {
+  background: var(--hover-bg);
+}
+/* Filter Tabs */
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.filter-tabs::-webkit-scrollbar {
+  display: none;
+}
+.filter-tab {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+.filter-tab:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+.filter-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+/* Content Container */
+.content-container {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
   padding: 24px 24px 80px;
-  padding-top: calc(65px + env(safe-area-inset-top) + 24px);
+  padding-top: calc(53px + env(safe-area-inset-top) + 140px);
 }
-
-/* Profile Header */
-.profile-header {
-  padding: 32px 0;
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 32px;
-}
-
-.profile-info {
-  display: flex;
-  align-items: flex-start;
-  gap: 24px;
-  margin-bottom: 24px;
-}
-
-.profile-avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: var(--hover-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-  color: var(--accent);
-  flex-shrink: 0;
-  overflow: hidden;
-  border: 3px solid var(--border-color);
-}
-
-.profile-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile-details {
-  flex: 1;
-}
-
-.profile-username {
-  font-family: 'Merriweather', Georgia, serif;
-  font-size: 32px;
-  font-weight: 700;
-  margin: 0 0 8px 0;
-  color: var(--text-primary);
-}
-
-.profile-email {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-}
-
-.profile-joined {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.profile-joined i {
-  font-size: 12px;
-}
-
-.profile-bio {
-  font-size: 15px;
-  color: var(--text-primary);
-  line-height: 1.5;
-  margin-bottom: 16px;
-  max-width: 600px;
-}
-
-.profile-stats {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.stat-label {
-  font-size: 13px;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.profile-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.btn-edit, .btn-logout {
-  padding: 10px 24px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-}
-
-.btn-edit {
-  background: var(--accent);
-  color: white;
-}
-
-.btn-edit:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.btn-logout {
-  background: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-}
-
-.btn-logout:hover {
-  background: var(--hover-bg);
-}
-
-/* Edit Profile Modal */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.modal-overlay.show {
-  display: flex;
-}
-
-.modal-content {
-  background: var(--card-bg);
-  border-radius: 12px;
-  width: 100%;
-  max-width: 500px;
-  max-height: 90vh;
-  overflow-y: auto;
-  border: 1px solid var(--border-color);
-}
-
-.modal-header {
-  padding: 24px;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.modal-title {
-  font-family: 'Merriweather', Georgia, serif;
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0;
-}
-
-.modal-close {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  transition: background 0.2s ease;
-}
-
-.modal-close:hover {
-  background: var(--hover-bg);
-}
-
-.modal-body {
-  padding: 24px;
-}
-
-.form-group {
-  margin-bottom: 24px;
-}
-
-.form-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-}
-
-.form-input, .form-textarea {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--bg-color);
-  color: var(--text-primary);
-  font-size: 14px;
-  font-family: inherit;
-  transition: border-color 0.2s ease;
-}
-
-.form-input:focus, .form-textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.form-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.avatar-upload {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.avatar-preview {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: var(--hover-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  color: var(--accent);
-  overflow: hidden;
-  border: 2px solid var(--border-color);
-  flex-shrink: 0;
-}
-
-.avatar-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.avatar-upload-btn {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.btn-upload {
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1px solid var(--border-color);
-  background: transparent;
-  color: var(--text-primary);
-}
-
-.btn-upload:hover {
-  background: var(--hover-bg);
-}
-
-.file-input {
-  display: none;
-}
-
-.upload-hint {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.modal-footer {
-  padding: 24px;
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-}
-
-.btn-cancel, .btn-save {
-  padding: 10px 24px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-}
-
-.btn-cancel {
-  background: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-}
-
-.btn-cancel:hover {
-  background: var(--hover-bg);
-}
-
-.btn-save {
-  background: var(--accent);
-  color: white;
-}
-
-.btn-save:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.btn-save:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Articles Section */
-.profile-section {
-  margin-bottom: 40px;
-}
-
-.section-title {
-  font-family: 'Merriweather', Georgia, serif;
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 0 24px 0;
-  color: var(--text-primary);
-}
-
-.article-list {
+/* Results List */
+.results-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.article-item {
-  padding: 24px 0;
+/* Result Item */
+.result-item {
+  padding: 16px;
   border-bottom: 1px solid var(--border-color);
   cursor: pointer;
   transition: background 0.2s ease;
-}
-.article-item:hover {
-  background: var(--hover-bg);
-  margin: 0 -12px;
-  padding: 24px 12px;
-}
-.article-title {
-  font-family: 'Merriweather', Georgia, serif;
-  font-size: 38px;
-  font-weight: 700;
-  margin: 0 0 8px 0;
-  line-height: 1.3;
-  color: var(--text-primary);
-  word-wrap: break-word;
-}
-.article-item:hover .article-title {
-  color: var(--accent);
-}
-.article-meta {
-  font-size: 14px;
-  color: var(--text-secondary);
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 16px;
 }
-.meta-dot {
-  width: 3px;
-  height: 3px;
-  background: var(--text-secondary);
+.result-item:hover {
+  background: var(--hover-bg);
+  margin: 0 -12px;
+  padding: 16px 28px;
+}
+.result-avatar {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  flex-shrink: 0;
+  overflow: hidden;
 }
+.result-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.result-avatar.article {
+  background: var(--accent-green);
+}
+.result-avatar.article-content {
+  background: var(--accent-orange);
+}
+.result-avatar.playlist {
+  background: var(--accent-purple);
+}
+.result-content {
+  flex: 1;
+  min-width: 0;
+}
+.result-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.result-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.result-excerpt {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 4px 0 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+.result-excerpt mark {
+  background: rgba(62, 166, 255, 0.3);
+  color: var(--text-primary);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.result-type-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.result-type-badge.user {
+  background: rgba(62, 166, 255, 0.15);
+  color: var(--accent);
+}
+.result-type-badge.article {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--accent-green);
+}
+.result-type-badge.article-content {
+  background: rgba(230, 126, 34, 0.15);
+  color: var(--accent-orange);
+}
+.result-type-badge.playlist {
+  background: rgba(155, 89, 182, 0.15);
+  color: var(--accent-purple);
+}
+/* Load More Button */
+.load-more-container {
+  text-align: center;
+  padding: 24px;
+  display: none;
+}
+.load-more-container.show {
+  display: block;
+}
+.btn-load-more {
+  padding: 12px 32px;
+  border-radius: 24px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-load-more:hover {
+  background: var(--hover-bg);
+  border-color: var(--accent);
+}
+.btn-load-more:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--text-secondary);
+}
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+.empty-state h3 {
+  font-size: 18px;
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+}
+.empty-state p {
+  font-size: 14px;
+  margin: 0;
+}
+/* Loading State */
 .loading-state {
   text-align: center;
   padding: 40px;
   color: var(--text-secondary);
   font-size: 16px;
 }
-.error-state {
-  text-align: center;
-  padding: 40px;
-  color: #ff4444;
-  font-size: 16px;
+.loading-spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
-
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-secondary);
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
-
-.empty-state i {
-  font-size: 48px;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
-
-.empty-state p {
-  font-size: 16px;
-  margin: 0;
-}
-
-.footer {
-  background: var(--bg-color);
-  border-top: 1px solid var(--border-color);
-  padding: 24px;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.6;
-  padding-bottom: calc(80px + env(safe-area-inset-bottom));
-}
-.footer-stats {
-  margin-bottom: 8px;
-}
-.article-count {
-  color: var(--accent-green);
-  font-weight: 600;
-}
-.footer-tagline {
-  margin-bottom: 8px;
-}
-.footer-location {
-  font-size: 13px;
-  color: var(--text-secondary);
-  opacity: 0.8;
-}
-
 /* Footer Bar Navigation */
 .footer-bar {
   position: fixed;
@@ -605,7 +431,6 @@ body {
   align-items: center;
   z-index: 100;
 }
-
 .footer-btn {
   display: flex;
   flex-direction: column;
@@ -618,87 +443,61 @@ body {
   transition: color 0.2s ease;
   padding: 6px 12px;
 }
-
 .footer-btn:hover {
   color: var(--text-primary);
 }
-
 .footer-btn.active {
   color: var(--accent);
 }
-
 .footer-btn i {
   font-size: 20px;
 }
-
 .footer-btn span {
   font-size: 10px;
   font-weight: 500;
 }
-
 @media (max-width: 768px) {
-  .profile-container {
+  .search-container {
+    padding: 12px 16px;
+  }
+  .search-input {
+    font-size: 14px;
+    padding: 10px 40px 10px 40px;
+  }
+  .filter-tabs {
+    margin-top: 10px;
+    gap: 6px;
+  }
+  .filter-tab {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+  .content-container {
     padding: 16px 16px 100px;
-    padding-top: calc(65px + env(safe-area-inset-top) + 16px);
+    padding-top: calc(53px + env(safe-area-inset-top) + 130px);
   }
-  
-  .profile-header {
-    padding: 24px 0;
-    margin-bottom: 24px;
+  .result-avatar {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
   }
-  
-  .profile-info {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 16px;
+  .result-title {
+    font-size: 15px;
   }
-  
-  .profile-avatar {
-    width: 100px;
-    height: 100px;
+  .result-subtitle {
+    font-size: 12px;
+  }
+  .empty-state {
+    padding: 40px 20px;
+  }
+  .empty-state i {
     font-size: 40px;
   }
-  
-  .profile-username {
-    font-size: 24px;
+  .empty-state h3 {
+    font-size: 16px;
   }
-  
-  .profile-bio {
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .profile-stats {
-    justify-content: center;
-    gap: 16px;
-  }
-  
-  .profile-actions {
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .btn-edit, .btn-logout {
-    width: 100%;
-    text-align: center;
-  }
-  
-  .section-title {
-    font-size: 20px;
-  }
-  
-  .article-title {
-    font-size: 28px;
-  }
-  .article-meta {
+  .empty-state p {
     font-size: 13px;
-  }
-  .footer {
-    padding: 20px 16px;
-    font-size: 13px;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom));
   }
   .auth-buttons {
     gap: 8px;
@@ -711,43 +510,14 @@ body {
     padding: 8px 16px;
     padding-bottom: calc(8px + env(safe-area-inset-bottom));
   }
-  
   .footer-btn {
     padding: 6px 8px;
   }
-  
   .footer-btn i {
     font-size: 18px;
   }
-  
   .footer-btn span {
     font-size: 9px;
-  }
-  
-  .modal-content {
-    max-height: 85vh;
-  }
-  
-  .modal-header {
-    padding: 20px;
-  }
-  
-  .modal-body {
-    padding: 20px;
-  }
-  
-  .modal-footer {
-    padding: 20px;
-    flex-direction: column;
-  }
-  
-  .btn-cancel, .btn-save {
-    width: 100%;
-  }
-  
-  .avatar-upload {
-    flex-direction: column;
-    align-items: center;
   }
 }
 </style>
@@ -769,68 +539,47 @@ body {
   </div>
 </div>
 
-<div class="profile-container">
-  <div id="profileContent">
-    <div class="loading-state">Loading profile...</div>
-  </div>
-</div>
-
-<!-- Edit Profile Modal -->
-<div class="modal-overlay" id="editModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">Edit Profile</h2>
-      <button class="modal-close" onclick="closeEditModal()">
+<!-- Search Container -->
+<div class="search-container">
+  <div class="search-bar">
+    <div class="search-input-wrapper">
+      <i class="fas fa-search search-icon"></i>
+      <input 
+        type="text" 
+        class="search-input" 
+        id="searchInput" 
+        placeholder="Search for users, articles, or libraries..."
+        autocomplete="off"
+      >
+      <button class="clear-search" id="clearSearch">
         <i class="fas fa-times"></i>
       </button>
     </div>
-    <div class="modal-body">
-      <form id="editForm">
-        <div class="form-group">
-          <label class="form-label">Profile Picture</label>
-          <div class="avatar-upload">
-            <div class="avatar-preview" id="avatarPreview">
-              <i class="fas fa-user"></i>
-            </div>
-            <div class="avatar-upload-btn">
-              <button type="button" class="btn-upload" onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-upload"></i> Choose Image
-              </button>
-              <input type="file" id="fileInput" class="file-input" accept="image/*" onchange="handleImageSelect(event)">
-              <span class="upload-hint">JPG, PNG or GIF (max 5MB)</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="bioInput">Bio</label>
-          <textarea 
-            id="bioInput" 
-            class="form-textarea" 
-            placeholder="Tell us about yourself..."
-            maxlength="500"
-          ></textarea>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
-      <button class="btn-save" id="saveBtn" onclick="saveProfile()">Save Changes</button>
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="users">Users</button>
+      <button class="filter-tab" data-filter="articles">Articles</button>
+      <button class="filter-tab" data-filter="article-content">Article Content</button>
+      <button class="filter-tab" data-filter="playlists">Libraries</button>
     </div>
   </div>
 </div>
 
-<footer class="footer">
-  <div class="footer-stats">
-    <span class="article-count" id="articleCount">0</span> articles accessible
+<div class="content-container">
+  <ul class="results-list" id="resultsList">
+    <li class="empty-state" id="initialState">
+      <i class="fas fa-search"></i>
+      <h3>Discover Content</h3>
+      <p>Search for users, articles, or libraries to explore</p>
+    </li>
+  </ul>
+  <div class="load-more-container" id="loadMoreContainer">
+    <button class="btn-load-more" id="loadMoreBtn">
+      <i class="fas fa-chevron-down" style="margin-right: 8px;"></i>
+      Load More
+    </button>
   </div>
-  <div class="footer-tagline">
-    Patholytica is a Medicinebank project aiming to unify academic sharing
-  </div>
-  <div class="footer-location" id="userLocation">
-    Loading location...
-  </div>
-</footer>
+</div>
 
 <!-- Footer Bar Navigation -->
 <div class="footer-bar">
@@ -842,11 +591,11 @@ body {
     <i class="fas fa-scroll"></i>
     <span>Feed</span>
   </button>
-  <button class="footer-btn" onclick="window.location.href='explore.html'">
+  <button class="footer-btn active" onclick="window.location.href='explore.html'">
     <i class="fas fa-search"></i>
     <span>Explore</span>
   </button>
-  <button class="footer-btn active" onclick="window.location.href='profile.html'">
+  <button class="footer-btn" onclick="window.location.href='profile.html'">
     <i class="fas fa-user"></i>
     <span>Profile</span>
   </button>
@@ -882,299 +631,33 @@ const supabase = window.supabase.createClient(
   "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
 );
 
-// Global variables
-let currentUser = null;
-let currentUserData = null;
-let selectedImageFile = null;
+// Search state
+let currentFilter = 'all';
+let searchTimeout;
+let currentQuery = '';
+let currentOffset = 0;
+let hasMore = false;
+const RESULTS_PER_PAGE = 10;
 
-// Load profile data
-async function loadProfile(user) {
-  const profileContent = document.getElementById('profileContent');
-  currentUser = user;
-  
-  try {
-    console.log('Loading profile for user:', user.uid);
-    
-    // Fetch user data from Supabase
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('firebase_uid', user.uid)
-      .single();
-
-    if (userError) {
-      console.error('Error fetching user:', userError);
-      profileContent.innerHTML = '<div class="error-state">Error loading profile</div>';
-      return;
-    }
-
-    currentUserData = userData;
-
-    // Fetch user's articles
-    const { data: articles, error: articlesError } = await supabase
-      .from('articles')
-      .select('*')
-      .eq('firebase_user_id', user.uid)
-      .order('created_at', { ascending: false });
-
-    if (articlesError) {
-      console.error('Error fetching articles:', articlesError);
-    }
-
-    const articleCount = articles ? articles.length : 0;
-    const totalViews = articles ? articles.reduce((sum, article) => sum + (article.views || 0), 0) : 0;
-
-    // Format joined date
-    const joinedDate = userData.created_at ? new Date(userData.created_at) : null;
-    const joinedText = joinedDate ? joinedDate.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long'
-    }) : 'Unknown';
-
-    // Build profile HTML
-    let avatarHTML = userData.pfp 
-      ? `<img src="${userData.pfp}" alt="Profile Picture">`
-      : `<i class="fas fa-user"></i>`;
-
-    let bioHTML = userData.bio 
-      ? `<div class="profile-bio">${userData.bio}</div>`
-      : '';
-
-    let profileHTML = `
-      <div class="profile-header">
-        <div class="profile-info">
-          <div class="profile-avatar">
-            ${avatarHTML}
-          </div>
-          <div class="profile-details">
-            <h1 class="profile-username">@${userData.username || 'User'}</h1>
-            <div class="profile-email">${user.email}</div>
-            <div class="profile-joined">
-              <i class="fas fa-calendar-alt"></i>
-              <span>Joined ${joinedText}</span>
-            </div>
-            ${bioHTML}
-            <div class="profile-stats">
-              <div class="stat-item">
-                <span class="stat-value">${articleCount}</span>
-                <span class="stat-label">Articles</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value">${totalViews}</span>
-                <span class="stat-label">Total Views</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="profile-actions">
-          <button class="btn-edit" onclick="openEditModal()">
-            <i class="fas fa-edit"></i> Edit Profile
-          </button>
-          <button class="btn-logout" onclick="logOut()">
-            <i class="fas fa-sign-out-alt"></i> Log Out
-          </button>
-        </div>
-      </div>
-    `;
-
-    // Add articles section
-    if (articles && articles.length > 0) {
-      profileHTML += `
-        <div class="profile-section">
-          <h2 class="section-title">Your Articles</h2>
-          <ul class="article-list" id="userArticles">
-      `;
-
-      articles.forEach(article => {
-        const date = new Date(article.created_at);
-        const formattedDate = date.toLocaleDateString('en-US', { 
-          year: 'numeric', 
-          month: 'short', 
-          day: 'numeric' 
-        });
-
-        profileHTML += `
-          <li class="article-item" onclick="openArticle('${article.id}')">
-            <h2 class="article-title">${article.title}</h2>
-            <div class="article-meta">
-              <span>${formattedDate}</span>
-              <div class="meta-dot"></div>
-              <span>${article.views || 0} views</span>
-            </div>
-          </li>
-        `;
-      });
-
-      profileHTML += `
-          </ul>
-        </div>
-      `;
-    } else {
-      profileHTML += `
-        <div class="profile-section">
-          <h2 class="section-title">Your Articles</h2>
-          <div class="empty-state">
-            <i class="fas fa-file-alt"></i>
-            <p>You haven't written any articles yet</p>
-          </div>
-        </div>
-      `;
-    }
-
-    profileContent.innerHTML = profileHTML;
-
-    // Update global article count
-    const { data: allArticles } = await supabase
-      .from('articles')
-      .select('id');
-    document.getElementById('articleCount').textContent = allArticles ? allArticles.length : 0;
-    
-  } catch (err) {
-    console.error('Unexpected error:', err);
-    profileContent.innerHTML = '<div class="error-state">An unexpected error occurred</div>';
-  }
-}
-
-// Open edit modal
-window.openEditModal = function() {
-  const modal = document.getElementById('editModal');
-  const bioInput = document.getElementById('bioInput');
-  const avatarPreview = document.getElementById('avatarPreview');
-  
-  // Populate current data
-  bioInput.value = currentUserData.bio || '';
-  
-  // Show current avatar
-  if (currentUserData.pfp) {
-    avatarPreview.innerHTML = `<img src="${currentUserData.pfp}" alt="Profile Picture">`;
-  } else {
-    avatarPreview.innerHTML = `<i class="fas fa-user"></i>`;
-  }
-  
-  selectedImageFile = null;
-  modal.classList.add('show');
-};
-
-// Close edit modal
-window.closeEditModal = function() {
-  const modal = document.getElementById('editModal');
-  modal.classList.remove('show');
-  selectedImageFile = null;
-};
-
-// Handle image selection
-window.handleImageSelect = function(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  
-  // Check file size (5MB max)
-  if (file.size > 5 * 1024 * 1024) {
-    alert('File size must be less than 5MB');
-    return;
-  }
-  
-  // Check file type
-  if (!file.type.startsWith('image/')) {
-    alert('Please select an image file');
-    return;
-  }
-  
-  selectedImageFile = file;
-  
-  // Preview image
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const avatarPreview = document.getElementById('avatarPreview');
-    avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-  };
-  reader.readAsDataURL(file);
-};
-
-// Save profile
-window.saveProfile = async function() {
-  const saveBtn = document.getElementById('saveBtn');
-  const bioInput = document.getElementById('bioInput');
-  
-  saveBtn.disabled = true;
-  saveBtn.textContent = 'Saving...';
-  
-  try {
-    let pfpUrl = currentUserData.pfp;
-    
-    // Upload image if selected
-    if (selectedImageFile) {
-      const fileExt = selectedImageFile.name.split('.').pop();
-      const fileName = `${currentUser.uid}-${Date.now()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
-      
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('profile-pictures')
-        .upload(filePath, selectedImageFile, {
-          cacheControl: '3600',
-          upsert: true
-        });
-      
-      if (uploadError) {
-        console.error('Upload error:', uploadError);
-        alert('Error uploading image. Please try again.');
-        saveBtn.disabled = false;
-        saveBtn.textContent = 'Save Changes';
-        return;
-      }
-      
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from('profile-pictures')
-        .getPublicUrl(filePath);
-      
-      pfpUrl = urlData.publicUrl;
-    }
-    
-    // Update user data
-    const { error: updateError } = await supabase
-      .from('users')
-      .update({
-        bio: bioInput.value.trim(),
-        pfp: pfpUrl
-      })
-      .eq('firebase_uid', currentUser.uid);
-    
-    if (updateError) {
-      console.error('Update error:', updateError);
-      alert('Error saving profile. Please try again.');
-      saveBtn.disabled = false;
-      saveBtn.textContent = 'Save Changes';
-      return;
-    }
-    
-    // Reload profile
-    await loadProfile(currentUser);
-    closeEditModal();
-    
-  } catch (err) {
-    console.error('Unexpected error:', err);
-    alert('An unexpected error occurred. Please try again.');
-  }
-  
-  saveBtn.disabled = false;
-  saveBtn.textContent = 'Save Changes';
-};
+// DOM Elements
+const searchInput = document.getElementById('searchInput');
+const clearSearchBtn = document.getElementById('clearSearch');
+const resultsList = document.getElementById('resultsList');
+const initialState = document.getElementById('initialState');
+const filterTabs = document.querySelectorAll('.filter-tab');
+const loadMoreContainer = document.getElementById('loadMoreContainer');
+const loadMoreBtn = document.getElementById('loadMoreBtn');
 
 // Log out function
 window.logOut = async function() {
   try {
     await signOut(auth);
     console.log("User logged out");
-    window.location.href = 'index.html';
+    window.location.reload();
   } catch (error) {
     console.error("Error logging out:", error);
     alert("Error logging out. Please try again.");
   }
-};
-
-// Open article function
-window.openArticle = function(articleId) {
-  window.location.href = `article.html?id=${articleId}`;
 };
 
 // Check authentication state
@@ -1182,18 +665,13 @@ onAuthStateChanged(auth, async (user) => {
   const authButtons = document.getElementById('authButtons');
   const userWelcome = document.getElementById('userWelcome');
   const welcomeText = document.getElementById('welcomeText');
-  const profileContent = document.getElementById('profileContent');
   
   if (user) {
-    // User is logged in
     authButtons.classList.remove('show');
     userWelcome.classList.add('show');
-    
-    // Add click event to username for logout
     welcomeText.onclick = window.logOut;
     welcomeText.style.cursor = 'pointer';
     
-    // Update welcome text with username
     try {
       const { data: userData } = await supabase
         .from('users')
@@ -1207,54 +685,358 @@ onAuthStateChanged(auth, async (user) => {
     } catch (error) {
       console.error('Error fetching username:', error);
     }
-
-    // Load profile
-    loadProfile(user);
   } else {
-    // User is logged out - redirect to login
     authButtons.classList.add('show');
     userWelcome.classList.remove('show');
-    profileContent.innerHTML = '<div class="error-state">Please log in to view your profile</div>';
-    setTimeout(() => {
-      window.location.href = 'login.html';
-    }, 1500);
   }
 });
 
-// Close modal when clicking outside
-document.getElementById('editModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    closeEditModal();
-  }
-});
-</script>
-
-<script>
-// Get user location
-if ("geolocation" in navigator) {
-  navigator.geolocation.getCurrentPosition(
-    function(position) {
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
-        .then(response => response.json())
-        .then(data => {
-          const city = data.address.city || data.address.town || data.address.village || '';
-          const state = data.address.state || '';
-          const country = data.address.country || '';
-          
-          let locationText = [city, state, country].filter(Boolean).join(', ');
-          document.getElementById('userLocation').textContent = locationText || 'Location unavailable';
-        })
-        .catch(() => {
-          document.getElementById('userLocation').textContent = 'Location unavailable';
-        });
-    },
-    function() {
-      document.getElementById('userLocation').textContent = 'Location access denied';
+// Filter tab handling
+filterTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    filterTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentFilter = tab.dataset.filter;
+    
+    const query = searchInput.value.trim();
+    if (query) {
+      currentOffset = 0;
+      performSearch(query, true);
     }
-  );
-} else {
-  document.getElementById('userLocation').textContent = 'Geolocation not supported';
+  });
+});
+
+// Clear search
+clearSearchBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  clearSearchBtn.classList.remove('show');
+  resultsList.innerHTML = '';
+  resultsList.appendChild(initialState);
+  initialState.style.display = 'block';
+  loadMoreContainer.classList.remove('show');
+  currentOffset = 0;
+  currentQuery = '';
+  searchInput.focus();
+});
+
+// Search input handling
+searchInput.addEventListener('input', (e) => {
+  const query = e.target.value.trim();
+  
+  if (query) {
+    clearSearchBtn.classList.add('show');
+  } else {
+    clearSearchBtn.classList.remove('show');
+    resultsList.innerHTML = '';
+    resultsList.appendChild(initialState);
+    initialState.style.display = 'block';
+    loadMoreContainer.classList.remove('show');
+    currentOffset = 0;
+    currentQuery = '';
+    return;
+  }
+  
+  // Debounce search
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    currentOffset = 0;
+    performSearch(query, true);
+  }, 300);
+});
+
+// Load more button
+loadMoreBtn.addEventListener('click', () => {
+  if (currentQuery) {
+    performSearch(currentQuery, false);
+  }
+});
+
+// Helper function to highlight search terms
+function highlightText(text, query) {
+  if (!text || !query) return text;
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return text.replace(regex, '<mark>$1</mark>');
 }
+
+// Perform search
+async function performSearch(query, isNewSearch = true) {
+  if (!query) return;
+  
+  if (isNewSearch) {
+    currentQuery = query;
+    currentOffset = 0;
+    initialState.style.display = 'none';
+    
+    // Show loading state
+    resultsList.innerHTML = `
+      <li class="loading-state">
+        <div class="loading-spinner"></div>
+        <div style="margin-top: 12px;">Searching...</div>
+      </li>
+    `;
+    loadMoreContainer.classList.remove('show');
+  } else {
+    loadMoreBtn.disabled = true;
+    loadMoreBtn.innerHTML = '<div class="loading-spinner" style="margin: 0 auto;"></div>';
+  }
+  
+  try {
+    let results = [];
+    let totalCount = 0;
+    
+    // Search users
+    if (currentFilter === 'all' || currentFilter === 'users') {
+      const { data: users, error: usersError, count } = await supabase
+        .from('users')
+        .select('*', { count: 'exact' })
+        .ilike('username', `%${query}%`)
+        .range(currentOffset, currentOffset + RESULTS_PER_PAGE - 1);
+      
+      if (!usersError && users) {
+        results.push(...users.map(u => ({ ...u, type: 'user' })));
+        totalCount = count || 0;
+      }
+    }
+    
+    // Search articles (by title)
+    if (currentFilter === 'all' || currentFilter === 'articles') {
+      const { data: articles, error: articlesError, count } = await supabase
+        .from('articles')
+        .select('*, media(url)', { count: 'exact' })
+        .ilike('title', `%${query}%`)
+        .range(currentOffset, currentOffset + RESULTS_PER_PAGE - 1);
+      
+      if (!articlesError && articles) {
+        // Get author usernames and pfps
+        const firebaseUserIds = [...new Set(articles.map(a => a.firebase_user_id).filter(Boolean))];
+        const { data: users } = await supabase
+          .from('users')
+          .select('firebase_uid, username, pfp')
+          .in('firebase_uid', firebaseUserIds);
+        
+        const userMap = {};
+        if (users) {
+          users.forEach(user => {
+            userMap[user.firebase_uid] = user;
+          });
+        }
+        
+        results.push(...articles.map(a => ({ 
+          ...a, 
+          type: 'article',
+          authorUsername: userMap[a.firebase_user_id]?.username || 'Unknown',
+          articleImage: a.media && a.media.length > 0 ? a.media[0].url : null
+        })));
+        totalCount += count || 0;
+      }
+    }
+    
+    // Search article content
+    if (currentFilter === 'all' || currentFilter === 'article-content') {
+      const { data: articleContent, error: contentError, count } = await supabase
+        .from('articles')
+        .select('*, media(url)', { count: 'exact' })
+        .ilike('content', `%${query}%`)
+        .range(currentOffset, currentOffset + RESULTS_PER_PAGE - 1);
+      
+      if (!contentError && articleContent) {
+        // Get author usernames and pfps
+        const firebaseUserIds = [...new Set(articleContent.map(a => a.firebase_user_id).filter(Boolean))];
+        const { data: users } = await supabase
+          .from('users')
+          .select('firebase_uid, username, pfp')
+          .in('firebase_uid', firebaseUserIds);
+        
+        const userMap = {};
+        if (users) {
+          users.forEach(user => {
+            userMap[user.firebase_uid] = user;
+          });
+        }
+        
+        results.push(...articleContent.map(a => {
+          // Extract excerpt around the search term
+          let excerpt = '';
+          if (a.content) {
+            const contentLower = a.content.toLowerCase();
+            const queryLower = query.toLowerCase();
+            const index = contentLower.indexOf(queryLower);
+            if (index !== -1) {
+              const start = Math.max(0, index - 50);
+              const end = Math.min(a.content.length, index + query.length + 100);
+              excerpt = (start > 0 ? '...' : '') + a.content.substring(start, end) + (end < a.content.length ? '...' : '');
+            } else {
+              excerpt = a.content.substring(0, 150) + (a.content.length > 150 ? '...' : '');
+            }
+          }
+          
+          return { 
+            ...a, 
+            type: 'article-content',
+            authorUsername: userMap[a.firebase_user_id]?.username || 'Unknown',
+            articleImage: a.media && a.media.length > 0 ? a.media[0].url : null,
+            excerpt: excerpt
+          };
+        })));
+        totalCount += count || 0;
+      }
+    }
+    
+    // Search playlists (libraries)
+    if (currentFilter === 'all' || currentFilter === 'playlists') {
+      const { data: playlists, error: playlistsError, count } = await supabase
+        .from('playlists')
+        .select('*', { count: 'exact' })
+        .ilike('name', `%${query}%`)
+        .range(currentOffset, currentOffset + RESULTS_PER_PAGE - 1);
+      
+      if (!playlistsError && playlists) {
+        results.push(...playlists.map(p => ({ ...p, type: 'playlist' })));
+        totalCount += count || 0;
+      }
+    }
+    
+    // Check if there are more results
+    hasMore = (currentOffset + RESULTS_PER_PAGE) < totalCount;
+    
+    // Display results
+    displayResults(results, query, isNewSearch);
+    
+    // Update offset for next load
+    currentOffset += RESULTS_PER_PAGE;
+    
+    // Show/hide load more button
+    if (hasMore && results.length > 0) {
+      loadMoreContainer.classList.add('show');
+      loadMoreBtn.disabled = false;
+      loadMoreBtn.innerHTML = '<i class="fas fa-chevron-down" style="margin-right: 8px;"></i>Load More';
+    } else {
+      loadMoreContainer.classList.remove('show');
+    }
+    
+  } catch (error) {
+    console.error('Search error:', error);
+    if (isNewSearch) {
+      resultsList.innerHTML = `
+        <li class="empty-state">
+          <i class="fas fa-exclamation-circle"></i>
+          <h3>Search Error</h3>
+          <p>An error occurred while searching. Please try again.</p>
+        </li>
+      `;
+    } else {
+      loadMoreBtn.disabled = false;
+      loadMoreBtn.innerHTML = '<i class="fas fa-chevron-down" style="margin-right: 8px;"></i>Load More';
+      alert('Error loading more results. Please try again.');
+    }
+  }
+}
+
+// Display search results
+function displayResults(results, query, isNewSearch) {
+  if (results.length === 0 && isNewSearch) {
+    resultsList.innerHTML = `
+      <li class="empty-state">
+        <i class="fas fa-search"></i>
+        <h3>No results found</h3>
+        <p>Try searching with different keywords</p>
+      </li>
+    `;
+    return;
+  }
+  
+  if (isNewSearch) {
+    resultsList.innerHTML = '';
+  }
+  
+  results.forEach(result => {
+    const li = document.createElement('li');
+    li.className = 'result-item';
+    
+    if (result.type === 'user') {
+      const initial = result.username ? result.username[0].toUpperCase() : 'U';
+      const avatarContent = result.pfp 
+        ? `<img src="${result.pfp}" alt="${result.username}" onerror="this.style.display='none'; this.parentElement.textContent='${initial}';"/>`
+        : initial;
+      
+      li.innerHTML = `
+        <div class="result-avatar">${avatarContent}</div>
+        <div class="result-content">
+          <h3 class="result-title">@${result.username || 'Unknown'}</h3>
+          <p class="result-subtitle">${result.bio || 'No bio available'}</p>
+        </div>
+        <span class="result-type-badge user">User</span>
+      `;
+      li.onclick = () => window.location.href = `profile.html?username=${result.username}`;
+      
+    } else if (result.type === 'article') {
+      const initial = result.title ? result.title[0].toUpperCase() : 'A';
+      const avatarContent = result.articleImage 
+        ? `<img src="${result.articleImage}" alt="${result.title}" onerror="this.style.display='none'; this.parentElement.textContent='${initial}';"/>`
+        : initial;
+      
+      const date = new Date(result.created_at);
+      const formattedDate = date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+      
+      li.innerHTML = `
+        <div class="result-avatar article">${avatarContent}</div>
+        <div class="result-content">
+          <h3 class="result-title">${result.title}</h3>
+          <p class="result-subtitle">by @${result.authorUsername} • ${formattedDate}</p>
+        </div>
+        <span class="result-type-badge article">Article</span>
+      `;
+      li.onclick = () => window.location.href = `article.html?id=${result.id}`;
+      
+    } else if (result.type === 'article-content') {
+      const initial = result.title ? result.title[0].toUpperCase() : 'A';
+      const avatarContent = result.articleImage 
+        ? `<img src="${result.articleImage}" alt="${result.title}" onerror="this.style.display='none'; this.parentElement.textContent='${initial}';"/>`
+        : initial;
+      
+      const date = new Date(result.created_at);
+      const formattedDate = date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+      
+      li.innerHTML = `
+        <div class="result-avatar article-content">${avatarContent}</div>
+        <div class="result-content">
+          <h3 class="result-title">${result.title}</h3>
+          <p class="result-subtitle">by @${result.authorUsername} • ${formattedDate}</p>
+          <p class="result-excerpt">${highlightText(result.excerpt, query)}</p>
+        </div>
+        <span class="result-type-badge article-content">Content</span>
+      `;
+      li.onclick = () => window.location.href = `article.html?id=${result.id}`;
+      
+    } else if (result.type === 'playlist') {
+      const initial = result.name ? result.name[0].toUpperCase() : 'L';
+      const articleCount = result.article_count || 0;
+      
+      li.innerHTML = `
+        <div class="result-avatar playlist">${initial}</div>
+        <div class="result-content">
+          <h3 class="result-title">${result.name}</h3>
+          <p class="result-subtitle">${articleCount} article${articleCount !== 1 ? 's' : ''}</p>
+        </div>
+        <span class="result-type-badge playlist">Library</span>
+      `;
+      li.onclick = () => window.location.href = `playlist.html?id=${result.id}`;
+    }
+    
+    resultsList.appendChild(li);
+  });
+}
+
+// Focus search input on page load
+searchInput.focus();
 </script>
 </body>
 </html>
