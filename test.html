@@ -300,7 +300,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    z-index: 10;
+    z-index: 150;
+    pointer-events: none;
 }
 
 .action-btn {
@@ -312,6 +313,7 @@ body {
     border: none;
     cursor: pointer;
     transition: transform 0.1s;
+    pointer-events: all;
 }
 
 .action-btn:active {
@@ -324,6 +326,7 @@ body {
     stroke: var(--text-primary);
     fill: none;
     stroke-width: 2;
+    pointer-events: none;
 }
 
 .action-btn.liked svg {
@@ -335,6 +338,7 @@ body {
     color: var(--text-primary);
     font-size: 11px;
     font-weight: 600;
+    pointer-events: none;
 }
 
 /* Comments Popup */
@@ -703,9 +707,14 @@ body {
 </div>
 
 <script type="module">
+    // Import Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { 
+        getAuth, 
+        onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+    // Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
         authDomain: "patholytica.firebaseapp.com",
@@ -716,28 +725,508 @@ body {
         appId: "1:738430635282:web:8451ef380447c7611137cb"
     };
 
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
     const supabase = window.supabase.createClient(
         "https://vduqewqyvszfquntmark.supabase.co",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkdXFld3F5dnN6ZnF1bnRtYXJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc0ODA0MjcsImV4cCI6MjA1MzA1NjQyN30.g1e4jJXTCNNZ6mlqTYPB8t2hcGN-kJj-Xy1GRNg7Opw"
+        "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
     );
 
     let articles = [];
-    let userLikes = new Set();
+    let userLikes = new Set(); // Track which articles user has liked
+    let currentArticleId = null;
+    let currentIndex = 0;
+    let isLoading = false;
+    let hasMore = true;
+    let offset = 0;
+    const LIMIT = 10;
     let currentUser = null;
+    
+    // View tracking
+    let viewTimers = {}; // Track view timers for each article
+    let viewedArticles = new Set(); // Track which articles have been counted
 
-    // Make handleLike global so onclick can access it
-    window.handleLike = async function(articleId) {
-        console.log('Like button clicked for article:', articleId);
+    // Get current logged-in user from Firebase and Supabase
+    async function getCurrentUser() {
+        try {
+            const firebaseUser = auth.currentUser;
+            if (!firebaseUser) {
+                console.log('No Firebase user logged in');
+                return null;
+            }
+            
+            console.log('Firebase user ID:', firebaseUser.uid);
+            
+            // Get user data from Supabase users table using firebase_uid
+            const { data: userData, error } = await supabase
+                .from('users')
+                .select('user_id, firebase_uid, username')
+                .eq('firebase_uid', firebaseUser.uid)
+                .single();
+            
+            if (error) {
+                console.error('Error fetching user from Supabase:', error);
+                return null;
+            }
+            
+            console.log('Supabase user data:', userData);
+            return userData;
+        } catch (error) {
+            console.error('Error getting current user:', error);
+            return null;
+        }
+    }
+
+    // Listen for auth state changes
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            console.log('User logged in:', user.uid);
+            currentUser = await getCurrentUser();
+            console.log('Current user set to:', currentUser);
+            
+            // Load user's likes
+            if (currentUser) {
+                await loadUserLikes();
+            }
+        } else {
+            console.log('User logged out');
+            currentUser = null;
+            userLikes.clear();
+        }
+    });
+
+    // Load user's existing likes
+    async function loadUserLikes() {
+        if (!currentUser) return;
         
-        const btn = document.querySelector(`.like-btn[data-id="${articleId}"]`);
-        const countSpan = btn?.querySelector('.like-count');
+        try {
+            const { data: likes, error } = await supabase
+                .from('likes')
+                .select('article_id')
+                .eq('user_id', currentUser.user_id);
+            
+            if (error) throw error;
+            
+            userLikes.clear();
+            likes.forEach(like => {
+                userLikes.add(like.article_id);
+            });
+            
+            // Update UI for already loaded articles
+            updateLikeButtons();
+        } catch (error) {
+            console.error('Error loading user likes:', error);
+        }
+    }
+
+    // Update like button states based on userLikes
+    function updateLikeButtons() {
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            const articleId = btn.dataset.id;
+            if (userLikes.has(articleId)) {
+                btn.classList.add('liked');
+            } else {
+                btn.classList.remove('liked');
+            }
+        });
+    }
+
+    async function loadArticles(isInitial = true) {
+        if (isLoading || (!isInitial && !hasMore)) return;
+        
+        isLoading = true;
+
+        try {
+            const { data: articlesData, error: articlesError } = await supabase
+                .from('articles')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .range(offset, offset + LIMIT - 1);
+
+            if (articlesError) throw articlesError;
+
+            if (!articlesData || articlesData.length === 0) {
+                if (isInitial) {
+                    document.getElementById('postsWrapper').innerHTML = `
+                        <div class="loading-container">
+                            <i class="fas fa-inbox" style="font-size: 48px;"></i>
+                            <div>No articles found</div>
+                        </div>
+                    `;
+                }
+                hasMore = false;
+                isLoading = false;
+                return;
+            }
+
+            if (articlesData.length < LIMIT) {
+                hasMore = false;
+            }
+
+            offset += articlesData.length;
+
+            const userIds = [...new Set(articlesData.map(a => a.firebase_user_id).filter(id => id))];
+            
+            let usersData = [];
+            if (userIds.length > 0) {
+                const { data: users } = await supabase
+                    .from('users')
+                    .select('firebase_uid, username, full_name')
+                    .in('firebase_uid', userIds);
+                
+                usersData = users || [];
+            }
+
+            // Fetch media for all articles
+            const articleIds = articlesData.map(a => a.id);
+            const { data: mediaData } = await supabase
+                .from('media')
+                .select('*')
+                .in('article_id', articleIds)
+                .order('display_order', { ascending: true });
+
+            const newArticles = articlesData.map(article => {
+                const user = usersData?.find(u => u.firebase_uid === article.firebase_user_id);
+                const articleMedia = mediaData?.filter(m => m.article_id === article.id) || [];
+                
+                return {
+                    ...article,
+                    author: user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous'),
+                    media: articleMedia
+                };
+            });
+
+            articles = [...articles, ...newArticles];
+            renderArticles(isInitial);
+            isLoading = false;
+
+        } catch (error) {
+            console.error('Error loading articles:', error);
+            if (isInitial) {
+                document.getElementById('postsWrapper').innerHTML = `
+                    <div class="loading-container">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
+                        <div>Failed to load articles</div>
+                    </div>
+                `;
+            }
+            isLoading = false;
+        }
+    }
+
+    function createMediaElement(mediaItem) {
+        const mediaDiv = document.createElement('div');
+        mediaDiv.className = 'media-embed';
+
+        if (mediaItem.type === 'image') {
+            mediaDiv.innerHTML = `
+                <img src="${mediaItem.url}" alt="${mediaItem.caption || 'Article image'}">
+                ${mediaItem.caption ? `<div class="media-caption">${mediaItem.caption}</div>` : ''}
+            `;
+        } else if (mediaItem.type === 'audio') {
+            const audioId = 'audio-' + Math.random().toString(36).substr(2, 9);
+            mediaDiv.innerHTML = `
+                <div class="custom-audio-player">
+                    <button class="play-btn" onclick="toggleAudio(this, '${audioId}')">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <div class="audio-info">
+                        <div class="audio-title">${mediaItem.caption || 'Audio'}</div>
+                        <div class="waveform-container" onclick="seekAudio(event, this, '${audioId}')">
+                            <div class="waveform-progress"></div>
+                            <div class="waveform-bars">
+                                ${Array(15).fill(0).map(() => `<div class="waveform-bar" style="height: ${Math.random() * 60 + 20}%"></div>`).join('')}
+                            </div>
+                        </div>
+                        <div class="audio-time">
+                            <span class="current-time">0:00</span>
+                            <span class="duration">0:00</span>
+                        </div>
+                    </div>
+                    <audio id="${audioId}" src="${mediaItem.url}" style="display: none;"></audio>
+                </div>
+                ${mediaItem.caption ? `<div class="media-caption">${mediaItem.caption}</div>` : ''}
+            `;
+
+            setTimeout(() => {
+                const audio = document.getElementById(audioId);
+                if (audio) {
+                    audio.addEventListener('loadedmetadata', function() {
+                        const duration = Math.floor(audio.duration);
+                        const mins = Math.floor(duration / 60);
+                        const secs = duration % 60;
+                        const durationSpan = audio.closest('.custom-audio-player').querySelector('.duration');
+                        if (durationSpan) {
+                            durationSpan.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                        }
+                    });
+                }
+            }, 100);
+        }
+
+        return mediaDiv;
+    }
+
+    function renderArticles(isInitial = true) {
+        const wrapper = document.getElementById('postsWrapper');
+        
+        if (isInitial) {
+            wrapper.innerHTML = '';
+        } else {
+            const loadingMore = wrapper.querySelector('.loading-more');
+            if (loadingMore) {
+                loadingMore.remove();
+            }
+        }
+
+        const startIndex = isInitial ? 0 : articles.length - LIMIT;
+        const endIndex = articles.length;
+
+        for (let index = startIndex; index < endIndex; index++) {
+            const article = articles[index];
+            const articleDiv = document.createElement('div');
+            articleDiv.className = 'article-card';
+            articleDiv.dataset.index = index;
+            articleDiv.dataset.articleId = article.id;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'article-content';
+            
+            const paragraphs = (article.content || 'No content available').split('\n\n');
+            paragraphs.forEach((paragraph, pIndex) => {
+                if (paragraph.trim()) {
+                    const p = document.createElement('div');
+                    p.className = 'content-paragraph';
+                    p.textContent = paragraph.trim();
+                    contentDiv.appendChild(p);
+
+                    if (article.media && article.media.length > 0) {
+                        const relatedMedia = article.media.filter(m => m.display_order === pIndex);
+                        relatedMedia.forEach(m => {
+                            contentDiv.appendChild(createMediaElement(m));
+                        });
+                    }
+                }
+            });
+
+            if (article.media) {
+                article.media.filter(m => m.display_order >= paragraphs.length).forEach(m => {
+                    contentDiv.appendChild(createMediaElement(m));
+                });
+            }
+
+            const isLiked = userLikes.has(article.id);
+
+            articleDiv.innerHTML = `
+                <div class="article-header">
+                    <div class="author-avatar">${article.author.charAt(0).toUpperCase()}</div>
+                    <div class="author-info">
+                        <div class="author-name">${article.author}</div>
+                        <div class="article-date">${formatDate(new Date(article.created_at))}</div>
+                    </div>
+                </div>
+                
+                <div class="article-title">${article.title || 'Untitled'}</div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" data-id="${article.id}">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        <span class="like-count">${article.likes || 0}</span>
+                    </button>
+                    
+                    <button class="action-btn comment-btn" data-id="${article.id}">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span class="comment-count">0</span>
+                    </button>
+
+                    <button class="action-btn expand-btn" data-id="${article.id}">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
+                        <span>Open</span>
+                    </button>
+                </div>
+            `;
+            
+            articleDiv.querySelector('.article-title').insertAdjacentElement('afterend', contentDiv);
+            wrapper.appendChild(articleDiv);
+        }
+
+        if (hasMore) {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'article-card loading-more';
+            loadingDiv.innerHTML = `
+                <div class="spinner"></div>
+                <span>Loading more...</span>
+            `;
+            wrapper.appendChild(loadingDiv);
+        }
+
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            btn.addEventListener('click', handleLike);
+        });
+
+        document.querySelectorAll('.comment-btn').forEach(btn => {
+            btn.addEventListener('click', handleComments);
+        });
+
+        document.querySelectorAll('.expand-btn').forEach(btn => {
+            btn.addEventListener('click', handleExpand);
+        });
+
+        if (isInitial) {
+            wrapper.addEventListener('scroll', handleScroll);
+            loadCommentCounts();
+            setupIntersectionObserver();
+        }
+    }
+
+    // Setup Intersection Observer for view tracking
+    function setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const articleCard = entry.target;
+                const articleId = articleCard.dataset.articleId;
+                
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.75) {
+                    // User is viewing this article
+                    startViewTimer(articleId);
+                } else {
+                    // User scrolled away from this article
+                    clearViewTimer(articleId);
+                }
+            });
+        }, {
+            threshold: [0.75] // Trigger when 75% of article is visible
+        });
+
+        // Observe all article cards
+        document.querySelectorAll('.article-card').forEach(card => {
+            if (card.dataset.articleId) {
+                observer.observe(card);
+            }
+        });
+    }
+
+    // Start timer to increment view after 5 seconds
+    function startViewTimer(articleId) {
+        // Don't start timer if already viewed or timer already running
+        if (viewedArticles.has(articleId) || viewTimers[articleId]) {
+            return;
+        }
+
+        viewTimers[articleId] = setTimeout(async () => {
+            await incrementView(articleId);
+        }, 5000); // 5 seconds
+    }
+
+    // Clear view timer if user scrolls away
+    function clearViewTimer(articleId) {
+        if (viewTimers[articleId]) {
+            clearTimeout(viewTimers[articleId]);
+            delete viewTimers[articleId];
+        }
+    }
+
+    // Increment view count in database
+    async function incrementView(articleId) {
+        if (viewedArticles.has(articleId)) return;
+        
+        try {
+            // Mark as viewed to prevent duplicate increments
+            viewedArticles.add(articleId);
+            
+            // Get current views
+            const { data: article, error: fetchError } = await supabase
+                .from('articles')
+                .select('views')
+                .eq('id', articleId)
+                .single();
+            
+            if (fetchError) throw fetchError;
+            
+            const newViews = (article.views || 0) + 1;
+            
+            // Update views in database
+            const { error: updateError } = await supabase
+                .from('articles')
+                .update({ views: newViews })
+                .eq('id', articleId);
+            
+            if (updateError) throw updateError;
+            
+            // Update local article data
+            const articleIndex = articles.findIndex(a => a.id === articleId);
+            if (articleIndex !== -1) {
+                articles[articleIndex].views = newViews;
+            }
+            
+            console.log(`View counted for article ${articleId}, new total: ${newViews}`);
+        } catch (error) {
+            console.error('Error incrementing view:', error);
+            // Remove from viewed set on error so it can be retried
+            viewedArticles.delete(articleId);
+        }
+    }
+
+    async function loadCommentCounts() {
+        try {
+            const { data: comments, error } = await supabase
+                .from('comments')
+                .select('article_id');
+
+            if (error) throw error;
+
+            const counts = {};
+            comments.forEach(comment => {
+                counts[comment.article_id] = (counts[comment.article_id] || 0) + 1;
+            });
+
+            document.querySelectorAll('.comment-btn').forEach(btn => {
+                const articleId = btn.dataset.id;
+                const countSpan = btn.querySelector('.comment-count');
+                countSpan.textContent = counts[articleId] || 0;
+            });
+        } catch (error) {
+            console.error('Error loading comment counts:', error);
+        }
+    }
+
+    function formatDate(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHours < 24) return `${diffHours}h ago`;
+        if (diffDays < 7) return `${diffDays}d ago`;
+        
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    async function handleLike(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const articleId = e.currentTarget.dataset.id;
+        const btn = e.currentTarget;
+        const countSpan = btn.querySelector('.like-count');
         const article = articles.find(a => a.id === articleId);
         
-        if (!article || !btn || !countSpan) return;
+        if (!article) return;
 
+        // Check if user is logged in
         if (!currentUser) {
             alert('Please log in to like articles');
             window.location.href = 'https://patholytica.com/login';
@@ -762,29 +1251,35 @@ body {
 
         try {
             if (wasLiked) {
-                const { error } = await supabase
+                // Remove like from database
+                const { error: deleteError } = await supabase
                     .from('likes')
                     .delete()
                     .eq('article_id', articleId)
                     .eq('user_id', currentUser.user_id);
                 
-                if (error) throw error;
+                if (deleteError) throw deleteError;
             } else {
-                const { error } = await supabase
+                // Add like to database
+                const { error: insertError } = await supabase
                     .from('likes')
-                    .insert([{ article_id: articleId, user_id: currentUser.user_id }]);
+                    .insert([{
+                        article_id: articleId,
+                        user_id: currentUser.user_id
+                    }]);
                 
-                if (error) throw error;
+                if (insertError) throw insertError;
             }
 
+            // Update like count in articles table
             await supabase
                 .from('articles')
                 .update({ likes: article.likes })
                 .eq('id', articleId);
 
-            console.log('Like updated successfully');
         } catch (error) {
             console.error('Error updating like:', error);
+            // Revert on error
             if (wasLiked) {
                 userLikes.add(articleId);
                 btn.classList.add('liked');
@@ -794,180 +1289,185 @@ body {
             }
             article.likes = originalCount;
             countSpan.textContent = article.likes;
-        }
-    };
-
-    async function getCurrentUser() {
-        try {
-            const firebaseUser = auth.currentUser;
-            if (!firebaseUser) return null;
-            
-            const { data, error } = await supabase
-                .from('users')
-                .select('user_id, firebase_uid, username')
-                .eq('firebase_uid', firebaseUser.uid)
-                .single();
-            
-            return error ? null : data;
-        } catch (error) {
-            console.error('Error getting current user:', error);
-            return null;
+            alert('Failed to update like. Please try again.');
         }
     }
 
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            currentUser = await getCurrentUser();
-            if (currentUser) await loadUserLikes();
-        } else {
-            currentUser = null;
-            userLikes.clear();
-        }
-    });
-
-    async function loadUserLikes() {
-        if (!currentUser) return;
-        
-        try {
-            const { data, error } = await supabase
-                .from('likes')
-                .select('article_id')
-                .eq('user_id', currentUser.user_id);
-            
-            if (error) throw error;
-            
-            userLikes.clear();
-            data?.forEach(like => userLikes.add(like.article_id));
-            updateLikeButtons();
-        } catch (error) {
-            console.error('Error loading user likes:', error);
-        }
+    async function handleComments(e) {
+        const articleId = e.currentTarget.dataset.id;
+        currentArticleId = articleId;
+        await loadComments(articleId);
+        openComments();
     }
 
-    function updateLikeButtons() {
-        document.querySelectorAll('.like-btn').forEach(btn => {
-            const articleId = btn.dataset.id;
-            if (userLikes.has(articleId)) {
-                btn.classList.add('liked');
-            } else {
-                btn.classList.remove('liked');
-            }
-        });
-    }
+    async function loadComments(articleId) {
+        const commentsList = document.getElementById('commentsList');
+        commentsList.innerHTML = '<div class="loading-container"><div class="spinner" style="width: 32px; height: 32px; border-width: 3px;"></div></div>';
 
-    async function loadArticles() {
         try {
-            const { data: articlesData, error } = await supabase
-                .from('articles')
+            const { data: comments, error } = await supabase
+                .from('comments')
                 .select('*')
-                .order('created_at', { ascending: false })
-                .limit(10);
+                .eq('article_id', articleId)
+                .order('created_at', { ascending: true });
 
             if (error) throw error;
-            if (!articlesData) return;
 
-            const userIds = [...new Set(articlesData.map(a => a.firebase_user_id).filter(id => id))];
+            if (!comments || comments.length === 0) {
+                commentsList.innerHTML = `
+                    <div class="no-comments">
+                        <i class="fas fa-comments"></i>
+                        <div>No comments yet</div>
+                        <div style="font-size: 12px;">Be the first to comment!</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const userIds = [...new Set(comments.map(c => c.user_id).filter(id => id))];
+            let usersMap = {};
             
-            let usersData = [];
             if (userIds.length > 0) {
                 const { data: users } = await supabase
                     .from('users')
-                    .select('firebase_uid, username, full_name')
-                    .in('firebase_uid', userIds);
-                usersData = users || [];
+                    .select('user_id, username, full_name')
+                    .in('user_id', userIds);
+                
+                if (users) {
+                    users.forEach(user => {
+                        usersMap[user.user_id] = user;
+                    });
+                }
             }
 
-            const articleIds = articlesData.map(a => a.id);
-            const { data: mediaData } = await supabase
-                .from('media')
-                .select('*')
-                .in('article_id', articleIds)
-                .order('display_order', { ascending: true });
-
-            articles = articlesData.map(article => {
-                const user = usersData?.find(u => u.firebase_uid === article.firebase_user_id);
-                const articleMedia = mediaData?.filter(m => m.article_id === article.id) || [];
+            commentsList.innerHTML = comments.map(comment => {
+                const user = usersMap[comment.user_id];
+                const author = user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous');
                 
-                return {
-                    ...article,
-                    author: user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous'),
-                    media: articleMedia
-                };
-            });
+                return `
+                    <div class="comment-item">
+                        <div class="comment-avatar">${author.charAt(0).toUpperCase()}</div>
+                        <div class="comment-content">
+                            <div class="comment-author">${author}</div>
+                            <div class="comment-text">${comment.comment_text}</div>
+                            <div class="comment-time">${formatDate(new Date(comment.created_at))}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
 
-            renderArticles();
         } catch (error) {
-            console.error('Error loading articles:', error);
+            console.error('Error loading comments:', error);
+            commentsList.innerHTML = `
+                <div class="no-comments">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>Failed to load comments</div>
+                </div>
+            `;
         }
     }
 
-    function renderArticles() {
-        const wrapper = document.getElementById('postsWrapper');
-        wrapper.innerHTML = '';
-
-        articles.forEach(article => {
-            const isLiked = userLikes.has(article.id);
-            const articleDiv = document.createElement('div');
-            articleDiv.className = 'article-card';
-            articleDiv.dataset.articleId = article.id;
-            
-            articleDiv.innerHTML = `
-                <div class="article-header">
-                    <div class="author-avatar">${article.author.charAt(0).toUpperCase()}</div>
-                    <div class="author-info">
-                        <div class="author-name">${article.author}</div>
-                        <div class="article-date">${new Date(article.created_at).toLocaleDateString()}</div>
-                    </div>
-                </div>
-                
-                <div class="article-title">${article.title || 'Untitled'}</div>
-                
-                <div class="article-content">
-                    ${(article.content || '').split('\n\n').map(p => `<div class="content-paragraph">${p}</div>`).join('')}
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" data-id="${article.id}" onclick="handleLike('${article.id}')">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                        </svg>
-                        <span class="like-count">${article.likes || 0}</span>
-                    </button>
-                    
-                    <button class="action-btn comment-btn" data-id="${article.id}" onclick="openComments('${article.id}')">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                        <span class="comment-count">0</span>
-                    </button>
-
-                    <button class="action-btn expand-btn" data-id="${article.id}">
-                        <svg viewBox="0 0 24 24">
-                            <polyline points="15 3 21 3 21 9"></polyline>
-                            <polyline points="9 21 3 21 3 15"></polyline>
-                            <line x1="21" y1="3" x2="14" y2="10"></line>
-                            <line x1="3" y1="21" x2="10" y2="14"></line>
-                        </svg>
-                        <span>Open</span>
-                    </button>
-                </div>
-            `;
-            
-            wrapper.appendChild(articleDiv);
-        });
+    window.openComments = function() {
+        document.getElementById('commentsPopup').classList.add('active');
+        document.getElementById('commentsOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
-
-    window.openComments = function(articleId) {
-        console.log('Comments for:', articleId);
-        // Add your comments logic here
-    };
 
     window.closeComments = function() {
         document.getElementById('commentsPopup').classList.remove('active');
         document.getElementById('commentsOverlay').classList.remove('active');
-    };
+        document.body.style.overflow = '';
+    }
 
-    loadArticles();
+    window.sendComment = async function() {
+        const input = document.getElementById('commentInput');
+        const text = input.value.trim();
+        
+        if (!text || !currentArticleId) {
+            console.log('No text or article ID');
+            return;
+        }
+
+        const sendBtn = document.getElementById('sendCommentBtn');
+        sendBtn.disabled = true;
+
+        try {
+            // Refresh current user data
+            if (!currentUser) {
+                currentUser = await getCurrentUser();
+            }
+            
+            console.log('Attempting to post comment with user:', currentUser);
+            
+            if (!currentUser) {
+                console.log('No user logged in - redirecting to login');
+                window.location.href = 'https://patholytica.com/login';
+                return;
+            }
+
+            console.log('Posting comment with user_id:', currentUser.user_id);
+
+            // Post comment with the logged-in user's ID
+            const { data, error } = await supabase
+                .from('comments')
+                .insert([
+                    {
+                        article_id: currentArticleId,
+                        user_id: currentUser.user_id,
+                        comment_text: text
+                    }
+                ])
+                .select();
+
+            if (error) {
+                console.error('Supabase insert error:', error);
+                throw error;
+            }
+
+            console.log('Comment posted successfully:', data);
+
+            input.value = '';
+            await loadComments(currentArticleId);
+            
+            // Update comment count
+            const commentBtn = document.querySelector(`.comment-btn[data-id="${currentArticleId}"]`);
+            if (commentBtn) {
+                const countSpan = commentBtn.querySelector('.comment-count');
+                countSpan.textContent = parseInt(countSpan.textContent) + 1;
+            }
+
+        } catch (error) {
+            console.error('Error posting comment:', error);
+            alert('Failed to post comment. Please try again.');
+        } finally {
+            sendBtn.disabled = false;
+        }
+    }
+
+    // Enable send button on Enter key
+    document.getElementById('commentInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            window.sendComment();
+        }
+    });
+
+    function handleExpand(e) {
+        const articleId = e.currentTarget.dataset.id;
+        window.location.href = `article.html?id=${articleId}`;
+    }
+
+    function handleScroll(e) {
+        const container = e.target;
+        const scrollPosition = container.scrollTop;
+        const scrollHeight = container.scrollHeight;
+        const clientHeight = container.clientHeight;
+
+        if (scrollPosition + clientHeight >= scrollHeight * 0.8 && hasMore && !isLoading) {
+            loadArticles(false);
+        }
+    }
+
+    loadArticles(true);
 </script>
 
 <script>
@@ -979,10 +1479,32 @@ body {
         if (audio.paused) {
             audio.play();
             icon.className = 'fas fa-pause';
+            
+            audio.ontimeupdate = function() {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                player.querySelector('.waveform-progress').style.width = progress + '%';
+                const currentMins = Math.floor(audio.currentTime / 60);
+                const currentSecs = Math.floor(audio.currentTime % 60);
+                player.querySelector('.current-time').textContent = `${currentMins}:${currentSecs.toString().padStart(2, '0')}`;
+            };
+            
+            audio.onended = function() {
+                icon.className = 'fas fa-play';
+                player.querySelector('.waveform-progress').style.width = '0%';
+                player.querySelector('.current-time').textContent = '0:00';
+            };
         } else {
             audio.pause();
             icon.className = 'fas fa-play';
         }
+    };
+
+    window.seekAudio = function(event, container, audioId) {
+        const audio = document.getElementById(audioId);
+        const rect = container.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const percentage = x / rect.width;
+        audio.currentTime = percentage * audio.duration;
     };
 </script>
 </body>
