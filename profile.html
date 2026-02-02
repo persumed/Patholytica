@@ -905,36 +905,84 @@ const supabase = window.supabase.createClient(
 // Global variables
 let currentUser = null;
 let currentUserData = null;
+let viewingUserData = null;
 let selectedImageDataUrl = null;
+let isOwnProfile = false;
+
+// Get URL parameters
+function getUrlParameter(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
 
 // Load profile data
-async function loadProfile(user) {
+async function loadProfile(loggedInUser) {
   const profileContent = document.getElementById('profileContent');
-  currentUser = user;
+  currentUser = loggedInUser;
+  
+  // Check if we're viewing someone else's profile via URL parameter
+  const usernameParam = getUrlParameter('username');
   
   try {
-    console.log('Loading profile for user:', user.uid);
+    console.log('Loading profile...', usernameParam ? `for username: ${usernameParam}` : 'for logged-in user');
     
-    // Fetch user data from Supabase
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('firebase_uid', user.uid)
-      .single();
+    let userData;
+    let userFirebaseId;
+    
+    if (usernameParam) {
+      // Viewing someone else's profile
+      const { data: profileUser, error: profileError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('username', usernameParam)
+        .single();
 
-    if (userError) {
-      console.error('Error fetching user:', userError);
-      profileContent.innerHTML = '<div class="error-state">Error loading profile</div>';
-      return;
+      if (profileError || !profileUser) {
+        console.error('Error fetching profile user:', profileError);
+        profileContent.innerHTML = '<div class="error-state">User not found</div>';
+        return;
+      }
+
+      userData = profileUser;
+      userFirebaseId = profileUser.firebase_uid;
+      viewingUserData = userData;
+      
+      // Check if this is the logged-in user's own profile
+      isOwnProfile = loggedInUser && loggedInUser.uid === userFirebaseId;
+    } else {
+      // Viewing own profile (no username parameter)
+      if (!loggedInUser) {
+        profileContent.innerHTML = '<div class="error-state">Please log in to view your profile</div>';
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1500);
+        return;
+      }
+      
+      const { data: ownUserData, error: userError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('firebase_uid', loggedInUser.uid)
+        .single();
+
+      if (userError) {
+        console.error('Error fetching user:', userError);
+        profileContent.innerHTML = '<div class="error-state">Error loading profile</div>';
+        return;
+      }
+
+      userData = ownUserData;
+      userFirebaseId = loggedInUser.uid;
+      currentUserData = userData;
+      viewingUserData = userData;
+      isOwnProfile = true;
     }
-
-    currentUserData = userData;
 
     // Fetch user's articles
     const { data: articles, error: articlesError } = await supabase
       .from('articles')
       .select('*')
-      .eq('firebase_user_id', user.uid)
+      .eq('firebase_user_id', userFirebaseId)
       .order('created_at', { ascending: false });
 
     if (articlesError) {
@@ -960,6 +1008,9 @@ async function loadProfile(user) {
       ? `<div class="profile-bio">${userData.bio}</div>`
       : '';
 
+    // Show email only on own profile
+    let emailHTML = isOwnProfile ? `<div class="profile-email">${loggedInUser.email}</div>` : '';
+
     let profileHTML = `
       <div class="profile-header">
         <div class="profile-info">
@@ -968,7 +1019,7 @@ async function loadProfile(user) {
           </div>
           <div class="profile-details">
             <h1 class="profile-username">@${userData.username || 'User'}</h1>
-            <div class="profile-email">${user.email}</div>
+            ${emailHTML}
             <div class="profile-joined">
               <i class="fas fa-calendar-alt"></i>
               <span>Joined ${joinedText}</span>
@@ -986,6 +1037,11 @@ async function loadProfile(user) {
             </div>
           </div>
         </div>
+    `;
+
+    // Show edit/logout buttons only on own profile
+    if (isOwnProfile) {
+      profileHTML += `
         <div class="profile-actions">
           <button class="btn-edit" onclick="openEditModal()">
             <i class="fas fa-edit"></i> Edit Profile
@@ -994,14 +1050,19 @@ async function loadProfile(user) {
             <i class="fas fa-sign-out-alt"></i> Log Out
           </button>
         </div>
-      </div>
-    `;
+      `;
+    }
+
+    profileHTML += `</div>`;
 
     // Add articles section
+    const articlesTitle = isOwnProfile ? 'Your Articles' : `Articles by @${userData.username}`;
+    const emptyMessage = isOwnProfile ? "You haven't written any articles yet" : "This user hasn't written any articles yet";
+    
     if (articles && articles.length > 0) {
       profileHTML += `
         <div class="profile-section">
-          <h2 class="section-title">Your Articles</h2>
+          <h2 class="section-title">${articlesTitle}</h2>
           <ul class="article-list" id="userArticles">
       `;
 
@@ -1032,10 +1093,10 @@ async function loadProfile(user) {
     } else {
       profileHTML += `
         <div class="profile-section">
-          <h2 class="section-title">Your Articles</h2>
+          <h2 class="section-title">${articlesTitle}</h2>
           <div class="empty-state">
             <i class="fas fa-file-alt"></i>
-            <p>You haven't written any articles yet</p>
+            <p>${emptyMessage}</p>
           </div>
         </div>
       `;
@@ -1057,6 +1118,8 @@ async function loadProfile(user) {
 
 // Open edit modal
 window.openEditModal = function() {
+  if (!isOwnProfile) return; // Only allow editing own profile
+  
   const modal = document.getElementById('editModal');
   const bioInput = document.getElementById('bioInput');
   const avatarPreview = document.getElementById('avatarPreview');
@@ -1131,6 +1194,8 @@ window.removeImage = function() {
 
 // Save profile
 window.saveProfile = async function() {
+  if (!isOwnProfile || !currentUser) return; // Only allow editing own profile
+  
   const saveBtn = document.getElementById('saveBtn');
   const bioInput = document.getElementById('bioInput');
   
@@ -1199,42 +1264,50 @@ onAuthStateChanged(auth, async (user) => {
   const authButtons = document.getElementById('authButtons');
   const userWelcome = document.getElementById('userWelcome');
   const welcomeText = document.getElementById('welcomeText');
-  const profileContent = document.getElementById('profileContent');
   
   if (user) {
     // User is logged in
     authButtons.classList.remove('show');
     userWelcome.classList.add('show');
     
-    // Add click event to username for logout
-    welcomeText.onclick = window.logOut;
-    welcomeText.style.cursor = 'pointer';
-    
-    // Update welcome text with username
+    // Fetch logged-in user's data for header
     try {
       const { data: userData } = await supabase
         .from('users')
-        .select('username')
+        .select('*')
         .eq('firebase_uid', user.uid)
         .single();
       
-      if (userData && userData.username) {
+      if (userData) {
+        currentUserData = userData;
         welcomeText.textContent = `@${userData.username}`;
+        welcomeText.onclick = () => window.location.href = 'profile.html'; // Go to own profile
+        welcomeText.style.cursor = 'pointer';
       }
     } catch (error) {
       console.error('Error fetching username:', error);
     }
 
-    // Load profile
+    // Load profile (either own or someone else's based on URL)
     loadProfile(user);
   } else {
-    // User is logged out - redirect to login
+    // User is logged out
     authButtons.classList.add('show');
     userWelcome.classList.remove('show');
-    profileContent.innerHTML = '<div class="error-state">Please log in to view your profile</div>';
-    setTimeout(() => {
-      window.location.href = 'login.html';
-    }, 1500);
+    
+    // Check if trying to view someone's profile via URL parameter
+    const usernameParam = getUrlParameter('username');
+    if (usernameParam) {
+      // Allow viewing other profiles even when logged out
+      loadProfile(null);
+    } else {
+      // Redirect to login if trying to access profile without being logged in
+      const profileContent = document.getElementById('profileContent');
+      profileContent.innerHTML = '<div class="error-state">Please log in to view your profile</div>';
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 1500);
+    }
   }
 });
 
