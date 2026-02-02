@@ -135,7 +135,7 @@ body {
 /* Search Container */
 .search-container {
   position: fixed;
-  top: calc(65px + env(safe-area-inset-top));
+  top: calc(53px + env(safe-area-inset-top));
   left: 0;
   right: 0;
   background: var(--bg-color);
@@ -235,7 +235,7 @@ body {
   width: 100%;
   margin: 0 auto;
   padding: 24px 24px 80px;
-  padding-top: calc(65px + env(safe-area-inset-top) + 140px);
+  padding-top: calc(53px + env(safe-area-inset-top) + 140px);
 }
 /* Results List */
 .results-list {
@@ -280,6 +280,9 @@ body {
 .result-avatar.article {
   background: var(--accent-green);
 }
+.result-avatar.article-content {
+  background: var(--accent-orange);
+}
 .result-avatar.playlist {
   background: var(--accent-purple);
 }
@@ -304,6 +307,22 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.result-excerpt {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 4px 0 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+.result-excerpt mark {
+  background: rgba(62, 166, 255, 0.3);
+  color: var(--text-primary);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
 .result-type-badge {
   padding: 4px 10px;
   border-radius: 12px;
@@ -320,9 +339,41 @@ body {
   background: rgba(46, 204, 113, 0.15);
   color: var(--accent-green);
 }
+.result-type-badge.article-content {
+  background: rgba(230, 126, 34, 0.15);
+  color: var(--accent-orange);
+}
 .result-type-badge.playlist {
   background: rgba(155, 89, 182, 0.15);
   color: var(--accent-purple);
+}
+/* Load More Button */
+.load-more-container {
+  text-align: center;
+  padding: 24px;
+  display: none;
+}
+.load-more-container.show {
+  display: block;
+}
+.btn-load-more {
+  padding: 12px 32px;
+  border-radius: 24px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-load-more:hover {
+  background: var(--hover-bg);
+  border-color: var(--accent);
+}
+.btn-load-more:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 /* Empty State */
 .empty-state {
@@ -423,7 +474,7 @@ body {
   }
   .content-container {
     padding: 16px 16px 100px;
-    padding-top: calc(65px + env(safe-area-inset-top) + 130px);
+    padding-top: calc(53px + env(safe-area-inset-top) + 130px);
   }
   .result-avatar {
     width: 42px;
@@ -508,6 +559,7 @@ body {
       <button class="filter-tab active" data-filter="all">All</button>
       <button class="filter-tab" data-filter="users">Users</button>
       <button class="filter-tab" data-filter="articles">Articles</button>
+      <button class="filter-tab" data-filter="article-content">Article Content</button>
       <button class="filter-tab" data-filter="playlists">Libraries</button>
     </div>
   </div>
@@ -521,6 +573,12 @@ body {
       <p>Search for users, articles, or libraries to explore</p>
     </li>
   </ul>
+  <div class="load-more-container" id="loadMoreContainer">
+    <button class="btn-load-more" id="loadMoreBtn">
+      <i class="fas fa-chevron-down" style="margin-right: 8px;"></i>
+      Load More
+    </button>
+  </div>
 </div>
 
 <!-- Footer Bar Navigation -->
@@ -567,15 +625,19 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Initialize Supabase
-const supabase = window.supabase.createClient(
-  "https://vduqewqyvszfquntmark.supabase.co",
-  "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
-);
+// Initialize Supabase with correct anon key
+const SUPABASE_URL = "https://vduqewqyvszfquntmark.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkdXFld3F5dnN6ZnF1bnRtYXJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2MTg3MjgsImV4cCI6MjA4NTE5NDcyOH0.V2JellFmUGgYhKfW-D4CBdcBHyPztOlcgLCBdhnXj7c";
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Search state
 let currentFilter = 'all';
 let searchTimeout;
+let currentQuery = '';
+let currentOffset = 0;
+let hasMore = false;
+const RESULTS_PER_PAGE = 10;
 
 // DOM Elements
 const searchInput = document.getElementById('searchInput');
@@ -583,6 +645,8 @@ const clearSearchBtn = document.getElementById('clearSearch');
 const resultsList = document.getElementById('resultsList');
 const initialState = document.getElementById('initialState');
 const filterTabs = document.querySelectorAll('.filter-tab');
+const loadMoreContainer = document.getElementById('loadMoreContainer');
+const loadMoreBtn = document.getElementById('loadMoreBtn');
 
 // Log out function
 window.logOut = async function() {
@@ -636,7 +700,8 @@ filterTabs.forEach(tab => {
     
     const query = searchInput.value.trim();
     if (query) {
-      performSearch(query);
+      currentOffset = 0;
+      performSearch(query, true);
     }
   });
 });
@@ -648,6 +713,9 @@ clearSearchBtn.addEventListener('click', () => {
   resultsList.innerHTML = '';
   resultsList.appendChild(initialState);
   initialState.style.display = 'block';
+  loadMoreContainer.classList.remove('show');
+  currentOffset = 0;
+  currentQuery = '';
   searchInput.focus();
 });
 
@@ -662,109 +730,280 @@ searchInput.addEventListener('input', (e) => {
     resultsList.innerHTML = '';
     resultsList.appendChild(initialState);
     initialState.style.display = 'block';
+    loadMoreContainer.classList.remove('show');
+    currentOffset = 0;
+    currentQuery = '';
     return;
   }
   
   // Debounce search
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
-    performSearch(query);
+    currentOffset = 0;
+    performSearch(query, true);
   }, 300);
 });
 
+// Load more button
+loadMoreBtn.addEventListener('click', () => {
+  if (currentQuery) {
+    performSearch(currentQuery, false);
+  }
+});
+
+// Helper function to escape HTML
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Helper function to highlight search terms
+function highlightText(text, query) {
+  if (!text || !query) return escapeHtml(text);
+  const escapedText = escapeHtml(text);
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return escapedText.replace(regex, '<mark>$1</mark>');
+}
+
+// Helper function to handle image error
+function handleImageError(img, fallbackText) {
+  img.style.display = 'none';
+  img.parentElement.textContent = fallbackText;
+}
+
 // Perform search
-async function performSearch(query) {
+async function performSearch(query, isNewSearch = true) {
   if (!query) return;
   
-  initialState.style.display = 'none';
+  console.log('Starting search for:', query, 'Filter:', currentFilter);
   
-  // Show loading state
-  resultsList.innerHTML = `
-    <li class="loading-state">
-      <div class="loading-spinner"></div>
-      <div style="margin-top: 12px;">Searching...</div>
-    </li>
-  `;
+  if (isNewSearch) {
+    currentQuery = query;
+    currentOffset = 0;
+    initialState.style.display = 'none';
+    
+    // Show loading state
+    resultsList.innerHTML = `
+      <li class="loading-state">
+        <div class="loading-spinner"></div>
+        <div style="margin-top: 12px;">Searching...</div>
+      </li>
+    `;
+    loadMoreContainer.classList.remove('show');
+  } else {
+    loadMoreBtn.disabled = true;
+    loadMoreBtn.innerHTML = '<div class="loading-spinner" style="margin: 0 auto;"></div>';
+  }
   
   try {
     let results = [];
+    let totalCount = 0;
     
-    // Search users
+    // Search users (not in article-content filter)
     if (currentFilter === 'all' || currentFilter === 'users') {
-      const { data: users, error: usersError } = await supabase
+      console.log('Searching users...');
+      const { data: users, error: usersError, count } = await supabase
         .from('users')
-        .select('*')
+        .select('*', { count: 'exact' })
         .ilike('username', `%${query}%`)
-        .limit(10);
+        .range(currentOffset, currentOffset + RESULTS_PER_PAGE - 1);
+      
+      console.log('Users result:', users, 'Error:', usersError);
       
       if (!usersError && users) {
         results.push(...users.map(u => ({ ...u, type: 'user' })));
+        totalCount += count || 0;
       }
     }
     
-    // Search articles
+    // Search articles by title (not in article-content filter)
     if (currentFilter === 'all' || currentFilter === 'articles') {
-      const { data: articles, error: articlesError } = await supabase
+      console.log('Searching articles...');
+      const { data: articles, error: articlesError, count } = await supabase
         .from('articles')
-        .select('*, media(url)')
+        .select('*, media(url)', { count: 'exact' })
         .ilike('title', `%${query}%`)
-        .limit(20);
+        .range(currentOffset, currentOffset + RESULTS_PER_PAGE - 1);
+      
+      console.log('Articles result:', articles, 'Error:', articlesError);
       
       if (!articlesError && articles) {
         // Get author usernames and pfps
         const firebaseUserIds = [...new Set(articles.map(a => a.firebase_user_id).filter(Boolean))];
-        const { data: users } = await supabase
-          .from('users')
-          .select('firebase_uid, username, pfp')
-          .in('firebase_uid', firebaseUserIds);
         
-        const userMap = {};
-        if (users) {
-          users.forEach(user => {
-            userMap[user.firebase_uid] = user;
-          });
+        if (firebaseUserIds.length > 0) {
+          const { data: users } = await supabase
+            .from('users')
+            .select('firebase_uid, username, pfp')
+            .in('firebase_uid', firebaseUserIds);
+          
+          const userMap = {};
+          if (users) {
+            users.forEach(user => {
+              userMap[user.firebase_uid] = user;
+            });
+          }
+          
+          results.push(...articles.map(a => ({ 
+            ...a, 
+            type: 'article',
+            authorUsername: userMap[a.firebase_user_id]?.username || 'Unknown',
+            articleImage: a.media && a.media.length > 0 ? a.media[0].url : null
+          })));
+        } else {
+          results.push(...articles.map(a => ({ 
+            ...a, 
+            type: 'article',
+            authorUsername: 'Unknown',
+            articleImage: a.media && a.media.length > 0 ? a.media[0].url : null
+          })));
         }
         
-        results.push(...articles.map(a => ({ 
-          ...a, 
-          type: 'article',
-          authorUsername: userMap[a.firebase_user_id]?.username || 'Unknown',
-          articleImage: a.media && a.media.length > 0 ? a.media[0].url : null
-        })));
+        totalCount += count || 0;
       }
     }
     
-    // Search playlists (libraries)
+    // Search article content (only when article-content filter is selected)
+    if (currentFilter === 'article-content') {
+      console.log('Searching article content...');
+      const { data: articleContent, error: contentError, count } = await supabase
+        .from('articles')
+        .select('*, media(url)', { count: 'exact' })
+        .ilike('content', `%${query}%`)
+        .range(currentOffset, currentOffset + RESULTS_PER_PAGE - 1);
+      
+      console.log('Article content result:', articleContent, 'Error:', contentError);
+      
+      if (!contentError && articleContent) {
+        // Get author usernames and pfps
+        const firebaseUserIds = [...new Set(articleContent.map(a => a.firebase_user_id).filter(Boolean))];
+        
+        if (firebaseUserIds.length > 0) {
+          const { data: users } = await supabase
+            .from('users')
+            .select('firebase_uid, username, pfp')
+            .in('firebase_uid', firebaseUserIds);
+          
+          const userMap = {};
+          if (users) {
+            users.forEach(user => {
+              userMap[user.firebase_uid] = user;
+            });
+          }
+          
+          results.push(...articleContent.map(a => {
+            // Extract excerpt around the search term
+            let excerpt = '';
+            if (a.content) {
+              const contentLower = a.content.toLowerCase();
+              const queryLower = query.toLowerCase();
+              const index = contentLower.indexOf(queryLower);
+              if (index !== -1) {
+                const start = Math.max(0, index - 50);
+                const end = Math.min(a.content.length, index + query.length + 100);
+                excerpt = (start > 0 ? '...' : '') + a.content.substring(start, end) + (end < a.content.length ? '...' : '');
+              } else {
+                excerpt = a.content.substring(0, 150) + (a.content.length > 150 ? '...' : '');
+              }
+            }
+            
+            return { 
+              ...a, 
+              type: 'article-content',
+              authorUsername: userMap[a.firebase_user_id]?.username || 'Unknown',
+              articleImage: a.media && a.media.length > 0 ? a.media[0].url : null,
+              excerpt: excerpt
+            };
+          }));
+        } else {
+          results.push(...articleContent.map(a => {
+            let excerpt = '';
+            if (a.content) {
+              const contentLower = a.content.toLowerCase();
+              const queryLower = query.toLowerCase();
+              const index = contentLower.indexOf(queryLower);
+              if (index !== -1) {
+                const start = Math.max(0, index - 50);
+                const end = Math.min(a.content.length, index + query.length + 100);
+                excerpt = (start > 0 ? '...' : '') + a.content.substring(start, end) + (end < a.content.length ? '...' : '');
+              } else {
+                excerpt = a.content.substring(0, 150) + (a.content.length > 150 ? '...' : '');
+              }
+            }
+            
+            return { 
+              ...a, 
+              type: 'article-content',
+              authorUsername: 'Unknown',
+              articleImage: a.media && a.media.length > 0 ? a.media[0].url : null,
+              excerpt: excerpt
+            };
+          }));
+        }
+        
+        totalCount += count || 0;
+      }
+    }
+    
+    // Search playlists (not in article-content filter)
     if (currentFilter === 'all' || currentFilter === 'playlists') {
-      const { data: playlists, error: playlistsError } = await supabase
+      console.log('Searching playlists...');
+      const { data: playlists, error: playlistsError, count } = await supabase
         .from('playlists')
-        .select('*')
+        .select('*', { count: 'exact' })
         .ilike('name', `%${query}%`)
-        .limit(10);
+        .range(currentOffset, currentOffset + RESULTS_PER_PAGE - 1);
+      
+      console.log('Playlists result:', playlists, 'Error:', playlistsError);
       
       if (!playlistsError && playlists) {
         results.push(...playlists.map(p => ({ ...p, type: 'playlist' })));
+        totalCount += count || 0;
       }
     }
     
+    console.log('Total results:', results.length, 'Total count:', totalCount);
+    
+    // Check if there are more results
+    hasMore = (currentOffset + results.length) < totalCount;
+    
     // Display results
-    displayResults(results, query);
+    displayResults(results, query, isNewSearch);
+    
+    // Update offset for next load
+    currentOffset += results.length;
+    
+    // Show/hide load more button
+    if (hasMore && results.length > 0) {
+      loadMoreContainer.classList.add('show');
+      loadMoreBtn.disabled = false;
+      loadMoreBtn.innerHTML = '<i class="fas fa-chevron-down" style="margin-right: 8px;"></i>Load More';
+    } else {
+      loadMoreContainer.classList.remove('show');
+    }
     
   } catch (error) {
     console.error('Search error:', error);
-    resultsList.innerHTML = `
-      <li class="empty-state">
-        <i class="fas fa-exclamation-circle"></i>
-        <h3>Search Error</h3>
-        <p>An error occurred while searching. Please try again.</p>
-      </li>
-    `;
+    if (isNewSearch) {
+      resultsList.innerHTML = `
+        <li class="empty-state">
+          <i class="fas fa-exclamation-circle"></i>
+          <h3>Search Error</h3>
+          <p>An error occurred while searching. Please try again.</p>
+        </li>
+      `;
+    } else {
+      loadMoreBtn.disabled = false;
+      loadMoreBtn.innerHTML = '<i class="fas fa-chevron-down" style="margin-right: 8px;"></i>Load More';
+      alert('Error loading more results. Please try again.');
+    }
   }
 }
 
 // Display search results
-function displayResults(results, query) {
-  if (results.length === 0) {
+function displayResults(results, query, isNewSearch) {
+  if (results.length === 0 && isNewSearch) {
     resultsList.innerHTML = `
       <li class="empty-state">
         <i class="fas fa-search"></i>
@@ -775,7 +1014,9 @@ function displayResults(results, query) {
     return;
   }
   
-  resultsList.innerHTML = '';
+  if (isNewSearch) {
+    resultsList.innerHTML = '';
+  }
   
   results.forEach(result => {
     const li = document.createElement('li');
@@ -783,25 +1024,53 @@ function displayResults(results, query) {
     
     if (result.type === 'user') {
       const initial = result.username ? result.username[0].toUpperCase() : 'U';
-      const avatarContent = result.pfp 
-        ? `<img src="${result.pfp}" alt="${result.username}" onerror="this.style.display='none'; this.parentElement.textContent='${initial}';"/>`
-        : initial;
+      const avatarDiv = document.createElement('div');
+      avatarDiv.className = 'result-avatar';
       
-      li.innerHTML = `
-        <div class="result-avatar">${avatarContent}</div>
-        <div class="result-content">
-          <h3 class="result-title">@${result.username || 'Unknown'}</h3>
-          <p class="result-subtitle">${result.bio || 'No bio available'}</p>
-        </div>
-        <span class="result-type-badge user">User</span>
+      if (result.pfp) {
+        const img = document.createElement('img');
+        img.src = result.pfp;
+        img.alt = result.username || 'User';
+        img.onerror = function() {
+          handleImageError(this, initial);
+        };
+        avatarDiv.appendChild(img);
+      } else {
+        avatarDiv.textContent = initial;
+      }
+      
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'result-content';
+      contentDiv.innerHTML = `
+        <h3 class="result-title">@${escapeHtml(result.username || 'Unknown')}</h3>
+        <p class="result-subtitle">${escapeHtml(result.bio || 'No bio available')}</p>
       `;
+      
+      const badge = document.createElement('span');
+      badge.className = 'result-type-badge user';
+      badge.textContent = 'User';
+      
+      li.appendChild(avatarDiv);
+      li.appendChild(contentDiv);
+      li.appendChild(badge);
       li.onclick = () => window.location.href = `profile.html?username=${result.username}`;
       
     } else if (result.type === 'article') {
       const initial = result.title ? result.title[0].toUpperCase() : 'A';
-      const avatarContent = result.articleImage 
-        ? `<img src="${result.articleImage}" alt="${result.title}" onerror="this.style.display='none'; this.parentElement.textContent='${initial}';"/>`
-        : initial;
+      const avatarDiv = document.createElement('div');
+      avatarDiv.className = 'result-avatar article';
+      
+      if (result.articleImage) {
+        const img = document.createElement('img');
+        img.src = result.articleImage;
+        img.alt = result.title || 'Article';
+        img.onerror = function() {
+          handleImageError(this, initial);
+        };
+        avatarDiv.appendChild(img);
+      } else {
+        avatarDiv.textContent = initial;
+      }
       
       const date = new Date(result.created_at);
       const formattedDate = date.toLocaleDateString('en-US', { 
@@ -810,28 +1079,85 @@ function displayResults(results, query) {
         day: 'numeric' 
       });
       
-      li.innerHTML = `
-        <div class="result-avatar article">${avatarContent}</div>
-        <div class="result-content">
-          <h3 class="result-title">${result.title}</h3>
-          <p class="result-subtitle">by @${result.authorUsername} • ${formattedDate}</p>
-        </div>
-        <span class="result-type-badge article">Article</span>
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'result-content';
+      contentDiv.innerHTML = `
+        <h3 class="result-title">${escapeHtml(result.title)}</h3>
+        <p class="result-subtitle">by @${escapeHtml(result.authorUsername)} • ${formattedDate}</p>
       `;
+      
+      const badge = document.createElement('span');
+      badge.className = 'result-type-badge article';
+      badge.textContent = 'Article';
+      
+      li.appendChild(avatarDiv);
+      li.appendChild(contentDiv);
+      li.appendChild(badge);
+      li.onclick = () => window.location.href = `article.html?id=${result.id}`;
+      
+    } else if (result.type === 'article-content') {
+      const initial = result.title ? result.title[0].toUpperCase() : 'A';
+      const avatarDiv = document.createElement('div');
+      avatarDiv.className = 'result-avatar article-content';
+      
+      if (result.articleImage) {
+        const img = document.createElement('img');
+        img.src = result.articleImage;
+        img.alt = result.title || 'Article';
+        img.onerror = function() {
+          handleImageError(this, initial);
+        };
+        avatarDiv.appendChild(img);
+      } else {
+        avatarDiv.textContent = initial;
+      }
+      
+      const date = new Date(result.created_at);
+      const formattedDate = date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+      
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'result-content';
+      contentDiv.innerHTML = `
+        <h3 class="result-title">${escapeHtml(result.title)}</h3>
+        <p class="result-subtitle">by @${escapeHtml(result.authorUsername)} • ${formattedDate}</p>
+        <p class="result-excerpt">${highlightText(result.excerpt, query)}</p>
+      `;
+      
+      const badge = document.createElement('span');
+      badge.className = 'result-type-badge article-content';
+      badge.textContent = 'Content';
+      
+      li.appendChild(avatarDiv);
+      li.appendChild(contentDiv);
+      li.appendChild(badge);
       li.onclick = () => window.location.href = `article.html?id=${result.id}`;
       
     } else if (result.type === 'playlist') {
       const initial = result.name ? result.name[0].toUpperCase() : 'L';
       const articleCount = result.article_count || 0;
       
-      li.innerHTML = `
-        <div class="result-avatar playlist">${initial}</div>
-        <div class="result-content">
-          <h3 class="result-title">${result.name}</h3>
-          <p class="result-subtitle">${articleCount} article${articleCount !== 1 ? 's' : ''}</p>
-        </div>
-        <span class="result-type-badge playlist">Library</span>
+      const avatarDiv = document.createElement('div');
+      avatarDiv.className = 'result-avatar playlist';
+      avatarDiv.textContent = initial;
+      
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'result-content';
+      contentDiv.innerHTML = `
+        <h3 class="result-title">${escapeHtml(result.name)}</h3>
+        <p class="result-subtitle">${articleCount} article${articleCount !== 1 ? 's' : ''}</p>
       `;
+      
+      const badge = document.createElement('span');
+      badge.className = 'result-type-badge playlist';
+      badge.textContent = 'Library';
+      
+      li.appendChild(avatarDiv);
+      li.appendChild(contentDiv);
+      li.appendChild(badge);
       li.onclick = () => window.location.href = `playlist.html?id=${result.id}`;
     }
     
