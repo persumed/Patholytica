@@ -171,6 +171,35 @@
             font-size: 12px;
         }
 
+        .article-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .stat-item i {
+            font-size: 16px;
+        }
+
+        .stat-item.views i {
+            color: var(--accent);
+        }
+
+        .stat-item.likes i {
+            color: #ef4444;
+        }
+
         .article-title {
             font-size: 32px;
             font-weight: 700;
@@ -675,6 +704,17 @@
                         <div class="article-date" id="articleDate">Loading...</div>
                     </div>
                 </div>
+
+                <div class="article-stats">
+                    <div class="stat-item views">
+                        <i class="fas fa-eye"></i>
+                        <span id="viewCount">0</span>
+                    </div>
+                    <div class="stat-item likes">
+                        <i class="fas fa-heart"></i>
+                        <span id="likeCountStat">0</span>
+                    </div>
+                </div>
                 
                 <div class="article-title" id="articleTitle"></div>
                 <div class="article-content" id="articleBody"></div>
@@ -808,6 +848,8 @@
         let currentUser = null;
         let currentArticle = null;
         let userHasLiked = false;
+        let viewTimer = null;
+        let hasIncrementedView = false;
 
         async function getCurrentUser() {
             try {
@@ -849,6 +891,66 @@
         function getArticleId() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('id');
+        }
+
+        function startViewTimer(articleId) {
+            if (hasIncrementedView) return;
+            
+            viewTimer = setTimeout(async () => {
+                await incrementView(articleId);
+            }, 5000);
+        }
+
+        function clearViewTimer() {
+            if (viewTimer) {
+                clearTimeout(viewTimer);
+                viewTimer = null;
+            }
+        }
+
+        async function incrementView(articleId) {
+            if (hasIncrementedView) return;
+            
+            try {
+                hasIncrementedView = true;
+                
+                const { data: article, error: fetchError } = await supabase
+                    .from('articles')
+                    .select('views')
+                    .eq('id', articleId)
+                    .single();
+                
+                if (fetchError) throw fetchError;
+                
+                const newViews = (article.views || 0) + 1;
+                
+                const { error: updateError } = await supabase
+                    .from('articles')
+                    .update({ views: newViews })
+                    .eq('id', articleId);
+                
+                if (updateError) throw updateError;
+                
+                if (currentArticle) {
+                    currentArticle.views = newViews;
+                    document.getElementById('viewCount').textContent = formatNumber(newViews);
+                }
+                
+                console.log(`View counted for article ${articleId}, new total: ${newViews}`);
+            } catch (error) {
+                console.error('Error incrementing view:', error);
+                hasIncrementedView = false;
+            }
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
         }
 
         async function loadArticle() {
@@ -894,11 +996,28 @@
 
                 await loadCommentCount(articleId);
 
+                // Start view timer
+                startViewTimer(articleId);
+
             } catch (error) {
                 console.error('Error loading article:', error);
                 showError();
             }
         }
+
+        // Clear view timer when user leaves the page
+        window.addEventListener('beforeunload', () => {
+            clearViewTimer();
+        });
+
+        // Also clear when visibility changes (user switches tabs)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearViewTimer();
+            } else if (!hasIncrementedView && currentArticle) {
+                startViewTimer(currentArticle.id);
+            }
+        });
 
         async function loadCommentCount(articleId) {
             try {
@@ -952,6 +1071,9 @@
             const date = new Date(article.created_at);
             document.getElementById('articleDate').textContent = formatDate(date);
 
+            // Display stats
+            document.getElementById('viewCount').textContent = formatNumber(article.views || 0);
+            document.getElementById('likeCountStat').textContent = formatNumber(article.likes || 0);
             document.getElementById('likeCount').textContent = article.likes || 0;
 
             const contentContainer = document.getElementById('articleBody');
@@ -1088,6 +1210,7 @@
 
             const likeBtn = document.getElementById('likeBtn');
             const likeCount = document.getElementById('likeCount');
+            const likeCountStat = document.getElementById('likeCountStat');
             const wasLiked = userHasLiked;
             const originalCount = currentArticle.likes || 0;
 
@@ -1097,6 +1220,7 @@
                     likeBtn.classList.remove('liked');
                     currentArticle.likes = Math.max(0, originalCount - 1);
                     likeCount.textContent = currentArticle.likes;
+                    likeCountStat.textContent = formatNumber(currentArticle.likes);
 
                     const { error: deleteError } = await supabase
                         .from('likes')
@@ -1116,6 +1240,7 @@
                     likeBtn.classList.add('liked');
                     currentArticle.likes = originalCount + 1;
                     likeCount.textContent = currentArticle.likes;
+                    likeCountStat.textContent = formatNumber(currentArticle.likes);
 
                     const { error: insertError } = await supabase
                         .from('likes')
@@ -1136,6 +1261,7 @@
                 userHasLiked = wasLiked;
                 currentArticle.likes = originalCount;
                 likeCount.textContent = originalCount;
+                likeCountStat.textContent = formatNumber(originalCount);
                 
                 if (wasLiked) {
                     likeBtn.classList.add('liked');
