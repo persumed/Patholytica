@@ -1,610 +1,989 @@
 <!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Article Scroller - Patholytica</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg-color: #1f1f1f;
+            --text-primary: #fff;
+            --text-secondary: #aaa;
+            --card-bg: #1f1f1f;
+            --hover-bg: #2a2a2a;
+            --border-color: #303030;
+            --accent: #3ea6ff;
+            --accent-hover: #2d8ed6;
+        }
 
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Patholytica — Login</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root {
-  --bg-color: #0f0f0f;
-  --text-primary: #fff;
-  --text-secondary: #aaa;
-  --hover-bg: #2a2a2a;
-  --border-color: #303030;
-  --accent: #3ea6ff;
-  --accent-green: #2ecc71;
-  --error-color: #e74c3c;
-}
 body.light-theme {
-  --bg-color: #ffffff;
-  --text-primary: #0f0f0f;
-  --text-secondary: #606060;
-  --hover-bg: #f0f0f0;
-  --border-color: #e5e5e5;
-  --accent: #065fd4;
-  --accent-green: #27ae60;
-  --error-color: #c0392b;
+    --bg-color: #f9f9f9;
+    --text-primary: #0f0f0f;
+    --text-secondary: #606060;
+    --card-bg: #f9f9f9;
+    --hover-bg: #f0f0f0;
+    --border-color: #e5e5e5;
+    --accent: #065fd4;
+    --accent-hover: #0448a3;
 }
-* { box-sizing: border-box; }
-html, body { 
-  margin: 0; 
-  padding: 0; 
-  min-height: 100%; 
-  font-family: "Roboto", Arial, sans-serif;
-  overflow-x: hidden;
-  max-width: 100vw;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
+
 body {
-  background: var(--bg-color);
-  color: var(--text-primary);
-  transition: background 0.2s ease, color 0.2s ease;
-  display: flex;
-  flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-primary);
+    overflow: hidden;
+    transition: background 0.2s ease, color 0.2s ease;
+    position: fixed;
+    width: 100%;
+    height: 100%;
 }
-.header-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: var(--bg-color);
-  padding-top: env(safe-area-inset-top);
-  border-bottom: 1px solid var(--border-color);
-  z-index: 40;
-  width: 100%;
-}
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 24px;
-  max-width: 100%;
-  margin: 0 auto;
-}
-.logo-img {
-  height: 28px;
-  width: auto;
-  transition: filter 0.2s ease;
-  cursor: pointer;
-}
-body.light-theme .logo-img {
-  filter: invert(1);
-}
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
+
 .icon-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  transition: background 0.2s ease;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--hover-bg);
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: background 0.2s ease;
 }
+
 .icon-btn:hover {
-  background: var(--hover-bg);
+    background: var(--border-color);
 }
-.login-container {
-  max-width: 450px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 24px;
-  padding-top: calc(100px + env(safe-area-inset-top));
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+
+.app-container {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 450px;
+    height: 100vh;
+    background: var(--bg-color);
 }
-.login-card {
-  background: var(--bg-color);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 48px 40px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+.scroller-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: var(--bg-color);
+    overflow: hidden;
 }
-.login-title {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 36px;
-  font-weight: bold;
-  margin: 0 0 12px 0;
-  text-align: center;
-  color: var(--text-primary);
+
+.posts-wrapper {
+    height: 100%;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
 }
-.login-subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-  text-align: center;
-  margin-bottom: 32px;
+
+.posts-wrapper::-webkit-scrollbar {
+    display: none;
 }
-.form-group {
-  margin-bottom: 20px;
+
+.article-card {
+    position: relative;
+    height: 100vh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    background: var(--bg-color);
+    padding: 8px 20px 100px;
+    padding-top: 4px;
+    display: flex;
+    flex-direction: column;
 }
-.form-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: var(--text-primary);
+
+.article-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 50;
 }
-.form-input {
-  width: 100%;
-  padding: 12px 16px;
-  font-size: 15px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--bg-color);
-  color: var(--text-primary);
-  transition: border-color 0.2s ease;
+
+.author-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
 }
-.form-input:focus {
-  outline: none;
-  border-color: var(--accent);
+
+.author-info {
+    flex: 1;
 }
-.form-input::placeholder {
-  color: var(--text-secondary);
+
+.author-name {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 17px;
+    margin-bottom: 2px;
 }
-.btn {
-  width: 100%;
-  padding: 12px 24px;
-  font-size: 15px;
-  font-weight: 500;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+
+.article-date {
+    color: var(--text-secondary);
+    font-size: 12px;
 }
-.btn-primary {
-  background: var(--accent);
-  color: white;
-  margin-bottom: 12px;
+
+.article-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    line-height: 1.2;
 }
-.btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+
+.article-content {
+    color: var(--text-primary);
+    font-size: 16px;
+    line-height: 1.6;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 60px;
 }
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+
+.article-content::-webkit-scrollbar {
+    width: 4px;
 }
-.btn-google {
-  background: white;
-  color: #444;
-  border: 1px solid var(--border-color);
+
+.article-content::-webkit-scrollbar-track {
+    background: var(--border-color);
 }
-body.light-theme .btn-google {
-  background: var(--bg-color);
-  color: var(--text-primary);
+
+.article-content::-webkit-scrollbar-thumb {
+    background: var(--text-secondary);
+    border-radius: 2px;
 }
-.btn-google:hover {
-  background: var(--hover-bg);
+
+.content-paragraph {
+    margin-bottom: 14px;
 }
-.btn-google i {
-  font-size: 18px;
+
+.media-embed {
+    margin: 16px 0;
+    max-width: 100%;
 }
-.divider {
-  display: flex;
-  align-items: center;
-  margin: 24px 0;
-  color: var(--text-secondary);
-  font-size: 13px;
+
+.media-embed img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
 }
-.divider::before,
-.divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border-color);
+
+.media-caption {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    font-style: italic;
 }
-.divider span {
-  padding: 0 12px;
-}
-.form-footer {
-  text-align: center;
-  margin-top: 24px;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-.form-footer a {
-  color: var(--accent);
-  text-decoration: none;
-}
-.form-footer a:hover {
-  text-decoration: underline;
-}
-.error-message {
-  background: var(--error-color);
-  color: white;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  display: none;
-}
-.error-message.show {
-  display: block;
-}
-.success-message {
-  background: var(--accent-green);
-  color: white;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  display: none;
-}
-.success-message.show {
-  display: block;
-}
-.forgot-password {
-  text-align: right;
-  margin-top: 8px;
-}
-.forgot-password a {
-  font-size: 13px;
-  color: var(--accent);
-  text-decoration: none;
-}
-.forgot-password a:hover {
-  text-decoration: underline;
-}
-.signup-extra {
-  display: none;
-}
-.signup-extra.show {
-  display: block;
-}
-@media (max-width: 768px) {
-  .login-container {
+
+.custom-audio-player {
+    background: var(--card-bg);
+    border-radius: 12px;
     padding: 16px;
-    padding-top: calc(80px + env(safe-area-inset-top));
-  }
-  .login-card {
-    padding: 32px 24px;
-  }
-  .login-title {
-    font-size: 28px;
-  }
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 100%;
+    border: 1px solid var(--border-color);
 }
-</style>
-</head>
+
+.play-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.play-btn:hover {
+    background: var(--accent-hover);
+    transform: scale(1.05);
+}
+
+.audio-info {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.audio-title {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-primary);
+}
+
+.waveform-container {
+    position: relative;
+    height: 32px;
+    background: var(--hover-bg);
+    border-radius: 4px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.waveform-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: var(--accent);
+    opacity: 0.3;
+    transition: width 0.1s linear;
+}
+
+.waveform-bars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 4px;
+}
+
+.waveform-bar {
+    width: 2px;
+    background: var(--text-secondary);
+    border-radius: 2px;
+    opacity: 0.6;
+}
+
+.audio-time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.action-buttons {
+    position: absolute;
+    right: 16px;
+    bottom: 143px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 10;
+}
+
+.action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.action-btn:active {
+    transform: scale(0.9);
+}
+
+.action-btn svg {
+    width: 28px;
+    height: 28px;
+    stroke: var(--text-primary);
+    fill: none;
+    stroke-width: 2;
+}
+
+.action-btn.liked svg {
+    fill: #ef4444;
+    stroke: #ef4444;
+}
+
+.action-btn span {
+    color: var(--text-primary);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Comments Popup */
+.comments-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 199;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.comments-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.comments-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: calc(100% - 40px);
+    max-width: 500px;
+    height: 70vh;
+    max-height: 600px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.comments-popup.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.comments-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.comments-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.close-comments {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.close-comments:hover {
+    background: var(--hover-bg);
+}
+
+.comments-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+}
+
+.comments-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.comments-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.comment-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.comment-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    flex-shrink: 0;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-author {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.comment-text {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 6px;
+}
+
+.comment-time {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.comment-input-wrapper {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-color);
+    border-radius: 0 0 16px 16px;
+}
+
+.comment-input-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.comment-input {
+    flex: 1;
+    background: var(--hover-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 10px 16px;
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+}
+
+.comment-input:focus {
+    border-color: var(--accent);
+}
+
+.send-comment-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+.send-comment-btn:hover {
+    background: var(--accent-hover);
+}
+
+.send-comment-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.no-comments {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-secondary);
+    gap: 12px;
+}
+
+.no-comments i {
+    font-size: 48px;
+    opacity: 0.5;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-primary);
+    gap: 16px;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Footer Bar from library code */
+.footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 450px;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    padding: 8px 24px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+}
+
+.footer-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 6px 12px;
+}
+
+.footer-btn:hover {
+    color: var(--text-primary);
+}
+
+.footer-btn.active {
+    color: var(--accent);
+}
+
+.footer-btn i {
+    font-size: 20px;
+}
+
+.footer-btn span {
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.loading-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.loading-more .spinner {
+    width: 24px;
+    height: 24px;
+    border-width: 3px;
+    margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+    .footer-bar {
+        padding: 8px 16px;
+        padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    }
+    
+    .footer-btn {
+        padding: 6px 8px;
+    }
+    
+    .footer-btn i {
+        font-size: 18px;
+    }
+    
+    .footer-btn span {
+        font-size: 9px;
+    }
+}
+
+</style></head>
 <body>
-
-<div class="header-wrapper">
-  <div class="header">
-    <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo">
-    <div class="header-actions">
-      <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-        <i class="fas fa-circle-half-stroke"></i>
-      </button>
+    <div class="app-container">
+    <div class="scroller-container">
+        <div class="posts-wrapper" id="postsWrapper">
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <div>Loading articles...</div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
-<div class="login-container">
-  <div class="login-card">
-    <h1 class="login-title">Welcome Back</h1>
-    <p class="login-subtitle">Sign in to access Patholytica Library</p>
+<div class="comments-overlay" id="commentsOverlay" onclick="closeComments()"></div>
 
-<div id="errorMessage" class="error-message"></div>
-<div id="successMessage" class="success-message"></div>
-
-<form id="loginForm">
-  <div class="form-group signup-extra">
-    <label class="form-label" for="fullName">Full Name</label>
-    <input type="text" id="fullName" class="form-input" placeholder="John Doe">
-  </div>
-  
-  <div class="form-group signup-extra">
-    <label class="form-label" for="username">Username</label>
-    <input type="text" id="username" class="form-input" placeholder="johndoe">
-  </div>
-  
-  <div class="form-group">
-    <label class="form-label" for="email">Email</label>
-    <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
-  </div>
-  
-  <div class="form-group">
-    <label class="form-label" for="password">Password</label>
-    <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
-    <div class="forgot-password" id="forgotPasswordLink">
-      <a href="#" onclick="forgotPassword(); return false;">Forgot password?</a>
+<div class="comments-popup" id="commentsPopup">
+    <div class="comments-header">
+        <h3>Comments</h3>
+        <button class="close-comments" onclick="closeComments()">×</button>
     </div>
-  </div>
-  
-  <button type="submit" class="btn btn-primary" id="submitBtn">
-    <span>Sign In</span>
-  </button>
-</form>
-
-<div class="divider">
-  <span>or continue with</span>
+    <div class="comments-list" id="commentsList">
+        <div class="no-comments">
+            <i class="fas fa-comments"></i>
+            <div>No comments yet</div>
+            <div style="font-size: 12px;">Be the first to comment!</div>
+        </div>
+    </div>
+    <div class="comment-input-wrapper">
+        <div class="comment-input-container">
+            <input type="text" class="comment-input" id="commentInput" placeholder="Add a comment...">
+            <button class="send-comment-btn" id="sendCommentBtn" onclick="sendComment()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
 </div>
 
-<button class="btn btn-google" onclick="signInWithGoogle()">
-  <i class="fab fa-google"></i>
-  <span>Sign in with Google</span>
-</button>
-
-<div class="form-footer">
-  Don't have an account? <a href="#" onclick="toggleSignUpMode(); return false;">Sign up</a>
-</div>
-
-  </div>
+<!-- Footer Bar Navigation -->
+<div class="footer-bar">
+    <button class="footer-btn" onclick="window.location.href='index.html'">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </button>
+    <button class="footer-btn active" onclick="window.location.href='https://patholytica.com/dailyfeed'">
+        <i class="fas fa-scroll"></i>
+        <span>Feed</span>
+    </button>
+    <button class="footer-btn" onclick="window.location.href='explore.html'">
+        <i class="fas fa-search"></i>
+        <span>Explore</span>
+    </button>
+    <button class="footer-btn" onclick="window.location.href='profile.html'">
+        <i class="fas fa-user"></i>
+        <span>Profile</span>
+    </button>
 </div>
 
 <script type="module">
-// Import Firebase modules
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-  getAuth, 
-  signInWithEmailAndPassword, 
-  signInWithPopup,
-  GoogleAuthProvider,
-  sendPasswordResetEmail,
-  createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
-  authDomain: "patholytica.firebaseapp.com",
-  databaseURL: "https://patholytica-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "patholytica",
-  storageBucket: "patholytica.firebasestorage.app",
-  messagingSenderId: "738430635282",
-  appId: "1:738430635282:web:8451ef380447c7611137cb"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
-
-// Initialize Supabase
-const supabase = window.supabase.createClient(
-  "https://vduqewqyvszfquntmark.supabase.co",
-  "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
-);
-
-// Store user data in Supabase
-async function createUserInSupabase(firebaseUser, fullName = null, username = null) {
-  try {
-    // Extract user data
-    const userData = {
-      firebase_uid: firebaseUser.uid, // Added firebase_uid
-      email: firebaseUser.email,
-      username: username || firebaseUser.email.split('@')[0], // Default username from email
-      full_name: fullName || firebaseUser.displayName || null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+    const firebaseConfig = {
+        apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
+        authDomain: "patholytica.firebaseapp.com",
+        databaseURL: "https://patholytica-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "patholytica",
+        storageBucket: "patholytica.firebasestorage.app",
+        messagingSenderId: "738430635282",
+        appId: "1:738430635282:web:8451ef380447c7611137cb"
     };
 
-    // Check if user already exists by firebase_uid
-    const { data: existingUser, error: checkError } = await supabase
-      .from('users')
-      .select('user_id')
-      .eq('firebase_uid', firebaseUser.uid) // Check by firebase_uid instead of email
-      .single();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-    if (existingUser) {
-      console.log("User already exists in Supabase");
-      return existingUser;
+    const supabase = window.supabase.createClient(
+        "https://vduqewqyvszfquntmark.supabase.co",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkdXFld3F5dnN6ZnF1bnRtYXJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc0ODA0MjcsImV4cCI6MjA1MzA1NjQyN30.g1e4jJXTCNNZ6mlqTYPB8t2hcGN-kJj-Xy1GRNg7Opw"
+    );
+
+    let articles = [];
+    let userLikes = new Set();
+    let currentUser = null;
+
+    // Make handleLike global so onclick can access it
+    window.handleLike = async function(articleId) {
+        console.log('Like button clicked for article:', articleId);
+        
+        const btn = document.querySelector(`.like-btn[data-id="${articleId}"]`);
+        const countSpan = btn?.querySelector('.like-count');
+        const article = articles.find(a => a.id === articleId);
+        
+        if (!article || !btn || !countSpan) return;
+
+        if (!currentUser) {
+            alert('Please log in to like articles');
+            window.location.href = 'https://patholytica.com/login';
+            return;
+        }
+
+        const wasLiked = userLikes.has(articleId);
+        const originalCount = article.likes || 0;
+
+        // Optimistic UI update
+        if (wasLiked) {
+            userLikes.delete(articleId);
+            btn.classList.remove('liked');
+            article.likes = Math.max(0, originalCount - 1);
+        } else {
+            userLikes.add(articleId);
+            btn.classList.add('liked');
+            article.likes = originalCount + 1;
+        }
+        
+        countSpan.textContent = article.likes;
+
+        try {
+            if (wasLiked) {
+                const { error } = await supabase
+                    .from('likes')
+                    .delete()
+                    .eq('article_id', articleId)
+                    .eq('user_id', currentUser.user_id);
+                
+                if (error) throw error;
+            } else {
+                const { error } = await supabase
+                    .from('likes')
+                    .insert([{ article_id: articleId, user_id: currentUser.user_id }]);
+                
+                if (error) throw error;
+            }
+
+            await supabase
+                .from('articles')
+                .update({ likes: article.likes })
+                .eq('id', articleId);
+
+            console.log('Like updated successfully');
+        } catch (error) {
+            console.error('Error updating like:', error);
+            if (wasLiked) {
+                userLikes.add(articleId);
+                btn.classList.add('liked');
+            } else {
+                userLikes.delete(articleId);
+                btn.classList.remove('liked');
+            }
+            article.likes = originalCount;
+            countSpan.textContent = article.likes;
+        }
+    };
+
+    async function getCurrentUser() {
+        try {
+            const firebaseUser = auth.currentUser;
+            if (!firebaseUser) return null;
+            
+            const { data, error } = await supabase
+                .from('users')
+                .select('user_id, firebase_uid, username')
+                .eq('firebase_uid', firebaseUser.uid)
+                .single();
+            
+            return error ? null : data;
+        } catch (error) {
+            console.error('Error getting current user:', error);
+            return null;
+        }
     }
 
-    // Insert new user
-    const { data, error } = await supabase
-      .from('users')
-      .insert([userData])
-      .select();
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUser = await getCurrentUser();
+            if (currentUser) await loadUserLikes();
+        } else {
+            currentUser = null;
+            userLikes.clear();
+        }
+    });
 
-    if (error) {
-      console.error("Supabase error:", error);
-      throw error;
+    async function loadUserLikes() {
+        if (!currentUser) return;
+        
+        try {
+            const { data, error } = await supabase
+                .from('likes')
+                .select('article_id')
+                .eq('user_id', currentUser.user_id);
+            
+            if (error) throw error;
+            
+            userLikes.clear();
+            data?.forEach(like => userLikes.add(like.article_id));
+            updateLikeButtons();
+        } catch (error) {
+            console.error('Error loading user likes:', error);
+        }
     }
 
-    console.log("User created in Supabase:", data);
-    return data;
-  } catch (error) {
-    console.error("Error creating user in Supabase:", error);
-    throw error;
-  }
-}
-
-// Update user data in Supabase
-async function updateUserInSupabase(email) {
-  try {
-    const { data, error } = await supabase
-      .from('users')
-      .update({ updated_at: new Date().toISOString() })
-      .eq('email', email)
-      .select();
-
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    console.error("Error updating user in Supabase:", error);
-  }
-}
-
-// Google Sign-In
-window.signInWithGoogle = async function() {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    console.log("Google sign-in successful:", result.user);
-    
-    // Create/update user in Supabase
-    await createUserInSupabase(result.user);
-    
-    showSuccess("Signed in successfully!");
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 1000);
-  } catch (error) {
-    showError(getErrorMessage(error.code));
-  }
-};
-
-// Forgot Password
-window.forgotPassword = async function() {
-  const email = document.getElementById('email').value;
-  if (!email) {
-    showError("Please enter your email address first");
-    return;
-  }
-  
-  try {
-    await sendPasswordResetEmail(auth, email);
-    showSuccess("Password reset email sent! Check your inbox.");
-  } catch (error) {
-    showError(getErrorMessage(error.code));
-  }
-};
-
-// Toggle between Sign In and Sign Up
-window.toggleSignUpMode = function() {
-  const title = document.querySelector('.login-title');
-  const subtitle = document.querySelector('.login-subtitle');
-  const submitBtn = document.querySelector('.btn-primary span');
-  const footer = document.querySelector('.form-footer');
-  const signupFields = document.querySelectorAll('.signup-extra');
-  const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-  const fullNameInput = document.getElementById('fullName');
-  const usernameInput = document.getElementById('username');
-  
-  if (title.textContent === "Welcome Back") {
-    // Switch to Sign Up mode
-    title.textContent = "Create Account";
-    subtitle.textContent = "Sign up to access Patholytica Library";
-    submitBtn.textContent = "Sign Up";
-    footer.innerHTML = 'Already have an account? <a href="#" onclick="toggleSignUpMode(); return false;">Sign in</a>';
-    signupFields.forEach(field => field.classList.add('show'));
-    forgotPasswordLink.style.display = 'none';
-    fullNameInput.required = true;
-    usernameInput.required = true;
-  } else {
-    // Switch to Sign In mode
-    title.textContent = "Welcome Back";
-    subtitle.textContent = "Sign in to access Patholytica Library";
-    submitBtn.textContent = "Sign In";
-    footer.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleSignUpMode(); return false;">Sign up</a>';
-    signupFields.forEach(field => field.classList.remove('show'));
-    forgotPasswordLink.style.display = 'block';
-    fullNameInput.required = false;
-    usernameInput.required = false;
-  }
-};
-
-// Handle form submission
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const fullName = document.getElementById('fullName').value;
-  const username = document.getElementById('username').value;
-  const isSignUp = document.querySelector('.login-title').textContent === "Create Account";
-  const submitBtn = document.getElementById('submitBtn');
-  
-  submitBtn.disabled = true;
-  submitBtn.querySelector('span').textContent = isSignUp ? "Creating account..." : "Signing in...";
-  
-  try {
-    if (isSignUp) {
-      // Sign up with Firebase
-      const result = await createUserWithEmailAndPassword(auth, email, password);
-      console.log("Sign-up successful:", result.user);
-      
-      // Create user in Supabase
-      await createUserInSupabase(result.user, fullName, username);
-      
-      showSuccess("Account created successfully!");
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 1000);
-    } else {
-      // Sign in with Firebase
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      console.log("Sign-in successful:", result.user);
-      
-      // Update last login in Supabase
-      await updateUserInSupabase(email);
-      
-      showSuccess("Signed in successfully!");
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 1000);
+    function updateLikeButtons() {
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            const articleId = btn.dataset.id;
+            if (userLikes.has(articleId)) {
+                btn.classList.add('liked');
+            } else {
+                btn.classList.remove('liked');
+            }
+        });
     }
-  } catch (error) {
-    showError(getErrorMessage(error.code));
-    submitBtn.disabled = false;
-    submitBtn.querySelector('span').textContent = isSignUp ? "Sign Up" : "Sign In";
-  }
-});
 
-function showError(message) {
-  const errorDiv = document.getElementById('errorMessage');
-  const successDiv = document.getElementById('successMessage');
-  successDiv.classList.remove('show');
-  errorDiv.textContent = message;
-  errorDiv.classList.add('show');
-  setTimeout(() => {
-    errorDiv.classList.remove('show');
-  }, 5000);
-}
+    async function loadArticles() {
+        try {
+            const { data: articlesData, error } = await supabase
+                .from('articles')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(10);
 
-function showSuccess(message) {
-  const successDiv = document.getElementById('successMessage');
-  const errorDiv = document.getElementById('errorMessage');
-  errorDiv.classList.remove('show');
-  successDiv.textContent = message;
-  successDiv.classList.add('show');
-  setTimeout(() => {
-    successDiv.classList.remove('show');
-  }, 3000);
-}
+            if (error) throw error;
+            if (!articlesData) return;
 
-function getErrorMessage(errorCode) {
-  const errorMessages = {
-    'auth/invalid-email': 'Invalid email address',
-    'auth/user-disabled': 'This account has been disabled',
-    'auth/user-not-found': 'No account found with this email',
-    'auth/wrong-password': 'Incorrect password',
-    'auth/email-already-in-use': 'An account with this email already exists',
-    'auth/weak-password': 'Password should be at least 6 characters',
-    'auth/popup-closed-by-user': 'Sign-in popup was closed',
-    'auth/cancelled-popup-request': 'Sign-in cancelled',
-  };
-  return errorMessages[errorCode] || 'An error occurred. Please try again.';
-}
+            const userIds = [...new Set(articlesData.map(a => a.firebase_user_id).filter(id => id))];
+            
+            let usersData = [];
+            if (userIds.length > 0) {
+                const { data: users } = await supabase
+                    .from('users')
+                    .select('firebase_uid, username, full_name')
+                    .in('firebase_uid', userIds);
+                usersData = users || [];
+            }
+
+            const articleIds = articlesData.map(a => a.id);
+            const { data: mediaData } = await supabase
+                .from('media')
+                .select('*')
+                .in('article_id', articleIds)
+                .order('display_order', { ascending: true });
+
+            articles = articlesData.map(article => {
+                const user = usersData?.find(u => u.firebase_uid === article.firebase_user_id);
+                const articleMedia = mediaData?.filter(m => m.article_id === article.id) || [];
+                
+                return {
+                    ...article,
+                    author: user?.username ? `@${user.username}` : (user?.full_name || 'Anonymous'),
+                    media: articleMedia
+                };
+            });
+
+            renderArticles();
+        } catch (error) {
+            console.error('Error loading articles:', error);
+        }
+    }
+
+    function renderArticles() {
+        const wrapper = document.getElementById('postsWrapper');
+        wrapper.innerHTML = '';
+
+        articles.forEach(article => {
+            const isLiked = userLikes.has(article.id);
+            const articleDiv = document.createElement('div');
+            articleDiv.className = 'article-card';
+            articleDiv.dataset.articleId = article.id;
+            
+            articleDiv.innerHTML = `
+                <div class="article-header">
+                    <div class="author-avatar">${article.author.charAt(0).toUpperCase()}</div>
+                    <div class="author-info">
+                        <div class="author-name">${article.author}</div>
+                        <div class="article-date">${new Date(article.created_at).toLocaleDateString()}</div>
+                    </div>
+                </div>
+                
+                <div class="article-title">${article.title || 'Untitled'}</div>
+                
+                <div class="article-content">
+                    ${(article.content || '').split('\n\n').map(p => `<div class="content-paragraph">${p}</div>`).join('')}
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" data-id="${article.id}" onclick="handleLike('${article.id}')">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        <span class="like-count">${article.likes || 0}</span>
+                    </button>
+                    
+                    <button class="action-btn comment-btn" data-id="${article.id}" onclick="openComments('${article.id}')">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span class="comment-count">0</span>
+                    </button>
+
+                    <button class="action-btn expand-btn" data-id="${article.id}">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
+                        <span>Open</span>
+                    </button>
+                </div>
+            `;
+            
+            wrapper.appendChild(articleDiv);
+        });
+    }
+
+    window.openComments = function(articleId) {
+        console.log('Comments for:', articleId);
+        // Add your comments logic here
+    };
+
+    window.closeComments = function() {
+        document.getElementById('commentsPopup').classList.remove('active');
+        document.getElementById('commentsOverlay').classList.remove('active');
+    };
+
+    loadArticles();
 </script>
 
 <script>
-function toggleTheme() {
-  document.body.classList.toggle('light-theme');
-  localStorage.setItem("theme", document.body.classList.contains("light-theme") ? "light" : "dark");
-}
-
-// Load saved theme
-if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light-theme");
-}
+    window.toggleAudio = function(btn, audioId) {
+        const player = btn.closest('.custom-audio-player');
+        const audio = document.getElementById(audioId);
+        const icon = btn.querySelector('i');
+        
+        if (audio.paused) {
+            audio.play();
+            icon.className = 'fas fa-pause';
+        } else {
+            audio.pause();
+            icon.className = 'fas fa-play';
+        }
+    };
 </script>
-
 </body>
 </html>
