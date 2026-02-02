@@ -147,6 +147,7 @@
             color: white;
             overflow: hidden;
             flex-shrink: 0;
+            cursor: pointer;
         }
 
         .author-avatar img {
@@ -164,6 +165,12 @@
             font-weight: 600;
             font-size: 17px;
             margin-bottom: 2px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .author-name:hover {
+            color: var(--accent);
         }
 
         .article-date {
@@ -330,6 +337,84 @@
             justify-content: space-between;
             font-size: 11px;
             color: var(--text-secondary);
+        }
+
+        .suggested-articles {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .suggested-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .suggested-article {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: var(--hover-bg);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .suggested-article:hover {
+            background: var(--border-color);
+            transform: translateY(-2px);
+        }
+
+        .suggested-thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 6px;
+            background: var(--border-color);
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .suggested-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .suggested-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .suggested-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .suggested-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .suggested-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .action-bar {
@@ -718,6 +803,15 @@
                 
                 <div class="article-title" id="articleTitle"></div>
                 <div class="article-content" id="articleBody"></div>
+
+                <!-- Suggested Articles Section -->
+                <div class="suggested-articles" id="suggestedArticles" style="display: none;">
+                    <div class="suggested-header">More from this author</div>
+                    <div id="suggestedArticlesList"></div>
+                </div>
+
+                <!-- Footer spacer to prevent content being blocked -->
+                <div style="height: 80px;"></div>
             </div>
         </div>
     </div>
@@ -821,6 +915,13 @@
                 window.sendComment();
             }
         });
+
+        function openProfile(username) {
+            if (username) {
+                const cleanUsername = username.replace('@', '');
+                window.location.href = `https://patholytica.com/profile.html?username=${cleanUsername}`;
+            }
+        }
     </script>
 
     <script type="module">
@@ -953,6 +1054,56 @@
             return num.toString();
         }
 
+        async function loadSuggestedArticles(firebaseUserId, currentArticleId) {
+            try {
+                const { data: articles, error } = await supabase
+                    .from('articles')
+                    .select('id, title, created_at, views, likes')
+                    .eq('firebase_user_id', firebaseUserId)
+                    .neq('id', currentArticleId)
+                    .order('created_at', { ascending: false })
+                    .limit(3);
+
+                if (error) throw error;
+
+                if (articles && articles.length > 0) {
+                    const suggestedSection = document.getElementById('suggestedArticles');
+                    const suggestedList = document.getElementById('suggestedArticlesList');
+                    
+                    suggestedList.innerHTML = articles.map(article => {
+                        const timeAgo = formatDate(new Date(article.created_at));
+                        return `
+                            <div class="suggested-article" onclick="window.location.href='article.html?id=${article.id}'">
+                                <div class="suggested-thumbnail">
+                                    <i class="fas fa-file-alt" style="font-size: 32px; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; height: 100%;"></i>
+                                </div>
+                                <div class="suggested-info">
+                                    <div class="suggested-title">${article.title || 'Untitled'}</div>
+                                    <div class="suggested-meta">
+                                        <div class="suggested-meta-item">
+                                            <i class="fas fa-eye"></i>
+                                            <span>${formatNumber(article.views || 0)}</span>
+                                        </div>
+                                        <div class="suggested-meta-item">
+                                            <i class="fas fa-heart"></i>
+                                            <span>${formatNumber(article.likes || 0)}</span>
+                                        </div>
+                                        <div class="suggested-meta-item">
+                                            <span>${timeAgo}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    suggestedSection.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading suggested articles:', error);
+            }
+        }
+
         async function loadArticle() {
             const articleId = getArticleId();
             
@@ -995,6 +1146,9 @@
                 }
 
                 await loadCommentCount(articleId);
+                
+                // Load suggested articles by the same author
+                await loadSuggestedArticles(article.firebase_user_id, articleId);
 
                 // Start view timer
                 startViewTimer(articleId);
@@ -1062,11 +1216,26 @@
             document.getElementById('articleTitle').textContent = article.title || 'Untitled';
             document.title = `${article.title || 'Article'} — Patholytica`;
 
-            const authorName = author?.username ? `@${author.username}` : (author?.full_name || 'Anonymous');
-            document.getElementById('authorName').textContent = authorName;
+            const authorUsername = author?.username || '';
+            const authorName = authorUsername ? `@${authorUsername}` : (author?.full_name || 'Anonymous');
+            const authorNameElement = document.getElementById('authorName');
+            authorNameElement.textContent = authorName;
+            
+            // Make author name clickable
+            if (authorUsername) {
+                authorNameElement.style.cursor = 'pointer';
+                authorNameElement.onclick = () => openProfile(authorUsername);
+            }
             
             const avatarContent = getAvatarContent(authorName, author?.pfp);
-            document.getElementById('authorAvatar').innerHTML = avatarContent;
+            const avatarElement = document.getElementById('authorAvatar');
+            avatarElement.innerHTML = avatarContent;
+            
+            // Make avatar clickable
+            if (authorUsername) {
+                avatarElement.style.cursor = 'pointer';
+                avatarElement.onclick = () => openProfile(authorUsername);
+            }
 
             const date = new Date(article.created_at);
             document.getElementById('articleDate').textContent = formatDate(date);
