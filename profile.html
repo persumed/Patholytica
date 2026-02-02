@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Patholytica — Profile</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg-color: #1f1f1f;
+  --text-primary: #fff;
+  --text-secondary: #aaa;
+  --card-bg: #1f1f1f;
+  --hover-bg: #2a2a2a;
+  --border-color: #303030;
+  --accent: #3ea6ff;
+  --accent-hover: #2d8ed6;
+  --accent-green: #2ecc71;
+}
+
+* { box-sizing: border-box; }
+html, body { 
+  margin: 0; 
+  padding: 0; 
+  min-height: 100%; 
+  font-family: "Roboto", Arial, sans-serif;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+body {
+  background: var(--bg-color);
+  color: var(--text-primary);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.header-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-color);
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 40;
+  width: 100%;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.logo-img {
+  height: 28px;
+  width: auto;
+  cursor: pointer;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: background 0.2s ease;
+}
+.icon-btn:hover {
+  background: var(--hover-bg);
+}
+.auth-buttons {
+  display: none;
+  gap: 12px;
+}
+.auth-buttons.show {
+  display: flex;
+}
+.btn-login, .btn-signup {
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: none;
+}
+.btn-login {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+.btn-login:hover {
+  background: var(--hover-bg);
+}
+.btn-signup {
+  background: var(--accent);
+  color: white;
+}
+.btn-signup:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.user-welcome {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+.user-welcome.show {
+  display: flex;
+}
+.welcome-text {
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.welcome-text:hover {
+  color: var(--accent);
+}
+
+/* Profile Container */
+.profile-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 24px 80px;
+  padding-top: calc(65px + env(safe-area-inset-top) + 24px);
+}
+
+/* Profile Header */
+.profile-header {
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 32px;
+}
+
+.profile-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--hover-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.profile-details {
+  flex: 1;
+}
+
+.profile-username {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+}
+
+.profile-email {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-edit, .btn-logout {
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-edit {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-edit:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-logout {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-logout:hover {
+  background: var(--hover-bg);
+}
+
+/* Articles Section */
+.profile-section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 24px 0;
+  color: var(--text-primary);
+}
+
+.article-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.article-item {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.article-item:hover {
+  background: var(--hover-bg);
+  margin: 0 -12px;
+  padding: 24px 12px;
+}
+.article-title {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 38px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+  color: var(--text-primary);
+  word-wrap: break-word;
+}
+.article-item:hover .article-title {
+  color: var(--accent);
+}
+.article-meta {
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.meta-dot {
+  width: 3px;
+  height: 3px;
+  background: var(--text-secondary);
+  border-radius: 50%;
+}
+.loading-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+.error-state {
+  text-align: center;
+  padding: 40px;
+  color: #ff4444;
+  font-size: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin: 0;
+}
+
+.footer {
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+}
+.footer-stats {
+  margin-bottom: 8px;
+}
+.article-count {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+.footer-tagline {
+  margin-bottom: 8px;
+}
+.footer-location {
+  font-size: 13px;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+/* Footer Bar Navigation */
+.footer-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 450px;
+  background: var(--card-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 8px 24px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+}
+
+.footer-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 6px 12px;
+}
+
+.footer-btn:hover {
+  color: var(--text-primary);
+}
+
+.footer-btn.active {
+  color: var(--accent);
+}
+
+.footer-btn i {
+  font-size: 20px;
+}
+
+.footer-btn span {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 16px 16px 100px;
+    padding-top: calc(65px + env(safe-area-inset-top) + 16px);
+  }
+  
+  .profile-header {
+    padding: 24px 0;
+    margin-bottom: 24px;
+  }
+  
+  .profile-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    font-size: 40px;
+  }
+  
+  .profile-username {
+    font-size: 24px;
+  }
+  
+  .profile-stats {
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .profile-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-edit, .btn-logout {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
+  
+  .article-title {
+    font-size: 28px;
+  }
+  .article-meta {
+    font-size: 13px;
+  }
+  .footer {
+    padding: 20px 16px;
+    font-size: 13px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+  .auth-buttons {
+    gap: 8px;
+  }
+  .btn-login, .btn-signup {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
+  .footer-bar {
+    padding: 8px 16px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  }
+  
+  .footer-btn {
+    padding: 6px 8px;
+  }
+  
+  .footer-btn i {
+    font-size: 18px;
+  }
+  
+  .footer-btn span {
+    font-size: 9px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="header-wrapper">
+  <div class="header">
+    <img src="IMG_0696.png" class="logo-img" alt="Patholytica Logo" onclick="window.location.href='index.html'">
+    <div class="header-actions">
+      <!-- Auth buttons (shown when logged out) -->
+      <div class="auth-buttons" id="authButtons">
+        <a href="login.html" class="btn-login">Log In</a>
+      </div>
+      <!-- User welcome (shown when logged in) -->
+      <div class="user-welcome" id="userWelcome">
+        <span class="welcome-text" id="welcomeText">Welcome</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="profile-container">
+  <div id="profileContent">
+    <div class="loading-state">Loading profile...</div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-stats">
+    <span class="article-count" id="articleCount">0</span> articles accessible
+  </div>
+  <div class="footer-tagline">
+    Patholytica is a Medicinebank project aiming to unify academic sharing
+  </div>
+  <div class="footer-location" id="userLocation">
+    Loading location...
+  </div>
+</footer>
+
+<!-- Footer Bar Navigation -->
+<div class="footer-bar">
+  <button class="footer-btn" onclick="window.location.href='index.html'">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </button>
+  <button class="footer-btn" onclick="window.location.href='https://patholytica.com/dailyfeed'">
+    <i class="fas fa-scroll"></i>
+    <span>Feed</span>
+  </button>
+  <button class="footer-btn" onclick="window.location.href='explore.html'">
+    <i class="fas fa-search"></i>
+    <span>Explore</span>
+  </button>
+  <button class="footer-btn active" onclick="window.location.href='profile.html'">
+    <i class="fas fa-user"></i>
+    <span>Profile</span>
+  </button>
+</div>
+
+<script type="module">
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+  getAuth, 
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBs6V0yY14cuLBXB1nciZ-X0eyAiodC-Ak",
+  authDomain: "patholytica.firebaseapp.com",
+  databaseURL: "https://patholytica-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "patholytica",
+  storageBucket: "patholytica.firebasestorage.app",
+  messagingSenderId: "738430635282",
+  appId: "1:738430635282:web:8451ef380447c7611137cb"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Initialize Supabase
+const supabase = window.supabase.createClient(
+  "https://vduqewqyvszfquntmark.supabase.co",
+  "sb_publishable_YseP73aoHam8YT6B0b9EQQ_iAUEWARI"
+);
+
+// Load profile data
+async function loadProfile(user) {
+  const profileContent = document.getElementById('profileContent');
+  
+  try {
+    console.log('Loading profile for user:', user.uid);
+    
+    // Fetch user data from Supabase
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('firebase_uid', user.uid)
+      .single();
+
+    if (userError) {
+      console.error('Error fetching user:', userError);
+      profileContent.innerHTML = '<div class="error-state">Error loading profile</div>';
+      return;
+    }
+
+    // Fetch user's articles
+    const { data: articles, error: articlesError } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('firebase_user_id', user.uid)
+      .order('created_at', { ascending: false });
+
+    if (articlesError) {
+      console.error('Error fetching articles:', articlesError);
+    }
+
+    const articleCount = articles ? articles.length : 0;
+    const totalViews = articles ? articles.reduce((sum, article) => sum + (article.views || 0), 0) : 0;
+
+    // Build profile HTML
+    let profileHTML = `
+      <div class="profile-header">
+        <div class="profile-info">
+          <div class="profile-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="profile-details">
+            <h1 class="profile-username">@${userData.username || 'User'}</h1>
+            <div class="profile-email">${user.email}</div>
+            <div class="profile-stats">
+              <div class="stat-item">
+                <span class="stat-value">${articleCount}</span>
+                <span class="stat-label">Articles</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">${totalViews}</span>
+                <span class="stat-label">Total Views</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-actions">
+          <button class="btn-edit" onclick="editProfile()">
+            <i class="fas fa-edit"></i> Edit Profile
+          </button>
+          <button class="btn-logout" onclick="logOut()">
+            <i class="fas fa-sign-out-alt"></i> Log Out
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Add articles section
+    if (articles && articles.length > 0) {
+      profileHTML += `
+        <div class="profile-section">
+          <h2 class="section-title">Your Articles</h2>
+          <ul class="article-list" id="userArticles">
+      `;
+
+      articles.forEach(article => {
+        const date = new Date(article.created_at);
+        const formattedDate = date.toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
+        });
+
+        profileHTML += `
+          <li class="article-item" onclick="openArticle('${article.id}')">
+            <h2 class="article-title">${article.title}</h2>
+            <div class="article-meta">
+              <span>${formattedDate}</span>
+              <div class="meta-dot"></div>
+              <span>${article.views || 0} views</span>
+            </div>
+          </li>
+        `;
+      });
+
+      profileHTML += `
+          </ul>
+        </div>
+      `;
+    } else {
+      profileHTML += `
+        <div class="profile-section">
+          <h2 class="section-title">Your Articles</h2>
+          <div class="empty-state">
+            <i class="fas fa-file-alt"></i>
+            <p>You haven't written any articles yet</p>
+          </div>
+        </div>
+      `;
+    }
+
+    profileContent.innerHTML = profileHTML;
+
+    // Update global article count
+    const { data: allArticles } = await supabase
+      .from('articles')
+      .select('id');
+    document.getElementById('articleCount').textContent = allArticles ? allArticles.length : 0;
+    
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    profileContent.innerHTML = '<div class="error-state">An unexpected error occurred</div>';
+  }
+}
+
+// Log out function
+window.logOut = async function() {
+  try {
+    await signOut(auth);
+    console.log("User logged out");
+    window.location.href = 'index.html';
+  } catch (error) {
+    console.error("Error logging out:", error);
+    alert("Error logging out. Please try again.");
+  }
+};
+
+// Edit profile function
+window.editProfile = function() {
+  alert('Edit profile functionality coming soon!');
+};
+
+// Open article function
+window.openArticle = function(articleId) {
+  window.location.href = `article.html?id=${articleId}`;
+};
+
+// Check authentication state
+onAuthStateChanged(auth, async (user) => {
+  const authButtons = document.getElementById('authButtons');
+  const userWelcome = document.getElementById('userWelcome');
+  const welcomeText = document.getElementById('welcomeText');
+  const profileContent = document.getElementById('profileContent');
+  
+  if (user) {
+    // User is logged in
+    authButtons.classList.remove('show');
+    userWelcome.classList.add('show');
+    
+    // Add click event to username for logout
+    welcomeText.onclick = window.logOut;
+    welcomeText.style.cursor = 'pointer';
+    
+    // Update welcome text with username
+    try {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('username')
+        .eq('firebase_uid', user.uid)
+        .single();
+      
+      if (userData && userData.username) {
+        welcomeText.textContent = `@${userData.username}`;
+      }
+    } catch (error) {
+      console.error('Error fetching username:', error);
+    }
+
+    // Load profile
+    loadProfile(user);
+  } else {
+    // User is logged out - redirect to login
+    authButtons.classList.add('show');
+    userWelcome.classList.remove('show');
+    profileContent.innerHTML = '<div class="error-state">Please log in to view your profile</div>';
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 1500);
+  }
+});
+</script>
+
+<script>
+// Get user location
+if ("geolocation" in navigator) {
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
+        .then(response => response.json())
+        .then(data => {
+          const city = data.address.city || data.address.town || data.address.village || '';
+          const state = data.address.state || '';
+          const country = data.address.country || '';
+          
+          let locationText = [city, state, country].filter(Boolean).join(', ');
+          document.getElementById('userLocation').textContent = locationText || 'Location unavailable';
+        })
+        .catch(() => {
+          document.getElementById('userLocation').textContent = 'Location unavailable';
+        });
+    },
+    function() {
+      document.getElementById('userLocation').textContent = 'Location access denied';
+    }
+  );
+} else {
+  document.getElementById('userLocation').textContent = 'Geolocation not supported';
+}
+</script>
+</body>
+</html>
